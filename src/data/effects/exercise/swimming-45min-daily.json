@@ -1,0 +1,302 @@
+{
+  "id": "swimming-45min-daily",
+  "name": { "en": "Swimming 45 minutes daily", "hi": "रोज़ 45 मिनट तैराकी" },
+  "category": "exercise",
+  "icon": "🏊",
+  "dose": "45 minutes of continuous or interval swimming daily, mostly freestyle at a moderate effort (roughly 1,200–2,000 m for a recreational swimmer), starting from a sedentary baseline. Assumes competent stroke technique — poor technique turns this into an anaerobic struggle rather than aerobic training.",
+  "summary": {
+    "en": "Swimming is the only common exercise that trains the whole body aerobically while the water removes almost all joint load. Horizontal position and water pressure on the chest increase venous return and force the heart to handle a larger filling volume, so cardiac adaptation is strong; breathing against water pressure trains the respiratory muscles directly. Expect upper-body and back development that running never produces, VO₂max up 10–20% by three months, and near-zero impact injury risk. The two honest limitations: it does not build bone, and it is uniquely poor at driving fat loss because the water keeps you cool and appetite tends to rise afterwards.",
+    "hi": "तैराकी अकेली ऐसी कसरत है जो पूरे शरीर को एक साथ ट्रेन करती है और जोड़ों पर लगभग कोई बोझ नहीं डालती। पानी में लेटी हुई मुद्रा और छाती पर पानी का दबाव दिल में ज़्यादा खून भेजते हैं, इसलिए दिल तेज़ी से मज़बूत होता है, और पानी के दबाव के ख़िलाफ़ साँस लेने से फेफड़ों की मांसपेशियाँ भी मज़बूत होती हैं। तीन महीनों में स्टैमिना 10–20% बढ़ता है और चोट का ख़तरा ना के बराबर रहता है। दो कमियाँ हैं — हड्डियाँ मज़बूत नहीं होतीं, और वज़न घटाने में यह दौड़ने से कमज़ोर साबित होती है क्योंकि तैरने के बाद भूख ज़्यादा लगती है।"
+  },
+  "indian_context": "Swimming is the ideal Indian summer exercise — it is the only aerobic option that keeps working at 40 °C when running outdoors becomes genuinely dangerous, and it is completely unaffected by AQI. The barrier is access: reliable pools are largely limited to clubs, gated societies, hotels and a few municipal facilities, which makes this a middle-class-and-above option in most cities. Two India-specific practical points: pool hygiene and chlorination standards vary widely, so ear infections and eye irritation are common complaints, and swimming ability is far from universal — most Indian adults never learned, and open-water 'swimming' in rivers, lakes and quarries is a major cause of drowning deaths every year.",
+  "evidence": "strong",
+  "sources": [
+    "Chase NL, Sui X, Blair SN. Swimming and all-cause mortality risk compared with running, walking, and sedentary habits in men. Int J Aquat Res Educ. 2008",
+    "Tanaka H. Swimming exercise: impact of aquatic exercise on cardiovascular health. Sports Med. 2009",
+    "Lazar JM et al. Swimming and the heart. Int J Cardiol. 2013",
+    "WHO. Guidelines on physical activity and sedentary behaviour. 2020",
+    "ACSM's Guidelines for Exercise Testing and Prescription, 11th ed. 2021"
+  ],
+  "caution": "Never swim alone, and never treat swimming ability as a fixed skill — fatigue, cold and cramp drown competent swimmers. People with epilepsy or arrhythmias need supervision in water. Shoulder pain is the one genuine overuse injury of swimming: 'swimmer's shoulder' comes from rotator cuff impingement in high-volume freestyle, and it is caused by technique and volume, not the water. Chlorinated indoor pools can trigger symptoms in people with asthma; a well-ventilated or outdoor pool is easier on the airways.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Whole body works, heart fills more, shoulders feel it first",
+      "effects": [
+        {
+          "target": "lats",
+          "kind": "strain",
+          "intensity": 0.6,
+          "note": "Freestyle propulsion comes mostly from the lats pulling the arm through the water. In a new swimmer these are the first muscles to fatigue and the first to be sore the next day."
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.6,
+          "note": "Lying horizontal and having water pressure on the chest increases venous return, so the heart fills more per beat. Heart rate during swimming runs about 10–15 bpm lower than land exercise at the same oxygen cost.",
+          "metric": { "label": "Heart rate vs land exercise", "value": "~10–15 bpm lower for same effort" }
+        },
+        {
+          "target": "diaphragm",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "You have to inhale quickly against chest-wall water pressure in a fixed rhythm. This is direct respiratory muscle training that no land exercise replicates."
+        },
+        {
+          "target": "deltoids",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "The deltoids and rotator cuff control the arm recovery over the water. Beginners overuse the deltoid because their body roll is poor, which is where shoulder trouble starts."
+        },
+        {
+          "target": "joints",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Buoyancy removes roughly 90% of body weight from the joints. This is why swimming is the standard recommendation for people with arthritis, back pain or high body weight.",
+          "metric": { "label": "Effective body weight in water", "value": "~10% of land weight" }
+        },
+        {
+          "target": "skin",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Chlorine strips skin oils and can dry skin and hair. You also sweat while swimming without noticing, so dehydration is a real and commonly missed risk."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Stroke efficiency improves faster than fitness does",
+      "effects": [
+        {
+          "target": "blood-vessels",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Plasma volume expands 8–10% in the first week, as with any aerobic training. Water immersion itself also acutely shifts fluid centrally and increases urine output.",
+          "metric": { "label": "Plasma volume", "value": "+8–10%" }
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Most early improvement in swimming is technical, not physiological: better body position reduces drag, and drag reduction saves far more energy than fitness gains do at this stage."
+        },
+        {
+          "target": "rotator-cuff",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Daily swimming means thousands of overhead arm cycles per week. The supraspinatus tendon passes through a narrow space, and this is where impingement builds if technique is poor."
+        },
+        {
+          "target": "lungs",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Controlled breathing patterns increase tidal volume and train tolerance of higher CO₂. Swimmers reliably show higher vital capacity than matched land athletes."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The rhythmic breathing and sensory isolation of swimming produce a strong post-exercise calm, and sleep quality typically improves within the first week."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Upper body starts changing shape; resting heart rate falls",
+      "effects": [
+        {
+          "target": "lats",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "The lats, teres major and posterior deltoids do thousands of pulling repetitions a week. This is the classic V-taper of swimmers and appears well before any other visible change."
+        },
+        {
+          "target": "heart-muscle",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Stroke volume rises and resting heart rate drops 3–5 bpm. Swim training produces particularly strong left-ventricular filling adaptations because of the horizontal position.",
+          "metric": { "label": "Resting heart rate", "value": "−3 to −5 bpm" }
+        },
+        {
+          "target": "trapezius",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The middle and lower traps stabilise the shoulder blade on every stroke. For desk workers with rounded shoulders, this is one of the most useful corrective effects of swimming."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Glucose disposal improves with daily aerobic work. Swimming is as effective as land exercise for insulin sensitivity, which makes it the best option for diabetics with foot or joint problems."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Honest note: swimming burns 400–600 kcal in 45 min but produces less fat loss than expected. Cool water blunts the post-exercise temperature rise and swimmers report notably higher post-session appetite.",
+          "metric": { "label": "Energy per session", "value": "~400–600 kcal" }
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Visible back and shoulder development; blood pressure down",
+      "effects": [
+        {
+          "target": "lats",
+          "kind": "positive",
+          "intensity": 0.6,
+          "visual": { "scale": 1.05 },
+          "note": "Two months of daily swimming produces genuine hypertrophy in the lats and posterior shoulder — the highest-volume pulling work most people will ever do."
+        },
+        {
+          "target": "deltoids",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.04 },
+          "note": "Shoulders broaden visibly. Swimming builds endurance-biased muscle, so the look is defined and durable rather than bulky."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Swim training lowers blood pressure comparably to land aerobic exercise — typically 4–8 mmHg systolic — and appears to reduce arterial stiffness particularly well.",
+          "metric": { "label": "Systolic blood pressure", "value": "−4 to −8 mmHg" }
+        },
+        {
+          "target": "diaphragm",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Inspiratory muscle strength is measurably higher. Swimmers routinely show larger vital capacity and better respiratory endurance than runners of equivalent fitness."
+        },
+        {
+          "target": "abs",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Maintaining body position in water is continuous core work. The deep stabilisers, not just the visible abs, do this — one reason swimming helps chronic low back pain."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Trained heart and lungs, protected joints, unchanged bones",
+      "effects": [
+        {
+          "target": "heart-muscle",
+          "kind": "positive",
+          "intensity": 0.7,
+          "visual": { "scale": 1.04 },
+          "note": "Left-ventricular remodelling is well established. Resting heart rate is often 8–10 bpm below baseline and VO₂max up 15–20%, though swimming VO₂max transfers poorly to running.",
+          "metric": { "label": "VO₂max", "value": "+15–20%" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "HbA1c falls roughly 0.3–0.6% in people with prediabetes or type 2 diabetes. For diabetics with neuropathy or foot ulcer risk, this is the safest way to get that benefit.",
+          "metric": { "label": "HbA1c (if prediabetic/diabetic)", "value": "−0.3 to −0.6%" }
+        },
+        {
+          "target": "spine",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Unloading the spine while strengthening the muscles around it makes swimming one of the better exercises for chronic low back pain — though butterfly and breaststroke can aggravate it."
+        },
+        {
+          "target": "bones",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Non-weight-bearing exercise does not stimulate bone formation. Competitive swimmers consistently show lower bone density than land athletes and sometimes lower than sedentary controls."
+        },
+        {
+          "target": "rotator-cuff",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Swimmer's shoulder affects a large share of high-volume swimmers. Prevention is technique work, adequate body roll, and land-based external rotation strengthening — not rest alone."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Exceptional cardiorespiratory fitness with almost no injury cost",
+      "effects": [
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.7,
+          "visual": { "scale": 1.04 },
+          "note": "A year of daily swimming builds a fitness level comparable to daily running, without a single impact-loading cycle on the joints. For older adults and heavy individuals this trade is enormously favourable."
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "In the Aerobics Center Longitudinal Study, regular swimmers had roughly 50% lower all-cause mortality than sedentary men, comparable to runners and walkers.",
+          "metric": { "label": "All-cause mortality vs sedentary", "value": "~−50% (cohort data)" }
+        },
+        {
+          "target": "lungs",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Higher vital capacity and stronger respiratory muscles persist. Swimming is also the exercise least likely to trigger exercise-induced asthma, because the air at the water surface is warm and humid."
+        },
+        {
+          "target": "airways",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "The counterpoint: chronic exposure to chlorine by-products in poorly ventilated indoor pools is associated with higher airway hyperresponsiveness in elite swimmers. An outdoor pool avoids this entirely."
+        },
+        {
+          "target": "bones",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "A year of swimming-only training leaves bone density where it started at best. Two resistance sessions a week completely closes this gap and should be treated as non-optional."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "The exercise you can still do at seventy",
+      "effects": [
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.8,
+          "note": "The defining long-term advantage of swimming is sustainability: joints and connective tissue take almost no cumulative damage, so people can maintain full training volume decades longer than runners."
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.7,
+          "visual": { "scale": 1.05 },
+          "note": "Five years of daily aerobic training puts you in the top fitness bands, with the associated large reductions in cardiovascular events, diabetes and all-cause mortality."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Regular swimming reduces arterial stiffness and blood pressure in middle-aged and older adults — one of the few exercise modes tested specifically in that population with positive results."
+        },
+        {
+          "target": "bones",
+          "kind": "negative",
+          "intensity": 0.5,
+          "visual": { "opacity": 0.85 },
+          "note": "Five years of exclusively aquatic exercise is the single real long-term risk: measurably lower hip and spine bone density and therefore higher fracture risk after 60."
+        },
+        {
+          "target": "shoulder-joint",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Cumulative overhead volume over five years takes a toll on the rotator cuff and labrum in a meaningful minority of swimmers. Varying strokes and managing volume is the practical protection."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Long-term aerobic exercise is associated with lower dementia and depression risk, and swimming adds the coordination and breath-control demands that pure endurance work lacks."
+        }
+      ]
+    }
+  ]
+}

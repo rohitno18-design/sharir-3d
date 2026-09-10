@@ -1,0 +1,246 @@
+{
+  "id": "oral-contraceptive-pill",
+  "name": { "en": "Combined oral contraceptive pill, daily", "hi": "रोज़ की गर्भनिरोधक गोली" },
+  "category": "medicine",
+  "icon": "💊",
+  "molecule": "estradiol",
+  "dose": "One tablet at the same time every day — typically 21 active tablets containing 20–30 mcg ethinylestradiol plus a progestin (levonorgestrel, desogestrel or drospirenone), followed by 7 iron or placebo tablets during which a withdrawal bleed occurs. For women.",
+  "summary": {
+    "en": "The combined pill works by convincing the brain that ovulation has already happened. Steady daily oestrogen and progestin suppress the pulsatile GnRH signal from the hypothalamus, so the pituitary stops producing the FSH and LH surge that would ripen and release an egg. No dominant follicle develops, no egg is released. Two backup mechanisms run alongside: the progestin thickens cervical mucus so sperm cannot get through, and thins the endometrium so implantation is unlikely. With perfect use fewer than 1 woman in 300 conceives in a year; with real-world use — missed pills, vomiting, travel — it is closer to 7 in 100.",
+    "hi": "गर्भनिरोधक गोली दिमाग़ को यक़ीन दिला देती है कि अंडा पहले ही निकल चुका है। रोज़ एक जैसी मात्रा में एस्ट्रोजन और प्रोजेस्टिन मिलने से हाइपोथैलेमस का सिग्नल दब जाता है, पिट्यूटरी वो हार्मोन नहीं छोड़ती जिससे अंडा पकता और निकलता है — यानी ओव्यूलेशन ही नहीं होता। दो और तरीक़े साथ चलते हैं: गर्भाशय के मुँह का म्यूकस गाढ़ा हो जाता है ताकि शुक्राणु आगे न बढ़ सकें, और गर्भाशय की परत पतली रहती है। सही तरीक़े से लेने पर साल भर में 300 में से एक से भी कम महिला गर्भवती होती है; असल ज़िंदगी में — गोली भूलना, उल्टी, सफ़र — ये आँकड़ा 100 में लगभग 7 हो जाता है।"
+  },
+  "indian_context": "Pill use in India is strikingly low — national family health survey data show only a small single-digit percentage of married women using oral contraceptives, while female sterilisation accounts for the large majority of contraception, often performed in a woman's twenties. That imbalance is not about availability: Mala-N is distributed free through the public health system, Mala-D is heavily subsidised, and chemists sell contraceptive pills over the counter without a prescription. It is about myths and about who gets to decide — the belief that the pill causes permanent infertility, that it must be 'rested' periodically, and that contraception is the woman's problem alone. Two Indian specifics are worth knowing. First, emergency pills like i-pill are being used as regular contraception by a large number of young women, which is far less effective and far more disruptive to cycles than simply taking a combined pill daily. Second, over half of Indian women aged 15–49 are anaemic, and the combined pill reduces menstrual blood loss by roughly a third to a half — so for a woman with heavy periods and low haemoglobin, it treats two problems at once. India also has Saheli (ormeloxifene), a non-hormonal weekly pill developed here, which works differently and is a genuine alternative for women who cannot take oestrogen.",
+  "evidence": "strong",
+  "sources": [
+    "World Health Organization. Medical Eligibility Criteria for Contraceptive Use, 5th edition. 2015",
+    "Collaborative Group on Epidemiological Studies of Ovarian Cancer. Ovarian cancer and oral contraceptives: collaborative reanalysis of data from 45 epidemiological studies. Lancet. 2008",
+    "Mørch LS et al. Contemporary hormonal contraception and the risk of breast cancer. New England Journal of Medicine. 2017",
+    "Iversen L et al. Lifetime cancer risk and combined oral contraceptives: the Royal College of General Practitioners' Oral Contraception Study. American Journal of Obstetrics and Gynecology. 2017",
+    "Faculty of Sexual and Reproductive Healthcare (FSRH). Combined Hormonal Contraception clinical guideline. 2019",
+    "International Institute for Population Sciences. National Family Health Survey (NFHS-5), India. 2019–21"
+  ],
+  "caution": "The combined pill is not suitable for everyone, and the exclusions are specific rather than vague. Do not use it if you are over 35 and smoke, have migraine with aura, a history of blood clots, stroke or heart disease, uncontrolled high blood pressure, active liver disease, current breast cancer, or are less than six weeks postpartum and breastfeeding — WHO eligibility criteria treat these as strict contraindications because they multiply the small clotting and arterial risks. Seek urgent care for severe calf pain or swelling, sudden breathlessness, chest pain, a severe unusual headache, or sudden visual or speech disturbance. Get blood pressure checked before starting and periodically after. Rifampicin, some anti-epileptics and St John's wort make the pill fail; a course of ordinary antibiotics does not. And to be explicit about the commonest Indian fear: the pill does not cause infertility, does not need to be 'rested' every few months, and offers zero protection against HIV or any other sexually transmitted infection.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Hormones on board; not yet protected unless started on day 1–5",
+      "effects": [
+        {
+          "target": "pituitary",
+          "kind": "neutral",
+          "intensity": 0.5,
+          "note": "Steady ethinylestradiol and progestin blunt the pulsatile GnRH signal, so FSH and LH secretion falls from the first tablets. This is the whole mechanism — no pituitary surge means no ovulation.",
+          "metric": { "label": "Protection", "value": "immediate if started day 1–5 of the cycle, otherwise after 7 days" }
+        },
+        {
+          "target": "vagina",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Progestin makes cervical mucus thick and scanty within about 24–48 hours, forming a physical barrier to sperm. This backup mechanism kicks in faster than ovulation suppression does."
+        },
+        {
+          "target": "stomach",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Mild nausea is common on the first days, mostly from the oestrogen component. Taking the tablet at night with food usually solves it."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Ovulation reliably suppressed; contraceptive cover complete",
+      "effects": [
+        {
+          "target": "ovaries",
+          "kind": "neutral",
+          "intensity": 0.6,
+          "note": "Follicles no longer mature past the small antral stage and no dominant follicle forms. The ovary is resting, not damaged — this is a pause on cycling, not a depletion of the egg supply."
+        },
+        {
+          "target": "uterus",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "The endometrium stops its usual oestrogen-driven proliferation and stays thin. This is why bleeding becomes lighter, and why the monthly bleed on the pill is a withdrawal bleed rather than a true period."
+        },
+        {
+          "target": "breasts",
+          "kind": "neutral",
+          "intensity": 0.35,
+          "note": "Breast tenderness and slight fullness are common in the first cycles as a direct oestrogen effect. It usually settles by the third pack."
+        },
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.35,
+          "note": "Ethinylestradiol passes through the liver and changes its protein output: more clotting factors, more sex hormone binding globulin, more angiotensinogen. Almost every systemic effect of the pill, good and bad, traces back to this."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "First pack done; spotting and mood shifts are commonest now",
+      "effects": [
+        {
+          "target": "uterus",
+          "kind": "neutral",
+          "intensity": 0.45,
+          "note": "Breakthrough bleeding or spotting affects a substantial minority in the first three cycles as the thin endometrium stabilises. It is not a sign of failure and usually resolves without changing pills."
+        },
+        {
+          "target": "veins",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Clotting risk is highest in the first months of use. Baseline venous thromboembolism risk is roughly 2 per 10,000 women per year; on a combined pill it is about 5–12 — still well below the 20–30 of pregnancy itself.",
+          "metric": { "label": "VTE risk per 10,000 women-years", "value": "~2 baseline, ~5–12 on the pill, ~20–30 in pregnancy" }
+        },
+        {
+          "target": "brain",
+          "kind": "neutral",
+          "intensity": 0.35,
+          "note": "Mood changes are reported by a minority and are genuinely hard to study. Large registry data show a small association with antidepressant use, particularly in adolescents; most women notice nothing, and those who do are not imagining it."
+        },
+        {
+          "target": "ovaries",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "For women with PCOS, painful periods or endometriosis, this first month is often when the therapeutic benefit shows: less pain, predictable timing and lighter flow."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Side effects settling; skin and cycle benefits appearing",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.45,
+          "note": "Sex hormone binding globulin rises two- to four-fold, which mops up free testosterone. This is the mechanism behind the pill's effect on acne and unwanted hair — and behind the reduced libido some women report.",
+          "metric": { "label": "Sex hormone binding globulin", "value": "2–4× baseline" }
+        },
+        {
+          "target": "skin",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Lower free androgens mean less sebum. Acne typically improves noticeably by the second or third month, which is why the pill is an established acne treatment in its own right."
+        },
+        {
+          "target": "uterus",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Menstrual blood loss falls by roughly a third to a half and cramping is much reduced. In a country where anaemia in women is the norm rather than the exception, this is a meaningful health benefit, not a convenience."
+        },
+        {
+          "target": "arteries",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Blood pressure rises slightly in most users through increased angiotensinogen, usually by only a few mmHg. A minority develop genuine hypertension, which is why periodic BP checks matter."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Steady state: iron status improving, cancer protection accruing",
+      "effects": [
+        {
+          "target": "uterus",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Lighter bleeding over months means less iron loss. For a woman who started anaemic, haemoglobin and ferritin typically improve — a benefit that is underappreciated in the Indian context."
+        },
+        {
+          "target": "ovaries",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Suppressed ovulation reduces ovarian cancer risk, and the protection builds with duration of use. Five years of use is associated with a meaningful reduction that persists for decades after stopping.",
+          "metric": { "label": "Ovarian cancer risk with 5+ years' use", "value": "roughly 30% lower, persisting for decades" }
+        },
+        {
+          "target": "breasts",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Current users show a small increase in breast cancer risk — around 20% in relative terms, which for young women translates to a very small absolute number of extra cases. It fades within about five to ten years of stopping."
+        },
+        {
+          "target": "bones",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "The combined pill has little meaningful effect on bone density in adult women. This is worth stating because the injectable progestin depot, which does reduce bone density, is often confused with it."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "A year of use: risks front-loaded, benefits still accumulating",
+      "effects": [
+        {
+          "target": "veins",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Clot risk falls after the first year of continuous use but never returns to baseline. Formulation matters: levonorgestrel-containing pills carry the lowest risk, while desogestrel, gestodene and drospirenone carry roughly one and a half to two times that."
+        },
+        {
+          "target": "uterus",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Endometrial cancer risk falls substantially with duration of use, and like the ovarian benefit, the protection lasts for decades after stopping."
+        },
+        {
+          "target": "ovaries",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Nothing is being 'stored up' or depleted. Stop the pill and the hypothalamic-pituitary axis restarts, with ovulation typically returning within one to three cycles — there is no such thing as needing a break to protect fertility."
+        },
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Arterial risk — heart attack and ischaemic stroke — is where the pill becomes genuinely dangerous in the wrong person. It is negligible in a healthy young non-smoker and rises steeply with smoking after 35, migraine with aura, or uncontrolled hypertension."
+        },
+        {
+          "target": "immune-system",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "The pill offers no protection against HIV or other sexually transmitted infections. Condoms remain necessary for that entirely separate purpose."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years: net cancer effect favourable, fertility unaffected",
+      "effects": [
+        {
+          "target": "ovaries",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "This is the strongest long-term finding: five or more years of use roughly halves ovarian cancer risk in some analyses, and the protection persists for decades. Combined with the endometrial benefit, long-term follow-up studies show a net reduction in overall cancer risk.",
+          "metric": { "label": "Endometrial and ovarian cancer", "value": "substantially reduced, protection lasting decades" }
+        },
+        {
+          "target": "uterus",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Long-term users also have fewer fibroids, less endometriosis progression, fewer functional ovarian cysts and fewer episodes of pelvic inflammatory disease requiring treatment."
+        },
+        {
+          "target": "breasts",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "The small excess breast cancer risk applies to current and recent users and disappears with time after stopping. Cervical cancer risk is also slightly higher with long duration, though HPV exposure is the underlying driver and vaccination plus screening addresses it directly."
+        },
+        {
+          "target": "ovaries",
+          "kind": "neutral",
+          "intensity": 0.35,
+          "note": "Fertility after five years of use is the same as it would have been without it. What does change over five years is your age — and age, not the pill, is what determines fertility at 35."
+        },
+        {
+          "target": "veins",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "The clotting risk stays modestly elevated for as long as you take it and returns to baseline within weeks of stopping. It rises with age, obesity, smoking and long immobility such as a long-haul flight."
+        }
+      ]
+    }
+  ]
+}

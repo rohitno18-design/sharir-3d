@@ -1,0 +1,297 @@
+{
+  "id": "squats-heavy-2x-week",
+  "name": { "en": "Heavy barbell squats 2× a week", "hi": "हफ्ते में 2 बार भारी बारबेल स्क्वैट" },
+  "category": "exercise",
+  "icon": "🦵",
+  "dose": "Two sessions a week of back squats at 75–90% of one-rep max, 3–5 working sets of 3–6 reps, progressive loading, full or near-full depth. Assumes reasonable technique learned with lighter loads, plus adequate protein.",
+  "summary": {
+    "en": "The heavy squat is the single most demanding whole-body lift: the quads, glutes, hamstrings, spinal erectors and core all work at once, blood pressure spikes with each rep, and the spine, hips and knees carry loads of 1.5–2.5× body weight. The payoff is large: fast leg strength, visible hypertrophy of the biggest muscles in the body by 6–8 weeks, and one of the strongest known stimuli for hip and spine bone density. The risks are technique-dependent, mostly the lower back and knees when depth, bracing or load control is wrong.",
+    "hi": "भारी स्क्वैट पूरे शरीर की सबसे मुश्किल कसरत है: जांघें, कूल्हे, हैमस्ट्रिंग, पीठ के इरेक्टर और कोर एक साथ काम करते हैं, हर रेप में बीपी उछलता है, और रीढ़, कूल्हे और घुटने शरीर के वज़न का 1.5–2.5 गुना बोझ उठाते हैं। फायदा बड़ा है — टांगों की ताकत तेज़ी से बढ़ती है, 6–8 हफ्तों में सबसे बड़ी मांसपेशियाँ दिखने लगती हैं, और कूल्हे-रीढ़ की हड्डी मज़बूत करने का यह सबसे असरदार तरीकों में से एक है। खतरा तकनीक पर निर्भर है — गलत गहराई, कमज़ोर ब्रेसिंग या ज़्यादा वज़न पर सबसे पहले कमर और घुटने भुगतते हैं।"
+  },
+  "indian_context": "Legs are the most skipped body part in Indian gyms and squat racks are often missing or used for curls, so most people arrive at heavy squats with weak glutes, stiff ankles from years of chair-sitting, and no coaching. Ironically, the traditional Indian deep squat (used for toilets and floor work) means many Indians have the hip and ankle mobility for full depth that Westerners lack, if it has not been lost to office chairs. Squats are also the most effective single exercise for the South-Asian metabolic problem: the legs hold the largest glucose sink in the body. Protein on a vegetarian diet is again the limiting factor for growth.",
+  "evidence": "strong",
+  "sources": [
+    "Hartmann H, Wirth K, Klusemann M. Analysis of the load on the knee joint and vertebral column with changes in squatting depth and weight load. Sports Med. 2013",
+    "Watson SL et al. High-intensity resistance and impact training improves bone mineral density and physical function in postmenopausal women with osteopenia and osteoporosis: the LIFTMOR randomized controlled trial. J Bone Miner Res. 2018",
+    "MacDougall JD et al. Arterial blood pressure response to heavy resistance exercise. J Appl Physiol. 1985",
+    "ACSM Position Stand. Progression models in resistance training for healthy adults. Med Sci Sports Exerc. 2009",
+    "Schoenfeld BJ. Squatting kinematics and kinetics and their application to exercise performance. J Strength Cond Res. 2010"
+  ],
+  "caution": "Blood pressure during a maximal squat with breath-holding can transiently reach 250–300+ mmHg systolic in trained lifters; people with uncontrolled hypertension, aortic aneurysm, recent retinal problems, or hernias should not do heavy Valsalva lifts. Sharp low-back pain that shoots into a leg, or a knee that locks or gives way, needs assessment. Learn to squat with an empty bar for weeks before it gets heavy; use safety pins.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "The heaviest day of the week for legs, spine and blood pressure",
+      "effects": [
+        {
+          "target": "quadriceps",
+          "kind": "strain",
+          "intensity": 0.8,
+          "note": "Heavy eccentric loading tears muscle fibres at the microscopic level; the quads and glutes take the biggest hit. Expect severe DOMS at 24–72 h, especially descending stairs."
+        },
+        {
+          "target": "glutes",
+          "kind": "strain",
+          "intensity": 0.7,
+          "note": "At full depth the glutes and adductors are stretched under load; they are the main drivers out of the bottom position."
+        },
+        {
+          "target": "spine",
+          "kind": "strain",
+          "intensity": 0.7,
+          "note": "The lumbar spine sees compressive loads of several times body weight under a heavy bar. Bracing (intra-abdominal pressure) protects the discs; losing the brace is when injuries happen.",
+          "metric": { "label": "Lumbar compression (heavy squat)", "value": "typically 4–8× body weight" }
+        },
+        {
+          "target": "arteries",
+          "kind": "strain",
+          "intensity": 0.6,
+          "note": "Breath-holding plus maximal muscle contraction spikes blood pressure dramatically for a few seconds per rep, then it falls below baseline for hours after the session.",
+          "metric": { "label": "BP during maximal rep", "value": "can exceed 250/150 mmHg" }
+        },
+        {
+          "target": "brainstem",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "Heavy squats are as fatiguing to the nervous system as to the muscle; light-headedness at the top of a rep is the baroreflex catching up, and general tiredness persists into the next day."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Two sessions in: soreness eases, coordination improves",
+      "effects": [
+        {
+          "target": "spinal-cord",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Motor learning is rapid: the second session already recruits more fibres more synchronously across quads, glutes and back. Strength rises before any muscle is added."
+        },
+        {
+          "target": "quadriceps",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The repeated-bout effect means session two produces a fraction of the soreness of session one, and full recovery between sessions (3–4 days) is why twice a week is the right frequency for heavy work."
+        },
+        {
+          "target": "knee-joint",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Patellar tendon and knee cartilage are under high compressive and shear load; they adapt slowly and need the rest days as much as the muscle does."
+        },
+        {
+          "target": "hip-joint",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Deep squatting loads the hip capsule and labrum through a large range; people with limited hip mobility feel pinching at the front of the hip at depth."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Squat up 10–20%, bone remodelling begins",
+      "effects": [
+        {
+          "target": "quadriceps",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Eight sessions in: squat is typically 10–20% heavier, still largely neural. Early fibre hypertrophy is measurable on ultrasound (~3–4% CSA) but not obvious in the mirror.",
+          "metric": { "label": "Squat 1RM", "value": "+10–20%" }
+        },
+        {
+          "target": "bones",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "High compressive loading through the femur, hip and spine has started the bone remodelling cycle; osteoclasts remove old bone first, so density does not rise for another 2–3 months."
+        },
+        {
+          "target": "erector-spinae",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "The spinal erectors and deep core (multifidus, transversus) strengthen from holding the torso rigid under load; many people notice less everyday back stiffness."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Working the largest muscles in the body twice a week markedly improves whole-body glucose disposal; insulin sensitivity rises more than with any upper-body lift."
+        },
+        {
+          "target": "tendons",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Patellar and quadriceps tendons are stiffening but lag the muscle; adding load too fast at this stage is the classic route to patellar tendinopathy ('jumper's knee')."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Visible thighs and glutes; squat up 20–30%",
+      "effects": [
+        {
+          "target": "quadriceps",
+          "kind": "positive",
+          "intensity": 0.7,
+          "visual": { "scale": 1.04 },
+          "note": "Hypertrophy is now visible: thighs fill trousers differently, vastus muscles are defined. Quad cross-sectional area is up ~6–8%."
+        },
+        {
+          "target": "glutes",
+          "kind": "positive",
+          "intensity": 0.7,
+          "visual": { "scale": 1.04 },
+          "note": "Glutes have grown and firmed noticeably; full-depth squats are among the strongest gluteal hypertrophy stimuli."
+        },
+        {
+          "target": "hamstrings",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.03 },
+          "note": "Hamstrings and adductors grow as hip extensors, though less than the quads."
+        },
+        {
+          "target": "erector-spinae",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.03 },
+          "note": "Thicker spinal erectors are visible as columns beside the lower spine."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The remodelling cycle has flipped into net bone formation in the femoral neck and lumbar vertebrae."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Despite the spikes during lifts, resting blood pressure is typically 3–5 mmHg lower after two months of heavy training."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Strong legs, measurably denser hip and spine",
+      "effects": [
+        {
+          "target": "quadriceps",
+          "kind": "positive",
+          "intensity": 0.8,
+          "visual": { "scale": 1.06 },
+          "note": "Squat is typically 35–50% above baseline, often past 1.25× body weight. Leg muscle mass is up 2–3 kg.",
+          "metric": { "label": "Squat 1RM", "value": "+35–50%" }
+        },
+        {
+          "target": "glutes",
+          "kind": "positive",
+          "intensity": 0.7,
+          "visual": { "scale": 1.06 },
+          "note": "Glute size and hip extension power are transformed; this is what protects the lower back in everyday lifting."
+        },
+        {
+          "target": "femur",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Femoral neck and lumbar spine BMD up roughly 1–3%; the LIFTMOR trial showed heavy squats and deadlifts built spine density even in women with osteoporosis.",
+          "metric": { "label": "Lumbar spine BMD", "value": "~+1–3%" }
+        },
+        {
+          "target": "knee-joint",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Deep squatting with good technique thickens cartilage and strengthens the patellar tendon; well-programmed squatters have healthy knees, not worn ones."
+        },
+        {
+          "target": "abs",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.03 },
+          "note": "The bracing demand has built a thick, functional core without a single sit-up."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Resting metabolic rate is up from the extra leg muscle; visceral fat is lower, waist typically 2–4 cm smaller at the same body weight."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Squatting 1.5× body weight; bones and joints reinforced",
+      "effects": [
+        {
+          "target": "quadriceps",
+          "kind": "positive",
+          "intensity": 0.8,
+          "visual": { "scale": 1.08 },
+          "note": "A year of consistent heavy squatting typically brings a man to 1.5× body weight or more and a woman to ~1× body weight. Thigh circumference is up 3–5 cm."
+        },
+        {
+          "target": "glutes",
+          "kind": "positive",
+          "intensity": 0.7,
+          "visual": { "scale": 1.08 },
+          "note": "Glutes at or near their genetic size for this stimulus; further growth needs more volume."
+        },
+        {
+          "target": "spine",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Lumbar BMD up ~2–4% and the vertebrae, discs and ligaments are conditioned to load. Disc problems in squatters cluster in those who lift with a rounded back or return too fast after injury, not in those who train well."
+        },
+        {
+          "target": "heart-muscle",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "visual": { "scale": 1.02 },
+          "note": "Repeated pressure spikes cause mild concentric thickening of the left ventricle; benign in healthy lifters and reversible."
+        },
+        {
+          "target": "tendons",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Patellar and quad tendons are thicker and stiffer, matching the muscle; the acute tendinopathy window has closed if load was progressed sensibly."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Durable strength, protected bones, joints that depend on your technique",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.8,
+          "visual": { "scale": 1.08 },
+          "note": "Leg strength and mass are maintained far above age-matched peers; this is the strongest single protection against the leg weakness and falls of later life."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.7,
+          "note": "Hip and spine density are maintained through years when they would otherwise decline; lifelong squatters have markedly lower osteoporotic fracture risk."
+        },
+        {
+          "target": "knee-joint",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "Evidence from powerlifters and weightlifters does not show higher knee osteoarthritis rates than the general population when technique is good; the risk is real only with chronic poor form or lifting through injury."
+        },
+        {
+          "target": "hip-joint",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Some deep squatters with a particular hip anatomy (cam-type femoroacetabular impingement) develop anterior hip pain over the years; it shows up as pinching at depth and is worth investigating rather than pushing through."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Large, active leg muscles remain a permanent glucose sink; type 2 diabetes risk is substantially lower for as long as training continues."
+        }
+      ]
+    }
+  ]
+}

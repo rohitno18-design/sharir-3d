@@ -1,0 +1,261 @@
+{
+  "id": "packaged-snacks-daily",
+  "name": { "en": "100 g of chips, biscuits or namkeen every day", "hi": "रोज़ 100 ग्राम चिप्स, बिस्किट या नमकीन" },
+  "category": "food",
+  "icon": "🍟",
+  "dose": "About 100 g a day of packaged ultra-processed snacks — one large packet of chips, or a full pack of glucose biscuits, or a bowl of bhujia/mixture. Roughly 500–560 kcal, 25–35 g fat (usually palm oil), 400–700 mg sodium, and in biscuits another 20–25 g of sugar.",
+  "molecule": "sodium-chloride",
+  "summary": {
+    "en": "These foods are engineered to be eaten fast and to not fill you up: soft texture, no fibre, almost no protein, and a salt-fat-sugar ratio tuned so that the mouth wants the next piece before the stomach has registered the last one. In the one properly controlled trial of this question, people given ultra-processed food ate about 500 extra calories a day without meaning to, and gained weight in two weeks. The damage is not one nutrient — it is the calories that arrive without satiety, the sodium, the palm oil, and the dal-sabzi-fruit that gets displaced.",
+    "hi": "ये चीज़ें इस तरह बनाई जाती हैं कि जल्दी खाई जाएँ और पेट न भरे: मुलायम, बिना फाइबर, प्रोटीन के नाम पर कुछ नहीं, और नमक-तेल-चीनी का ऐसा अनुपात कि मुँह अगला टुकड़ा माँग ले उससे पहले कि पेट को पिछला पता चले। इस पर हुई सबसे भरोसेमंद ट्रायल में लोगों ने अल्ट्रा-प्रोसेस्ड खाना दिए जाने पर बिना इरादे के रोज़ करीब 500 कैलोरी ज़्यादा खाईं और दो हफ़्ते में वज़न बढ़ा लिया। नुकसान किसी एक चीज़ का नहीं है — बिना पेट भरे आने वाली कैलोरी, नमक, पाम ऑयल, और वो दाल-सब्ज़ी-फल जो इनकी वजह से छूट जाते हैं।"
+  },
+  "indian_context": "The ₹5 and ₹10 sachet is what made this a rural problem and not just an urban one — packaged namkeen and biscuits now reach villages more reliably than fresh vegetables do. Palm oil is the default fat in Indian packaged snacks because it is cheap and stable, and it is high in palmitic acid, the saturated fat that raises LDL most. 'Baked, not fried' chips and 'digestive' or 'multigrain' biscuits are marketing, not nutrition — check the back of the pack, not the front. ICMR-NIN's 2024 guidelines specifically flag high-fat, salt and sugar packaged foods as a driver of India's obesity and diabetes rise, and children are the fastest-growing consumer group.",
+  "evidence": "strong",
+  "sources": [
+    "Hall KD et al. Ultra-Processed Diets Cause Excess Calorie Intake and Weight Gain: An Inpatient Randomized Controlled Trial of Ad Libitum Food Intake. Cell Metabolism, 2019",
+    "Monteiro CA et al. Ultra-processed foods: what they are and how to identify them. Public Health Nutrition, 2019",
+    "Pagliai G et al. Consumption of ultra-processed foods and health status: a systematic review and meta-analysis. British Journal of Nutrition, 2021",
+    "WHO. Guideline: Sodium intake for adults and children, 2012",
+    "ICMR-NIN. Dietary Guidelines for Indians, 2024 (guideline on high fat, sugar and salt foods)"
+  ],
+  "caution": "If you have hypertension, chronic kidney disease or heart failure, the sodium in a daily packet alone can undo a BP tablet. For children this is the more urgent case: a 100 g packet in a 25 kg body is proportionally more than double the adult exposure, and taste preferences set in childhood are the hardest to change later. The practical fix is not willpower — it is not keeping the packet in the house, because portion control against an engineered food is a fight most people lose.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "500+ calories eaten in ten minutes without feeling full",
+      "effects": [
+        {
+          "target": "tongue",
+          "kind": "neutral",
+          "intensity": 0.45,
+          "note": "Salt, fat and a crisp-then-melt texture together produce a mouthfeel that no natural food has. The eating rate is roughly two to three times faster than for dal-chawal, and satiety signals need about 20 minutes to arrive.",
+          "metric": { "label": "Energy in one 100 g packet", "value": "~500–560 kcal, eaten in under 10 minutes" }
+        },
+        {
+          "target": "basal-ganglia",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "Dopamine release in the striatum is driven by the fat-plus-salt or fat-plus-sugar combination, which is far more reinforcing than either alone. This is normal reward wiring, exploited deliberately by product design."
+        },
+        {
+          "target": "kidneys",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "400–700 mg of sodium in one sitting pulls water into the bloodstream, raising blood volume and triggering thirst. The kidney clears it over the next several hours."
+        },
+        {
+          "target": "pancreas",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "Refined starch with no fibre produces a fast glucose rise and a matching insulin surge. Biscuits, with added sugar on top, do it harder than chips."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "A quiet surplus of ~3500 calories; hunger regulation drifting",
+      "effects": [
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "In the inpatient trial people did not compensate at later meals — the extra calories were simply extra. A week at this rate is roughly half a kilogram of stored energy.",
+          "metric": { "label": "Excess intake on an ultra-processed diet", "value": "~500 kcal/day more than a matched unprocessed diet" }
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Low protein, low fibre and rapid eating all blunt the satiety signals (GLP-1, PYY, distension) that normally tell the brain to stop. You end up hungry again within two hours."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "500 kcal of near-zero-fibre food displaces roughly a meal's worth of dal, sabzi or fruit. Stool bulk falls and the butyrate-producing bacteria lose their substrate."
+        },
+        {
+          "target": "arteries",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Palm-oil palmitic acid begins pushing LDL up, and the daily sodium load nudges blood pressure. Neither is dramatic in a week; both are cumulative."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Blood pressure and LDL both measurably higher",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "A month of extra sodium plus palm oil moves both numbers on a routine check-up. The sodium effect on blood pressure is fully reversible; the LDL effect reverses just as fast when the food goes.",
+          "metric": { "label": "Blood pressure", "value": "typically +2–5 mmHg systolic from the added sodium alone" }
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "1–2 kg in a month is typical if nothing else changes, and in a South Asian body it goes to the abdomen first. Waist moves before the scale does."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Emulsifiers used in packaged snacks reduce the protective mucus layer and shift the microbiota in animal studies; the human evidence is early and much weaker. Worth knowing, not worth panicking about."
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Biscuits are the worst dental offender in this group — refined starch sticks in the grooves of molars and is fermented to acid for far longer than a sweet drink is."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Fasting insulin rising; micronutrient intake quietly diluted",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "strain",
+          "intensity": 0.45,
+          "note": "Central fat gain plus a daily refined-carbohydrate load raises baseline insulin output. Fasting glucose still reads normal, which is exactly why this stage is missed.",
+          "metric": { "label": "Fasting insulin", "value": "rises well before fasting glucose changes" }
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Visceral fat accumulating around the intestines and liver — the compartment that actually drives metabolic disease, not the fat you can pinch."
+        },
+        {
+          "target": "whole-body",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Nutrient dilution: a quarter of the day's calories now carry almost no protein, iron, calcium, B vitamins or fibre. In an Indian diet already short on iron and B12, this makes an existing gap worse."
+        },
+        {
+          "target": "kidneys",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "A steady sodium load means the kidney is filtering and reabsorbing more sodium every day. In salt-sensitive people — common in South Asia — this is where the blood pressure rise is generated."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Fatty liver, higher triglycerides, blood pressure settled higher",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Refined starch plus palm oil plus a calorie surplus is a direct recipe for hepatic fat. Grade 1 fatty liver becomes a common incidental ultrasound finding, including in people who look slim.",
+          "visual": { "scale": 1.04 },
+          "metric": { "label": "Triglycerides", "value": "often up 15–30% on a habitual refined-carbohydrate load" }
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "The heart is pumping against a slightly higher pressure every beat. Small numbers repeated 100,000 times a day are how left ventricular thickening eventually starts."
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Waist past the Indian cut-off of 90 cm in men or 80 cm in women is common by now. Those thresholds are lower than Western ones precisely because Indians get metabolically sick at a lower body size."
+        },
+        {
+          "target": "immune-system",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Visceral fat releases IL-6 and TNF-alpha; CRP drifts up. This chronic low-grade inflammation is the shared root of the cardiovascular and diabetes risk."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Metabolic syndrome assembling piece by piece",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "HbA1c drifting toward the prediabetic 5.7–6.4% band in susceptible people. Cohort studies consistently link ultra-processed food intake with type 2 diabetes risk beyond what the weight gain alone explains.",
+          "metric": { "label": "HbA1c", "value": "may rise 0.2–0.5% over a year in susceptible people" }
+        },
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Higher LDL, higher triglycerides, lower HDL and a higher blood pressure together — three or more of these plus a big waist is literally the definition of metabolic syndrome."
+        },
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Established fatty liver disease. Still fully reversible: removing the daily packet and walking 8,000 steps clears measurable liver fat within 8–12 weeks.",
+          "visual": { "scale": 1.05 }
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "5–8 kg over a year is a realistic figure when a 500 kcal daily surplus is only partly compensated by appetite adaptation."
+        },
+        {
+          "target": "kidneys",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "A year of higher blood pressure plus insulin resistance begins loading the glomeruli. Microalbuminuria is the earliest sign and is not on a routine health package."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "The habit that quietly builds India's diabetes and heart disease",
+      "effects": [
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Large cohort studies consistently associate high ultra-processed food intake with cardiovascular events and all-cause mortality. The association is observational, but it holds after adjusting for weight, which is the interesting part.",
+          "metric": { "label": "Cohort evidence", "value": "each additional daily serving of ultra-processed food is associated with a small but consistent rise in cardiovascular risk" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "For a susceptible Indian, five years of this pattern is a common route into type 2 diabetes. India already has over 100 million people with diabetes and a similar number with prediabetes."
+        },
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "A minority progress from simple fatty liver to inflammation and early fibrosis. In India this now competes with alcohol as the leading cause of chronic liver disease."
+        },
+        {
+          "target": "kidneys",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Five years of high sodium and rising blood pressure is a genuine contributor to chronic kidney disease — a condition India is now diagnosing far too late and far too often."
+        },
+        {
+          "target": "bones",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "Every 100 mmol of sodium excreted takes roughly 40 mg of calcium out with it in the urine. On the low-calcium diet most Indians eat, that loss is not easily replaced."
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "The hardest thing to reverse is the calibration: after years of engineered salt-fat intensity, home food genuinely tastes bland. It takes about two to four weeks of not eating these for taste sensitivity to reset."
+        }
+      ]
+    }
+  ]
+}

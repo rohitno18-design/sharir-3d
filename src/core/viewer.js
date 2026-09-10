@@ -1,0 +1,273 @@
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { acceleratedRaycast, computeBoundsTree, disposeBoundsTree } from 'three-mesh-bvh';
+import { SYSTEMS } from '../data/systems.js';
+import { applyMorph, invertMorph } from './morph.js';
+
+THREE.Mesh.prototype.raycast = acceleratedRaycast;
+THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
+THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
+
+const finiteVec = v => Number.isFinite(v.x) && Number.isFinite(v.y) && Number.isFinite(v.z);
+
+export const BODY_CENTER = new THREE.Vector3(0, 0.9, 0);
+
+export class Viewer {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance', preserveDrawingBuffer: true });
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 1.05;
+    this.renderer.localClippingEnabled = true;
+    this.renderer.setClearColor(0x000000, 0);
+
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera(32, 1, 0.01, 60);
+    this.camera.position.set(0.35, 1.05, 3.9);
+
+    this._makeControls();
+
+    // Lighting
+    const pmrem = new THREE.PMREMGenerator(this.renderer);
+    this.scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    this.scene.environmentIntensity = 0.55;
+    const hemi = new THREE.HemisphereLight(0xdfe6f0, 0x2a2622, 0.55);
+    this.scene.add(hemi);
+    const key = new THREE.DirectionalLight(0xfff4e0, 2.2); key.position.set(2.5, 3.5, 4);
+    const fill = new THREE.DirectionalLight(0xcfe0ff, 0.9); fill.position.set(-3.5, 1.2, -1.5);
+    const rim = new THREE.DirectionalLight(0xffffff, 1.2); rim.position.set(0.5, 2.5, -4.5);
+    this.scene.add(key, fill, rim);
+
+    // Ground disc
+    const g = new THREE.Mesh(new THREE.CircleGeometry(1.4, 96), new THREE.MeshStandardMaterial({ color: 0x0f1216, roughness: 1, metalness: 0, transparent: true, opacity: 0.9 }));
+    g.rotation.x = -Math.PI / 2; g.position.y = -0.002; g.renderOrder = -10;
+    this.ground = g; this.scene.add(g);
+    const ring = new THREE.Mesh(new THREE.RingGeometry(1.39, 1.4, 128), new THREE.MeshBasicMaterial({ color: 0xe9c95c, transparent: true, opacity: 0.35, side: THREE.DoubleSide }));
+    ring.rotation.x = -Math.PI / 2; ring.position.y = 0.0005; this.scene.add(ring); this.ring = ring;
+
+    // Body root + system groups
+    this.bodyRoot = new THREE.Group(); this.bodyRoot.name = 'body';
+    this.scene.add(this.bodyRoot);
+    this.systemGroups = {};
+    for (const s of SYSTEMS) {
+      const grp = new THREE.Group(); grp.name = s.key; grp.userData.system = s.key;
+      this.systemGroups[s.key] = grp; this.bodyRoot.add(grp);
+    }
+
+    // Clipping planes: x (left/right), y (top/bottom), z (front/back)
+    this.clipPlanes = [
+      new THREE.Plane(new THREE.Vector3(-1, 0, 0), 10),
+      new THREE.Plane(new THREE.Vector3(0, -1, 0), 10),
+      new THREE.Plane(new THREE.Vector3(0, 0, -1), 10),
+    ];
+    this.renderer.clippingPlanes = [];
+
+    this.raycaster = new THREE.Raycaster();
+    this.raycaster.firstHitOnly = true;
+    this.pickables = [];
+    this._frameCbs = [];
+    this._tween = null;
+    this.clock = new THREE.Clock();
+    this.frame = 0;
+
+    this.width = 1; this.height = 1;
+    this._ro = new ResizeObserver(() => this.resize());
+    this._ro.observe(canvas.parentElement);
+    this.resize();
+    this._loop = this._loop.bind(this);
+    requestAnimationFrame(this._loop);
+  }
+
+  /** OrbitControls keeps private spherical/pan state, so recovery has to rebuild it. */
+  _makeControls() {
+    if (this.controls) this.controls.dispose();
+    this.controls = new OrbitControls(this.camera, this.canvas);
+    this.controls.target.copy(BODY_CENTER);
+    this.controls.enableDamping = true;
+    this.controls.dampingFactor = 0.08;
+    this.controls.minDistance = 0.03;
+    this.controls.maxDistance = 14;
+    this.controls.screenSpacePanning = true;
+    this.controls.mouseButtons = { LEFT: THREE.MOUSE.ROTATE, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.PAN };
+    this.controls.zoomSpeed = 1.1;
+    this.controls.rotateSpeed = 0.85;
+  }
+
+  resize() {
+    const el = this.canvas.parentElement;
+    const w = el.clientWidth, h = el.clientHeight;
+    if (!w || !h) return;
+    this.renderer.setSize(w, h, false);
+    this.camera.aspect = w / h;
+    this.camera.updateProjectionMatrix();
+    this.width = w; this.height = h;
+  }
+
+  onFrame(cb) { this._frameCbs.push(cb); }
+
+  _loop() {
+    requestAnimationFrame(this._loop);
+    const dt = Math.min(this.clock.getDelta(), 0.1);
+    const t = this.clock.elapsedTime;
+    this.frame++;
+    if (!finiteVec(this.camera.position) || !finiteVec(this.controls.target)) this._recoverCamera();
+    if (this._tween) this._stepTween(dt);
+    this.controls.update();
+    for (const cb of this._frameCbs) cb(t, dt, this.frame);
+    this.renderer.render(this.scene, this.camera);
+  }
+
+  // ---------- clipping ----------
+  setClip({ x = 1, y = 1, z = 1 } = {}, bbox) {
+    const [mn, mx] = bbox;
+    const planes = [];
+    const pad = 0.02;
+    if (x < 0.999) { this.clipPlanes[0].constant = mn[0] + (mx[0] - mn[0]) * x + pad; planes.push(this.clipPlanes[0]); }
+    if (y < 0.999) { this.clipPlanes[1].constant = mn[1] + (mx[1] - mn[1]) * y + pad; planes.push(this.clipPlanes[1]); }
+    if (z < 0.999) { this.clipPlanes[2].constant = mn[2] + (mx[2] - mn[2]) * z + pad; planes.push(this.clipPlanes[2]); }
+    this.renderer.clippingPlanes = planes;
+  }
+
+  // ---------- picking ----------
+  /** pointer: {x,y} in canvas pixels. Returns { mesh, point(world, morphed), distance } or null */
+  pick(px, py) {
+    const ndc = new THREE.Vector2((px / this.width) * 2 - 1, -(py / this.height) * 2 + 1);
+    this.raycaster.setFromCamera(ndc, this.camera);
+    const wo = this.raycaster.ray.origin.clone();
+    const wd = this.raycaster.ray.direction.clone();
+    let best = null;
+    const inv = new THREE.Matrix4();
+    const lo = new THREE.Vector3(), lp = new THREE.Vector3(), ld = new THREE.Vector3();
+    const local = new THREE.Raycaster(); local.firstHitOnly = true;
+    for (const grp of Object.values(this.systemGroups)) {
+      if (!grp.visible || !grp.children.length) continue;
+      const list = this.pickables.filter(m => m.parent === grp);
+      if (!list.length) continue;
+      inv.copy(grp.matrixWorld).invert();
+      lo.copy(wo).applyMatrix4(inv);
+      lp.copy(wo).addScaledVector(wd, 1).applyMatrix4(inv);
+      invertMorph(lo, lo); invertMorph(lp, lp);
+      ld.subVectors(lp, lo).normalize();
+      local.set(lo, ld);
+      local.near = 0; local.far = 100;
+      const hits = local.intersectObjects(list, false);
+      if (hits.length) {
+        const h = hits[0];
+        const wp = applyMorph(h.point, new THREE.Vector3()).applyMatrix4(grp.matrixWorld);
+        const dist = wp.distanceTo(wo);
+        if (!best || dist < best.distance) best = { mesh: h.object, point: wp, distance: dist };
+      }
+    }
+    return best;
+  }
+
+  // ---------- camera ----------
+  /** Pixels of UI chrome covering the canvas, so framing can avoid it. */
+  setSafeInsets(insets) { this.safeInsets = insets; }
+
+  /** Free (uncovered) area of the canvas, in pixels. */
+  _safeRect() {
+    const i = this.safeInsets || { top: 0, bottom: 0, left: 0, right: 0 };
+    return {
+      x0: i.left, y0: i.top,
+      x1: Math.max(i.left + 40, this.width - i.right),
+      y1: Math.max(i.top + 40, this.height - i.bottom),
+    };
+  }
+
+  /** Shift the look-at point so the subject lands in the free area, not behind the panels. */
+  _safeOffset(dist, out = new THREE.Vector3()) {
+    const r = this._safeRect();
+    const cx = (r.x0 + r.x1) / 2, cy = (r.y0 + r.y1) / 2;
+    const fov = THREE.MathUtils.degToRad(this.camera.fov);
+    const worldPerPx = (2 * dist * Math.tan(fov / 2)) / this.height;
+    const dxPx = cx - this.width / 2, dyPx = cy - this.height / 2;
+    const right = new THREE.Vector3().setFromMatrixColumn(this.camera.matrixWorld, 0);
+    const up = new THREE.Vector3().setFromMatrixColumn(this.camera.matrixWorld, 1);
+    return out.set(0, 0, 0)
+      .addScaledVector(right, -dxPx * worldPerPx)
+      .addScaledVector(up, dyPx * worldPerPx);
+  }
+
+  /** Smoothly frame a Box3 (in morphed world space), fitting it into the uncovered area. */
+  focusBox(box, { duration = 0.8, pad = 1.25, keepDir = true } = {}) {
+    if (!box || box.isEmpty()) return;
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    const fov = THREE.MathUtils.degToRad(this.camera.fov);
+    const r = this._safeRect();
+    // Fit the box's real extents into the uncovered fraction of the frame,
+    // vertically and horizontally, instead of its (much larger) bounding sphere.
+    const halfH = Math.max(size.y / 2, 0.01);
+    const halfW = Math.max(Math.max(size.x, size.z) / 2, 0.01);
+    const tanV = Math.tan(fov / 2);
+    const tanH = tanV * this.camera.aspect;
+    // The canvas can legitimately be 0×0 (pane hidden, tab in the background, panel
+    // mid-collapse). Dividing by that yields NaN — and Math.max(0.25, NaN) is NaN, not
+    // 0.25 — which would poison the camera permanently and black out the scene.
+    const frac = (span, total) => (total > 0 ? Math.max(0.25, span / total) : 1);
+    const safeH = frac(r.y1 - r.y0, this.height);
+    const safeW = frac(r.x1 - r.x0, this.width);
+    const dist = Math.max((halfH * pad) / (tanV * safeH), (halfW * pad) / (tanH * safeW)) + halfW;
+    if (!Number.isFinite(dist)) return;
+    const dir = keepDir ? this.camera.position.clone().sub(this.controls.target).normalize() : new THREE.Vector3(0.2, 0.15, 1).normalize();
+    if (!Number.isFinite(dir.x) || dir.lengthSq() < 1e-9) dir.set(0.2, 0.15, 1).normalize();
+    const target = center.clone().add(this._safeOffset(dist));
+    const to = target.clone().addScaledVector(dir, dist);
+    this.tweenCamera(to, target, duration);
+  }
+
+  tweenCamera(toPos, toTarget, duration = 0.8) {
+    if (!finiteVec(toPos) || !finiteVec(toTarget)) return;   // never tween into NaN
+    if (!finiteVec(this.camera.position) || !finiteVec(this.controls.target)) this._recoverCamera();
+    this._tween = { t: 0, duration, fromPos: this.camera.position.clone(), fromTarget: this.controls.target.clone(), toPos: toPos.clone(), toTarget: toTarget.clone() };
+  }
+
+  /** Put the camera back somewhere sane after it has been corrupted. */
+  _recoverCamera() {
+    this._tween = null;
+    this.camera.position.set(0.35, 1.05, 3.9);
+    this.camera.quaternion.identity();
+    this.camera.updateProjectionMatrix();
+    this._makeControls();          // drops any NaN left in the controls' internal state
+  }
+
+  _stepTween(dt) {
+    const tw = this._tween;
+    tw.t += dt;
+    const k = Math.min(1, tw.t / tw.duration);
+    const e = 1 - Math.pow(1 - k, 3);
+    this.camera.position.lerpVectors(tw.fromPos, tw.toPos, e);
+    this.controls.target.lerpVectors(tw.fromTarget, tw.toTarget, e);
+    if (k >= 1) this._tween = null;
+  }
+
+  view(name, center = null, dist = null) {
+    const c = center || this.controls.target.clone();
+    const d = dist || this.camera.position.distanceTo(this.controls.target);
+    const dirs = { front: [0, 0, 1], back: [0, 0, -1], left: [1, 0, 0], right: [-1, 0, 0], top: [0, 1, 0.0001], iso: [0.6, 0.25, 0.75] };
+    const v = new THREE.Vector3(...(dirs[name] || dirs.front)).normalize();
+    this.tweenCamera(c.clone().addScaledVector(v, d), c, 0.7);
+  }
+
+  resetView(height = 1.74) {
+    const box = new THREE.Box3(new THREE.Vector3(-height * 0.19, 0, -height * 0.12),
+                               new THREE.Vector3(height * 0.19, height, height * 0.12));
+    this.focusBox(box, { pad: 1.06, keepDir: false, duration: 0.8 });
+  }
+
+  screenshot() {
+    this.renderer.render(this.scene, this.camera);
+    return this.renderer.domElement.toDataURL('image/png');
+  }
+
+  /** world → screen px */
+  project(v, out = { x: 0, y: 0, z: 0 }) {
+    const p = v.clone().project(this.camera);
+    out.x = (p.x + 1) / 2 * this.width; out.y = (1 - p.y) / 2 * this.height; out.z = p.z;
+    return out;
+  }
+}

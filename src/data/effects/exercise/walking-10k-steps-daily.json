@@ -1,0 +1,272 @@
+{
+  "id": "walking-10k-steps-daily",
+  "name": { "en": "Walking 10,000 steps a day", "hi": "रोज़ 10,000 कदम चलना" },
+  "category": "exercise",
+  "icon": "🚶",
+  "dose": "10,000 steps (roughly 7–8 km, about 90–100 minutes of walking spread across the day), every day, at a comfortable-to-brisk pace. Assumes a previously sedentary baseline of ~3,000–4,000 steps.",
+  "summary": {
+    "en": "Walking 10,000 steps is moderate-intensity activity that mostly works through the metabolism: every bout of walking pulls glucose and fat out of the blood into leg muscle without needing much insulin. Over weeks it lowers blood pressure and resting heart rate a little; over months it improves HbA1c, trims visceral fat and protects the brain. Large cohort studies show mortality risk keeps falling up to about 8,000–10,000 steps a day and then plateaus.",
+    "hi": "रोज़ 10,000 कदम चलना हल्की-मध्यम कसरत है जो सबसे ज़्यादा असर मेटाबॉलिज़्म पर डालती है — हर बार चलने पर पैरों की मांसपेशियाँ खून से शुगर और फैट खींच लेती हैं, वो भी बिना ज़्यादा इंसुलिन के। कुछ हफ्तों में बीपी और आराम की धड़कन थोड़ी कम होती है, कुछ महीनों में HbA1c सुधरता है और पेट की अंदरूनी चर्बी घटती है। बड़े अध्ययन बताते हैं कि 8,000–10,000 कदम तक मौत का खतरा घटता जाता है, उसके बाद फायदा लगभग बराबर हो जाता है।"
+  },
+  "indian_context": "India has about 101 million people with diabetes and 136 million with prediabetes (ICMR-INDIAB 2023), and the South-Asian body stores fat around the organs at a lower BMI, so a post-meal walk of even 10–15 minutes after rice or roti meals is one of the cheapest glucose-lowering tools available. Urban Indians in desk jobs typically log 3,000–5,000 steps; reaching 10,000 usually means deliberate morning or evening walks, ideally before 8 AM or after sunset in summer, and indoors or in a mall when AQI crosses 200. Barefoot walking on hot tiles, poorly cushioned chappals and diabetic foot ulcers are real Indian-specific risks: use proper walking shoes.",
+  "evidence": "strong",
+  "sources": [
+    "Paluch AE et al. Daily steps and all-cause mortality: a meta-analysis of 15 international cohorts. Lancet Public Health. 2022",
+    "Saint-Maurice PP et al. Association of daily step count and step intensity with mortality among US adults. JAMA. 2020",
+    "del Pozo Cruz B et al. Association of daily step count and intensity with incident dementia in 78 430 adults living in the UK. JAMA Neurol. 2022",
+    "Anjana RM et al. Metabolic non-communicable disease health report of India: the ICMR-INDIAB national cross-sectional study. Lancet Diabetes Endocrinol. 2023",
+    "WHO. Guidelines on physical activity and sedentary behaviour. 2020"
+  ],
+  "caution": "Safe for almost everyone. People with diabetes should check their feet daily for blisters and wear cushioned shoes; anyone with chest tightness, unusual breathlessness or calf pain that stops them walking should be checked for heart or peripheral artery disease. Walking alone does not build much muscle or bone; add some strength work, especially after 40.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Flatter blood-sugar curve, tired feet, better sleep tonight",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Contracting leg muscles pull glucose from the blood through insulin-independent GLUT4 transporters. A walk after a meal blunts the glucose spike by roughly 20–30% compared with sitting.",
+          "metric": { "label": "Post-meal glucose peak (walk vs sit)", "value": "~−20 to −30%" }
+        },
+        {
+          "target": "feet",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Going from 4,000 to 10,000 steps in a day is about 6 km more on the feet: expect sore soles, calves and possibly a blister if the shoes are new."
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Heart rate sits at 90–115 bpm while walking briskly, which is a gentle but real cardiovascular stimulus repeated many times through the day."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Walking raises cerebral blood flow and BDNF modestly; most people notice clearer thinking after a walk and fall asleep faster that night."
+        },
+        {
+          "target": "leg-veins",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "The calf-muscle pump squeezes blood up the leg veins with every step, reducing the ankle pooling and heaviness that come from sitting."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Insulin working better, small BP dips, legs adapting",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Each day of walking improves insulin sensitivity for the next 24–48 h, so by the end of a week the pancreas is releasing less insulin for the same meals."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Blood pressure drops 2–4 mmHg for several hours after each walk (post-exercise hypotension); with daily walks this starts to become the new normal."
+        },
+        {
+          "target": "calves",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Calf and shin soreness from the extra distance settles as muscle fibres and connective tissue adjust to the repeated bout."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Sleep quality and daytime energy improve; time outdoors in morning light also anchors the circadian clock."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Lower resting heart rate, first fat loss, steadier mood",
+      "effects": [
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Resting heart rate is typically 2–4 bpm lower and the heart's stroke volume slightly higher. Walking is moderate intensity, so cardiac changes are real but smaller than with running.",
+          "metric": { "label": "Resting heart rate", "value": "−2 to −4 bpm" }
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The extra 6,000 steps burn roughly 200–300 kcal a day. With no change in diet that is about 0.5–1 kg of fat over a month, preferentially from visceral fat.",
+          "metric": { "label": "Extra energy burned per day", "value": "~200–300 kcal" }
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Systolic blood pressure is down 3–5 mmHg in people who started with elevated readings, driven by better endothelial nitric-oxide release.",
+          "metric": { "label": "Systolic blood pressure", "value": "−3 to −5 mmHg" }
+        },
+        {
+          "target": "prefrontal-cortex",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Regular walking improves executive function and reduces anxiety symptoms; the effect size for mild depression is comparable to some first-line treatments."
+        },
+        {
+          "target": "erector-spinae",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Walking is one of the best-evidenced treatments for non-specific low back pain: it keeps the spinal muscles and discs moving and nourished."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Better lipids, nourished joints, steady weight loss",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Triglycerides fall and HDL cholesterol rises as leg muscles burn more fat; liver fat begins to decline, which matters for the very common Indian fatty liver."
+        },
+        {
+          "target": "knee-joint",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Cyclical loading pumps synovial fluid through knee and hip cartilage, which has no blood supply of its own. Walking is protective, not harmful, for healthy and even mildly arthritic knees."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Roughly 1–2 kg of fat lost so far if diet is unchanged; waist circumference typically drops 1–3 cm."
+        },
+        {
+          "target": "leg-veins",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Better venous return and lower risk of varicose veins and clots, especially valuable for people who otherwise sit 8–10 hours."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "HbA1c reflects the last ~3 months of glucose, so the improvement is now starting to show on blood tests."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "HbA1c down, BP down, visceral fat down",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "In people with prediabetes or type 2 diabetes, consistent walking lowers HbA1c by about 0.3–0.5%; in a third of prediabetics glucose returns to the normal range.",
+          "metric": { "label": "HbA1c (if prediabetic/diabetic)", "value": "−0.3 to −0.5%" }
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Blood pressure is typically 4–6 mmHg lower than baseline; arterial stiffness improves.",
+          "metric": { "label": "Systolic blood pressure", "value": "−4 to −6 mmHg" }
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "VO₂max is up roughly 5–10%, resting heart rate 4–6 bpm lower. Stairs and hills feel noticeably easier.",
+          "metric": { "label": "VO₂max", "value": "+5–10%" }
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Typical fat loss of 2–4 kg over six months, most of it visceral, if diet stays the same."
+        },
+        {
+          "target": "hippocampus",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Sustained BDNF and better cerebral blood flow support memory; walking is the exercise used in the trials that showed hippocampal growth."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Brain volume protected, bones maintained, disease risk clearly lower",
+      "effects": [
+        {
+          "target": "hippocampus",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "A year of regular walking increased hippocampal volume by ~2% in older adults in a randomised trial, with matching memory gains.",
+          "metric": { "label": "Hippocampal volume (older adults)", "value": "~+2%" }
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Walking is weight-bearing enough to slow age-related bone loss in the hip and spine, though not enough to build bone the way jumping or lifting does."
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Risk markers for coronary disease (BP, LDL, triglycerides, inflammation) are all improved; cardiorespiratory fitness is a stronger predictor of survival than weight."
+        },
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Regular moderate walkers report fewer and shorter upper-respiratory infections, and chronic inflammatory markers (CRP) are lower."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Roughly half the mortality risk of a 4,000-step life",
+      "effects": [
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.8,
+          "note": "In pooled cohorts, people taking ~8,000–10,000 steps a day have about 40–50% lower all-cause mortality than those taking ~4,000, after adjusting for other factors.",
+          "metric": { "label": "All-cause mortality vs ~4,000 steps", "value": "~−40 to −50%" }
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Around 9,800 steps a day was associated with ~50% lower dementia incidence over 7 years in UK Biobank; faster walking gave more benefit at a given step count."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Progression from prediabetes to type 2 diabetes is cut by roughly a third to a half with sustained moderate activity, a critical number in the Indian population."
+        },
+        {
+          "target": "knee-joint",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Regular walkers have less knee osteoarthritis progression and better function than sedentary peers; the joint stays lubricated and the muscles around it stay strong."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Walking preserves leg endurance but does not stop age-related loss of muscle mass and power after 40; that needs resistance training on top."
+        }
+      ]
+    }
+  ]
+}

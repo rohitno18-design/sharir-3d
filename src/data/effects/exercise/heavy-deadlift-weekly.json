@@ -1,0 +1,286 @@
+{
+  "id": "heavy-deadlift-weekly",
+  "name": { "en": "One heavy deadlift session a week", "hi": "हफ़्ते में एक बार भारी डेडलिफ्ट" },
+  "category": "exercise",
+  "icon": "🏋️",
+  "dose": "One session a week: warm-up sets, then 3–5 working sets of 3–5 reps at roughly 80–90% of one-rep max, conventional or sumo, from the floor. Roughly 15–25 hard reps total, with 3–5 minutes between sets. Assumes competent technique and a healthy adult back.",
+  "summary": {
+    "en": "The deadlift is the largest single voluntary load the human body handles. Lifting a heavy bar from the floor recruits nearly the whole posterior chain at once — erectors, glutes, hamstrings, lats, traps and grip — and drives spinal compressive forces into the thousands of newtons, which is precisely why it is such a potent signal for bone as well as muscle. The first six weeks of gains are almost entirely neural: the nervous system learns to recruit more motor units, fire them faster and stop protecting you. Muscle and bone follow over months. Once a week is enough because the recovery cost, not the stimulus, is the limiting factor.",
+    "hi": "डेडलिफ्ट वो हरकत है जिसमें इंसानी शरीर सबसे ज़्यादा वज़न संभालता है। ज़मीन से भारी बार उठाने में पीठ, कूल्हे, हैमस्ट्रिंग, लैट्स, ट्रैप्स और पकड़ — सब एक साथ काम करते हैं, और रीढ़ पर हज़ारों न्यूटन का दबाव पड़ता है। यही दबाव मांसपेशी ही नहीं, हड्डी को भी मज़बूत होने का सबसे तगड़ा संकेत देता है। शुरुआती छह हफ़्तों की ताक़त लगभग पूरी तरह दिमाग़ी होती है — नर्वस सिस्टम ज़्यादा मांसपेशी रेशे एक साथ चलाना सीखता है। मांसपेशी और हड्डी महीनों में बढ़ती हैं। हफ़्ते में एक बार इसलिए काफ़ी है क्योंकि रुकावट असर की नहीं, रिकवरी की है।"
+  },
+  "indian_context": "The deadlift is now everywhere in Indian budget gyms, usually taught by a trainer with a weekend certification and learned from reels, which is why the commonest thing seen on an Indian gym floor is a rounded lower back under a bar that is 20 kg too heavy for the current skill level. Two Indian-specific limits decide whether this works: protein and screening. Typical Indian vegetarian intake sits well under 1 g per kg body weight, while recovery from heavy lifting needs roughly 1.6 g per kg — dal and roti alone will not rebuild what a heavy session breaks down, and paneer, curd, soya, eggs or whey have to be deliberate. And because hypertension is common and commonly undiagnosed in Indian adults under 40, the Valsalva breath-hold that heavy pulling requires — which can push systolic pressure transiently very high — is being performed by a lot of people who have never had their blood pressure checked. Vitamin D deficiency, near-universal here even in sunny cities, blunts the bone benefit that is otherwise this lift's best long-term feature.",
+  "evidence": "strong",
+  "sources": [
+    "Watson SL et al. High-intensity resistance and impact training improves bone mineral density and physical function in postmenopausal women with osteopenia and osteoporosis: the LIFTMOR randomized controlled trial. Journal of Bone and Mineral Research. 2018",
+    "MacDougall JD et al. Arterial blood pressure response to heavy resistance exercise. Journal of Applied Physiology. 1985",
+    "Schoenfeld BJ. The mechanisms of muscle hypertrophy and their application to resistance training. Journal of Strength and Conditioning Research. 2010",
+    "Leong DP et al. Prognostic value of grip strength: findings from the Prospective Urban Rural Epidemiology (PURE) study. Lancet. 2015",
+    "ACSM's Guidelines for Exercise Testing and Prescription, 11th ed. 2021",
+    "WHO. Guidelines on physical activity and sedentary behaviour. 2020"
+  ],
+  "caution": "Technique is not optional here — a rounded lumbar spine under near-maximal load is the mechanism behind most serious deadlift injuries, and no belt compensates for it. Get uncontrolled high blood pressure, an unrepaired hernia, recent abdominal or eye surgery, or a known disc problem with nerve symptoms assessed before pulling heavy, because the Valsalva manoeuvre needed to brace transiently spikes arterial and intra-abdominal pressure. Sharp pain radiating down a leg, numbness, or loss of bladder or bowel control after a session is a medical emergency, not soreness. If you are new to lifting, spend 8–12 weeks building technique at moderate loads before anything is called heavy.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Maximal recruitment, huge spinal load, 48–72 hours of repair begins",
+      "effects": [
+        {
+          "target": "erector-spinae",
+          "kind": "strain",
+          "intensity": 0.8,
+          "note": "The spinal erectors work isometrically at near-maximum to hold the lumbar spine rigid while the hips extend. Compressive load through L4–L5 in a heavy pull runs into the thousands of newtons — safe with a braced neutral spine, dangerous with a rounded one.",
+          "metric": { "label": "Lumbar compressive force, heavy pull", "value": "several thousand newtons" }
+        },
+        {
+          "target": "glutes",
+          "kind": "strain",
+          "intensity": 0.7,
+          "note": "Glutes and hamstrings produce the actual movement through hip extension. The eccentric lowering causes the most microscopic fibre damage, which is why soreness peaks 24–48 hours later and lingers to 72."
+        },
+        {
+          "target": "arteries",
+          "kind": "strain",
+          "intensity": 0.6,
+          "note": "Bracing against a closed glottis (the Valsalva manoeuvre) stabilises the trunk but spikes blood pressure sharply for a few seconds per rep — measured systolic pressures during maximal lifts are extremely high. It normalises immediately after the set in a healthy person."
+        },
+        {
+          "target": "forearm-muscles",
+          "kind": "strain",
+          "intensity": 0.55,
+          "note": "Grip is often the first thing to fail. Finger flexors and the forearm work at maximum isometric effort for the length of each set, and grip endurance usually lags whole-body strength for months."
+        },
+        {
+          "target": "brain",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Near-maximal lifting is as much a central nervous system event as a muscular one. Adrenaline and cortisol spike, and the mental flatness for the rest of the day after a hard session is real central fatigue, not imagination."
+        },
+        {
+          "target": "trapezius",
+          "kind": "strain",
+          "intensity": 0.45,
+          "note": "The traps and lats hold the bar close to the body and resist the shoulders being pulled forward. Upper-back soreness after a heavy pull surprises most beginners."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "One session in: soreness clears, the nervous system starts learning",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "The first adaptations are neural, not structural: better motor unit recruitment, higher firing rates and less protective inhibition. This is why beginners add weight weekly long before any muscle is visibly bigger."
+        },
+        {
+          "target": "erector-spinae",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Repeated-bout protection kicks in quickly — the second session causes far less damage and soreness than the first, even at a heavier load."
+        },
+        {
+          "target": "tendons",
+          "kind": "strain",
+          "intensity": 0.45,
+          "note": "Tendons and ligaments adapt over months, while the nervous system adds usable strength in weeks. That mismatch is the core risk of the first three months: you can pull more than your connective tissue is ready for."
+        },
+        {
+          "target": "hands",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Calluses begin forming where the bar sits. Filing them flat prevents the tear that otherwise ends a session early."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Four sessions: strength climbing fast, still mostly neural",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "A novice commonly adds 15–30% to their deadlift in the first month. Almost none of that is new muscle — it is coordination, bracing and confidence, which is exactly why progress is so fast and then slows.",
+          "metric": { "label": "Novice strength gain, first month", "value": "~+15–30%" }
+        },
+        {
+          "target": "glutes",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.02 },
+          "note": "The glutes and hamstrings begin measurable hypertrophy from around week 4–6, given adequate protein. Deadlifting is one of the highest-tension stimuli available for the whole posterior chain."
+        },
+        {
+          "target": "spine",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Trained bracing raises intra-abdominal pressure and stiffens the trunk. Counterintuitively, people who deadlift well typically report less everyday back pain, because loaded hip hinging is exactly the pattern that fails when you lift a suitcase badly."
+        },
+        {
+          "target": "forearm-muscles",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Grip strength improves markedly. It is worth noting that grip strength is one of the strongest simple predictors of long-term mortality in large international cohorts — a proxy for total muscle function."
+        },
+        {
+          "target": "adrenal-glands",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Once-weekly frequency keeps the systemic recovery cost manageable. The same volume spread over three heavy sessions a week is where sleep disturbance, elevated resting heart rate and stalled progress usually appear."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Muscle now growing; posterior chain visibly thicker",
+      "effects": [
+        {
+          "target": "glutes",
+          "kind": "positive",
+          "intensity": 0.6,
+          "visual": { "scale": 1.04 },
+          "note": "Hypertrophy is now the main driver of further gains. Mechanical tension on the glutes, hamstrings and adductors at 80–90% of max is close to the strongest growth stimulus that exists for those muscles."
+        },
+        {
+          "target": "erector-spinae",
+          "kind": "positive",
+          "intensity": 0.55,
+          "visual": { "scale": 1.04 },
+          "note": "The spinal erectors thicken visibly — the two columns either side of the lower spine. This is one of the few muscle groups almost nothing else trains as directly."
+        },
+        {
+          "target": "lats",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "The lats work isometrically to keep the bar against the body throughout the pull, adding thickness through the mid-back alongside the traps."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Bone responds to strain magnitude more than repetition count, and axial loading through the spine, pelvis and femur is close to the ideal signal. The remodelling cycle takes 3–4 months, so this is the point where the bone-forming phase begins."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "More muscle mass means a larger sink for blood glucose. Even one heavy session a week improves insulin sensitivity for 24–48 hours afterwards through non-insulin-dependent glucose uptake."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Real strength, denser bone, better posture under load",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.65,
+          "visual": { "scale": 1.05 },
+          "note": "Six months of consistent heavy pulling typically doubles a true beginner's deadlift and adds 2–4 kg of lean mass alongside other training. Progress is now measured in monthly, not weekly, increments.",
+          "metric": { "label": "Lean mass gain over 6 months", "value": "~2–4 kg (with adequate protein)" }
+        },
+        {
+          "target": "spine",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "Lumbar bone mineral density responds to heavy axial loading — supervised high-intensity resistance training including deadlifts has improved lumbar spine and femoral neck density even in postmenopausal women with osteopenia, a group long told to avoid heavy lifting."
+        },
+        {
+          "target": "pelvis",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Hip bone density and the strength of the muscles crossing the hip both improve. This combination — denser bone plus stronger hip extensors — is the single best protection against a hip fracture in later life."
+        },
+        {
+          "target": "hamstrings",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.04 },
+          "note": "Hamstring strength through the hinge pattern improves markedly, which reduces hamstring strain risk in sprinting and field sports."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Fat loss from one session a week is small directly. The real contribution is preserving and adding muscle, which keeps resting metabolic rate up during any period of eating less."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Gains slow to a crawl; the value shifts from building to keeping",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.6,
+          "visual": { "scale": 1.05 },
+          "note": "After a year, adding load requires programming — varied rep ranges, accessory work, deload weeks — rather than simply showing up. One heavy session a week is excellent maintenance and slow-growth, not a fast track past intermediate."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "A year of heavy axial loading is one of the few interventions that genuinely builds rather than merely preserves bone in adults. It requires adequate calcium, protein and vitamin D — all three of which are commonly short in Indian diets."
+        },
+        {
+          "target": "spine",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Cumulative lumbar load is real. Long-term lifters show more disc changes on imaging than sedentary people, but usually less back pain — imaging findings and symptoms diverge here more than almost anywhere else in medicine."
+        },
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Resistance training alone produces only a small blood-pressure reduction, far less than aerobic work. If cardiovascular risk is the concern, a heavy weekly deadlift is not a substitute for cardio."
+        },
+        {
+          "target": "tendons",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Tendons and ligaments are now genuinely adapted — stiffer, thicker and matched to the muscle's output. The early mismatch risk has closed provided load was added gradually."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years: muscle and bone banked against ageing",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.65,
+          "visual": { "scale": 1.05 },
+          "note": "Adults lose roughly 3–8% of muscle mass per decade after 30, and more after 60. Five years of heavy loading does not just slow that — it moves the starting point higher, which is the whole game for function at 70."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "Hip and lumbar bone density maintained well above sedentary peers is meaningful fracture protection. A hip fracture after 65 carries a high one-year mortality, so this is one of the more consequential long-term benefits available."
+        },
+        {
+          "target": "forearm-muscles",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Grip strength stays high, and in large multi-country cohorts including Indian participants, grip strength predicts all-cause and cardiovascular mortality better than systolic blood pressure does."
+        },
+        {
+          "target": "spine",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Five years of near-maximal pulling with any technique drift accumulates. Almost every long-term lifter who ends up injured got there through ego loading, skipped deloads or lifting through a niggle — not through the exercise itself."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Long-term resistance training is associated with better cognitive function and lower depression risk in older adults, independent of aerobic exercise. Handling heavy things also changes how capable you believe you are, which is not a trivial effect."
+        }
+      ]
+    }
+  ]
+}

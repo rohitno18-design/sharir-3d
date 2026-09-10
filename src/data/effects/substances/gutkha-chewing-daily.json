@@ -1,0 +1,250 @@
+{
+  "id": "gutkha-chewing-daily",
+  "name": { "en": "Chewing gutkha / khaini daily", "hi": "रोज़ गुटखा / खैनी खाना" },
+  "category": "substance",
+  "icon": "🌰",
+  "dose": "Several sachets a day of gutkha, khaini, zarda or paan masala with tobacco — areca nut, slaked lime and tobacco held in the cheek or gum sulcus, often for hours, sometimes overnight while sleeping.",
+  "molecule": "nicotine",
+  "summary": {
+    "en": "Gutkha combines two independent carcinogens in one sachet: areca nut (betel nut) and tobacco. Nicotine is absorbed through the cheek lining and gives the buzz; arecoline from the areca nut drives salivary glands and mood. The slaked lime raises pH so more free nicotine and more reactive oxygen species reach the mucosa. The specific damage is areca-driven fibrosis — the cheeks and jaw muscles are slowly replaced by scar tissue, and the mouth literally stops opening.",
+    "hi": "गुटखे में दो अलग-अलग कैंसर पैदा करने वाली चीज़ें एक साथ होती हैं — सुपारी और तंबाकू। निकोटीन गाल की अंदरूनी परत से सीधे ख़ून में जाता है और नशा देता है, सुपारी का एरिकोलीन लार बढ़ाता है। चूना pH बढ़ाकर और ज़्यादा निकोटीन और ज़्यादा नुक़सानदेह ऑक्सीजन कण मुँह की परत तक पहुँचाता है। सबसे ख़ास नुक़सान सुपारी से होने वाला फ़ाइब्रोसिस है — गाल और जबड़े की मांसपेशियाँ धीरे-धीरे सख़्त निशान में बदल जाती हैं और मुँह खुलना बंद हो जाता है।"
+  },
+  "indian_context": "India carries the world's largest burden of smokeless tobacco: GATS-2 found about 21% of Indian adults use it, and khaini and gutkha are the two commonest forms. Oral cancer is among the top cancers in Indian men, and oral submucous fibrosis — a disease essentially confined to South Asia — is driven almost entirely by areca nut. Most states have banned gutkha under food safety rules, so it is now sold as separate 'paan masala' and 'tobacco' twin sachets mixed by the user, which defeats the ban entirely. It is cheap, socially normalised at work sites and among truck and auto drivers, and starts young.",
+  "evidence": "strong",
+  "sources": [
+    "IARC Monographs Vol. 85: Betel-quid and areca-nut chewing and some areca-nut-derived nitrosamines. 2004",
+    "IARC Monographs Vol. 89: Smokeless Tobacco and Some Tobacco-specific N-Nitrosamines. 2007",
+    "Global Adult Tobacco Survey (GATS-2) India, Ministry of Health and Family Welfare, 2016–17",
+    "Gupta PC, Ray CS. Epidemiology of betel quid usage. Ann Acad Med Singapore. 2004",
+    "WHO. Smokeless tobacco and public health in India. 2016"
+  ],
+  "caution": "Any white patch, red patch, non-healing ulcer lasting more than two weeks, burning on eating spicy food, or reducing mouth opening needs a dentist or ENT surgeon immediately — these are pre-cancerous, and oral cancer caught early is highly curable while late disease is not. Oral submucous fibrosis does not reverse; the most you can do is stop it worsening by quitting completely. Areca nut alone, without tobacco (plain supari, mouth fresheners), is still a Group 1 carcinogen. Never give it to children.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Nicotine through the cheek; the burn and the buzz",
+      "effects": [
+        {
+          "target": "mouth",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Nicotine and arecoline are absorbed directly across the buccal mucosa where the quid sits. Because it is held for long periods, blood nicotine stays high for hours instead of spiking and falling like a cigarette."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Nicotine hits the reward circuit and arecoline acts on muscarinic receptors, producing a mild stimulant, warm and alert feeling. This combination makes the habit stick faster than nicotine alone.",
+          "metric": { "label": "Nicotine per sachet", "value": "comparable to 2–4 cigarettes" }
+        },
+        {
+          "target": "salivary-glands",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Arecoline strongly stimulates salivary flow, which is why chewers spit constantly. The saliva itself carries carcinogens down to the throat and stomach."
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "The coarse areca fibre plus lime abrades enamel mechanically while the alkaline lime chemically irritates gum tissue at the exact spot the quid is parked."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "The parking spot is already inflamed",
+      "effects": [
+        {
+          "target": "mouth",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "The mucosa where the quid rests shows redness, mild ulceration and a leathery feel. Slaked lime keeps local pH high, which increases free radical generation from areca polyphenols."
+        },
+        {
+          "target": "tongue",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Taste buds are chemically blunted, so food tastes flatter and users progressively add more chillies and salt to compensate."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Dependence forms within days. Many users wake at night to place a fresh quid, which means the mucosa is under carcinogen contact almost 24 hours a day."
+        },
+        {
+          "target": "stomach",
+          "kind": "strain",
+          "intensity": 0.25,
+          "note": "Swallowed nicotine-rich saliva irritates the gastric lining and relaxes the lower oesophageal sphincter, so acidity and reflux appear early."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Burning on spicy food — the first sign of fibrosis",
+      "effects": [
+        {
+          "target": "mouth",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Arecoline stimulates fibroblasts to lay down collagen and blocks collagenase from breaking it down. The earliest symptom of oral submucous fibrosis is intolerance to spicy food, long before the mouth stops opening."
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Brown-red staining is set in, enamel is worn at the chewing site, and gums recede where the quid sits, exposing root surfaces to decay."
+        },
+        {
+          "target": "salivary-glands",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "After the initial hypersecretion, chronic use damages minor salivary glands and dryness begins — which makes the mucosa even more vulnerable."
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Steady nicotine absorption keeps blood pressure and heart rate slightly elevated all day; smokeless tobacco carries a real, if smaller, cardiovascular risk of its own."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "White patch appears — leukoplakia, a precancerous lesion",
+      "effects": [
+        {
+          "target": "mouth",
+          "kind": "negative",
+          "intensity": 0.7,
+          "note": "A white or wrinkled patch that cannot be scraped off appears at the quid site — leukoplakia. Tobacco-specific nitrosamines (NNK, NNN) are already forming DNA adducts in these cells. A minority of these patches turn malignant, and there is no way to tell which."
+        },
+        {
+          "target": "face",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Fibrous bands begin forming under the cheek mucosa. You can feel them as tight cords when you run a finger inside the cheek."
+        },
+        {
+          "target": "esophagus",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Carcinogen-laden saliva swallowed all day raises risk of oesophageal cancer, a well-documented consequence of chewing that most users never connect to the habit."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Nicotine dependence is now firmly established, with cravings, irritability and poor concentration within hours of the last quid."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Mouth opening starting to reduce; the change is permanent",
+      "effects": [
+        {
+          "target": "mouth",
+          "kind": "negative",
+          "intensity": 0.8,
+          "note": "Established oral submucous fibrosis. Normal mouth opening is 40–50 mm between incisors; chewers commonly drop below 35 mm and cannot bite a whole roti or a samosa. Collagen already laid down does not go away when you quit.",
+          "metric": { "label": "Mouth opening", "value": "often <35 mm (normal 40–50)" }
+        },
+        {
+          "target": "face",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "The cheeks feel stiff and blanched, the mucosa turns marble-white as its blood supply is choked by scar tissue. Chewing and speaking take more effort."
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Severe attrition, staining and periodontal loss. Dental treatment is itself becoming harder because the mouth will not open wide enough for instruments."
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "Smokeless tobacco use is associated with higher risk of pancreatic cancer and with worse insulin resistance, which matters a great deal on an Indian metabolic background."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Precancer entrenched; malignant transformation clock running",
+      "effects": [
+        {
+          "target": "mouth",
+          "kind": "negative",
+          "intensity": 0.85,
+          "note": "Oral submucous fibrosis carries a malignant transformation rate reported in the range of about 7–13% over years of follow-up. Leukoplakia adds its own separate risk. Both are precancer, not cancer — and both are still worth catching now.",
+          "metric": { "label": "OSMF malignant transformation", "value": "~7–13% over years" }
+        },
+        {
+          "target": "face",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Fibrosis extends to the soft palate and can involve the jaw-closing muscles, so the restriction is now structural rather than just mucosal."
+        },
+        {
+          "target": "lymph-nodes",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Neck nodes should be checked at every visit — a hard, fixed node in a chewer is a red flag for spread from an oral cancer, sometimes before the primary lesion is obvious."
+        },
+        {
+          "target": "heart",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Long-term smokeless tobacco use is associated with higher risk of fatal heart attack and stroke, driven by chronic nicotine load and sodium content of the products."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years: the highest-risk mouth a dentist ever sees",
+      "effects": [
+        {
+          "target": "mouth",
+          "kind": "negative",
+          "intensity": 0.95,
+          "note": "Oral cancer risk in daily gutkha users runs several-fold that of non-users, and the cancers arise exactly where the quid was parked — buccal mucosa and gingivobuccal sulcus, the classic 'Indian oral cancer' site. Treatment means surgery that removes part of the jaw or cheek, plus radiotherapy.",
+          "metric": { "label": "Oral cancer risk", "value": "several-fold higher than non-users" }
+        },
+        {
+          "target": "face",
+          "kind": "negative",
+          "intensity": 0.7,
+          "note": "Advanced fibrosis: severe trismus, difficulty eating anything solid, weight loss from inadequate intake. Surgical release helps only partially and often re-scars."
+        },
+        {
+          "target": "esophagus",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Sustained carcinogen exposure raises oesophageal and hypopharyngeal cancer risk, cancers that usually present late and do badly."
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Multiple lost teeth from periodontal destruction and root caries; dentures are hard to fit in a mouth that cannot open."
+        },
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Half a decade of continuous nicotine keeps blood pressure elevated and endothelium stressed, adding to Indian users' already early cardiovascular risk."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "The dependence is as strong as any smoker's. Quitting brings 2–4 weeks of craving and irritability, and stops further fibrosis — but does not undo the scar tissue or erase cancer risk for many years."
+        }
+      ]
+    }
+  ]
+}

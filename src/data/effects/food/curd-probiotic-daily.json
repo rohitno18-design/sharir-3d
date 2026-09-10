@@ -1,0 +1,246 @@
+{
+  "id": "curd-probiotic-daily",
+  "name": { "en": "A bowl of homemade dahi every day", "hi": "रोज़ एक कटोरी घर का दही" },
+  "category": "food",
+  "icon": "🥛",
+  "dose": "About 150 g of homemade unsweetened dahi a day — one katori — set at home from boiled, cooled milk with a spoon of the previous day's curd. Roughly 90–100 kcal, 5–6 g protein and 150–180 mg calcium if made from whole milk.",
+  "summary": {
+    "en": "Fermentation does two useful things: the bacteria eat some of the lactose, and they carry their own lactase enzyme into your gut, which is why people who cannot drink milk can usually eat dahi without trouble. What it is not is a clinical probiotic — the strains in home dahi are undefined, they mostly pass through without settling, and the effect on your resident microbiome fades within a week or two of stopping. Judge it as what it actually is: a cheap, live, well-tolerated source of protein, calcium, B12 and riboflavin that happens to be easier on the gut than the milk it came from.",
+    "hi": "दही जमने में दो काम होते हैं: बैक्टीरिया लैक्टोज़ का कुछ हिस्सा खा जाते हैं, और अपने साथ लैक्टेज़ एंज़ाइम भी आपकी आँत तक ले आते हैं — इसीलिए जिन्हें दूध नहीं पचता वो भी दही आराम से खा लेते हैं। लेकिन यह कोई मेडिकल प्रोबायोटिक नहीं है — घर के दही के स्ट्रेन तय नहीं होते, ज़्यादातर पेट से निकल जाते हैं, और छोड़ने के एक-दो हफ़्ते में असर खत्म। इसे वही समझिए जो यह है: सस्ता, ज़िंदा, आसानी से पचने वाला प्रोटीन, कैल्शियम, B12 और राइबोफ्लेविन का स्रोत।"
+  },
+  "indian_context": "Lactose malabsorption is the norm, not the exception, in adult Indians — and it is far more common in the south and east than in the north, which is roughly why dahi and chaas dominate southern meals. Two things ruin a good habit: sweetened flavoured 'probiotic' curd cups from the shop, which carry 10–15 g of added sugar per serving, and the Ayurvedic belief that dahi at night causes cough or cold, which has no evidence behind it. There is one real Indian caveat nobody mentions: the calcium in a big bowl of curd blocks non-haem iron absorption, so if you are anaemic, eat your dahi away from the dal-rice meal, not with it. Home-set dahi from boiled milk is also safe in a way that raw-milk fermentation is not.",
+  "evidence": "moderate",
+  "sources": [
+    "EFSA Panel on Dietetic Products, Nutrition and Allergies. Scientific Opinion on the substantiation of health claims related to live yoghurt cultures and improved lactose digestion. EFSA Journal, 2010",
+    "Hill C et al. Expert consensus document: The ISAPP consensus statement on the scope and appropriate use of the term probiotic. Nature Reviews Gastroenterology & Hepatology, 2014",
+    "Chen M et al. Dairy consumption and risk of type 2 diabetes: 3 cohorts of US adults and an updated meta-analysis. BMC Medicine, 2014",
+    "Marco ML et al. Health benefits of fermented foods: microbiota and beyond. Current Opinion in Biotechnology, 2017",
+    "ICMR-NIN. Dietary Guidelines for Indians, 2024 (milk and milk products)"
+  ],
+  "caution": "This is not for a true cow's milk protein allergy — fermentation does not remove the protein. People who are severely immunocompromised (on chemotherapy, transplant drugs, or with advanced HIV) should avoid uncontrolled live cultures. If you are anaemic, keep curd away from your main iron-containing meal. And if the curd is a sweetened shop cup rather than home-set dahi, most of what is written on this page does not apply — you are eating a dessert.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Live cultures arrive with their own lactose-digesting enzyme",
+      "effects": [
+        {
+          "target": "small-intestine",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "The bacteria in dahi carry beta-galactosidase, which survives long enough in the small intestine to break down the lactose that your own gut may no longer digest. This is one of the few dairy health claims that regulators have actually approved.",
+          "metric": { "label": "Lactose reduced by fermentation", "value": "roughly 20–30%, plus bacterial enzyme helping digest the rest" }
+        },
+        {
+          "target": "stomach",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Curd is mildly acidic and empties from the stomach more slowly than milk, which is part of why it sits better with a heavy or spicy Indian meal."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "150–180 mg of highly bioavailable calcium, plus phosphorus and protein — which matters in a country where average calcium intake sits well below the recommendation."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Most of the live bacteria pass through without colonising. They can still act while in transit — producing lactic acid and interacting with the immune tissue in the gut wall on the way out."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Bloating after dairy settles; stool becomes more regular",
+      "effects": [
+        {
+          "target": "small-intestine",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Regular fermented dairy improves tolerance to lactose over days, both from the bacterial enzyme and from colonic bacteria adapting to handle the residual lactose.",
+          "metric": { "label": "Adult lactose malabsorption in India", "value": "common, and considerably higher in southern and eastern populations" }
+        },
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Lactic acid production lowers colonic pH slightly, which discourages some pathogenic bacteria. The effect is modest and lasts only as long as the habit does."
+        },
+        {
+          "target": "bone-marrow",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Dairy is the main B12 source for Indian lacto-vegetarians. 150 g of dahi supplies a meaningful fraction of the daily requirement — not enough alone for a strict vegetarian, but far better than nothing."
+        },
+        {
+          "target": "immune-system",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Gut-associated lymphoid tissue interacts with the passing bacteria. Trial evidence for immune benefit is strain-specific and mostly comes from defined commercial probiotics, not from home dahi."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "A measurable change in stool bacteria — and it is not permanent",
+      "effects": [
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Faecal counts of lactic acid bacteria rise on daily fermented dairy, but the resident microbiome composition changes only modestly. Stop for two weeks and it drifts back to where it was.",
+          "metric": { "label": "Persistence after stopping", "value": "most of the effect fades within 1–2 weeks" }
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "A month of an extra 150–180 mg of calcium a day is genuinely useful in Indian diets, which typically fall a few hundred milligrams short of requirement."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "5–6 g of high-quality dairy protein a day, rich in leucine and fully digestible. It is a small contribution but a high-quality one on a cereal-and-pulse diet."
+        },
+        {
+          "target": "small-intestine",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "The calcium that helps your bones competes with non-haem iron for absorption in the same meal. On an already iron-poor Indian plate, timing matters more than most people realise."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Steady contribution to protein, calcium and B12 — nothing dramatic",
+      "effects": [
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Two months of daily fermented food is associated in trials with lower inflammatory markers, though those studies used a wider variety of ferments than dahi alone.",
+          "metric": { "label": "What dahi actually is", "value": "a live fermented food, not a defined clinical probiotic" }
+        },
+        {
+          "target": "stomach",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Many people report less acidity and better tolerance of spicy food with curd or chaas at meals. Plausible from buffering and slower emptying, but not something trials have measured well."
+        },
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Fermented dairy is associated with fewer and shorter respiratory infections in some trials. Effect sizes are small and vary a lot by strain — treat this as a modest bonus, not the reason to eat it."
+        },
+        {
+          "target": "teeth",
+          "kind": "positive",
+          "intensity": 0.25,
+          "note": "Dairy calcium, phosphate and casein help remineralise enamel and buffer plaque acid. Unsweetened curd after a meal is mildly protective — the sweetened version is the opposite."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Bone and metabolic contributions add up; nothing has been cured",
+      "effects": [
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Six months of an extra 30 g or so of cumulative calcium plus daily protein is real support for bone density, particularly for Indian women approaching menopause with low reserves.",
+          "metric": { "label": "Calcium supplied over 6 months", "value": "roughly 27–32 g of extra dietary calcium" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Yoghurt intake is consistently associated with lower type 2 diabetes risk in cohort studies — around 15–20% lower per daily serving. Observational, and yoghurt eaters tend to eat better overall."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "The microbiome effect has stabilised at 'modestly better' rather than transformed. Fibre from dal, vegetables and fruit does far more for your gut bacteria than dahi does."
+        },
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Fermented dairy sits neutral to mildly favourable for blood pressure and lipids in cohorts, despite its saturated fat. Whole-milk dahi is not the cardiovascular problem that its fat content on paper suggests."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "A quietly good habit — the value is nutrition, not bacteria",
+      "effects": [
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "A year of daily curd is a meaningful part of closing the calcium gap in an Indian diet. Combined with sunlight and some loading exercise, it is real fracture protection decades later.",
+          "metric": { "label": "Annual calcium contribution", "value": "roughly 55–65 g of extra dietary calcium" }
+        },
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Whatever benefit exists is maintained only while the habit is. There is no cumulative 'gut repair' from home dahi — the honest framing is maintenance, not restoration."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "The diabetes association holds across cohorts and durations. It is one of the few dairy findings that is consistent enough for regulators to have looked at seriously."
+        },
+        {
+          "target": "small-intestine",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Lactose tolerance stays improved as long as the daily habit continues, and it fades if you stop for a few weeks. It is an adaptation, not a cure."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "No downside worth naming, and a few small durable gains",
+      "effects": [
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Five years of daily unsweetened dahi is one of the safest food habits on this app: modest calcium, protein and B12 support, better dairy tolerance, and no signal of harm in any long-term cohort.",
+          "metric": { "label": "Evidence quality", "value": "moderate — consistent cohorts, few randomised trials, effects small" }
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Bone mass built and preserved through the forties and fifties is what determines whether a fall at 70 breaks a hip. Small daily contributions are exactly how that reserve is built."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Sustained association with lower type 2 diabetes risk. Modest on its own — it will not offset a late-night rice-heavy diet or an inactive decade."
+        },
+        {
+          "target": "bone-marrow",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "A daily dairy B12 source substantially delays the deficiency that catches strict vegetarians. It slows the drain; it does not replace a supplement for someone eating no other animal food."
+        },
+        {
+          "target": "small-intestine",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "The one persistent negative: five years of a big bowl of curd eaten with the main iron-containing meal measurably reduces iron absorbed. Move it to a different hour and this disappears entirely."
+        }
+      ]
+    }
+  ]
+}

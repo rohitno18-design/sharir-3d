@@ -1,0 +1,261 @@
+{
+  "id": "fried-snacks-daily",
+  "name": { "en": "A samosa or pakora every single day", "hi": "रोज़ एक समोसा या पकौड़ा" },
+  "category": "food",
+  "icon": "🥟",
+  "dose": "One deep-fried snack a day from a stall or a mithai shop — a samosa, two-three pakoras, a kachori or a vada — roughly 250–350 kcal and 15–20 g of fat, fried in oil that has been sitting in the same kadhai and reheated many times over.",
+  "molecule": "trans-fat-elaidic",
+  "summary": {
+    "en": "The problem is not the potato and it is not one meal's worth of fat — it is the oil. Every reheating cycle in a stall kadhai builds up polar compounds, aldehydes and heat-formed trans fatty acid isomers, and the starchy filling adds acrylamide from browning above 120 °C. Trans fat is unique among fats in that it simultaneously raises LDL, lowers HDL and raises Lp(a), which is why gram for gram it does more arterial damage than any other fat we eat. One a day is enough to keep your endothelium mildly inflamed all year.",
+    "hi": "दिक्कत आलू की नहीं है और न एक बार के तेल की — दिक्कत उस तेल की है जो बार-बार गरम होता रहता है। हर बार गरम करने पर तेल में पोलर कंपाउंड, एल्डिहाइड और गर्मी से बने ट्रांस फैट बढ़ते जाते हैं, और आलू 120 डिग्री से ऊपर तलने पर एक्रिलामाइड बनाता है। ट्रांस फैट अकेला ऐसा फैट है जो एक साथ LDL बढ़ाता है, HDL घटाता है और Lp(a) ऊपर ले जाता है — इसीलिए यह बाकी सब फैट से ज़्यादा नुकसान करता है। रोज़ एक समोसा पूरे साल आपकी नसों को हल्की सूजन में रखने के लिए काफ़ी है।"
+  },
+  "indian_context": "FSSAI caps industrially produced trans fat at 2% by weight in oils and fats (in force since January 2022) and its RUCO programme sets a 25% total-polar-compounds limit for frying oil — but neither is meaningfully enforced at a thela or a small halwai. The same kadhai oil is topped up rather than changed, sometimes for days, which is exactly the condition that generates aldehydes and polymerised fat. Add the Indian pattern of eating it with sweet chai in the evening and the fact that Indians develop coronary disease roughly a decade earlier than Europeans, and a daily samosa is a much bigger bet here than the calorie count suggests.",
+  "evidence": "strong",
+  "sources": [
+    "Mozaffarian D, Katan MB, Ascherio A, Stampfer MJ, Willett WC. Trans fatty acids and cardiovascular disease. N Engl J Med, 2006",
+    "WHO. REPLACE action package to eliminate industrially produced trans-fatty acids, 2018",
+    "FSSAI. Food Safety and Standards (Prohibition and Restrictions on Sales) Regulations — 2% trans fat limit in oils and fats, effective January 2022",
+    "EFSA CONTAM Panel. Scientific Opinion on acrylamide in food. EFSA Journal, 2015",
+    "FSSAI. Repurpose Used Cooking Oil (RUCO) initiative — total polar compounds limit for frying oil"
+  ],
+  "caution": "If you already have high LDL, diabetes, a stent, or a family history of early heart attacks, a daily fried snack is not a small indulgence — it is working directly against your medication. Gallstone disease and reflux both flare with a fatty evening snack. If you fry at home, the fix is simple and cheap: fresh oil each time, do not reuse it more than once, and throw it out the moment it darkens, smokes early or goes sticky.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Blood vessels stiffen for hours after the meal; reflux by night",
+      "effects": [
+        {
+          "target": "blood-vessels",
+          "kind": "strain",
+          "intensity": 0.45,
+          "note": "A single high-fat, oxidised-oil meal measurably reduces the artery's ability to dilate for 2–4 hours afterwards. It recovers — but if you do it every evening, your endothelium is impaired for a large part of every day.",
+          "metric": { "label": "Flow-mediated dilation after a fried meal", "value": "typically falls for 2–4 hours" }
+        },
+        {
+          "target": "stomach",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "Fat slows gastric emptying to 3–4 hours and relaxes the lower oesophageal sphincter. A samosa at 8 pm is still sitting there when you lie down at 11."
+        },
+        {
+          "target": "esophagus",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Acid reflux after a fried evening snack is not imagination — the sphincter genuinely loosens with a fatty load, and lying flat removes gravity's help."
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Aldehydes and oxidised lipids absorbed from reused oil are detoxified in the liver, consuming glutathione. One meal is trivial; the daily version is a standing tax."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "HDL starts falling — the signature of trans fat, not just any fat",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Trans fatty acids are the only dietary fat that pushes LDL up and HDL down at the same time. The effect on blood lipids is measurable within one to three weeks of a steady intake.",
+          "metric": { "label": "Cardiovascular risk per 2% of energy from trans fat", "value": "roughly 20–25% higher coronary heart disease risk" }
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "About 300 kcal a day added to an evening that already has dinner coming is nearly pure surplus. Fried snacks are also poorly satiating for their calories — nobody eats less dinner because of a samosa."
+        },
+        {
+          "target": "immune-system",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Oxidised lipids and trans fat both raise inflammatory markers such as CRP, IL-6 and TNF-alpha. This is low-grade, invisible inflammation, not the kind that gives you a fever."
+        },
+        {
+          "target": "gallbladder",
+          "kind": "strain",
+          "intensity": 0.25,
+          "note": "A large fat bolus forces a hard gallbladder contraction. In someone with existing stones this is the classic trigger for right-upper-abdomen pain an hour after eating."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Lipid profile visibly worse; the waist has started moving",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "LDL up, HDL down, triglycerides up — the exact combination that makes an Indian lipid report look bad even at a normal total cholesterol. Small dense LDL particles penetrate the artery wall more easily than large ones.",
+          "metric": { "label": "HDL cholesterol", "value": "often falls a few mg/dL on habitual trans fat intake" }
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Trans fat in animal and cohort data is associated with preferential deposition of fat in the abdomen rather than under the skin — pound for pound the worse place to put it."
+        },
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "The maida in the pastry is a fast carbohydrate and the oil is a fat load arriving together. This combination drives hepatic fat accumulation faster than either does alone."
+        },
+        {
+          "target": "skin",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "High glycaemic load plus inflammation modestly worsens acne. The Indian belief that 'oily food causes pimples' is roughly right, but for the sugar and inflammation, not because the oil reaches your face."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Insulin resistance and inflammation now measurable together",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Trans fat and visceral fat both interfere with insulin signalling, so the beta cells raise their baseline output to keep fasting glucose looking normal. Fasting insulin rises long before fasting sugar does.",
+          "metric": { "label": "Fasting insulin", "value": "rises before fasting glucose changes at all" }
+        },
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Trans fat also raises lipoprotein(a), which is already high in a large share of Indians for genetic reasons and cannot be lowered by diet — so this is stacking risk on top of risk you were born with."
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Two months at roughly 300 surplus kcal a day typically shows up as 1–3 kg, concentrated centrally in South Asian bodies."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "A daily fried snack usually displaces something better — the sabzi, the fruit, the salad. The fibre you didn't eat matters as much as the fat you did."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Fatty liver on ultrasound; blood pressure creeping up too",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Grade 1 fatty liver is a common incidental ultrasound finding by now, and Indian series keep finding it in people with a normal BMI. Reversible at this stage — stopping the daily snack alone often clears it.",
+          "visual": { "scale": 1.04 },
+          "metric": { "label": "Liver enzymes", "value": "ALT often mildly raised, 40–70 U/L" }
+        },
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Six months of daily post-meal endothelial dysfunction plus a worse lipid profile means lipid particles are actively being retained in the artery wall. Silent, and decades ahead of any symptom."
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Salt in stall snacks — often 400–700 mg of sodium per piece — plus weight gain nudges blood pressure up a few mmHg. Small numbers, but they compound."
+        },
+        {
+          "target": "immune-system",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Chronically raised inflammatory markers are the common thread linking this diet to heart disease, diabetes and several cancers. It is a background state, not an illness you can feel."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "The full Indian metabolic picture, assembled in twelve months",
+      "effects": [
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "A year of raised ApoB, low HDL and daily inflammation is real added plaque. Trans fat's association with coronary disease is one of the most consistent findings in nutrition epidemiology — strong enough that WHO asked every country to eliminate it.",
+          "metric": { "label": "WHO position", "value": "no safe level of industrially produced trans fat" }
+        },
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Established fatty liver disease in a large fraction of daily consumers, especially those who also drink sweet chai with the snack.",
+          "visual": { "scale": 1.05 }
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Prediabetes territory for susceptible people. India's diabetes burden is not built by mithai alone — it is built by the daily savoury fried habit sitting on top of a carbohydrate-heavy plate."
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Visceral fat is now behaving like an endocrine organ, releasing free fatty acids and inflammatory cytokines directly into the portal vein feeding the liver."
+        },
+        {
+          "target": "kidneys",
+          "kind": "strain",
+          "intensity": 0.25,
+          "note": "Rising blood pressure and insulin resistance start loading the glomeruli. Nothing shows on a creatinine test yet; microalbumin would be the first thing to move."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Heart disease risk clearly raised; the cancer question stays open",
+      "effects": [
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Five years of this pattern in an Indian body is a meaningful contribution to premature coronary disease. Trans fat, reused-oil oxidation products, central obesity and insulin resistance all push the same way at once.",
+          "metric": { "label": "Age of first heart attack in Indians", "value": "roughly a decade earlier than in Western populations" }
+        },
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "A minority progress from simple steatosis to steatohepatitis with inflammation and early fibrosis. Most do not — but a scan is the only way to know which side you are on."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Acrylamide from browned starch is classified as a probable human carcinogen based on animal evidence; human epidemiological studies have been inconsistent. Honest position: it is a reason to fry less, not a proven cause of cancer at these doses."
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "For a genetically susceptible Indian, five years of this is a plausible route into type 2 diabetes — not the sole cause, but a steady contributor."
+        },
+        {
+          "target": "esophagus",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Years of nightly reflux causes chronic oesophagitis in some people, and in a small minority the lining changes to a Barrett's pattern. This is the one effect that a simple timing change — eat it at 4 pm, not 9 pm — largely prevents."
+        },
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "The encouraging half: lipids respond fast in the other direction too. Drop the daily fried snack and HDL, LDL and CRP all move back within weeks — arteries stop getting worse the day you stop."
+        }
+      ]
+    }
+  ]
+}

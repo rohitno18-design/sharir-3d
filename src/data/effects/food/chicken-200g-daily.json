@@ -1,0 +1,252 @@
+{
+  "id": "chicken-200g-daily",
+  "name": { "en": "200 g chicken breast every day, with weight training", "hi": "रोज़ 200 ग्राम चिकन ब्रेस्ट, वेट ट्रेनिंग के साथ" },
+  "category": "food",
+  "icon": "🍗",
+  "dose": "200 g of cooked skinless chicken breast a day — about 60 g protein, 5 g leucine, 330 kcal and 6–8 g fat. Assumes it is eaten across two meals alongside a resistance-training programme of 3–5 sessions a week. Without training, most of the extra protein is simply oxidised.",
+  "molecule": "leucine",
+  "summary": {
+    "en": "Chicken breast is close to the cleanest protein-to-calorie ratio available in an Indian kitchen, and 200 g comfortably clears the leucine threshold that switches on muscle protein synthesis twice a day. Paired with lifting, this is the raw material for real hypertrophy — roughly 2–4 kg of lean mass over the first year in an untrained person. Without lifting, it is just expensive amino acids being burnt for fuel.",
+    "hi": "चिकन ब्रेस्ट भारतीय रसोई में सबसे साफ़ प्रोटीन-टू-कैलोरी अनुपात वाला खाना है, और 200 ग्राम में इतना ल्यूसीन होता है कि दिन में दो बार मसल बनाने का स्विच चालू हो जाए। वेट ट्रेनिंग के साथ यह असली मसल ग्रोथ का कच्चा माल है — पहले साल में करीब 2–4 किलो लीन मास। लेकिन बिना ट्रेनिंग के यही प्रोटीन सिर्फ़ जलकर ऊर्जा बन जाता है, मसल नहीं।"
+  },
+  "indian_context": "Most Indians eat enough calories but not enough good-quality protein — ICMR-NIN repeatedly flags protein quality, not quantity, as the gap. Chicken solves it cheaply compared with paneer, and unlike dal it needs no complementing. Two Indian-specific caveats: broiler chicken in India carries a documented antibiotic-residue and antimicrobial-resistance problem, so source matters; and heavily charred tandoori or grilled chicken generates heterocyclic amines, so a burnt tikka is not the same food as a grilled breast. The old belief that chicken 'produces heat in the body' has no physiological basis.",
+  "evidence": "strong",
+  "sources": [
+    "Jäger R et al. International Society of Sports Nutrition Position Stand: protein and exercise. J Int Soc Sports Nutr 2017",
+    "Morton RW et al. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength. Br J Sports Med 2018",
+    "Devries MC et al. Changes in kidney function do not differ between healthy adults consuming higher- compared with lower- or normal-protein diets. J Nutr 2018",
+    "ICMR-NIN Dietary Guidelines for Indians 2024 (protein quality and requirements)",
+    "Centre for Science and Environment, New Delhi. Antibiotic residues in chicken. 2014"
+  ],
+  "caution": "If you already have chronic kidney disease or a single kidney, this protein load is genuinely too high and needs a nephrologist's number, not a gym target. In healthy kidneys, high protein does not cause kidney disease — that claim is not supported by controlled data. Watch food safety: undercooked chicken is a common source of Salmonella and Campylobacter in Indian kitchens.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Muscle protein synthesis switched on twice, for about 3 hours each time",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Roughly 2.5 g of leucine per serving activates mTORC1 and lifts muscle protein synthesis about 50–100% above baseline for 2–3 hours. Training on the same day roughly doubles how much of that protein is actually retained.",
+          "metric": { "label": "Leucine per day", "value": "~5 g — well above the ~2.5 g/meal trigger" }
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Amino acids not used for building are deaminated in the liver and the nitrogen converted to urea. This is normal work, not damage — the urea cycle scales up easily."
+        },
+        {
+          "target": "kidneys",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Urea excretion rises, so glomerular filtration rate increases modestly. This is functional adaptation, exactly like muscles working harder — controlled trials show no loss of kidney function in healthy adults."
+        },
+        {
+          "target": "stomach",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Protein slows gastric emptying and triggers CCK and PYY release, so 200 g of chicken keeps you full far longer than 330 kcal of rice or biscuits would."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Positive nitrogen balance; appetite noticeably lower",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Daily net protein balance turns positive. Nothing is visible yet — early strength gains in the first weeks come almost entirely from the nervous system learning the lifts, not new tissue.",
+          "metric": { "label": "Protein intake", "value": "~60 g/day from chicken alone, on top of dal/roti protein" }
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Protein is the most satiating macronutrient. Most people eat 200–300 fewer total calories a day without trying, which is why high-protein diets work for fat loss even without calorie counting."
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Protein has a thermic effect of roughly 20–30% — about a fifth of the chicken's calories are spent digesting and processing it, versus 5–10% for carbohydrate."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Urine urea and urine volume rise. Drinking more water matters here — not because protein damages kidneys, but because the nitrogen load needs a solvent."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "First real tissue: muscle fibres thickening, iron and B12 topped up",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Measurable hypertrophy typically becomes detectable around week 4–6 of consistent training with adequate protein. Myofibrils are added in parallel, thickening each fibre.",
+          "visual": { "scale": 1.02 },
+          "metric": { "label": "Lean mass", "value": "typically +0.5–1 kg in month 1 in a novice" }
+        },
+        {
+          "target": "bone-marrow",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Chicken supplies heme iron, B12, zinc and selenium — all absorbed far better than their plant equivalents. For someone coming off a dal-rice diet, ferritin and B12 both improve within weeks."
+        },
+        {
+          "target": "tendons",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Tendon and connective tissue remodel much slower than muscle. This mismatch — strong muscle pulling on unadapted tendon — is where month-two elbow and shoulder pain comes from."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "If total calories are held steady, higher protein plus training usually shifts body composition even when weight does not move — fat down, muscle up."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Visible change in the mirror; strength climbing steadily",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Cross-sectional area of trained muscles is now clearly larger. Protein supplementation on top of training adds roughly 0.3–0.5 kg of extra lean mass over what training alone achieves.",
+          "visual": { "scale": 1.04 },
+          "metric": { "label": "Strength", "value": "commonly +20–40% on main lifts in a novice" }
+        },
+        {
+          "target": "pectorals",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Upper-body muscles that most people train hardest show the clearest change first — chest, shoulders and arms, simply because they get the most direct volume."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Mechanical loading from lifting, combined with adequate protein, stimulates osteoblasts. Bone density change is slow but starts now — and adequate protein is required for it, not harmful to it."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Two months of 2 g/kg-level protein in a healthy person leaves creatinine and eGFR essentially unchanged. Serum creatinine may read slightly high simply because you have more muscle — that is not kidney damage."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "2–4 kg of new lean mass; metabolic rate genuinely higher",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.7,
+          "note": "Six months of consistent training with this protein intake typically produces 2–4 kg of lean mass in a previously untrained man, less in a woman or an experienced lifter. Gains slow as you get closer to your genetic ceiling.",
+          "visual": { "scale": 1.06 },
+          "metric": { "label": "Lean mass gained", "value": "~2–4 kg (novice), ~1–2 kg (trained)" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "More muscle means a bigger glucose sink. Insulin sensitivity improves measurably — one of the most useful adaptations for a South Asian body, which stores glucose poorly."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Visceral fat typically drops even without much weight change. Waist-to-height ratio is the number that moves."
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Resistance training lowers resting blood pressure a few mmHg and improves resting heart rate. Chicken breast contributes almost no saturated fat to offset this."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Body composition rebuilt; kidney function still normal",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.7,
+          "note": "Muscle mass plateaus near the individual's ceiling; further gains need progressive overload, not more protein. Intakes above roughly 1.6 g/kg/day add little extra — the meta-analytic plateau.",
+          "visual": { "scale": 1.07 },
+          "metric": { "label": "Useful protein ceiling", "value": "~1.6 g/kg/day for hypertrophy" }
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "A full year of high protein in healthy adults produces no decline in eGFR in controlled studies. The 'protein destroys kidneys' belief comes from advice meant for people who already have kidney disease."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Bone mineral density at the hip and spine rises measurably with a year of loading. Higher protein intake is associated with better, not worse, bone density when calcium is adequate."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "A meat-heavy day can crowd out fibre. If dal, sabzi and salad get displaced by chicken, stool bulk and gut bacterial diversity both fall — a real and common side effect."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Muscle banked against ageing; poultry itself carries no cancer signal",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.7,
+          "note": "The strongest long-term payoff: muscle mass built in the 30s and 40s is the buffer against sarcopenia, falls and frailty in the 60s and 70s. Muscle is the only organ you can deliberately grow.",
+          "visual": { "scale": 1.07 },
+          "metric": { "label": "Age-related muscle loss", "value": "~3–8% per decade after 30 — largely offset by training" }
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Higher lean mass and grip strength track with lower all-cause mortality in large cohorts. Unlike processed and red meat, poultry has not been classified as carcinogenic and is not linked to colorectal cancer in the major reviews."
+        },
+        {
+          "target": "immune-system",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Five years of daily commercially farmed Indian broiler chicken means chronic low-level exposure to antibiotic residues and resistant organisms in an environment where poultry antimicrobial use is poorly regulated. Sourcing and thorough cooking matter."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Charred, high-heat tandoori surfaces produce heterocyclic amines and polycyclic aromatic hydrocarbons — mutagens linked to colorectal cancer risk. Grilled and moist-cooked chicken carries far less than blackened tikka."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Still no evidence of harm in healthy kidneys after years. But nobody has run a 20-year randomised trial, so 'no signal' is honest and 'proven safe forever' is not."
+        }
+      ]
+    }
+  ]
+}

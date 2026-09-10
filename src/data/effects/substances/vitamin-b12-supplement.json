@@ -1,0 +1,202 @@
+{
+  "id": "vitamin-b12-supplement",
+  "name": { "en": "Vitamin B12 1000 mcg daily (deficient vegetarian)", "hi": "रोज़ 1000 माइक्रोग्राम विटामिन B12 (कमी वाले शाकाहारी के लिए)" },
+  "category": "supplement",
+  "icon": "🌿",
+  "dose": "1000 mcg (1 mg) cyanocobalamin or methylcobalamin orally, once daily, for a person with confirmed low B12 (below ~200 pg/mL) on a vegetarian or vegan diet. Oral high-dose works even without intrinsic factor because ~1% is absorbed passively.",
+  "molecule": "vitamin-b12",
+  "summary": {
+    "en": "B12 (cobalamin) is a cofactor for two enzymes: one that recycles homocysteine into methionine (needed for DNA synthesis and red-cell production) and one that keeps the myelin sheath around nerves healthy. Deficiency causes large, fragile red cells (megaloblastic anaemia), fatigue, a sore smooth tongue, tingling in the feet, poor balance and memory fog. A daily 1000 mcg tablet refills liver stores over 2–3 months; blood counts recover in 6–8 weeks and nerve symptoms improve over months, though damage older than a year may not fully reverse.",
+    "hi": "B12 दो ज़रूरी एंज़ाइम के लिए चाहिए — एक जो खून की नई कोशिकाएँ और DNA बनाने में मदद करता है, दूसरा जो नसों के ऊपर की परत (माइलिन) को सही रखता है। कमी से थकान, बड़ी-कमज़ोर लाल कोशिकाएँ (एनीमिया), जीभ में जलन, पैरों में झनझनाहट, चलने में लड़खड़ाहट और याददाश्त की धुंध होती है। रोज़ 1000 माइक्रोग्राम की गोली 2–3 महीने में लिवर का स्टोर भर देती है; खून 6–8 हफ़्ते में ठीक होता है, नसें महीनों लेती हैं, और एक साल से पुराना नुक़सान पूरी तरह वापस नहीं भी आ सकता।"
+  },
+  "indian_context": "B12 exists only in animal foods, so India's large lacto-vegetarian population depends on milk, which supplies too little. Studies of urban Indians (Pune, Delhi, Bengaluru) find 40–70% with low or borderline B12, higher in strict vegetarians, and the deficiency often coexists with high homocysteine. Metformin, the first-line diabetes drug for 100 million Indians, cuts B12 absorption further. Many Indians get injectable B12 (methylcobalamin shots) from clinics when a ₹1–2 daily tablet would do the same job; injections are only clearly necessary for severe neurological deficiency or when absorption is impossible.",
+  "evidence": "strong",
+  "sources": [
+    "Vidal-Alaball J et al. Oral vitamin B12 versus intramuscular vitamin B12 for vitamin B12 deficiency. Cochrane Database Syst Rev. 2005",
+    "Refsum H et al. Hyperhomocysteinemia and elevated methylmalonic acid indicate a high prevalence of cobalamin deficiency in Asian Indians. Am J Clin Nutr. 2001",
+    "Stabler SP. Vitamin B12 deficiency. N Engl J Med. 2013",
+    "ICMR-NIN. Nutrient Requirements for Indians (RDA and EAR). 2020"
+  ],
+  "caution": "B12 has no known toxicity; the excess is passed in urine. The one real risk is treating with folic acid alone when the problem is B12: folate fixes the anaemia while nerve damage continues silently, so both should be checked. If there is numbness, unsteady walking or memory change, see a doctor for a neurological assessment and possibly injections rather than tablets. Recheck B12 and a blood count at 3 months.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Absorbed; bone marrow gets the signal within hours",
+      "effects": [
+        {
+          "target": "small-intestine",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Of a 1000 mcg dose, ~1.5–2 mcg is absorbed through the intrinsic-factor pathway in the terminal ileum and another ~10 mcg by passive diffusion, which is why big oral doses work even in pernicious anaemia.",
+          "metric": { "label": "Absorbed from 1000 mcg", "value": "~10–13 mcg" }
+        },
+        {
+          "target": "bone-marrow",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "In a deficient marrow, DNA synthesis in developing red cells has been stalled. B12 unblocks it within 24 hours; the first normal red-cell precursors begin to mature."
+        },
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "The liver is the B12 store (normally 2–5 mg, enough for years). It takes up much of the absorbed dose; refilling a depleted store takes weeks of daily dosing."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Reticulocyte surge: new red cells pouring out of the marrow",
+      "effects": [
+        {
+          "target": "bone-marrow",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Reticulocytes (young red cells) peak around day 5–8 in a person who was anaemic; this early bounce is the classic sign that the treatment is working.",
+          "metric": { "label": "Reticulocyte peak", "value": "Day 5–8" }
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Energy and appetite often improve within the first week, before the haemoglobin has visibly risen, partly as cell metabolism normalises."
+        },
+        {
+          "target": "tongue",
+          "kind": "positive",
+          "intensity": 0.25,
+          "note": "The sore, smooth, red tongue of deficiency (glossitis) begins to heal as the fast-dividing surface cells can synthesise DNA again."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "As new cells form rapidly they take up potassium; in severe anaemia this can transiently drop blood potassium in the first week, one reason severe cases are monitored."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Haemoglobin climbing; homocysteine down; tingling may start easing",
+      "effects": [
+        {
+          "target": "bone-marrow",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "Red cell production has been normal for weeks and haemoglobin rises at about 1 g/dL every 1–2 weeks. Red cells are back to normal size in the new generation.",
+          "metric": { "label": "Haemoglobin rise", "value": "~+1 g/dL per 1–2 weeks" }
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Homocysteine, which was elevated because B12 could not recycle it, drops within 2–4 weeks. Whether that alone lowers heart risk is unproven, but the elevated level is corrected."
+        },
+        {
+          "target": "peripheral-nerves",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Myelin repair is slow. Tingling and numbness in the feet often start improving in the first month; the earlier the treatment relative to onset, the more complete the recovery."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Anaemia corrected; nerves still healing",
+      "effects": [
+        {
+          "target": "bone-marrow",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "By 6–8 weeks haemoglobin and cell size are normal in most people. If they are not, iron or folate deficiency (both common in Indian vegetarians) may be present alongside.",
+          "metric": { "label": "Haemoglobin normalises", "value": "~6–8 weeks" }
+        },
+        {
+          "target": "peripheral-nerves",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Two months of adequate B12: nerve conduction improves, vibration sense in the toes returns in many, but balance problems from damage to the spinal cord's posterior columns lag behind."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Brain fog, low mood and irritability from deficiency generally clear over 1–3 months. Where the deficiency was long-standing, cognitive recovery is partial."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Liver stores refilled; most reversible damage reversed",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Six months of daily dosing rebuilds a store that can carry a person for a year or more. Serum B12 will now read high on tests; this is expected, not a problem.",
+          "metric": { "label": "Serum B12 on treatment", "value": "often >600 pg/mL" }
+        },
+        {
+          "target": "spinal-cord",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Subacute combined degeneration (damage to the cord's sensory and motor tracts) recovers over 6–12 months where it recovers at all. This is the deficit that becomes permanent if treatment started too late."
+        },
+        {
+          "target": "peripheral-nerves",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Nerve symptoms present for under 6 months before treatment usually resolve fully by now; those present over a year commonly leave some residual numbness."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Maintenance: the cause has not gone away",
+      "effects": [
+        {
+          "target": "bone-marrow",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Blood counts remain normal only while intake continues; a vegetarian who stops will drift back to deficiency over 1–3 years as stores drain. Many switch to a lower maintenance dose (250–500 mcg) or fortified foods."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.25,
+          "note": "Correcting deficiency protects against the further cognitive decline it causes; it does not raise cognition above normal, and B12 supplements in non-deficient people do not improve memory."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.1,
+          "note": "Excess B12 is excreted by the kidney unchanged. No renal effect at any oral dose."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years: no toxicity; a lifelong requirement on a vegetarian diet",
+      "effects": [
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "For a vegetarian, this is simply maintaining a nutrient the diet cannot supply. Long-term high-dose oral B12 has no documented toxicity in decades of use."
+        },
+        {
+          "target": "peripheral-nerves",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Five years of adequate B12 prevents the slow, silent neuropathy and cord damage that untreated vegetarian deficiency causes in middle age."
+        },
+        {
+          "target": "uterus",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "For women planning pregnancy, adequate B12 (with folate) lowers the risk of neural-tube defects and low birth weight; Indian mothers' low B12 is a documented contributor to small-for-age babies."
+        }
+      ]
+    }
+  ]
+}

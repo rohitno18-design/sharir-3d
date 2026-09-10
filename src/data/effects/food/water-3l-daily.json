@@ -1,0 +1,223 @@
+{
+  "id": "water-3l-daily",
+  "name": { "en": "Drinking 3 litres of water every day", "hi": "रोज़ 3 लीटर पानी पीना" },
+  "category": "drink",
+  "icon": "💧",
+  "dose": "About 3 L of plain water a day (roughly 12–13 glasses), spread from waking to early evening, on top of the 0.5–1 L that comes from dal, sabzi, chai, curd and fruit. Assumes an adult of average size in Indian conditions.",
+  "molecule": "water",
+  "summary": {
+    "en": "This is the amount that keeps urine pale yellow and keeps the kidney's dilute-urine machinery working comfortably without ever pushing it. Blood volume, blood pressure regulation, joint lubrication and stool consistency all sit in their normal range. The two effects with real trial evidence behind them are fewer kidney stones and fewer urinary infections — everything else is simply the body doing its job with enough raw material.",
+    "hi": "इतना पानी पीने से पेशाब हल्का पीला रहता है और किडनी को कभी ज़ोर नहीं लगाना पड़ता। खून की मात्रा, ब्लड प्रेशर, जोड़ों की चिकनाई और पेट की सफाई — सब अपनी सामान्य रेंज में रहते हैं। इसके दो फ़ायदे असली रिसर्च से साबित हैं: पथरी कम बनती है और पेशाब का इन्फेक्शन कम होता है। बाकी सब बस शरीर का अपना काम ठीक से चलना है — कोई जादू नहीं।"
+  },
+  "indian_context": "For most of India this is closer to 'correct' than the WhatsApp-famous 5 litres. In Rajasthan, Gujarat, Telangana and the Vidarbha belt — the country's kidney-stone belt — high sweat loss plus low intake is exactly how stones form, and 3 L is genuinely protective there. Indian women in particular under-drink at work because of poor toilet access, which is a real driver of recurrent UTIs. In summer, salted fluids (nimbu-pani with namak, chaas, ORS) work better than plain water alone once you are sweating for hours.",
+  "evidence": "strong",
+  "sources": [
+    "ICMR-NIN Dietary Guidelines for Indians 2024 (water and fluid recommendations)",
+    "EFSA Panel on Dietetic Products. Scientific Opinion on Dietary Reference Values for water. EFSA Journal 2010",
+    "Borghi L et al. Urinary volume, water and recurrences in idiopathic calcium nephrolithiasis: a 5-year randomized prospective study. J Urol 1996",
+    "Hooton TM et al. Effect of increased daily water intake in premenopausal women with recurrent urinary tract infections. JAMA Intern Med 2018",
+    "Ganio MS et al. Mild dehydration impairs cognitive performance and mood of men. Br J Nutr 2011"
+  ],
+  "caution": "If you have heart failure, advanced chronic kidney disease, liver cirrhosis or are on fluid restriction from a doctor, 3 L is too much — follow the prescribed limit. If you are drinking 3 L and still passing dark, scanty urine, that is a reason to get kidney function checked rather than to drink more.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Urine turns pale; the thirst system stops nagging",
+      "effects": [
+        {
+          "target": "kidneys",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Vasopressin (ADH) stays low most of the day, so the kidney produces a comfortable, moderately dilute urine without ever hitting its maximum dilution capacity. This is the easiest possible working condition for a nephron.",
+          "metric": { "label": "Urine output", "value": "~2–2.5 L/day, pale straw colour" }
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Plasma osmolality settles near 285–290 mOsm/kg, so osmoreceptors stop firing thirst signals. The low-grade headache and irritability of mild dehydration disappear within hours."
+        },
+        {
+          "target": "bladder",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Roughly 6–8 voids in a day at comfortable intervals. Urine is dilute enough that it no longer stings or smells strongly of ammonia."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Even 1–2% body-water loss measurably worsens attention, short-term memory and mood; correcting it restores baseline performance. You do not get smarter — you stop being handicapped."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Stool softens, afternoon headaches fade, urine stops concentrating",
+      "effects": [
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "With enough fluid the colon stops over-extracting water from stool, so stools soften and pass with less straining — provided fibre intake is also adequate. Water alone will not fix constipation on a low-fibre maida-heavy diet.",
+          "metric": { "label": "Stool consistency", "value": "Bristol type 3–4 (normal)" }
+        },
+        {
+          "target": "kidneys",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Calcium, oxalate and uric acid stay well below their saturation points in urine all day, so crystal nuclei that would have started a stone simply dissolve and wash out."
+        },
+        {
+          "target": "skin",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Skin turgor normalises and lips stop cracking, but there is no extra 'glow' — the epidermal barrier, not drinking volume, sets skin hydration once you are adequately hydrated."
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Plasma volume sits at its normal set point, so the dizziness on standing up quickly that dehydrated people get (orthostatic drop) becomes less common."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Urinary tract infections become less frequent",
+      "effects": [
+        {
+          "target": "bladder",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Higher urine flow physically flushes bacteria out of the bladder before they can adhere and multiply. In a randomised trial, women with recurrent UTIs who added ~1.5 L water a day roughly halved their infection episodes.",
+          "metric": { "label": "Recurrent UTI episodes", "value": "~3.2 → ~1.7 per year in trial women" }
+        },
+        {
+          "target": "kidneys",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Steady dilute urine reduces the risk of ascending infection reaching the kidney (pyelonephritis) and keeps the medullary concentrating gradient intact — unlike very high intakes, 3 L does not wash it out."
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Heat tolerance improves: with normal plasma volume, sweat rate and skin blood flow can rise properly, so core temperature climbs more slowly on a hot day."
+        },
+        {
+          "target": "joints",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Synovial fluid and cartilage water content stay normal. Adequate hydration protects cartilage function; it does not repair worn joints."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Steady state — this is simply normal physiology, sustained",
+      "effects": [
+        {
+          "target": "kidneys",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Chronically low vasopressin is associated in observational data with slower decline in kidney function; the mechanism is less glomerular hyperfiltration driven by ADH. Evidence is suggestive, not proven.",
+          "metric": { "label": "Urine osmolality", "value": "typically 300–500 mOsm/kg" }
+        },
+        {
+          "target": "heart",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Blood pressure is essentially unchanged in healthy people — the kidney excretes what is not needed. Anyone expecting BP to fall from water alone will be disappointed."
+        },
+        {
+          "target": "mouth",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Saliva flow stays adequate, which matters more than people realise: saliva buffers acid and clears food debris, so dry-mouth-driven cavities and bad breath reduce."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Kidney stone risk measurably lower — the strongest proven benefit",
+      "effects": [
+        {
+          "target": "kidneys",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "A five-year randomised trial in first-time stone formers found that maintaining a urine output above ~2 L/day cut the recurrence rate roughly in half and delayed the time to the next stone. 3 L intake is the practical way to hit that urine target in Indian heat.",
+          "metric": { "label": "Stone recurrence at 5 years", "value": "~12% vs ~27% with low intake" }
+        },
+        {
+          "target": "bladder",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Fewer infections mean fewer antibiotic courses, which matters in India where recurrent empirical antibiotic use drives resistant E. coli."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Regular soft stools reduce straining, which over time means less pressure on haemorrhoidal cushions and pelvic floor."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "No adaptation needed — the body has nothing to compensate for",
+      "effects": [
+        {
+          "target": "kidneys",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "One year at 3 L leaves kidney structure and eGFR normal. Unlike very high intakes, there is no medullary washout and no sodium-wasting pressure, so the safety margin during illness or fever stays intact.",
+          "metric": { "label": "eGFR change", "value": "no meaningful change expected" }
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Consistently avoiding the daily 2–3% dehydration dip that most Indian office and field workers live in means fewer tension headaches and steadier afternoon concentration."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "No weight loss on its own. Water before meals slightly blunts intake in some trials, but the effect is small and inconsistent — do not expect fat loss from hydration."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Fewer stones, fewer UTIs, kidneys ageing on schedule",
+      "effects": [
+        {
+          "target": "kidneys",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Over years, the cumulative effect is fewer stone events and fewer infection-related scars. Observational cohorts suggest higher fluid intake tracks with slower eGFR decline, though randomised proof of slowed kidney disease progression is still lacking.",
+          "metric": { "label": "Lifetime stone risk", "value": "substantially reduced in stone-formers" }
+        },
+        {
+          "target": "bladder",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Lower lifetime exposure to concentrated urine and to recurrent infection, both of which are chronic irritants to the bladder lining."
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "In heat-exposed work — construction, farming, delivery riding — habitual adequate hydration is one of the few things that reliably reduces heat exhaustion and the acute kidney injury episodes that follow it."
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Thirst sensation blunts naturally with age, so an older adult who has built the 3 L habit is protected from the dehydration that catches many Indian elders in May and June."
+        }
+      ]
+    }
+  ]
+}

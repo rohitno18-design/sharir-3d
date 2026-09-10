@@ -1,0 +1,285 @@
+{
+  "id": "skipping-rope-15min-daily",
+  "name": { "en": "Skipping rope 15 minutes daily", "hi": "रोज़ 15 मिनट रस्सी कूदना" },
+  "category": "exercise",
+  "icon": "🪢",
+  "dose": "15 minutes daily, broken into sets — typically 8–10 rounds of 60–90 seconds skipping with 30–45 seconds rest, at roughly 120–140 skips per minute. Around 1,200–1,800 total contacts per session. Assumes cushioned shoes and a floor that is not bare concrete, starting from a mostly untrained baseline.",
+  "summary": {
+    "en": "Skipping is a high-impact, high-turnover aerobic drill: at 120–140 revolutions per minute it sits around 10–12 METs, comparable to running at 8–9 km/h, but it loads the calf-Achilles complex far more and the knees and hips far less than running. Each landing sends 2.5–4 times body weight through the foot in under 0.2 seconds, which is exactly the kind of brief, high-rate loading bone responds to. The cardiovascular return is fast, the coordination return is faster, and the risk is entirely concentrated in the lower leg during the first six weeks.",
+    "hi": "रस्सी कूदना तेज़ रफ़्तार वाला हाई-इम्पैक्ट कार्डियो है। 120–140 कूद प्रति मिनट पर ये लगभग 8–9 किमी/घंटा की दौड़ जितनी मेहनत है, लेकिन इसमें पिंडली और एड़ी की नस पर दबाव कहीं ज़्यादा और घुटनों-कूल्हों पर कम पड़ता है। हर लैंडिंग में शरीर के वज़न का ढाई से चार गुना ज़ोर पाँव से होकर गुज़रता है, वो भी सेकंड के पाँचवें हिस्से में — हड्डी मज़बूत होने का सबसे अच्छा इशारा यही है। दिल की फिटनेस जल्दी सुधरती है, तालमेल उससे भी जल्दी, और ख़तरा पूरी तरह पहले छह हफ़्तों में पिंडली और एड़ी तक सीमित रहता है।"
+  },
+  "indian_context": "This is the cheapest serious cardio available in India — a usable rope costs ₹150–400 once and needs about two by two metres of floor, which makes it realistic in a 1BHK flat where a treadmill or a gym membership is not. It is also fully indoor, so it works through the monsoon and through the winter smog season in Delhi-NCR, Lucknow and Patna when outdoor running is genuinely harmful. Two practical Indian problems: most flats have tile or stone over concrete, and skipping barefoot or in flat canvas shoes on that surface is the single biggest cause of shin splints and heel pain here — put down a rubber mat and wear cushioned shoes. And the bone-density benefit only cashes in if calcium and vitamin D are adequate, which they very often are not: vitamin D deficiency is widespread across Indian adults, including in sunny cities, and typical vegetarian diets run low on calcium.",
+  "evidence": "moderate",
+  "sources": [
+    "Ainsworth BE et al. 2011 Compendium of Physical Activities: a second update of codes and MET values. Medicine & Science in Sports & Exercise. 2011",
+    "Tucker LA, Strong JE, LeCheminant JD, Bailey BW. Effect of two jumping programs on hip bone mineral density in premenopausal women: a randomized controlled trial. American Journal of Health Promotion. 2015",
+    "Behringer M et al. Effects of weight-bearing activities on bone mineral content and density in children and adolescents: a meta-analysis. Journal of Bone and Mineral Research. 2014",
+    "WHO. Guidelines on physical activity and sedentary behaviour. 2020",
+    "ACSM's Guidelines for Exercise Testing and Prescription, 11th ed. 2021"
+  ],
+  "caution": "Skipping is not a good first exercise if you are significantly overweight, have knee or ankle osteoarthritis, uncontrolled hypertension, a history of stress fracture, or diabetic foot problems with reduced sensation — the impact per contact is high and the feedback that tells you to stop may be missing. Build up over 4–6 weeks rather than starting at 15 continuous minutes; almost all skipping injuries are calf strains, Achilles tendinopathy, shin splints and plantar fasciitis from doing too much too early on a hard floor. Women with known low bone density should get medical advice before adding high-impact loading, and anyone with pelvic-floor weakness or recent childbirth should expect leakage and address that first.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Calves burning, heart rate high fast, coordination the real limit",
+      "effects": [
+        {
+          "target": "calves",
+          "kind": "strain",
+          "intensity": 0.7,
+          "note": "The gastrocnemius, soleus and Achilles do nearly all the work, absorbing and returning energy on every contact. This is why the calves burn within 60 seconds and are the sorest thing tomorrow, far more than in running.",
+          "metric": { "label": "Landing force per skip", "value": "~2.5–4× body weight" }
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.6,
+          "note": "Heart rate reaches 75–90% of maximum within the first minute because the arms, shoulders and legs are all working and the movement has no coasting phase. At 10–12 METs it is a genuinely vigorous session.",
+          "metric": { "label": "Energy cost", "value": "~10–13 kcal/min" }
+        },
+        {
+          "target": "cerebellum",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "On day one the limiting factor is usually rhythm, not fitness — trips, timing errors and wrist over-rotation. The cerebellum and motor cortex learn this pattern fast, which is why the second week feels transformed."
+        },
+        {
+          "target": "forearm-muscles",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "The rope should be turned by the wrists, not the shoulders. Beginners over-use the arms, so the forearms and deltoids fatigue early and the shoulders ache the next day."
+        },
+        {
+          "target": "feet",
+          "kind": "strain",
+          "intensity": 0.45,
+          "note": "Landing repeatedly on the forefoot loads the plantar fascia and the small foot muscles. On tile or concrete without cushioning, heel and arch pain can show up the same evening."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Rhythm clicks, soreness drops, shins start complaining",
+      "effects": [
+        {
+          "target": "cerebellum",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Skill improves faster than fitness. Trips per minute fall sharply, ground contact time shortens, and the movement starts to feel elastic rather than effortful — the same neural learning that makes any rhythmic skill click."
+        },
+        {
+          "target": "tibia",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Repeated impact triggers bone remodelling in the shin, and remodelling removes old bone before laying down new. That temporary weakening is why medial tibial stress syndrome ('shin splints') peaks in weeks 1–6 of any new impact habit."
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Plasma volume expands by roughly 8–10% in the first week, so stroke volume rises and the same set of skips feels easier by the weekend."
+        },
+        {
+          "target": "tendons",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "The Achilles takes the highest cyclical load of any tendon here and adapts over months, not days. Morning stiffness at the back of the heel is the early warning sign that volume is climbing faster than the tendon can remodel."
+        },
+        {
+          "target": "calves",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The repeated-bout effect means soreness drops sharply after three or four sessions. The muscle-tendon unit reorganises so the same session causes far less damage."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Aerobic fitness up, ankles springier, calves visibly firmer",
+      "effects": [
+        {
+          "target": "heart-muscle",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "Stroke volume rises and resting heart rate typically drops 3–6 bpm. VO₂max in a previously sedentary adult is up roughly 5–10% at one month.",
+          "metric": { "label": "VO₂max", "value": "+5–10%" }
+        },
+        {
+          "target": "calves",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.03 },
+          "note": "The calf complex is the primary trained muscle and responds quickly with a mix of endurance adaptation and modest hypertrophy. Definition in the gastrocnemius is usually the first visible change from skipping."
+        },
+        {
+          "target": "ankle",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Reactive strength improves: the ankle spends less time on the ground and returns more of each landing's energy elastically. This transfers directly to running economy, sprinting and jumping."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Fifteen minutes burns roughly 150–190 kcal, so about 1,100–1,300 a week. If eating does not compensate, expect a modest 0.5–1 kg of fat loss in the first month, weighted toward visceral fat.",
+          "metric": { "label": "Energy per session", "value": "~150–190 kcal" }
+        },
+        {
+          "target": "tibia",
+          "kind": "strain",
+          "intensity": 0.45,
+          "note": "Weeks 3–6 remain the peak stress-fracture window, especially on hard floors or in worn shoes. Pain that is sharp, point-tender on the bone edge and worse at the start of a session is a stop signal, not a warm-up issue."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Bone remodelling turns positive; conditioning noticeably better",
+      "effects": [
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "The remodelling cycle takes roughly three to four months, and at two months the bone-forming phase is underway. Brief, frequent, high-rate impacts are a better osteogenic signal than long steady loading — jumping programmes of only 10–20 contacts a day have improved hip bone density in trials."
+        },
+        {
+          "target": "heart-muscle",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Resting heart rate typically sits 5–8 bpm below baseline and recovery heart rate after a hard round drops noticeably. Ventricular filling and stroke volume are both improved."
+        },
+        {
+          "target": "calves",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.04 },
+          "note": "Two months of daily high-frequency loading builds dense, defined calves — one of the few muscles most people struggle to develop with conventional gym work."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Nitric oxide production improves with regular high-flow exercise; systolic blood pressure is typically 4–6 mmHg lower, more if it started high.",
+          "metric": { "label": "Systolic blood pressure", "value": "−4 to −6 mmHg" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Daily vigorous activity keeps muscle GLUT4 activity high, so post-meal glucose spikes flatten and fasting insulin falls — the change that matters most for the South Asian tendency toward insulin resistance."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Genuine athletic conditioning; measurably stronger lower-leg bone",
+      "effects": [
+        {
+          "target": "heart-muscle",
+          "kind": "positive",
+          "intensity": 0.65,
+          "visual": { "scale": 1.02 },
+          "note": "VO₂max is typically 15–20% above a sedentary baseline and resting heart rate 8–10 bpm lower. Fifteen daily vigorous minutes comfortably exceeds the WHO weekly minimum for vigorous activity.",
+          "metric": { "label": "VO₂max vs baseline", "value": "+15–20%" }
+        },
+        {
+          "target": "tibia",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Bone mineral density in the tibia, calcaneus and femoral neck is measurably higher, typically by 1–2%. This only happens if calcium and vitamin D intake are adequate — the loading signal has to have material to build with."
+        },
+        {
+          "target": "tendons",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "The Achilles is now thicker and stiffer, storing and returning elastic energy more efficiently. The early injury window has largely closed and the movement costs less energy at the same rate."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Six months of daily vigorous work plus stable eating typically means a visible drop in waist circumference. Visceral fat is the depot that shrinks first with aerobic training."
+        },
+        {
+          "target": "lungs",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Ventilatory efficiency is better — less air moved for the same work — and breathlessness at ordinary tasks like stairs is markedly reduced."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Fitness plateaus; the value shifts to bone, balance and consistency",
+      "effects": [
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "A year of daily impact loading is one of the most practical ways to defend bone density, particularly at the hip and lower leg. This matters most for Indian women, in whom low bone density is common and often undiagnosed until a fracture."
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Cardiovascular adaptations plateau at this dose; further gains need more volume, more speed or added intervals. Blood pressure, resting heart rate and lipids all sit in a healthier range and stay there while the habit does."
+        },
+        {
+          "target": "ankle",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Proprioception, balance and reactive strength at the ankle are substantially better than a sedentary peer's. This is exactly the capacity that prevents falls decades later."
+        },
+        {
+          "target": "knee-joint",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "Skipping loads the knee less than running because the landing is a stiff forefoot contact with a small knee bend — but a year of daily impact with no rest days still accumulates. One or two lighter days a week is the sensible insurance."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Skipping does almost nothing for the upper body, hips or maximal strength. After a year the honest gap is resistance training, which skipping cannot substitute for."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years: strong bones and heart, if the lower leg held up",
+      "effects": [
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.7,
+          "note": "Sustained daily vigorous activity is associated with roughly 25–30% lower all-cause mortality in large cohorts, mediated through blood pressure, glucose control, body composition and cardiorespiratory fitness.",
+          "metric": { "label": "All-cause mortality (cohort data)", "value": "~−25 to −30%" }
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "Bone density at the hip and legs is maintained well above sedentary peers. Since bone loss accelerates sharply after menopause and after 60 in men, five years of impact loading is meaningful fracture insurance."
+        },
+        {
+          "target": "tendons",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Achilles tendon tissue turns over slowly and degenerates with age. Five years of daily loading without variation is the pattern most likely to produce mid-portion Achilles tendinopathy, especially past 40."
+        },
+        {
+          "target": "feet",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "Cumulative forefoot loading can produce plantar fasciitis or metatarsal stress reactions in people who trained on hard floors in unsupportive shoes. Surface and footwear are the variables that decide this outcome, not the exercise itself."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Long-term aerobic exercise is linked to roughly 20–30% lower dementia and depression risk in cohort studies, and the coordination demand of skipping adds a motor-learning component that pure treadmill work does not."
+        }
+      ]
+    }
+  ]
+}

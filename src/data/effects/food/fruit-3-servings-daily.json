@@ -1,0 +1,247 @@
+{
+  "id": "fruit-3-servings-daily",
+  "name": { "en": "3 servings of fruit every day", "hi": "रोज़ तीन बार फल" },
+  "category": "food",
+  "icon": "🍌",
+  "dose": "Three servings a day of whole fresh fruit — for example one banana, one guava and a bowl of papaya, or whatever is in season: mango and jamun in summer, orange and amla in winter, seasonal berries. Roughly 350–400 g total, about 200–250 kcal, 10–12 g of fibre and 15–20 g of naturally occurring fructose. Whole fruit, not juice.",
+  "molecule": "fructose",
+  "summary": {
+    "en": "The fructose in fruit and the fructose in a soft drink are the same molecule arriving in completely different packaging, and the packaging is the entire story: fibre slows absorption, so the liver receives a trickle instead of a flood and almost none of it is converted to fat. What comes with it is the point — potassium that counters the salt in an Indian diet, soluble fibre that lowers LDL, vitamin C that unlocks the iron in your dal, and polyphenols. WHO explicitly excludes the sugar inside whole fruit from its 'free sugars' limit for exactly this reason.",
+    "hi": "फल की फ्रुक्टोज़ और कोल्ड ड्रिंक की फ्रुक्टोज़ एक ही चीज़ है, बस पैकिंग अलग है — और पूरी कहानी उसी पैकिंग की है: फाइबर सोखने की रफ़्तार धीमी कर देता है, इसलिए लिवर तक बाढ़ नहीं, बूँद-बूँद पहुँचता है और चर्बी लगभग नहीं बनती। असली फ़ायदा साथ आने वाली चीज़ों का है — पोटैशियम जो भारतीय खाने के नमक को काटता है, घुलनशील फाइबर जो LDL घटाता है, विटामिन C जो दाल का आयरन खोल देता है, और पॉलीफ़ेनॉल। WHO ने अपनी शुगर की सीमा से साबुत फल की शुगर को इसीलिए बाहर रखा है।"
+  },
+  "indian_context": "The most damaging myth in Indian nutrition is that diabetics must avoid banana, mango and chikoo. Whole fruit in sensible portions is associated with lower diabetes risk, not higher — it is the juice, the milkshake and the aamras with sugar that raise it. Guava deserves special mention: it carries roughly four times the vitamin C of an orange and about 5 g of fibre per 100 g, and it costs a fraction of imported fruit. Eat an amla or a guava with your dal-chawal and you meaningfully increase the iron you absorb from that meal, which matters in a country where 57% of women aged 15–49 are anaemic. On safety: FSSAI has banned calcium carbide ripening of mangoes and bananas, but it still happens, so wash fruit properly and be suspicious of uniformly coloured out-of-season produce.",
+  "evidence": "strong",
+  "sources": [
+    "Aune D et al. Fruit and vegetable intake and the risk of cardiovascular disease, total cancer and all-cause mortality: a systematic review and dose-response meta-analysis. International Journal of Epidemiology, 2017",
+    "Muraki I et al. Fruit consumption and risk of type 2 diabetes: results from three prospective longitudinal cohort studies. BMJ, 2013",
+    "WHO. Guideline: Sugars intake for adults and children, 2015 (free sugars exclude sugars naturally present in whole fresh fruit)",
+    "WHO. Guideline: Potassium intake for adults and children, 2012",
+    "ICMR-NIN. Dietary Guidelines for Indians, 2024"
+  ],
+  "caution": "If you have chronic kidney disease, three servings a day — especially banana, chikoo and citrus — can push potassium into a dangerous range; this is the one group who genuinely must ration fruit. On insulin or sulfonylureas, count the carbohydrate as you would any other food and eat fruit whole rather than juiced. If you have IBS or fructose malabsorption, three servings may bloat you — mango and apple are worse offenders than banana and papaya. And fruit should sit alongside vegetables, not replace them; 400 g of fruit and no sabzi is a worse diet than half of each.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Fructose arrives slowly, wrapped in fibre; potassium load lands",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.35,
+          "note": "15–20 g of fructose arriving slowly through a fibre matrix is comfortably within what the liver burns or stores as glycogen. Almost none is converted to fat — the opposite of what the same dose does as a fast liquid.",
+          "metric": { "label": "Fructose from 3 servings", "value": "~15–20 g, spread over hours, vs ~25 g in seconds from a 500 ml soft drink" }
+        },
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "10–12 g of fibre — soluble pectin from guava and papaya, resistant starch from a less-ripe banana — adds bulk and reaches the colon as food for butyrate-producing bacteria."
+        },
+        {
+          "target": "small-intestine",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Vitamin C in the same meal converts dietary iron to its more absorbable ferrous form and stops phytates binding it. A guava with dal is worth more than a spoon of extra dal."
+        },
+        {
+          "target": "kidneys",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "About 1000–1400 mg of potassium arrives, which promotes sodium excretion. In an Indian diet running at 11 g of salt, this is the direct chemical counterweight."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Bowels regular, blood pressure a shade down, vitamin C saturated",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Potassium relaxes vascular smooth muscle and helps the kidney dump sodium. WHO's potassium target exists precisely because most diets — Indian diets especially — get the sodium-to-potassium ratio badly wrong.",
+          "metric": { "label": "Systolic BP from raising potassium intake", "value": "typically −2 to −4 mmHg, more if salt intake is high" }
+        },
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Constipation improves within days — usually the first change people actually notice. Fibre plus the water fruit carries is more effective than fibre supplements."
+        },
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Plasma vitamin C saturates at these intakes. That does not prevent colds — the trial evidence there is disappointing — but it does support collagen synthesis, wound healing and iron absorption."
+        },
+        {
+          "target": "stomach",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Some people get bloating in the first week as the gut adapts to more fructose and fibre. It usually settles; if it does not, fructose malabsorption or IBS is worth considering."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "LDL and blood pressure both nudged down; iron status improving",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Soluble fibre binds bile acids so the liver has to pull cholesterol from the blood to replace them. Combined with the potassium effect, a month of fruit moves two cardiovascular numbers at once.",
+          "metric": { "label": "LDL cholesterol", "value": "typically −3 to −7 mg/dL from ~10 g/day of added fibre" }
+        },
+        {
+          "target": "bone-marrow",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "A month of vitamin C at every meal meaningfully raises the iron absorbed from a vegetarian Indian plate. It cannot cure established anaemia, but it slows the drain and helps tablets work better."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Microbial diversity and short-chain fatty acid production rise with consistent fruit fibre and polyphenols. Colonic pH falls slightly, which is the pattern associated with a healthier gut lining."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Fruit is low in energy density and high in satiety for its calories. In trials it does not cause weight gain and usually displaces worse snacks — provided it is eaten instead of biscuits, not alongside them."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Glycaemic control unchanged or slightly better — the myth breaks",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Two months of whole fruit does not worsen HbA1c even in people with type 2 diabetes — fibre and slow absorption blunt the glucose rise. The same fruit as juice does the opposite.",
+          "metric": { "label": "Whole fruit vs fruit juice", "value": "whole fruit is linked to lower type 2 diabetes risk; juice to higher" }
+        },
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Stable improvement in stool consistency and transit. This is also the mechanism behind fibre's association with lower colorectal cancer risk over decades."
+        },
+        {
+          "target": "skin",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Vitamin C is essential for collagen cross-linking, and carotenoids from papaya and mango accumulate in skin. The effect is real but subtle — nothing like what supplement advertising promises."
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "Fruit acids do erode enamel slightly, particularly citrus. Far less damaging than sticky sweets or sweet chai — but rinse with water afterwards and do not brush immediately on softened enamel."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Inflammatory markers down; the cardiovascular numbers hold",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Six months of lower blood pressure and slightly lower LDL is a genuine change in the rate at which arterial plaque accumulates. Unglamorous, cumulative, and exactly how prevention works.",
+          "metric": { "label": "Fruit and vegetable target", "value": "at least 400 g/day combined; risk keeps falling up to ~800 g" }
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Fruit intake is inversely associated with coronary events and stroke in dose-response meta-analyses. Potassium, fibre, folate and polyphenols all plausibly contribute."
+        },
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "CRP and other inflammatory markers tend to fall on high fruit and vegetable intakes. Modest effect sizes, but consistent across trials."
+        },
+        {
+          "target": "eyes",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Carotenoids from papaya, mango and orange add to the eye's antioxidant defences. Leafy greens do more for the macula, but fruit contributes to the same pool."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "One of the most reliably protective habits in nutrition",
+      "effects": [
+        {
+          "target": "coronary-arteries",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "The dose-response evidence for fruit and vegetables against cardiovascular disease is about as consistent as nutrition epidemiology gets. Whether it is the fruit or the whole lifestyle around it is the honest open question.",
+          "metric": { "label": "Cohort evidence", "value": "risk of cardiovascular disease and total mortality falls steadily up to ~800 g/day of fruit and vegetables" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Whole fruit intake is associated with lower type 2 diabetes risk across large cohorts, with the strongest signals for high-fibre, low-glycaemic fruits. Juice moves the other way."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "A year of consistently high fibre is one of the better-supported dietary factors for colorectal health — a growing problem in urban India."
+        },
+        {
+          "target": "bone-marrow",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "A year of vitamin C at meals produces a measurable improvement in iron status on a vegetarian diet. It is the cheapest single fix for Indian iron nutrition after the iron tablet itself."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Lower risk across almost everything, and little on the other side",
+      "effects": [
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Five years at three servings a day sits comfortably inside the range where cohort data show lower cardiovascular disease, lower stroke, lower total cancer and lower all-cause mortality. The evidence is observational but the consistency is unusual.",
+          "metric": { "label": "All-cause mortality", "value": "consistently lower with higher fruit intake; benefit plateaus around 800 g/day of fruit and vegetables" }
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Lower blood pressure over five years is the strongest modifiable protection against stroke and vascular cognitive decline. Fruit contributes to that through potassium more than through anything exotic."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Five years of whole fruit is protective, not harmful, in the diabetes data. If nothing else on this page sticks, let it be this: fruit is not the reason Indians get diabetes."
+        },
+        {
+          "target": "kidneys",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "The single group who must ignore all of the above: anyone with advanced chronic kidney disease, where five years of this potassium load is genuinely dangerous. For everyone else the kidney effect is neutral or mildly protective."
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "Cumulative mild acid erosion over years, mostly from citrus and from grazing on fruit all day rather than eating it as three defined servings. Small, and easily managed with water."
+        }
+      ]
+    }
+  ]
+}

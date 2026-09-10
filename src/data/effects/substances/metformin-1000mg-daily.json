@@ -1,0 +1,248 @@
+{
+  "id": "metformin-1000mg-daily",
+  "name": { "en": "Metformin 1000 mg a day", "hi": "रोज़ 1000 मि.ग्रा. मेटफॉर्मिन" },
+  "category": "medicine",
+  "icon": "💊",
+  "dose": "500 mg twice daily with or immediately after breakfast and dinner, for type 2 diabetes. Usually started at 500 mg once daily and titrated up over 1–2 weeks to reduce gut side effects. Extended-release forms allow the whole dose at night.",
+  "molecule": "metformin",
+  "summary": {
+    "en": "Metformin does not push the pancreas to release more insulin — it lowers the amount of glucose the liver makes. It mildly inhibits mitochondrial complex I in liver cells, which raises the AMP-to-ATP ratio, activates the energy sensor AMPK and shuts down gluconeogenesis; it also slows glucose absorption in the gut, raises GLP-1 and shifts the gut microbiome. Because the liver's overnight glucose output is the main driver of a high fasting sugar, fasting readings fall first. Expect HbA1c to drop by about 1 to 1.5 percentage points over three months, with no hypoglycaemia when used alone and roughly no weight gain.",
+    "hi": "मेटफॉर्मिन पैंक्रियास से ज़्यादा इंसुलिन नहीं निकलवाता — ये लिवर को शुगर बनाने से रोकता है। लिवर की कोशिकाओं में ऊर्जा बनाने की मशीन को हल्का धीमा करके ये AMPK नाम का स्विच चालू करता है, जिससे नई ग्लूकोज़ बनना बंद हो जाता है। साथ ही आँत से शुगर का सोखना धीमा करता है और GLP-1 बढ़ाता है। रात भर लिवर जो शुगर बनाता है वही सुबह की फास्टिंग शुगर बढ़ाती है, इसलिए सबसे पहले फास्टिंग रीडिंग गिरती है। तीन महीने में HbA1c लगभग 1 से 1.5 प्रतिशत तक घटता है, अकेले लेने पर शुगर ख़तरनाक स्तर तक नहीं गिरती, और वज़न भी नहीं बढ़ता।"
+  },
+  "indian_context": "India carries one of the largest diabetes burdens in the world — ICMR-INDIAB estimated over 100 million adults with diabetes and a comparable number with prediabetes — and metformin is the first-line drug for nearly all of them. It is also one of the cheapest medicines in the country at roughly ₹1–3 a day as a generic and is on the National List of Essential Medicines, so cost is almost never the reason people stop. Two Indian realities complicate it. First, a rice- or roti-heavy plate produces large post-meal glucose spikes that metformin, which mainly works on the liver, controls poorly — which is why sugars can still look bad on the drug if the plate does not change. Second, vitamin B12 deficiency is already widespread among Indian vegetarians, and metformin independently reduces B12 absorption, so the two stack into a very common and very missed cause of tingling feet that gets mistaken for diabetic neuropathy. The other pattern worth naming: stopping the tablet once the sugar report reads normal, or swapping it for an unregulated 'sugar-free' herbal powder, is how a lot of Indian patients quietly lose years of control.",
+  "evidence": "strong",
+  "sources": [
+    "American Diabetes Association. Standards of Care in Diabetes. Diabetes Care (annual update)",
+    "UK Prospective Diabetes Study (UKPDS) Group. Effect of intensive blood-glucose control with metformin on complications in overweight patients with type 2 diabetes (UKPDS 34). Lancet. 1998",
+    "Holman RR et al. 10-year follow-up of intensive glucose control in type 2 diabetes. New England Journal of Medicine. 2008",
+    "Rena G, Hardie DG, Pearson ER. The mechanisms of action of metformin. Diabetologia. 2017",
+    "Aroda VR et al. Long-term metformin use and vitamin B12 deficiency in the Diabetes Prevention Program Outcomes Study. Journal of Clinical Endocrinology & Metabolism. 2016",
+    "Anjana RM et al. Metabolic non-communicable disease health report of India: the ICMR-INDIAB national cross-sectional study. Lancet Diabetes & Endocrinology. 2023"
+  ],
+  "caution": "Metformin must be stopped and reassessed if kidney function drops — it is contraindicated below an eGFR of 30 and needs dose reduction between 30 and 45, because the drug is cleared by the kidneys and accumulation is what causes the rare but dangerous lactic acidosis (roughly a few cases per 100,000 patient-years). Hold it during acute illness with dehydration, vomiting, severe infection, before surgery, and around contrast-dye scans. Get vitamin B12 checked periodically on long-term use, especially if you are vegetarian or develop numbness or tingling in the feet. Alcohol, particularly binge drinking, raises lactic acidosis risk. It does not cause low blood sugar on its own, but can when combined with sulfonylureas or insulin.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Liver glucose output falls the same day; the gut protests first",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Metformin concentrates in hepatocytes via the OCT1 transporter, mildly inhibits mitochondrial complex I, and activates AMPK. Hepatic gluconeogenesis is suppressed within hours of the first dose — the drug's core action.",
+          "metric": { "label": "Hepatic glucose output", "value": "reduced within hours" }
+        },
+        {
+          "target": "stomach",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Nausea, metallic taste and abdominal discomfort affect roughly 20–30% of people in the first days. This is why the dose is titrated and taken with food rather than started at full strength."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "A large fraction of the dose stays in the gut, where it increases anaerobic glucose use by enterocytes and shifts the microbiome. Loose motions and bloating in week one come from the intestine, not the stomach."
+        },
+        {
+          "target": "small-intestine",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Metformin slows intestinal glucose absorption and stimulates GLP-1 release from L-cells, adding a modest appetite and post-meal glucose benefit on top of the liver effect."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Fasting sugar visibly lower; gut side effects usually settling",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.65,
+          "note": "With steady dosing, overnight hepatic glucose production is consistently suppressed. Fasting glucose typically drops 20–40 mg/dL in the first one to two weeks — the fastest-moving number on the drug.",
+          "metric": { "label": "Fasting plasma glucose", "value": "−20 to −40 mg/dL" }
+        },
+        {
+          "target": "large-intestine",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "For most people the diarrhoea and bloating fade over one to two weeks as the gut adapts. For the 5–10% in whom they persist, switching to the extended-release form usually solves it."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Peripheral insulin sensitivity improves modestly, so muscle takes up glucose more readily at the same insulin level. This is a secondary effect — the liver remains the main site of action."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Because the drug lowers glucose without forcing insulin secretion, the beta cells get relief rather than being driven harder. That is a key advantage over older sulfonylureas."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "HbA1c starting to move; appetite slightly down",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "Lower ambient glucose reduces glucotoxicity on the beta cells, so their own insulin response partially recovers. HbA1c reflects the previous 8–12 weeks, so at one month it has moved only part of the way.",
+          "metric": { "label": "HbA1c at 1 month", "value": "−0.4 to −0.8%" }
+        },
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "AMPK activation also suppresses fat synthesis in the liver. Liver fat and transaminases often improve, which matters because fatty liver sits alongside diabetes in most Indian patients."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Metformin is weight-neutral to mildly weight-reducing — typically 1–3 kg over months, partly through GLP-1 and appetite effects. It is not a weight-loss drug and should not be sold as one."
+        },
+        {
+          "target": "small-intestine",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "The drug interferes with calcium-dependent uptake of the B12–intrinsic factor complex in the terminal ileum. The deficiency takes years to appear, but the mechanism is running from the first month."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Full glycaemic effect near; dose often increased around now",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Maximal effect at 1000 mg/day is reached by roughly 4–8 weeks. Many patients are titrated to 1500–2000 mg at this point, since the dose-response continues up to about 2000 mg daily."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "HbA1c is now approaching its new steady value. Monotherapy typically delivers a 1 to 1.5 percentage point reduction, with larger falls in people who started higher.",
+          "metric": { "label": "HbA1c", "value": "−1.0 to −1.5%" }
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Beyond glucose, metformin improves endothelial function and lowers triglycerides and PAI-1 slightly. These pleiotropic effects are part of why it outperformed equivalent glucose lowering by other drugs in UKPDS."
+        },
+        {
+          "target": "ovaries",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "In women with PCOS, the same insulin-sensitising action reduces ovarian androgen output and restores ovulation in a meaningful proportion — a common off-label use, particularly in India."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Steady state: sugars controlled, complications risk falling",
+      "effects": [
+        {
+          "target": "blood-vessels",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Sustained glucose control reduces damage to the small vessels of the eye, kidney and nerves. Microvascular benefit tracks HbA1c closely and begins accruing from the first months of good control."
+        },
+        {
+          "target": "kidneys",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Better glycaemic control protects the glomeruli over time. The kidneys must still be monitored, because they clear the drug and falling function is the main reason metformin has to be stopped."
+        },
+        {
+          "target": "small-intestine",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "B12 levels start to drift down measurably in a minority by six months. Vegetarians, who begin with lower stores, reach the deficient range sooner than meat-eaters on the same dose."
+        },
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Reduced hepatic fat and improved insulin sensitivity persist. There is no tolerance to metformin's action — it does not stop working the way some drugs do."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "One year: real complication protection, and the B12 question",
+      "effects": [
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "In overweight patients with type 2 diabetes, UKPDS showed metformin reduced diabetes-related endpoints, myocardial infarction and all-cause mortality more than equivalent glucose control with other agents — the basis for its first-line status.",
+          "metric": { "label": "Macrovascular benefit (UKPDS 34)", "value": "significant reduction in MI and all-cause mortality" }
+        },
+        {
+          "target": "peripheral-nerves",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Long-term use is associated with B12 deficiency in roughly 6–30% of users depending on dose and duration. Untreated, it causes numbness and tingling that looks exactly like diabetic neuropathy but is reversible with B12 replacement.",
+          "metric": { "label": "B12 deficiency with long-term use", "value": "~6–30%" }
+        },
+        {
+          "target": "retina",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "A year of HbA1c around 1 point lower measurably slows progression of diabetic retinopathy. Annual dilated eye examination remains necessary regardless of how good the numbers look."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Metformin does not damage the kidneys — but it accumulates when they fail. Annual eGFR checks are about drug safety, not drug toxicity."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years: durable but not permanent — beta cells keep declining",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "neutral",
+          "intensity": 0.5,
+          "note": "Type 2 diabetes is progressive: beta-cell function continues to fall regardless of treatment. In long-term trials a substantial share of patients on metformin alone need a second drug added within about five years. That is disease progression, not drug failure.",
+          "metric": { "label": "Monotherapy failure by 5 years", "value": "roughly 1 in 5" }
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "Post-trial follow-up of UKPDS found the mortality and cardiovascular benefit of early metformin persisted a decade later even after treatment groups converged — the 'legacy effect' of controlling sugars early."
+        },
+        {
+          "target": "peripheral-nerves",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "By five years, B12 deficiency risk is at its highest. Left untreated it can produce irreversible nerve and spinal cord damage, which is why periodic testing is a guideline recommendation, not an optional extra."
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Five years of an HbA1c roughly 1 point lower translates into meaningfully less retinopathy, nephropathy and neuropathy. The diet and activity changes alongside the drug decide how much of that benefit is actually realised."
+        },
+        {
+          "target": "kidneys",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "As diabetes progresses, kidney function declines in a proportion of patients and metformin eventually has to be reduced or stopped. Planning for that transition beats discovering it during an acute illness."
+        }
+      ]
+    }
+  ]
+}

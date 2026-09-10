@@ -1,0 +1,247 @@
+{
+  "id": "coffee-3-cups-daily",
+  "name": { "en": "3 cups of coffee every day", "hi": "रोज़ 3 कप कॉफ़ी" },
+  "category": "drink",
+  "icon": "☕",
+  "dose": "3 cups a day, roughly 300 mg of caffeine in total. A South Indian filter coffee or a brewed cup carries about 80–120 mg; instant coffee is closer to 60–80 mg per spoon. Assumed here: two in the morning, one after lunch. EFSA considers up to 400 mg/day safe for healthy adults.",
+  "molecule": "caffeine",
+  "summary": {
+    "en": "Caffeine does not give you energy — it blocks adenosine, the molecule that builds up through the day and tells your brain it is tired. Alertness rises for a few hours, blood pressure jumps briefly, and within one to two weeks the brain grows extra adenosine receptors so the same three cups mostly return you to normal rather than lifting you above it. What survives the tolerance is the interesting part: coffee drinkers show consistently lower rates of type 2 diabetes, liver disease and Parkinson's in large cohorts, and around three cups a day sits at the bottom of the mortality curve.",
+    "hi": "कैफ़ीन एनर्जी नहीं देती — वो एडेनोसिन को रोकती है, वही मॉलिक्यूल जो दिन भर जमा होकर दिमाग़ को थकान का सिग्नल देता है। कुछ घंटे चुस्ती बढ़ती है, BP थोड़ी देर के लिए चढ़ता है, और एक-दो हफ़्ते में दिमाग़ ज़्यादा एडेनोसिन रिसेप्टर बना लेता है — फिर वही तीन कप आपको ऊपर नहीं उठाते, बस सामान्य पर लाते हैं। मज़ेदार बात यह है कि टॉलरेंस के बाद भी बड़े अध्ययनों में कॉफ़ी पीने वालों में टाइप 2 डायबिटीज़, लिवर की बीमारी और पार्किंसन कम मिलते हैं, और रोज़ 3 कप के आसपास मृत्यु-दर सबसे नीची रहती है।"
+  },
+  "indian_context": "In most Indian homes the coffee is 60% milk and comes with two spoons of sugar, so three cups is quietly 6 teaspoons of added sugar and about 250 kcal of milk — often enough to cancel every benefit listed here. The second India-specific issue is iron: coffee polyphenols cut non-haem iron absorption from a meal by roughly a third to a half, and in a country where 57% of women aged 15–49 are anaemic, drinking coffee with or right after dal-chawal is a genuinely bad habit. Leave a gap of about an hour between the meal and the cup. Filter coffee brewed the South Indian way passes through a fine metal filter, so it carries more of the cholesterol-raising diterpenes than paper-filtered coffee but far less than boiled or French-press coffee.",
+  "evidence": "strong",
+  "sources": [
+    "EFSA Panel on Dietetic Products, Nutrition and Allergies. Scientific Opinion on the safety of caffeine. EFSA Journal, 2015",
+    "Poole R et al. Coffee consumption and health: umbrella review of meta-analyses of multiple health outcomes. BMJ, 2017",
+    "Drake C et al. Caffeine effects on sleep taken 0, 3, or 6 hours before going to bed. Journal of Clinical Sleep Medicine, 2013",
+    "Ding M et al. Caffeinated and decaffeinated coffee and risk of type 2 diabetes: a systematic review and dose-response meta-analysis. Diabetes Care, 2014",
+    "Morck TA, Lynch SR, Cook JD. Inhibition of food iron absorption by coffee. Am J Clin Nutr, 1983"
+  ],
+  "caution": "Keep it to 200 mg a day in pregnancy — caffeine crosses the placenta and the fetus clears it very slowly. Cut back if you have an anxiety disorder, panic attacks, palpitations or an arrhythmia, uncontrolled hypertension, or reflux. If you are anaemic or a menstruating woman, keep coffee at least an hour away from meals. Caffeine half-life is 4–6 hours in most people but doubles in pregnancy and on oral contraceptives, and roughly halves in smokers — which is why the same cup wrecks one person's sleep and not another's.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Adenosine blocked for 6 hours; a short blood pressure bump",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Caffeine occupies adenosine A1 and A2A receptors, removing the brake on dopamine and noradrenaline signalling. Reaction time, vigilance and mood all improve within 30–45 minutes.",
+          "metric": { "label": "Peak blood level", "value": "30–60 minutes after the cup; half-life 4–6 hours" }
+        },
+        {
+          "target": "arteries",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "In someone not used to caffeine, blood pressure rises about 3–8 mmHg for two to three hours. In a habitual drinker this response is largely blunted."
+        },
+        {
+          "target": "adrenal-glands",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "A transient rise in adrenaline and cortisol, larger if the coffee is drunk on an empty stomach or at an unusual time of day. Tolerance to this develops quickly."
+        },
+        {
+          "target": "stomach",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Coffee stimulates gastric acid and relaxes the lower oesophageal sphincter, and it also triggers the gastrocolic reflex — which is why the third cup often sends you to the toilet."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Tolerance builds; a missed morning now gives you a headache",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "The brain upregulates adenosine receptors within 7–12 days. The alerting effect shrinks toward simply relieving withdrawal — you are now paying three cups to feel baseline.",
+          "metric": { "label": "Withdrawal headache on stopping abruptly", "value": "in roughly half of regular users, peaking at 20–48 hours" }
+        },
+        {
+          "target": "pineal",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Evening caffeine delays the nightly melatonin rise by around 40 minutes — a genuine circadian phase shift, equivalent to moving your body clock west."
+        },
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "The acute pressure rise largely disappears with habitual use. Long-term coffee drinking is not associated with developing hypertension in cohort studies."
+        },
+        {
+          "target": "small-intestine",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Chlorogenic acids and other polyphenols bind non-haem iron in the gut. A cup taken with the meal reduces the iron you absorb from that meal by roughly a third to a half."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Deep sleep is the price if any cup lands after 2 pm",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Caffeine taken even six hours before bed measurably cuts total sleep time — about an hour in controlled study conditions — and people usually do not notice it happening.",
+          "metric": { "label": "Sleep lost from caffeine 6 hours before bed", "value": "roughly 1 hour of total sleep time" }
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "The performance effect resists tolerance better than the alertness effect does. Around 3 mg/kg before training reliably improves endurance and perceived effort even in daily coffee drinkers."
+        },
+        {
+          "target": "bone-marrow",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "A month of coffee taken with meals meaningfully reduces cumulative iron absorption. In an already iron-deficient Indian population this is a real, avoidable contributor."
+        },
+        {
+          "target": "esophagus",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "Reflux worsens in susceptible people, particularly with strong black coffee on an empty stomach in the morning."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Steady state: no BP change, but the sleep debt is compounding",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "The trap closes: poor sleep at night creates the tiredness that the morning coffee is treating. Most heavy coffee drinkers are managing a problem their coffee is helping to cause.",
+          "metric": { "label": "Practical cut-off", "value": "no caffeine within 8 hours of bedtime if sleep matters to you" }
+        },
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Blood pressure in habitual drinkers is essentially unchanged from baseline. Coffee's reputation as a blood pressure raiser comes from the acute test, not from the chronic reality."
+        },
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Coffee drinkers consistently show lower liver enzymes and less fibrosis in observational studies, and the effect appears with decaffeinated coffee too — so it is the coffee compounds, not the caffeine."
+        },
+        {
+          "target": "hands",
+          "kind": "negative",
+          "intensity": 0.2,
+          "note": "Fine tremor, restlessness and palpitations at 300 mg are uncommon but real, especially in slow caffeine metabolisers, who carry a CYP1A2 variant that clears it far more slowly."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Liver markers better; ferritin worse if you drink it with food",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Six months of habitual coffee is associated with lower ALT and less progression of fatty liver disease. It is one of very few dietary items with a consistently protective liver signal.",
+          "metric": { "label": "Liver benefit", "value": "consistent across cohorts at 2–4 cups/day, decaf included" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Coffee intake is inversely associated with type 2 diabetes in a dose-dependent way — roughly 6% lower risk per cup per day in pooled analyses. Observational, but very consistent."
+        },
+        {
+          "target": "bone-marrow",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "For a menstruating Indian woman on a vegetarian diet, six months of meal-time coffee can be the difference between low-normal and frankly deficient ferritin."
+        },
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Unfiltered coffee — boiled, French press, and to a lesser extent metal-filtered South Indian decoction — carries cafestol and kahweol, which raise LDL. Paper-filtered coffee removes almost all of it."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "The cohort benefits show up — unless it is 6 spoons of sugar",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "A year of habitual coffee sits in the range where cohorts show lower rates of cirrhosis and liver cancer. Effect sizes are meaningful and hold after adjusting for alcohol.",
+          "metric": { "label": "All-cause mortality", "value": "lowest at roughly 3–4 cups/day in umbrella reviews of cohorts" }
+        },
+        {
+          "target": "basal-ganglia",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Caffeine consumption is inversely associated with Parkinson's disease, and adenosine A2A receptor blockade is a plausible mechanism — A2A antagonists are actually used as Parkinson's drugs."
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "The Indian version cancels this out. Three cups with two spoons of sugar each is 6 tsp — about 25 g of added sugar a day, half the WHO limit, delivered as a habit you do not even count as food."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Chronic short sleep from late caffeine is associated with worse memory consolidation, mood and metabolic health. This is the one clear way three cups can make you worse off overall."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Net positive — if you fix the sugar, the timing and the iron",
+      "effects": [
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Across dozens of meta-analyses, 3–4 cups a day is associated with lower all-cause mortality, less cardiovascular disease and less liver disease. All observational — coffee drinkers may simply be healthier people — but the consistency is hard to dismiss.",
+          "metric": { "label": "Strength of evidence", "value": "consistent across cohorts; no randomised long-term trial exists" }
+        },
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "The liver signal is the strongest single finding in the coffee literature: less fibrosis, less cirrhosis, less hepatocellular carcinoma."
+        },
+        {
+          "target": "brain",
+          "kind": "neutral",
+          "intensity": 0.35,
+          "note": "Five years of dependence is genuine but mild — caffeine withdrawal is a recognised diagnosis, not a moral failing. It resolves in about a week if you ever want to stop."
+        },
+        {
+          "target": "bones",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Caffeine slightly increases urinary calcium loss. At 300 mg a day and adequate calcium intake this has no measurable bone effect; it only matters if calcium intake is already poor, which it often is in India."
+        },
+        {
+          "target": "bone-marrow",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Five years of meal-time coffee in an iron-marginal person is the one clear harm on this list — and it is fixed for free by moving the cup an hour away from food."
+        }
+      ]
+    }
+  ]
+}

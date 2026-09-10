@@ -1,0 +1,247 @@
+{
+  "id": "green-leafy-vegetables-daily",
+  "name": { "en": "200 g of green leafy vegetables every day", "hi": "रोज़ 200 ग्राम हरी पत्तेदार सब्ज़ी" },
+  "category": "food",
+  "icon": "🥬",
+  "dose": "About 200 g raw weight a day of palak, methi, sarson, chaulai, bathua or curry leaves — roughly two generous katoris of cooked saag, or one big bunch. That is double ICMR-NIN's suggested 100 g/day of green leafy vegetables. Cooked with a little oil or ghee, since the vitamins in them are fat-soluble.",
+  "molecule": "ferrous",
+  "summary": {
+    "en": "Green leaves are the cheapest concentrated source of folate, vitamin K, magnesium, potassium, lutein and dietary nitrate available in India, and 200 g a day moves several of these measurably within weeks. Dietary nitrate is converted to nitric oxide and relaxes blood vessels, which is why leafy greens reliably shave a few mmHg off blood pressure. The one thing they are famously credited with — fixing anaemia — is the thing they do worst: spinach iron is non-haem iron sitting in a bed of oxalate, and very little of it actually gets absorbed.",
+    "hi": "हरी पत्तेदार सब्ज़ियाँ भारत में फ़ोलेट, विटामिन K, मैग्नीशियम, पोटैशियम, ल्यूटीन और नाइट्रेट का सबसे सस्ता और घना स्रोत हैं, और रोज़ 200 ग्राम कुछ ही हफ़्तों में इनमें से कई चीज़ें नापने लायक़ बढ़ा देता है। इनका नाइट्रेट शरीर में नाइट्रिक ऑक्साइड बनकर नसों को ढीला करता है, इसीलिए BP कुछ अंक गिरता है। पर जिस एक काम के लिए ये सबसे ज़्यादा मशहूर हैं — खून की कमी दूर करना — वही ये सबसे कम कर पाती हैं: पालक का आयरन ऑक्सलेट में फँसा रहता है और बहुत कम ही शरीर में जाता है।"
+  },
+  "indian_context": "Palak ka saag is not an iron tablet — that belief is one of the most durable myths in Indian nutrition, and it is why so many anaemic women are told to eat more spinach and stay anaemic. If iron is the goal, methi, chaulai (amaranth) and bathua are better choices than palak because they carry less oxalate, and squeezing lemon or eating an amla with the meal helps far more than the quantity of leaves does. Cheap and seasonal is the real advantage here: sarson in winter, bathua in the north, drumstick and curry leaves in the south, methi almost everywhere. Two practical cautions — Indian leafy vegetables carry among the highest pesticide residue loads in the food supply, so soak and wash in salted water; and 200 g of palak daily is a lot of oxalate if you have ever passed a kidney stone.",
+  "evidence": "strong",
+  "sources": [
+    "ICMR-NIN. Dietary Guidelines for Indians, 2024 (My Plate: ~100 g green leafy vegetables per day)",
+    "Aune D et al. Fruit and vegetable intake and the risk of cardiovascular disease, total cancer and all-cause mortality: a systematic review and dose-response meta-analysis. International Journal of Epidemiology, 2017",
+    "Morris MC et al. Nutrients and bioactives in green leafy vegetables and cognitive decline. Neurology, 2018",
+    "Siervo M et al. Inorganic nitrate and beetroot juice supplementation reduces blood pressure in adults: a systematic review and meta-analysis. Journal of Nutrition, 2013",
+    "Age-Related Eye Disease Study 2 (AREDS2) Research Group. Lutein + zeaxanthin and omega-3 fatty acids for age-related macular degeneration. JAMA, 2013"
+  ],
+  "caution": "If you take warfarin, do not swing your leafy vegetable intake up and down — vitamin K directly opposes the drug and your INR will chase it. Keep it steady and tell your doctor. If you are a calcium-oxalate kidney stone former, 200 g of palak a day is genuinely risky; switch to lower-oxalate greens and always eat curd or another calcium source in the same meal so the oxalate binds in the gut instead of the kidney. People with advanced kidney disease need to watch the potassium load too.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Nitrate becomes nitric oxide; blood vessels relax within hours",
+      "effects": [
+        {
+          "target": "blood-vessels",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Nitrate in the leaves is reduced to nitrite by bacteria on the tongue and then to nitric oxide in the body, widening arteries. The effect on blood pressure appears 2–3 hours after the meal.",
+          "metric": { "label": "Systolic BP after a nitrate-rich vegetable load", "value": "typically −3 to −5 mmHg within hours" }
+        },
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "About 4–6 g of fibre from 200 g of greens adds stool bulk and water, and feeds the bacteria that produce butyrate for the colonic lining."
+        },
+        {
+          "target": "eyes",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Lutein and zeaxanthin are absorbed with the fat in the tadka and carried to the macula, where they act as a natural blue-light filter. A day's intake barely moves the needle — the effect is cumulative."
+        },
+        {
+          "target": "small-intestine",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "The iron on the label is largely not the iron you get. Oxalate in palak and phytate in the accompanying roti bind it; only a small single-digit percentage is absorbed."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Bowels regular, blood pressure a shade lower, vitamin K restocked",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Daily nitrate keeps the nitric oxide pathway topped up rather than spiking it once. In trials this is where the reliable few-mmHg reduction lives.",
+          "metric": { "label": "Vitamin K1 in 200 g of greens", "value": "several hundred micrograms — far above the daily requirement" }
+        },
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Transit time shortens and stool becomes softer and more regular within days. For most Indians this is the change they actually feel first."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Vitamin K1 is needed to carboxylate osteocalcin, the protein that binds calcium into bone. Adequate K status is associated with better bone quality independent of calcium intake."
+        },
+        {
+          "target": "kidneys",
+          "kind": "strain",
+          "intensity": 0.25,
+          "note": "200 g of palak carries well over a gram of oxalate. In a normal kidney this is handled; in a stone former it is the single most important thing on this page."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Folate up, homocysteine down, carotenoids visibly higher in blood",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Folate from leaves is a methyl donor that lets the body convert homocysteine back to methionine. Indian vegetarians run high homocysteine because of low B12, and folate fixes only half of that equation.",
+          "metric": { "label": "Folate in 200 g of cooked greens", "value": "typically 150–300 µg — a large share of the daily requirement" }
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "A month of daily nitrate plus potassium plus magnesium is a real, drug-free blood pressure intervention. The potassium alone counters some of the sodium in a high-salt Indian diet."
+        },
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Vitamin A from beta-carotene supports the integrity of mucosal barriers in the gut and airways — the first line of defence, and a real issue in vitamin-A-marginal Indian populations."
+        },
+        {
+          "target": "bone-marrow",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Ferritin barely moves. If you are anaemic, greens are a supporting act — you need iron tablets, or haem iron, or at minimum vitamin C at every meal."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Macular pigment measurably denser; gut bacteria shifting",
+      "effects": [
+        {
+          "target": "retina",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Macular pigment optical density rises over roughly 8–12 weeks of steady lutein intake. This pigment absorbs blue light and reduces oxidative stress in the most metabolically active tissue in the eye.",
+          "metric": { "label": "Lutein + zeaxanthin in 200 g of greens", "value": "roughly 10–20 mg — comparable to the AREDS2 supplement dose" }
+        },
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Two months of consistent fibre and polyphenols increases microbial diversity and butyrate producers. Diversity is one of the few microbiome markers that reliably tracks with health."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Blood pressure reduction is now stable rather than meal-to-meal. Combined with cutting salt, this is often enough to move someone out of stage 1 hypertension without a tablet."
+        },
+        {
+          "target": "skin",
+          "kind": "positive",
+          "intensity": 0.25,
+          "note": "Carotenoids accumulate in the skin and are measurable as a slight warming of complexion. Cosmetically minor, but it is a decent proxy for how many vegetables you are actually eating."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "LDL a little lower, pressure steadily lower, eyes better protected",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Soluble fibre binds bile acids and forces the liver to pull cholesterol out of the blood to make more. Combined with the nitrate effect, six months of greens is a genuine cardiovascular intervention.",
+          "metric": { "label": "LDL cholesterol", "value": "typically −3 to −8 mg/dL from the added soluble fibre alone" }
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Lower afterload from lower blood pressure means less work per beat, every beat, for six months. Small differences compound at this frequency."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Green leafy vegetables specifically — more than vegetables in general — are associated with lower type 2 diabetes risk in pooled cohort analyses. Magnesium and fibre are the likely mediators."
+        },
+        {
+          "target": "kidneys",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "In a susceptible person, six months of daily high-oxalate palak raises urinary oxalate enough to matter. Rotate your greens and drink enough water — this is the one avoidable harm here."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Cardiovascular and cognitive markers both moving the right way",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "In a well-known cohort, roughly one serving of green leafy vegetables a day was associated with a rate of cognitive decline equivalent to being about 11 years younger. Association, not proof — but the folate, vitamin K, lutein and nitrate mechanisms all point the same way.",
+          "metric": { "label": "Cohort finding", "value": "~1 serving/day of greens associated with slower cognitive decline" }
+        },
+        {
+          "target": "coronary-arteries",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Lower blood pressure and lower LDL sustained for a year is a real reduction in the rate at which plaque forms. Nothing dramatic happens in a year — it is the trajectory that changes."
+        },
+        {
+          "target": "retina",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "A year of high macular pigment is the pattern associated with lower risk of age-related macular degeneration — a disease with very limited treatment once it advances."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Consistently high vegetable fibre is one of the better-supported dietary factors for lower colorectal cancer risk. India's rates are rising fastest in exactly the urban groups eating least of this."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "One of the few habits where the evidence has no real downside",
+      "effects": [
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Dose-response analyses of fruit and vegetable intake show risk falling up to roughly 800 g a day combined, with benefits for cardiovascular disease, cancer and total mortality. Greens are the most nutrient-dense way to get there.",
+          "metric": { "label": "Dose-response evidence", "value": "benefit rises up to ~800 g/day of fruit and vegetables combined" }
+        },
+        {
+          "target": "coronary-arteries",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Five years of slightly lower pressure and slightly lower LDL is exactly the kind of small, boring, compounding change that separates a heart attack at 52 from one at 72."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The cognitive association strengthens with duration in cohort data. Diets built around leaves, whole grains and pulses consistently outperform on brain ageing."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Years of adequate vitamin K, magnesium and potassium support bone mineral density and reduce urinary calcium loss. This matters enormously for Indian women, who reach menopause with low bone reserves."
+        },
+        {
+          "target": "kidneys",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "The only persistent risk on this page: for people who form calcium-oxalate stones — common in the hot north-western 'stone belt' — five years of daily palak is a bad idea. Everyone else can ignore this line."
+        }
+      ]
+    }
+  ]
+}

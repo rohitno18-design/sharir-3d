@@ -1,0 +1,305 @@
+{
+  "id": "running-5km-daily",
+  "name": { "en": "Running 5 km every day", "hi": "रोज़ 5 किलोमीटर दौड़ना" },
+  "category": "exercise",
+  "icon": "🏃",
+  "dose": "5 km at an easy-to-moderate conversational pace (typically 28–40 min for a beginner), every day, starting from a mostly sedentary baseline. Assumes running shoes, a mix of road/track, and no prior injury.",
+  "summary": {
+    "en": "Daily 5 km running is a strong aerobic stimulus: within weeks it expands blood volume, builds mitochondria and capillaries in the leg muscles, and slows the resting heart rate. The heart, lungs and blood vessels adapt in months; bones and tendons take longer, which is why the first 2–3 months carry the highest overuse-injury risk for beginners. Over years, regular running is linked to roughly 25–30% lower all-cause mortality.",
+    "hi": "रोज़ 5 किलोमीटर दौड़ना दिल और फेफड़ों के लिए ज़बरदस्त ट्रेनिंग है। कुछ ही हफ्तों में खून की मात्रा बढ़ती है, पैरों की मांसपेशियों में माइटोकॉन्ड्रिया और बारीक रक्त-नलिकाएँ बनती हैं, और आराम की धड़कन धीमी हो जाती है। दिल और फेफड़े महीनों में ढल जाते हैं, पर हड्डियाँ और टेंडन धीरे ढलते हैं — इसीलिए शुरू के 2–3 महीनों में चोट का खतरा सबसे ज़्यादा रहता है।"
+  },
+  "indian_context": "In most Indian cities, running outdoors means dealing with 30–40 °C heat and 70–90% humidity for half the year, so sweat losses of 1–1.5 L per run are common and early-morning runs before 7 AM matter. Winter AQI above 200 in Delhi-NCR, Lucknow, Patna and similar cities means a 5 km run at high ventilation inhales several times the pollutant dose of sitting indoors; on such days a treadmill or indoor session is the wiser choice. Vegetarian runners should watch iron, B12 and protein (dal, paneer, curd, soya) because iron-deficiency anaemia is very common in Indian women and blunts endurance gains.",
+  "evidence": "strong",
+  "sources": [
+    "WHO. Guidelines on physical activity and sedentary behaviour. 2020",
+    "Lee DC et al. Leisure-time running reduces all-cause and cardiovascular mortality risk. J Am Coll Cardiol. 2014",
+    "Alentorn-Geli E et al. The association of recreational and competitive running with hip and knee osteoarthritis: a systematic review and meta-analysis. J Orthop Sports Phys Ther. 2017",
+    "Erickson KI et al. Exercise training increases size of hippocampus and improves memory. PNAS. 2011",
+    "ACSM's Guidelines for Exercise Testing and Prescription, 11th ed. 2021"
+  ],
+  "caution": "Beginners who go straight to 5 km every day without rest days are the group most likely to get shin splints, Achilles tendinopathy or a stress fracture; a walk-run build-up over 6–8 weeks and 1–2 easy or rest days a week is safer and gives the same long-term benefit. Anyone with chest pain on exertion, known heart disease, uncontrolled blood pressure, or diabetes with foot problems should be assessed before starting. Skip outdoor runs when AQI is above 200.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Heart rate up, legs sore, body already adapting",
+      "effects": [
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.6,
+          "note": "Heart rate rises to 140–170 bpm for the run and cardiac output roughly triples. Adrenaline and cortisol spike, then fall below baseline for the rest of the day.",
+          "metric": { "label": "Heart rate during run", "value": "~70–85% of max" }
+        },
+        {
+          "target": "quadriceps",
+          "kind": "strain",
+          "intensity": 0.6,
+          "note": "Quads, calves and hamstrings absorb 2–3 times body weight on every stride. Micro-tears in muscle fibres start an inflammatory repair response; soreness (DOMS) peaks at 24–48 h.",
+          "metric": { "label": "Ground reaction force per stride", "value": "~2–3× body weight" }
+        },
+        {
+          "target": "calves",
+          "kind": "strain",
+          "intensity": 0.6,
+          "note": "Calf muscles and the Achilles tendon do the most eccentric work in running; in beginners they are the first to feel tight and sore."
+        },
+        {
+          "target": "lungs",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Breathing rate roughly triples to move 60–100 L of air per minute. Healthy lungs have huge reserve; the limit on day one is the heart and muscles, not the lungs."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Endorphins, endocannabinoids and a pulse of BDNF (a growth factor for neurons) lift mood for a few hours after the run and improve sleep that night."
+        },
+        {
+          "target": "skin",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "In Indian heat you can lose 0.5–1.5 L of sweat in 30 minutes; skin blood flow rises to dump heat. Replace fluid and some salt, not just plain water.",
+          "metric": { "label": "Sweat loss per run (hot climate)", "value": "~0.5–1.5 L" }
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Soreness fading, plasma volume up, tendons still catching up",
+      "effects": [
+        {
+          "target": "blood-vessels",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Plasma volume expands by ~8–10% within the first week (the 'repeated bout' and blood-volume effect). Each heartbeat now pumps a little more blood, so the same pace feels easier.",
+          "metric": { "label": "Plasma volume", "value": "+8–10%" }
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "DOMS drops sharply after the first 3–4 runs because of the repeated-bout effect: the muscle-tendon unit reorganises so the same run causes less damage."
+        },
+        {
+          "target": "tendons",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "The Achilles and patellar tendons have a fraction of muscle's blood supply and adapt over months, not days. Running daily without rest days loads them faster than they can remodel."
+        },
+        {
+          "target": "tibia",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Repeated impact starts bone remodelling in the shin. Early on, old bone is removed before new bone is laid down, which is why shin pain (medial tibial stress syndrome) shows up in weeks 1–6 of a new running habit."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Sleep becomes deeper and mood steadier; regular aerobic exercise is among the most consistent non-drug treatments for mild anxiety and low mood."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Fitter heart, more mitochondria — peak window for overuse injury",
+      "effects": [
+        {
+          "target": "heart-muscle",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Stroke volume is rising and resting heart rate is typically 3–5 bpm lower than a month ago. VO₂max in a previously sedentary adult is up roughly 5–10%.",
+          "metric": { "label": "Resting heart rate", "value": "−3 to −5 bpm" }
+        },
+        {
+          "target": "quadriceps",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Mitochondrial biogenesis (driven by PGC-1α) and new capillaries around leg-muscle fibres let the muscle burn more fat and produce less lactate at the same pace.",
+          "metric": { "label": "VO₂max", "value": "+5–10%" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Muscle now clears glucose more readily (more GLUT4 transporters), so the pancreas needs to release less insulin after meals. Fasting insulin and post-meal glucose spikes fall."
+        },
+        {
+          "target": "tendons",
+          "kind": "strain",
+          "intensity": 0.6,
+          "note": "Weeks 3–10 are the classic window for Achilles tendinopathy, runner's knee and shin splints in beginners: the heart and muscles feel ready, the connective tissue is not."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "A 5 km run burns ~300–400 kcal. If food intake does not fully compensate, expect 0.5–1.5 kg of fat loss in the first month, mostly from visceral fat around the organs.",
+          "metric": { "label": "Energy per 5 km run", "value": "~300–400 kcal" }
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Heart pumping more per beat, legs leaner, bone remodelling turns positive",
+      "effects": [
+        {
+          "target": "heart-muscle",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Left ventricle fills more completely and ejects more blood per beat. Resting heart rate is typically 5–8 bpm lower than before you started.",
+          "metric": { "label": "Resting heart rate", "value": "−5 to −8 bpm" }
+        },
+        {
+          "target": "calves",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.03 },
+          "note": "Calves and quads become denser and more defined. Running builds oxidative fibres and capillaries more than bulk, so expect firmer, leaner legs rather than big muscles."
+        },
+        {
+          "target": "quadriceps",
+          "kind": "positive",
+          "intensity": 0.4,
+          "visual": { "scale": 1.03 },
+          "note": "Modest hypertrophy of the quads and hip stabilisers is now visible, mostly in type I (endurance) fibres."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The remodelling cycle (about 3–4 months per cycle) is now in its bone-forming phase: the tibia, femur and hip lay down new bone along the lines of impact stress."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Endothelial cells produce more nitric oxide, so arteries relax more easily. Systolic blood pressure is typically 4–6 mmHg lower, more if it was high to begin with.",
+          "metric": { "label": "Systolic blood pressure", "value": "−4 to −6 mmHg" }
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "A runner's heart: bigger stroke volume, lower BP, better blood sugar",
+      "effects": [
+        {
+          "target": "heart-muscle",
+          "kind": "positive",
+          "intensity": 0.7,
+          "visual": { "scale": 1.03 },
+          "note": "Mild, healthy enlargement of the left ventricle (eccentric remodelling) increases stroke volume. Resting heart rate is often 8–10 bpm below baseline; VO₂max is up 15–20%.",
+          "metric": { "label": "VO₂max", "value": "+15–20%" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "HbA1c falls by roughly 0.3–0.6% in people with prediabetes or type 2 diabetes as muscle insulin sensitivity improves and visceral fat shrinks.",
+          "metric": { "label": "HbA1c (if prediabetic/diabetic)", "value": "−0.3 to −0.6%" }
+        },
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Liver fat drops measurably even without weight loss because fatty acids are diverted to working muscle; triglycerides fall and HDL cholesterol rises."
+        },
+        {
+          "target": "tibia",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Bone mineral density in the tibia and femoral neck is measurably higher (typically +1–2%), and the tendons are now stiffer and thicker, so the early injury window has largely closed."
+        },
+        {
+          "target": "hippocampus",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Sustained BDNF signalling supports new connections in the hippocampus, the brain's memory hub. Measurable gains in memory and attention are reported after 6 months of aerobic training."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Visceral (deep abdominal) fat is the first fat depot to shrink with aerobic training, which matters for the South-Asian tendency to store fat around the organs."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Fitness plateaus near its new ceiling; disease risk keeps falling",
+      "effects": [
+        {
+          "target": "heart-muscle",
+          "kind": "positive",
+          "intensity": 0.7,
+          "visual": { "scale": 1.04 },
+          "note": "Cardiac adaptations are largely complete for this dose; further VO₂max gains need more volume or intensity. Blood pressure, resting heart rate and heart rate variability all sit in a healthier range."
+        },
+        {
+          "target": "hippocampus",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "In trials, a year of regular aerobic exercise increased hippocampal volume by ~2% in older adults, reversing about 1–2 years of age-related shrinkage.",
+          "metric": { "label": "Hippocampal volume (older adults, trial data)", "value": "~+2%" }
+        },
+        {
+          "target": "knee-joint",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Contrary to the common fear, recreational runners have lower rates of knee and hip osteoarthritis than sedentary people; cartilage adapts to cyclical loading. Excess body weight is a far bigger risk to the knee than running."
+        },
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Moderate daily exercise improves immune surveillance and lowers chronic inflammation (CRP, IL-6). Only very long or very intense sessions transiently suppress immunity."
+        },
+        {
+          "target": "tendons",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Tendons are stronger now, but running every single day with no easy days still accumulates load. Most long-term runners do best with 1–2 lighter or rest days per week."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Lower mortality, younger arteries, stronger bones — if you stayed injury-free",
+      "effects": [
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.8,
+          "visual": { "scale": 1.04 },
+          "note": "Regular runners show roughly 30% lower all-cause mortality and 45% lower cardiovascular mortality in large cohorts, equivalent to about 3 extra years of life expectancy.",
+          "metric": { "label": "All-cause mortality (cohort data)", "value": "~−25 to −30%" }
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Arterial stiffness and blood pressure track years younger than chronological age; the carotid and coronary arteries build less plaque."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Hip, spine and leg bone density are maintained well above sedentary peers, which is a major protection against fractures after 50."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Long-term aerobic exercise is associated with roughly 20–30% lower risk of dementia and depression in cohort studies."
+        },
+        {
+          "target": "lungs",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "If most runs happened outdoors on high-AQI days, the cumulative inhaled particulate load is real: for North Indian city runners this is the one long-term risk that can partly offset the cardiovascular benefit."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,209 @@
+{
+  "id": "water-5l-daily",
+  "name": { "en": "Drinking 5 litres of water every day", "hi": "रोज़ 5 लीटर पानी पीना" },
+  "category": "drink",
+  "icon": "🚰",
+  "dose": "5 L plain water daily, spread through the day, on top of water from food (~0.5–1 L). Assumes a sedentary-to-moderately active adult in a normal indoor environment. An outdoor worker in a 42 °C Indian summer sweating 1–2 L/hour is a different case — for them 5 L may simply be replacement.",
+  "molecule": "water",
+  "summary": {
+    "en": "Healthy kidneys can excrete roughly 0.8–1 L of dilute urine per hour, so 5 L spread across a day is usually handled without harm — you just urinate a lot. The problem is pace and context: gulping litres in a short window, or drinking far beyond sweat loss while eating little salt, dilutes blood sodium (hyponatraemia), which swells brain cells. For most desk-bound Indians 5 L is simply excess; for a construction worker in May it may be barely enough.",
+    "hi": "स्वस्थ किडनी हर घंटे करीब 0.8–1 लीटर पतला पेशाब बना सकती है, इसलिए दिन भर में फैलाकर 5 लीटर पानी पीने से आम तौर पर नुकसान नहीं होता — बस बार-बार पेशाब आता है। दिक्कत तब होती है जब थोड़े समय में ढेर सारा पानी गटक लिया जाए या पसीने से ज़्यादा पानी पिया जाए — खून में सोडियम पतला हो जाता है (हाइपोनेट्रीमिया) और दिमाग की कोशिकाओं में सूजन आ सकती है। ऑफिस में बैठने वाले के लिए 5 लीटर ज़्यादा है; मई की गर्मी में मज़दूरी करने वाले के लिए शायद बस पूरा।"
+  },
+  "indian_context": "The '8 glasses' rule got inflated on Indian WhatsApp into '4–5 litres for glowing skin and detox'. Sweat loss in Indian summers (35–45 °C, high humidity in coastal cities) can genuinely reach 1–2 L/hour for outdoor workers, farmers and delivery riders — for them high intake with salt (nimbu-pani with namak, ORS, chaas) is protective. For an AC-office worker in Bengaluru, 5 L mostly means 10–12 toilet trips and washed-out sodium, especially if they are also on a low-salt diet or a thiazide BP tablet.",
+  "evidence": "moderate",
+  "sources": [
+    "ICMR-NIN Dietary Guidelines for Indians 2024 (water and fluid recommendations)",
+    "EFSA Panel on Dietetic Products. Scientific Opinion on Dietary Reference Values for water. EFSA Journal 2010",
+    "Hew-Butler T et al. Statement of the Third International Exercise-Associated Hyponatremia Consensus Development Conference. Clin J Sport Med 2015",
+    "Armstrong LE, Johnson EC. Water Intake, Water Balance, and the Elusive Daily Water Requirement. Nutrients 2018"
+  ],
+  "caution": "Do not do this if you have heart failure, chronic kidney disease, liver cirrhosis, SIADH, or take thiazide diuretics, SSRIs or carbamazepine — these impair water excretion and 5 L can cause dangerous hyponatraemia. Headache, nausea, confusion or a seizure after heavy water intake is an emergency. Never drink more than ~1 L in an hour unless you are replacing measured sweat loss.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Kidneys flush the excess; 10–12 trips to the toilet",
+      "effects": [
+        {
+          "target": "kidneys",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Vasopressin (ADH) switches off and the collecting ducts stop reabsorbing water, producing very dilute urine (osmolality can fall below 100 mOsm/kg). This is the kidney working normally at its upper capacity, not damage.",
+          "metric": { "label": "Urine output", "value": "~4–4.5 L/day, pale to clear" }
+        },
+        {
+          "target": "bladder",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "The bladder fills every 60–90 minutes. Night-time trips (nocturia) begin if a large share is drunk after 7 pm, fragmenting sleep."
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Plasma volume rises transiently after each large drink; blood sodium dips slightly (a few mmol/L) then normalises within hours in a healthy person."
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Osmoreceptors in the hypothalamus sense the dilution and suppress both thirst and ADH release — the body is actively telling you to stop."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Sodium dips if salt intake is low; sleep fragmented by nocturia",
+      "effects": [
+        {
+          "target": "kidneys",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Continuous maximal dilution. Sodium, potassium and some water-soluble vitamins are lost in the large urine volume; the kidney compensates but the margin narrows on a low-salt diet.",
+          "metric": { "label": "Serum sodium (sedentary, low salt)", "value": "may drift toward 133–135 mmol/L" }
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Mild dilutional hyponatraemia causes low-grade headache, fogginess and nausea in susceptible people — brain cells take up water and swell slightly inside a rigid skull."
+        },
+        {
+          "target": "bladder",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Nocturia 2–3 times a night; the bladder's functional capacity is unchanged but the filling rate overwhelms it."
+        },
+        {
+          "target": "skin",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "No measurable 'glow' beyond what adequate hydration already gives; skin hydration is limited by the epidermal barrier, not by how much you drink past normal."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Kidneys adapt; risk depends entirely on sweat and salt",
+      "effects": [
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "The renal medulla's concentration gradient washes out with chronic high water flow, so the kidney becomes slightly less able to concentrate urine on a day you drink less — this reverses in days.",
+          "metric": { "label": "Max urine concentrating ability", "value": "temporarily reduced (~10–20%)" }
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Blood pressure is essentially unchanged in healthy people; the extra water is excreted rather than retained."
+        },
+        {
+          "target": "adrenal-glands",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Aldosterone rises modestly to hold on to sodium as urinary losses continue — an adaptation, not harm."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Steady state: harmless if active and salted, wasteful if sedentary",
+      "effects": [
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "No structural change. Kidney function tests (creatinine, eGFR) stay normal; there is no evidence that high water intake 'cleans' or improves healthy kidneys beyond preventing stones."
+        },
+        {
+          "target": "bladder",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Frequent voiding persists. Some people train themselves to hold larger volumes, which can mildly increase bladder capacity but is not a health benefit."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.2,
+          "note": "In the low-salt, sedentary, or SSRI/thiazide-taking subgroup, chronic mild hyponatraemia subtly impairs attention and balance — often mistaken for tiredness."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Stone risk lower; no other measurable benefit over 3 L",
+      "effects": [
+        {
+          "target": "kidneys",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "High urine volume keeps calcium oxalate and uric acid below saturation, so the one clear benefit is fewer kidney stones — relevant in the hot, stone-prone 'stone belt' of north-west India. But ~2.5–3 L of urine a day is enough for this; 5 L adds little.",
+          "metric": { "label": "Kidney stone recurrence (with >2.5 L urine/day)", "value": "roughly halved vs low intake" }
+        },
+        {
+          "target": "bones",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Urinary calcium loss rises slightly with large urine volumes; on an adequate calcium diet this has no bone effect, but it is another reason 5 L is not 'free'."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Stool softening plateaus; beyond adequate hydration, extra water is absorbed and excreted by the kidneys, not the gut."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Same picture: excess excreted, hyponatraemia the only real risk",
+      "effects": [
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "One year of 5 L/day leaves healthy kidneys structurally unchanged. Slight enlargement of urine-handling capacity is functional, not anatomical.",
+          "metric": { "label": "eGFR change", "value": "none expected" }
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.2,
+          "note": "Cumulative risk is a single bad day — a fever, vomiting, or a marathon of drinking at a wedding on top of 5 L habit — when sodium can fall below 125 mmol/L and cause seizures. The habit lowers the buffer."
+        },
+        {
+          "target": "bladder",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Persistent high-frequency voiding; nocturia keeps fragmenting deep sleep for people who front-load water in the evening."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "No long-term organ damage; no long-term benefit beyond 3 L",
+      "effects": [
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Long-term cohort data (e.g. large observational studies of high fluid intake) show neither faster decline nor extra protection of kidney function in healthy people once intake exceeds ~2.5–3 L. The extra 2 L is work with no return.",
+          "metric": { "label": "Kidney function vs 3 L/day", "value": "no difference" }
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "For outdoor labourers in Indian heat, 5 L with salt over five years is simply correct hydration and prevents heat illness. For the sedentary, it is a harmless-but-pointless ritual — unless one of the risk conditions in the caution appears."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.15,
+          "note": "With age, kidneys lose some ability to excrete free water and medication use (BP tablets, antidepressants) rises — so the same 5 L habit that was harmless at 30 carries more hyponatraemia risk at 60."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,196 @@
+{
+  "id": "omega-3-1g-daily",
+  "name": { "en": "Omega-3 (1 g EPA+DHA) every day", "hi": "रोज़ 1 ग्राम ओमेगा-3 (EPA+DHA)" },
+  "category": "supplement",
+  "icon": "🐟",
+  "dose": "1 g combined EPA + DHA daily from fish oil or algal oil (check the label: a '1000 mg fish oil' capsule often has only 300 mg EPA+DHA). Taken with a meal containing fat.",
+  "molecule": "epa",
+  "summary": {
+    "en": "EPA and DHA are long-chain omega-3 fats that get built into cell membranes, especially in the heart, brain, retina and platelets, where they compete with omega-6 arachidonic acid and produce less inflammatory signalling molecules. At 1 g/day, blood triglycerides fall modestly (around 5–10%), platelets become slightly less sticky and the omega-3 index of red-cell membranes rises over 3–4 months. Big trials at this dose did not reduce heart attacks or strokes in the general population; the strong cardiovascular data are at 4 g/day of purified EPA in people with high triglycerides.",
+    "hi": "EPA और DHA लंबी चेन वाले ओमेगा-3 फ़ैट हैं जो कोशिकाओं की दीवार में जुड़ जाते हैं — ख़ासकर दिल, दिमाग़, आँख के रेटिना और प्लेटलेट्स में — और वहाँ ओमेगा-6 की जगह लेकर कम सूजन पैदा करने वाले सिग्नल बनाते हैं। रोज़ 1 ग्राम से ट्राइग्लिसराइड करीब 5–10% कम होते हैं, प्लेटलेट्स थोड़ी कम चिपचिपी होती हैं और 3–4 महीने में लाल कोशिकाओं का ओमेगा-3 लेवल बढ़ता है। इस डोज़ पर बड़ी स्टडीज़ में आम लोगों में हार्ट अटैक कम नहीं हुए; मज़बूत सबूत 4 ग्राम शुद्ध EPA पर, ज़्यादा ट्राइग्लिसराइड वालों में हैं।"
+  },
+  "indian_context": "Most Indian diets, especially vegetarian ones, contain almost no EPA/DHA; the omega-3 that Indians do get is ALA from flaxseed (alsi), walnuts and mustard oil, of which the body converts only ~5–10% to EPA and under 1% to DHA. Indian omega-3 indices in studies are typically low (~3–4% vs an 8% target). High triglycerides with low HDL is the classic South Asian lipid pattern, which is exactly where omega-3 has its clearest effect. Fish oil capsules in India cost ₹5–15 per 1 g dose; algal DHA is the vegetarian option and is pricier.",
+  "evidence": "mixed",
+  "sources": [
+    "ASCEND Study Collaborative Group. Effects of n-3 fatty acid supplements in diabetes mellitus. N Engl J Med. 2018",
+    "Manson JE et al. Marine n-3 fatty acids and prevention of cardiovascular disease and cancer (VITAL). N Engl J Med. 2019",
+    "Bhatt DL et al. Cardiovascular risk reduction with icosapent ethyl for hypertriglyceridemia (REDUCE-IT). N Engl J Med. 2019",
+    "Skulas-Ray AC et al. Omega-3 fatty acids for the management of hypertriglyceridemia: a science advisory from the American Heart Association. Circulation. 2019",
+    "Gencer B et al. Effect of long-term marine omega-3 fatty acids supplementation on the risk of atrial fibrillation in randomized controlled trials. Circulation. 2021"
+  ],
+  "caution": "Safe for most adults at 1 g/day. Fishy burps and loose stools are the usual complaints. Tell your surgeon before an operation because clotting is slightly slowed. Anyone on warfarin or other blood thinners, or with a history of atrial fibrillation, should check with a doctor: higher doses (2–4 g) raise AF risk. Check for oxidation (rancid smell) and third-party purity testing for mercury and PCBs.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Absorbed into blood lipids within hours; fishy aftertaste",
+      "effects": [
+        {
+          "target": "small-intestine",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "EPA/DHA are absorbed with fat via chylomicrons; plasma levels peak around 4–6 hours. Absorption roughly doubles when taken with a fatty meal versus empty stomach."
+        },
+        {
+          "target": "stomach",
+          "kind": "strain",
+          "intensity": 0.2,
+          "note": "Fish oil floats on stomach contents, hence the fishy reflux. Enteric-coated capsules or taking it just before a meal reduces this."
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Membrane composition of cells has not changed yet; the fat is circulating and being taken up into liver and tissues. No measurable effect today."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Platelets slightly less sticky; triglycerides begin to dip",
+      "effects": [
+        {
+          "target": "blood-vessels",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "EPA displaces arachidonic acid in platelet membranes, so less thromboxane A2 is made and platelets aggregate a little less readily. At 1 g the effect on bleeding time is small."
+        },
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "In the liver, omega-3s suppress SREBP-1c and reduce VLDL triglyceride secretion. Fasting triglycerides start falling within 1–2 weeks."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Loose stools in the first week are common as the gut adapts to the oil load; usually settles."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Triglycerides down; membranes filling with omega-3",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "One month in, the triglyceride reduction at 1 g/day is modest, roughly 5–10%, larger in people who started high. At 4 g/day the fall is 25–30%.",
+          "metric": { "label": "Triglycerides (1 g/day)", "value": "−5 to −10%" }
+        },
+        {
+          "target": "heart-muscle",
+          "kind": "positive",
+          "intensity": 0.25,
+          "note": "Omega-3 incorporates into heart-cell membranes, stabilising ion channels; resting heart rate typically drops a beat or two and heart-rate variability improves slightly.",
+          "metric": { "label": "Resting heart rate", "value": "−1 to −2 bpm" }
+        },
+        {
+          "target": "joints",
+          "kind": "positive",
+          "intensity": 0.25,
+          "note": "Resolvins and protectins made from EPA/DHA quiet inflammatory signalling. Trials in rheumatoid arthritis show reduced morning stiffness and NSAID use, usually at doses above 2 g; at 1 g the effect is slight."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Omega-3 index rising; joint and skin effects for some",
+      "effects": [
+        {
+          "target": "blood-vessels",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Red-cell membrane omega-3 index (EPA+DHA as % of fatty acids) has climbed from a typical Indian ~3–4% toward 5–6%. A small drop in blood pressure (~1–2 mmHg) appears in meta-analyses at this stage.",
+          "metric": { "label": "Blood pressure", "value": "−1 to −2 mmHg" }
+        },
+        {
+          "target": "skin",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "Skin barrier lipids shift toward omega-3; some people with dry skin or mild eczema notice less itch. Evidence is limited and inconsistent."
+        },
+        {
+          "target": "eyes",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "DHA is the dominant fat in the retina and in meibomian gland secretions. Dry-eye trials are mixed; the large DREAM trial found no benefit over olive oil placebo."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Steady state; brain, retina and sperm membranes enriched",
+      "effects": [
+        {
+          "target": "blood-vessels",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "After ~4 months (a red-cell lifetime), the omega-3 index has reached its new plateau. An index above 8% is associated with lower cardiac death in cohorts; 1 g/day gets most Indians to about 6–7%, not 8%.",
+          "metric": { "label": "Omega-3 index (1 g/day)", "value": "~6–7%" }
+        },
+        {
+          "target": "brain",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "DHA is 10–15% of brain fatty acids and turns over slowly; six months enriches it. Effects on mood are real but small, mostly in clinical depression with EPA-rich formulas; no measurable gain in memory in healthy adults."
+        },
+        {
+          "target": "testes",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "Sperm membranes are DHA-rich. Meta-analyses show modest improvement in sperm motility and count with omega-3 supplementation in subfertile men over 3–6 months."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "One year: the honest outcome data at this dose",
+      "effects": [
+        {
+          "target": "heart",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "In ASCEND (15,000 diabetics) and VITAL (25,000 adults), 1 g/day for 5–7 years did not reduce major cardiovascular events overall. VITAL did see fewer heart attacks in people who ate little fish, which describes many Indians, but this was a secondary finding."
+        },
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Triglyceride lowering holds as long as you keep taking it. In fatty liver disease, omega-3 modestly reduces liver fat in meta-analyses, but far less than losing 5–7% body weight does."
+        },
+        {
+          "target": "heart-muscle",
+          "kind": "strain",
+          "intensity": 0.15,
+          "note": "The AF signal in trials is dose-dependent: clear at 4 g/day, not significant at 1 g, but not zero. A person with prior atrial fibrillation should know this."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years: safe, modest metabolic benefit, no proven life extension",
+      "effects": [
+        {
+          "target": "blood-vessels",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Long-term omega-3 keeps triglycerides and platelet reactivity slightly better than they would be; population cohorts with higher omega-3 index have lower cardiac mortality, but supplement trials at 1 g have not proven that the pill delivers it."
+        },
+        {
+          "target": "brain",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Long-term trials (VITAL-Cog, AREDS2) show no cognitive protection from omega-3 in older adults. Eating fish twice a week tracks better with brain outcomes than capsules, likely because of what fish replaces."
+        },
+        {
+          "target": "immune-system",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Five years of daily EPA/DHA modestly lowers inflammatory markers (CRP, IL-6). No harm to immune function has been shown at this dose."
+        }
+      ]
+    }
+  ]
+}

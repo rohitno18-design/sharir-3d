@@ -1,0 +1,257 @@
+{
+  "id": "alcohol-weekend-binge",
+  "name": { "en": "Weekend binge drinking", "hi": "वीकेंड पर ज़्यादा शराब" },
+  "category": "substance",
+  "icon": "🍻",
+  "dose": "6 or more standard drinks in one evening, once or twice a week — roughly 180 ml+ of whisky or 6 beers in 3–4 hours. Nothing on weekdays.",
+  "molecule": "ethanol",
+  "summary": {
+    "en": "Binge drinking is defined as the pattern that pushes blood alcohol above roughly 0.08% in a single session. Because the liver clears only about one drink an hour, six drinks in three hours means unmetabolised ethanol floods the brain while acetaldehyde piles up faster than the enzymes can handle. The weekly total may be the same as two drinks a day, but the peak concentration is what damages tissue, disrupts heart rhythm and kills people — the pattern matters more than the total.",
+    "hi": "बिंज ड्रिंकिंग का मतलब है एक ही बैठक में इतनी शराब कि ख़ून में अल्कोहल 0.08% से ऊपर चला जाए। लिवर एक घंटे में सिर्फ़ एक पैग साफ़ कर पाता है, तो तीन घंटे में छह पैग का मतलब है — बिना पचा अल्कोहल सीधे दिमाग़ में, और एसीटैल्डिहाइड इतनी तेज़ी से जमा कि एंज़ाइम सँभाल न पाएँ। हफ़्ते का कुल हिसाब भले रोज़ दो पैग जैसा हो, नुक़सान 'पीक' से होता है — कितनी तेज़ी से पी, ये ज़्यादा मायने रखता है।"
+  },
+  "indian_context": "The Indian drinking pattern is overwhelmingly episodic rather than daily — the National Family Health Survey and WHO data both show Indian drinkers consume less often but far more per occasion than European drinkers, which is the more dangerous pattern for both liver and brain. Weekend binges are also the setting for most Indian drink-driving deaths; the legal limit is 30 mg/100 ml, well below the US and UK limits, and six drinks puts you at three to four times that. Hepatitis B carriage is common in India, and a heavy binge on an already-infected liver can precipitate acute-on-chronic liver failure.",
+  "evidence": "strong",
+  "sources": [
+    "GBD 2016 Alcohol Collaborators. Alcohol use and burden for 195 countries and territories. Lancet. 2018",
+    "WHO Global Status Report on Alcohol and Health. 2018",
+    "NIAAA. Drinking Levels and Patterns Defined. National Institute on Alcohol Abuse and Alcoholism",
+    "Voskoboinik A et al. Alcohol and atrial fibrillation. J Am Coll Cardiol. 2016",
+    "Mathurin P, Deltenre P. Effect of binge drinking on the liver: an alarming public health issue? Gut. 2009"
+  ],
+  "caution": "Acute alcohol poisoning is a medical emergency: unrousable, breathing under 8 per minute, repeated vomiting, seizure or blue lips means hospital now, not sleep it off. Never lay an unconscious drinker on their back — vomit aspiration is a common cause of death. Do not drive at all after drinking; there is no safe number. Combining alcohol with paracetamol, sedatives or opioids is the fastest way to turn a binge into liver failure or respiratory arrest. If binges are followed by shaking, sweating or drinking to steady yourself, that is dependence and needs medical help.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Six drinks: liver overwhelmed, brainstem depressed, sleep wrecked",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.8,
+          "note": "Blood alcohol above 0.08% saturates GABA-A enhancement and NMDA blockade. Prefrontal judgement goes first, then cerebellar coordination, then hippocampal memory encoding — this is the blackout, where the brain is awake but recording nothing.",
+          "metric": { "label": "Peak blood alcohol", "value": "~0.10–0.15%" }
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.7,
+          "note": "Alcohol dehydrogenase is saturated within the first drink or two, so the CYP2E1 pathway takes over — it generates far more reactive oxygen species. Acetaldehyde accumulates and causes flushing, nausea and direct hepatocyte injury."
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "'Holiday heart syndrome' — a single heavy session can trigger atrial fibrillation in an otherwise healthy person through direct atrial irritability, adrenaline surge and electrolyte shifts."
+        },
+        {
+          "target": "stomach",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "High-concentration ethanol strips the gastric mucus barrier, causing acute gastritis and, with repeated vomiting, Mallory-Weiss tears at the junction with the oesophagus."
+        },
+        {
+          "target": "brainstem",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "At high enough concentrations alcohol depresses the respiratory and vomiting centres. This is why alcohol poisoning kills — the drinker stops protecting their own airway."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "One binge done, one recovering — the liver never gets a clean week",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "A single heavy session causes measurable fat accumulation and a transient rise in liver enzymes that takes several days to settle. Weekly bingeing means the liver spends most of its 'off' days repairing rather than resting."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "The hangover is not just dehydration — it is acetaldehyde toxicity, inflammatory cytokines, rebound glutamate excitation and REM debt. Cognitive performance stays measurably below baseline for 24–48 hours."
+        },
+        {
+          "target": "immune-system",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "A single binge suppresses monocyte and natural killer cell function for up to 24 hours — one reason people so often fall ill the week after a heavy night."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "High-dose alcohol increases gut permeability, letting bacterial endotoxin into the portal blood. That endotoxin activates liver Kupffer cells, which is a major driver of alcohol-related liver inflammation."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Four binges in: fatty liver despite five dry days a week",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Repeated bingeing produces steatosis and inflammation independent of average weekly intake — the peak, not the mean, drives injury. Someone drinking 12 units in one night is at higher liver risk than someone spreading the same 12 across the week."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Repeated cycles of intoxication and withdrawal 'kindle' the brain: each cycle of GABA suppression and glutamate rebound makes the next withdrawal more excitable, worsening anxiety through the week."
+        },
+        {
+          "target": "hippocampus",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Binge patterns are specifically toxic to hippocampal neurogenesis in animal models and are associated with memory and learning deficits in young human drinkers."
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Six drinks plus the late-night food that goes with them is roughly 1,500–2,000 kcal in an evening, largely deposited as visceral fat.",
+          "metric": { "label": "Calories per binge night", "value": "~1,500–2,000 kcal" }
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Blood pressure and rhythm disturbance show up between binges",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Binge patterns raise blood pressure more sharply than the same alcohol spread out, and the surge in the 24 hours after a session is when binge-associated strokes cluster."
+        },
+        {
+          "target": "heart",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Repeated holiday-heart episodes can convert paroxysmal atrial fibrillation into a persistent rhythm. Alcohol is one of the few genuinely modifiable AF triggers."
+        },
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "GGT rises characteristically in bingers even when ALT and AST look fine — it is the most sensitive single marker of an episodic heavy drinking pattern."
+        },
+        {
+          "target": "pancreas",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "Acute pancreatitis is classically triggered by a single heavy binge, presenting as severe upper abdominal pain going through to the back. It can be life-threatening on the first episode."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Fatty liver established; sleep and mood degraded all week",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.65,
+          "visual": { "scale": 1.06 },
+          "note": "Ultrasound shows a bright, enlarged, fatty liver in a large share of regular weekend bingers, often to their genuine surprise since they 'don't drink during the week'."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "The anxiety and low mood in the two days after each binge are a withdrawal state, and many people treat it by drinking again — this is the specific loop that turns weekend drinking into daily drinking."
+        },
+        {
+          "target": "testes",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Heavy episodic drinking acutely suppresses testosterone for 24–48 hours after a session and impairs sperm production over months."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "A binge suppresses muscle protein synthesis by roughly a third for up to 24 hours, blunting recovery from training. Two lost days a week compounds over a training year."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Fifty-plus binges: fibrosis in some, dependence risk in many",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.7,
+          "visual": { "scale": 1.07 },
+          "note": "A year of weekly bingeing carries a real risk of progression to alcoholic steatohepatitis, and occasionally to acute alcoholic hepatitis after a particularly heavy stretch — a condition with meaningful mortality even in young people."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Binge drinkers show reduced white matter integrity and altered reward processing on imaging. Younger brains, still developing until the mid-20s, are more vulnerable to this than older ones."
+        },
+        {
+          "target": "immune-system",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Repeated immune suppression raises pneumonia and, in the Indian context, tuberculosis risk — heavy drinking is one of the strongest social risk factors for TB in India."
+        },
+        {
+          "target": "whole-body",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "The largest single risk of this pattern is not organ disease at all — it is injury. Road crashes, falls, drowning, burns, assault and suicide cluster around heavy sessions, particularly in men in their 20s and 30s."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years: liver scarring, brain shrinkage, or an escalation to daily",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.85,
+          "visual": { "scale": 0.92, "opacity": 0.72 },
+          "note": "For those who progress, repeated injury produces bridging fibrosis and eventually a shrunken, nodular cirrhotic liver. Indian patients frequently present with cirrhosis in their 40s from a pattern that started as weekend drinking in their 20s."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Cumulative grey and white matter loss, with executive function and memory measurably below matched non-drinkers. Repeated withdrawal kindling also raises seizure risk during any future abstinence attempt."
+        },
+        {
+          "target": "heart",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Established atrial fibrillation, higher blood pressure and, in heavy sustained cases, dilated cardiomyopathy. The binge pattern is a stronger predictor of sudden cardiac death than average intake."
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Recurrent acute attacks progress to chronic calcific pancreatitis with permanent pain, fat malabsorption and eventual diabetes."
+        },
+        {
+          "target": "esophagus",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Acetaldehyde exposure raises oesophageal and oral cancer risk, and this multiplies several-fold in anyone who also smokes or chews tobacco — a very common Indian combination."
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Five years of 2,000-calorie evenings deposited centrally: rising waist circumference, insulin resistance and metabolic syndrome, on a South Asian body type already predisposed to it."
+        }
+      ]
+    }
+  ]
+}

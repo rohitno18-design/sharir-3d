@@ -1,0 +1,260 @@
+{
+  "id": "dal-rice-vegetarian-diet",
+  "name": { "en": "Only dal-rice-roti, every day", "hi": "रोज़ सिर्फ़ दाल-चावल-रोटी" },
+  "category": "food",
+  "icon": "🍛",
+  "dose": "A classic Indian lacto-light vegetarian plate as the entire diet: dal (about 1 katori cooked), rice and/or 2–3 roti, one sabzi, a little pickle. No egg, no meat, no fish, and almost no milk or curd. Roughly 1800–2200 kcal and 45–60 g of protein a day for an average adult.",
+  "molecule": "vitamin-b12",
+  "summary": {
+    "en": "Cereal and pulse together fix each other's amino acid gap — rice is short on lysine, dal is short on methionine — so the protein on the plate is better than either alone, just lower in quality and quantity than milk, egg or meat. The real problem is not protein, it is what the plate cannot supply at all: vitamin B12 exists only in animal food, and the iron and zinc that are present are locked up by phytates in the same grains and pulses. The diet protects your arteries and your gut for years while quietly draining your iron stores and your B12 reserve.",
+    "hi": "दाल और चावल मिलकर एक-दूसरे की कमी पूरी कर देते हैं — चावल में लाइसिन कम है, दाल में मेथियोनिन — इसलिए प्रोटीन ठीक बन जाता है, बस दूध-अंडे-मीट जितना अच्छा और उतना ज़्यादा नहीं होता। असली दिक्कत प्रोटीन नहीं है, वो चीज़ें हैं जो इस थाली में हैं ही नहीं: विटामिन B12 सिर्फ़ जानवरों से मिलने वाले खाने में होता है, और जो आयरन-ज़िंक है वो अनाज-दाल के फाइटेट में फँसा रह जाता है। यह खाना सालों तक दिल और पेट को बचाता है, पर चुपचाप आयरन और B12 का स्टॉक खाली करता रहता है।"
+  },
+  "indian_context": "This is the default plate for hundreds of millions of Indians, and it is also why India carries one of the world's heaviest anaemia and B12-deficiency burdens at the same time. NFHS-5 found 57% of Indian women aged 15–49 anaemic; Indian studies repeatedly report low B12 in a large share of long-term vegetarians, especially in states where dairy intake is small. Two habits make it worse: chai or coffee taken with or right after a meal (polyphenols block non-haem iron), and the belief that dal alone is 'enough protein' — a katori of cooked dal carries only about 4–6 g of protein, not 20.",
+  "evidence": "strong",
+  "sources": [
+    "ICMR-NIN. Dietary Guidelines for Indians. National Institute of Nutrition, Hyderabad, 2024",
+    "International Institute for Population Sciences. National Family Health Survey (NFHS-5), India, 2019–21",
+    "Green R et al. Vitamin B12 deficiency. Nature Reviews Disease Primers, 2017",
+    "Hunt JR. Bioavailability of iron, zinc, and other trace minerals from vegetarian diets. Am J Clin Nutr, 2003",
+    "Rizzo G et al. Vitamin B12 among vegetarians: status, assessment and supplementation. Nutrients, 2016"
+  ],
+  "caution": "If this is your diet, a B12 supplement is not optional — it is the single cheapest fix in Indian nutrition (oral cyanocobalamin is a few rupees a tablet). Get haemoglobin, ferritin and serum B12 checked once a year if you are a menstruating woman, pregnant, over 60, on metformin, or on long-term antacids — all of these strip B12 or iron faster. Numbness or tingling in the feet on a lifelong vegetarian diet is a B12 sign until proven otherwise, and nerve damage does not fully reverse if you wait too long.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "The meal is complete on paper; the iron barely gets in",
+      "effects": [
+        {
+          "target": "small-intestine",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "Dal and rice eaten in the same meal deliver a reasonably complete amino acid mix. But the iron in them is non-haem iron, and phytates in the same grain and pulse bind it in the gut lumen before it can be absorbed.",
+          "metric": { "label": "Iron actually absorbed", "value": "typically 3–8% of the iron on the plate vs 15–35% for haem iron" }
+        },
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Dal fibre and resistant starch from cooled rice reach the colon and are fermented into short-chain fatty acids, mainly butyrate, which feeds the colonic lining directly."
+        },
+        {
+          "target": "pancreas",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "White rice has a high glycaemic index, but dal, ghee and sabzi in the same meal slow gastric emptying and blunt the peak. The plate is far less spiky than rice alone."
+        },
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Zero B12 arrives today. The liver holds a 2–5 year reserve of B12, so nothing is felt — the deficit is a balance-sheet problem, not a daily one."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Protein adds up, but lysine, zinc and B12 stay short",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Nitrogen balance is maintained for an average sedentary adult. For anyone training, the limiting factor is leucine per meal — a cereal-pulse meal rarely crosses the threshold that maximally switches on muscle protein synthesis.",
+          "metric": { "label": "Protein quality (DIAAS) of cereal-pulse mixes", "value": "roughly 0.6–0.8 vs ~1.0+ for milk or egg" }
+        },
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Fibre intake is comfortably above the ICMR target. Stool bulk, transit time and microbial diversity are all better than on a typical meat-and-refined-carb diet."
+        },
+        {
+          "target": "small-intestine",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "A high phytate-to-zinc molar ratio (above ~15 in unfermented cereal-pulse diets) roughly halves zinc absorption. Soaking, sprouting, fermenting (idli, dosa, dhokla) and long slow cooking break phytate down and are the traditional fix."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Saturated fat and dietary cholesterol are low. LDL on this pattern of eating is usually lower than on a mixed diet, which is a genuine long-term advantage."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Ferritin starts sliding; B12 runs off stored reserve",
+      "effects": [
+        {
+          "target": "bone-marrow",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Absorbed iron is not matching daily losses, especially in menstruating women who lose roughly 1 mg extra per day averaged over a cycle. Stored iron in ferritin is drawn down first; haemoglobin is untouched at this stage.",
+          "metric": { "label": "Serum ferritin", "value": "drifting down; below 30 ng/mL means stores are effectively empty" }
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Hepatic B12 stores fall by roughly 1–2 micrograms a day with no dietary replacement. Enterohepatic recycling of B12 in bile slows the loss, which is why it takes years and not months."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "A month of consistently high fibre measurably increases butyrate-producing bacteria and lowers colonic pH — the pattern linked with lower colorectal cancer risk in vegetarian populations."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Weight is usually stable, but a rice-and-roti-heavy plate with a small dal katori is carbohydrate-dominant. If total calories run high, this diet still produces central fat gain — 'vegetarian' is not the same as 'light'."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Zinc and iron gaps widen; the lipid profile keeps improving",
+      "effects": [
+        {
+          "target": "small-intestine",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Two months of a high-phytate diet with no vitamin C at meals leaves both iron and zinc absorption in the low single digits. Adding lemon, amla or a guava with the meal can raise non-haem iron absorption two- to three-fold.",
+          "metric": { "label": "Effect of vitamin C at the meal", "value": "non-haem iron absorption roughly doubles or triples" }
+        },
+        {
+          "target": "bone-marrow",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Iron stores continue emptying. The marrow keeps producing normal red cells by pulling from ferritin, so a routine haemoglobin test still reads normal — this is the phase everybody misses."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Total and LDL cholesterol on long-term Indian vegetarian diets sit lower than in matched non-vegetarians. This is real protection and it is the strongest argument for the plate as it stands."
+        },
+        {
+          "target": "skin",
+          "kind": "negative",
+          "intensity": 0.2,
+          "note": "Low zinc shows up first as slower wound healing and occasionally dry, scaly patches around the mouth and nose. It is subtle and easy to blame on weather."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Iron deficiency without anaemia — tired, but the report looks normal",
+      "effects": [
+        {
+          "target": "bone-marrow",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Ferritin is now low but haemoglobin is still inside the normal range. Iron-dependent enzymes in muscle and brain start running short before red cells do, which is why fatigue arrives before anaemia.",
+          "metric": { "label": "Typical picture", "value": "Hb still normal, ferritin often below 15–30 ng/mL" }
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Low iron reduces myoglobin and mitochondrial enzyme activity, so endurance and recovery drop even without anaemia. Climbing stairs feels heavier than it did."
+        },
+        {
+          "target": "hair",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "Hair follicles are among the fastest-dividing tissues in the body and are early casualties of low ferritin. Diffuse shedding (telogen effluvium) in Indian women is very often just this."
+        },
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "B12 reserve is meaningfully depleted in someone who started with average stores and takes no dairy. Serum B12 may still read low-normal, which falsely reassures."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Anaemia in many; B12 low enough to push homocysteine up",
+      "effects": [
+        {
+          "target": "bone-marrow",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Once stores are gone, haemoglobin follows. Combined iron and B12 shortage produces a confusing blood picture where cell size can look deceptively normal — small iron-deficient cells averaged with large B12-deficient ones.",
+          "metric": { "label": "Anaemia threshold", "value": "Hb below 12 g/dL (women) or 13 g/dL (men)" }
+        },
+        {
+          "target": "tongue",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "A smooth, sore, beefy-red tongue (atrophic glossitis) and cracks at the corners of the mouth are classic B12 and iron signs. In India these are usually treated as 'mouth ulcers' with a vitamin syrup and forgotten."
+        },
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "B12 is a cofactor for converting homocysteine back to methionine. Without it, homocysteine rises — and Indian vegetarians consistently show higher homocysteine than Western populations, which partly offsets the LDL advantage."
+        },
+        {
+          "target": "peripheral-nerves",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "The earliest nerve symptoms appear: pins and needles in the toes and fingertips, often at night. At this point it is fully reversible with B12."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The gut side of the ledger stays strongly positive. Long-term high-fibre vegetarian eating is associated with lower colorectal cancer risk and better bowel regularity than the Indian urban mixed diet."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "B12 reserve exhausted — nerves are the organ that pays",
+      "effects": [
+        {
+          "target": "peripheral-nerves",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "B12 is needed to build and maintain the myelin sheath. Years of deficit produce a glove-and-stocking numbness, burning feet, and loss of vibration sense — a picture routinely mistaken for diabetic neuropathy in Indian clinics.",
+          "metric": { "label": "Serum B12 in long-term strict vegetarians", "value": "often below 200 pg/mL, with raised methylmalonic acid" }
+        },
+        {
+          "target": "spinal-cord",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Untreated deficiency damages the dorsal columns of the cord (subacute combined degeneration), causing unsteady walking in the dark. Unlike the anaemia, this damage may not fully reverse once it is established."
+        },
+        {
+          "target": "bone-marrow",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Megaloblastic change: the marrow makes large, immature red cells because DNA synthesis is stalled without B12 and folate working together. Correcting only folate fixes the blood count while the nerve damage continues — a genuine trap."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Chronic B12 shortage is linked with low mood, poor concentration and, in older adults, accelerated cognitive decline. The association is consistent; how much is causal is still argued."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Five years of protein at the low end, cereal-dominant and unevenly spread across the day, leaves less muscle than an equivalent mixed diet — a serious issue after 50, when muscle loss accelerates anyway.",
+          "visual": { "opacity": 0.92 }
+        },
+        {
+          "target": "coronary-arteries",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "The genuine payoff: lower saturated fat and cholesterol intake over five years means less LDL-driven plaque than a matched non-vegetarian. Fix the B12 and the iron, and this becomes one of the healthier diets on earth."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,195 @@
+{
+  "id": "vitamin-d3-2000iu-daily",
+  "name": { "en": "Vitamin D3 2000 IU every day", "hi": "रोज़ 2000 IU विटामिन D3" },
+  "category": "supplement",
+  "icon": "☀️",
+  "dose": "2000 IU (50 mcg) cholecalciferol daily, taken with a meal containing some fat. Daily dosing rather than the 60,000 IU weekly sachets common in India, though both correct deficiency.",
+  "molecule": "vitamin-d3",
+  "summary": {
+    "en": "Vitamin D3 is a fat-soluble pro-hormone. The liver converts it to 25(OH)D (what blood tests measure) and the kidney to active 1,25(OH)2D, which raises calcium absorption in the gut, keeps parathyroid hormone in check and supports bone mineralisation and muscle function. In a deficient person, 2000 IU daily raises 25(OH)D by roughly 15–20 ng/mL over about 3 months; the bone pain, proximal muscle weakness and fatigue of deficiency ease over weeks to months. In a person who is already replete, extra vitamin D has not been shown to prevent cancer, heart disease or fractures.",
+    "hi": "विटामिन D3 एक फ़ैट में घुलने वाला प्रो-हॉर्मोन है। लिवर इसे 25(OH)D में बदलता है (यही ब्लड टेस्ट में नापा जाता है) और किडनी इसे ऐक्टिव रूप में, जो आँत से कैल्शियम सोखने, हड्डी मज़बूत रखने और मांसपेशियों के लिए ज़रूरी है। कमी वाले इंसान में रोज़ 2000 IU से 3 महीने में लेवल करीब 15–20 ng/mL बढ़ता है और हड्डियों का दर्द, जाँघों की कमज़ोरी और थकान धीरे-धीरे कम होती है। जिसका लेवल पहले से ठीक है, उसे और ज़्यादा लेने से कैंसर या हार्ट डिज़ीज़ से बचाव साबित नहीं हुआ है।"
+  },
+  "indian_context": "Indian studies consistently find 70–90% of urban adults with 25(OH)D below 20 ng/mL despite abundant sun: darker skin needs 3–5 times more UVB, people are indoors 9–6, clothing covers the arms and legs, air pollution filters UVB, and Indian food has almost no vitamin D (no fortified milk by default, few fatty fish). Deficiency is worse in women, in Kashmir and the North in winter, and in those who are obese. The 60,000 IU weekly sachet (Calcirol, D-Rise) is the usual Indian prescription; 2000 IU daily is gentler and easier to take long-term. ICMR-NIN's 2020 RDA is 600 IU, which assumes sun exposure most Indians no longer get.",
+  "evidence": "strong",
+  "sources": [
+    "Holick MF et al. Evaluation, treatment, and prevention of vitamin D deficiency: an Endocrine Society clinical practice guideline. J Clin Endocrinol Metab. 2011",
+    "Manson JE et al. Vitamin D supplements and prevention of cancer and cardiovascular disease (VITAL). N Engl J Med. 2019",
+    "LeBoff MS et al. Supplemental vitamin D and incident fractures in midlife and older adults (VITAL). N Engl J Med. 2022",
+    "Aparna P et al. Vitamin D deficiency in India. J Family Med Prim Care. 2018",
+    "ICMR-NIN. Nutrient Requirements for Indians (RDA and EAR). 2020"
+  ],
+  "caution": "2000 IU daily is below the tolerable upper limit of 4000 IU and does not cause toxicity. Toxicity (high blood calcium, kidney stones, kidney damage) comes from tens of thousands of IU daily for months, usually from repeated 60,000 IU sachets taken more often than prescribed. Do not combine with high-dose calcium unless advised; get a 25(OH)D test after 3 months. People with sarcoidosis, hyperparathyroidism or kidney stones need a doctor to decide the dose.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Absorbed with fat, stored; nothing to feel today",
+      "effects": [
+        {
+          "target": "small-intestine",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "D3 is absorbed with dietary fat via chylomicrons over several hours. Taken on an empty stomach, absorption is roughly halved."
+        },
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "The liver 25-hydroxylates today's dose within a day or two. 25(OH)D has a half-life of 2–3 weeks, so blood levels build slowly toward a steady state over ~3 months."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Fat tissue soaks up a share of each dose; this is why heavier people need more to reach the same blood level."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Blood 25(OH)D starting to climb; PTH begins to fall",
+      "effects": [
+        {
+          "target": "small-intestine",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Active vitamin D upregulates calcium transport proteins in the gut lining; fractional calcium absorption starts to rise from the ~10–15% seen in deficiency toward 30–40%."
+        },
+        {
+          "target": "thyroid",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "The parathyroid glands (behind the thyroid) sense better calcium supply and reduce PTH output, which had been pulling calcium out of bone to keep blood levels normal."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "One week in, 25(OH)D has risen only a few ng/mL. Anyone feeling dramatically better this soon is feeling placebo or better sleep, not vitamin D."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Level roughly halfway to target; deficiency symptoms start to ease",
+      "effects": [
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "With PTH down and calcium absorption up, bone stops being the calcium bank; unmineralised osteoid in a deficient adult begins to mineralise. Deep bone aches in the ribs, hips and shins (osteomalacia) start to lift.",
+          "metric": { "label": "25(OH)D rise so far", "value": "~+8–12 ng/mL" }
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Vitamin D receptors in muscle affect calcium handling and type II fibre function. Proximal weakness, the classic difficulty rising from a chair or climbing stairs, improves over 1–3 months in a deficient person."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "The kidney converts 25(OH)D to the active hormone under PTH control. At 2000 IU this is tightly regulated; there is no calcium overload."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Approaching steady state; immune and mood effects at best modest",
+      "effects": [
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Two months of adequate calcium absorption: bone turnover markers normalise and PTH is back in range in most people. Bone density on a scan will not change measurably for a year or more.",
+          "metric": { "label": "25(OH)D", "value": "~25–32 ng/mL (from a deficient start)" }
+        },
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "Immune cells carry vitamin D receptors and use it to make antimicrobial peptides. Trials show a small reduction in respiratory infections, mainly in people who were deficient, and none in the replete."
+        },
+        {
+          "target": "brain",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Low vitamin D correlates with low mood in observational data, but supplement trials mostly fail to improve depression. Do not expect a mood drug."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Replete: the target reached and held",
+      "effects": [
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "At steady state, 2000 IU/day typically holds 25(OH)D in the 30–40 ng/mL range. Osteomalacia is healed; the remaining question is whether calcium and protein intake are enough for bone to keep it.",
+          "metric": { "label": "Typical steady-state 25(OH)D", "value": "30–40 ng/mL" }
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Muscle strength gains from correcting deficiency have plateaued; further vitamin D above replete levels adds nothing to strength."
+        },
+        {
+          "target": "pancreas",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Vitamin D was hoped to prevent diabetes; the D2d trial found only a small, non-significant effect overall. For an Indian with prediabetes it is not a substitute for weight and diet work."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Bone density stabilised; big-outcome trials say: no extra magic",
+      "effects": [
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "One year replete stops the deficiency-driven bone loss. In people who are not deficient, large trials (VITAL, D-Health) found no fracture reduction from extra vitamin D, so the benefit belongs to correcting the deficit, not to the pill itself."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "At 2000 IU with normal calcium intake, urinary calcium stays normal and kidney-stone risk is not raised; the stone signal in trials came from vitamin D plus 1000 mg calcium tablets."
+        },
+        {
+          "target": "heart",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "VITAL (25,000 adults, 5 years) showed no reduction in heart attack or stroke. Low vitamin D is a marker of poor health more than a cause of heart disease."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years: safe, deficiency prevented, no long-term harm at this dose",
+      "effects": [
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "For an Indian who would otherwise have spent five years deficient, this is five years without osteomalacia, with lower PTH and better muscle function; a meaningful gain, especially for women heading toward menopause."
+        },
+        {
+          "target": "immune-system",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "VITAL reported a ~22% lower rate of new autoimmune disease over 5 years in the vitamin D arm; this is one trial and needs replication, so treat it as promising rather than proven."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "No toxicity at 2000 IU/day across 5-year trials. Repeat a 25(OH)D check every year or two, and keep total intake from all sources (sachets, multivitamins, fortified foods) under 4000 IU."
+        }
+      ]
+    }
+  ]
+}

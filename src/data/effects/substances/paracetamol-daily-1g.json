@@ -1,0 +1,242 @@
+{
+  "id": "paracetamol-daily-1g",
+  "name": { "en": "Paracetamol 1 g daily for chronic pain", "hi": "रोज़ 1 ग्राम पैरासिटामोल" },
+  "category": "medicine",
+  "icon": "💊",
+  "dose": "1 g per day — typically 500 mg twice daily, or 1 g once daily. Well within the adult maximum of 3–4 g in 24 hours, and below the 3 g/day ceiling advised for regular long-term use in adults under 50 kg or with liver risk factors.",
+  "molecule": "paracetamol",
+  "summary": {
+    "en": "Paracetamol (acetaminophen) reduces pain and fever mainly through central mechanisms — inhibition of COX enzymes in the brain and spinal cord, with contributions from the endocannabinoid and serotonergic descending pain pathways. Unlike ibuprofen it barely touches peripheral inflammation, so it does not damage the stomach lining or kidneys at normal doses. Its whole safety story rests on one thing: the liver's supply of glutathione, which mops up the toxic metabolite NAPQI. Stay under the ceiling and it is one of the safest drugs there is; go over, especially with alcohol or fasting, and it destroys the liver.",
+    "hi": "पैरासिटामोल दर्द और बुख़ार को मुख्य रूप से दिमाग़ और रीढ़ के स्तर पर काम करके कम करता है, न कि जोड़ में सूजन घटाकर। इसीलिए ब्रूफ़ेन की तरह ये पेट या किडनी को सामान्य डोज़ पर नुक़सान नहीं पहुँचाता। इसकी पूरी सुरक्षा एक ही चीज़ पर टिकी है — लिवर में मौजूद ग्लूटाथायोन, जो NAPQI नाम के ज़हरीले हिस्से को साफ़ करता है। तय मात्रा में लें तो ये सबसे सुरक्षित दवाओं में से एक है; ज़्यादा लें — ख़ासकर शराब के साथ या भूखे पेट — तो यही दवा लिवर ख़त्म कर देती है।"
+  },
+  "indian_context": "Paracetamol is India's default household medicine, sold in every kirana shop under dozens of brand names — Crocin, Dolo, Calpol, Metacin — and hidden inside hundreds of combination products for cold, body ache and period pain. The real Indian danger is double-dosing: taking Dolo 650 for fever and a Sinarest or Combiflam-type combination for a blocked nose on the same day can silently exceed 4 g. It costs about ₹1–2 per tablet and, unlike NSAIDs, it is the correct first choice for anyone with kidney disease, ulcers, hypertension or on blood thinners — all of which are common here.",
+  "evidence": "strong",
+  "sources": [
+    "NICE Clinical Guideline: Osteoarthritis in over 16s — diagnosis and management (NG226). 2022",
+    "Larson AM et al. Acetaminophen-induced acute liver failure: results of a United States multicenter, prospective study. Hepatology. 2005",
+    "US FDA prescribing information for acetaminophen; FDA Drug Safety Communication on acetaminophen and liver injury",
+    "Roberts E et al. Paracetamol: not as safe as we thought? A systematic literature review of observational studies. Ann Rheum Dis. 2016",
+    "WHO Model List of Essential Medicines, 23rd edition. 2023"
+  ],
+  "caution": "Never exceed 4 g in 24 hours from all sources, and stay at or below 3 g/day if you drink alcohol regularly, weigh under 50 kg, are malnourished, or have any liver disease — chronic alcohol induces CYP2E1 and depletes glutathione, so the toxic threshold falls sharply. Check every cold, flu and pain combination you take for paracetamol content; accidental stacking causes most Indian paracetamol liver injury. Overdose is deceptively silent for 24–48 hours before liver failure appears — N-acetylcysteine works only if given early, so any suspected overdose is an immediate emergency, not a wait-and-watch. For chronic osteoarthritis pain, guidelines now rate paracetamol as only weakly effective, so if it is not working, do not just keep taking it.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Pain relief in 30–60 minutes; liver clears it quietly",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Paracetamol crosses into the central nervous system and raises the pain threshold within 30–60 minutes, mainly by inhibiting prostaglandin synthesis centrally and modulating descending serotonergic pain control.",
+          "metric": { "label": "Onset / peak", "value": "30 min / 1–2 h" }
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.25,
+          "note": "About 90% of a normal dose is safely conjugated with glucuronide and sulphate. Roughly 5–10% goes through CYP2E1 to NAPQI, which glutathione neutralises immediately. At 1 g/day the glutathione pool is barely touched.",
+          "metric": { "label": "Half-life", "value": "~2–3 hours" }
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "If fever is present, paracetamol resets the hypothalamic thermostat downward, producing sweating and a temperature drop within an hour."
+        },
+        {
+          "target": "stomach",
+          "kind": "neutral",
+          "intensity": 0.1,
+          "note": "Unlike NSAIDs, paracetamol does not inhibit protective prostaglandins in the gastric mucosa, so it does not cause gastritis or ulcers. This is its single biggest practical advantage."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Steady relief, no tolerance, no dependence",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Analgesia is consistent day to day. Paracetamol does not produce tolerance or physical dependence, which is why it is preferred over opioids and even NSAIDs for long-running mild pain."
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.25,
+          "note": "Daily dosing keeps a small, steady NAPQI load. Glutathione regenerates continuously; the margin only narrows if you are fasting, malnourished or drinking."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Paracetamol does not constrict renal afferent arterioles the way NSAIDs do, so at therapeutic doses kidney function is unaffected — the reason it is the analgesic of choice in chronic kidney disease."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "For headache and tension-type pain, more than about 10–15 days of painkiller use a month can itself cause medication-overuse headache. Watch the frequency, not just the dose."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "A month in: effective for some pain, weak for arthritis",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Effectiveness holds for headache, dental and post-injury pain. For knee and hip osteoarthritis, trial data show the benefit over placebo is small — NICE no longer recommends it as routine first-line therapy there."
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "A minority of people on regular therapeutic paracetamol show mild, transient ALT elevations that resolve without stopping. It is worth one liver function test if you have been on daily doses for weeks."
+        },
+        {
+          "target": "joints",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Paracetamol masks the pain signal but does nothing to the underlying joint inflammation or cartilage. Nothing about the joint is improving because you are taking it."
+        },
+        {
+          "target": "stomach",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "For someone who would otherwise be on daily ibuprofen, choosing paracetamol has avoided a month of gastric erosion and ulcer risk. This is a real, if invisible, benefit."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Safe at this dose, but ask what the pain actually is",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "At 1 g/day in a well-nourished adult who does not drink, two months of use causes no meaningful cumulative liver injury. The risk profile changes entirely with alcohol, fasting, or dose creep."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Continued analgesia without sedation, gastric bleeding or addiction — a genuinely favourable profile compared with the alternatives for long-term daily use."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Two months of daily painkillers means a diagnosis has been substituted with a symptom fix. Chronic pain lasting this long deserves an actual cause, not a longer prescription."
+        },
+        {
+          "target": "arteries",
+          "kind": "strain",
+          "intensity": 0.15,
+          "note": "Some observational studies report a small rise in blood pressure with regular high-dose paracetamol, particularly the effervescent formulations, which carry a large hidden sodium load."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Six months: still the safest long-term analgesic available",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "No progressive liver damage is expected at 1 g/day in healthy adults. The single most important thing you can do is keep an accurate count of every product containing paracetamol you take."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Some older studies linked long-term heavy analgesic use to analgesic nephropathy, but that literature is dominated by phenacetin-containing mixtures, not paracetamol alone at moderate doses."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "The analgesic effect is undiminished at six months — no tolerance, no dose escalation required, which distinguishes it sharply from opioids."
+        },
+        {
+          "target": "arteries",
+          "kind": "strain",
+          "intensity": 0.2,
+          "note": "Observational data suggest a small increase in cardiovascular events with sustained high-dose paracetamol. The effect size is small and confounded by the fact that people in more pain are less healthy to begin with."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "A year of daily use — safe, but the pain deserves a diagnosis",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Long-term therapeutic paracetamol is not a recognised cause of chronic liver disease. Essentially all paracetamol liver failure comes from acute overdose or from staggered supratherapeutic dosing over a few days."
+        },
+        {
+          "target": "whole-body",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "A year of daily analgesia usually means an untreated arthritis, disc problem or neuropathic pain. Physiotherapy, weight reduction and strength training change the disease; paracetamol only changes the signal."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "For headache sufferers, a year of frequent use raises the risk of medication-overuse headache, where the painkiller itself sustains the daily headache. The fix is a supervised drug holiday."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Renal function remains the strongest argument for paracetamol over NSAIDs — after a year, the kidney damage an equivalent year of ibuprofen would have caused simply has not happened."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years: no cumulative organ damage at this dose",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Five years at 1 g/day in a healthy, non-drinking adult carries no established cumulative hepatic risk. The danger has never been chronic exposure — it is the single day someone stacks brands or drinks heavily on top of it."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Compared with five years of daily NSAIDs, this route has avoided ulcers, GI bleeds, kidney decline and raised cardiovascular risk. That comparison is the real reason paracetamol remains first choice."
+        },
+        {
+          "target": "joints",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Five years of pain masking without treating the joint means osteoarthritis has probably progressed structurally, sometimes to the point where a knee replacement is the only remaining option."
+        },
+        {
+          "target": "arteries",
+          "kind": "strain",
+          "intensity": 0.2,
+          "note": "The small observational association with blood pressure and cardiovascular events over years is not proven causal, but it argues for using the lowest effective dose rather than an automatic daily gram."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "No meaningful decline in filtration is expected from paracetamol alone at these doses over five years."
+        }
+      ]
+    }
+  ]
+}

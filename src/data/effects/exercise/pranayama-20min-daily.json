@@ -1,0 +1,261 @@
+{
+  "id": "pranayama-20min-daily",
+  "name": { "en": "Pranayama 20 minutes daily", "hi": "रोज़ 20 मिनट प्राणायाम" },
+  "category": "habit",
+  "icon": "🧘",
+  "dose": "20 minutes daily of slow yogic breathing — typically 10 min anulom-vilom (alternate nostril, roughly 5–6 breaths per minute), 5 min bhramari (humming exhale), 5 min quiet diaphragmatic breathing. Seated, empty stomach, morning or evening.",
+  "summary": {
+    "en": "Slowing the breath to 5–6 cycles per minute is the single fastest way to shift the autonomic nervous system from sympathetic (fight-or-flight) toward parasympathetic (rest-and-digest). Long exhales and the humming of bhramari stimulate the vagus nerve, which slows the heart, lowers blood pressure and raises heart rate variability. The immediate effect is calm within minutes; the durable effects — lower resting BP, better stress reactivity, stronger respiratory muscles — build over weeks to months.",
+    "hi": "साँस को धीमा करके 5–6 बार प्रति मिनट पर लाना, दिमाग और शरीर को तनाव मोड से आराम मोड में लाने का सबसे तेज़ तरीका है। लंबी साँस छोड़ना और भ्रामरी की गुनगुनाहट वेगस नस को जगाती है, जिससे धड़कन धीमी होती है और ब्लड प्रेशर घटता है। शांति कुछ ही मिनटों में महसूस होती है, पर असली फायदे — कम बीपी, तनाव में स्थिर रहना, मज़बूत साँस की मांसपेशियाँ — हफ्तों और महीनों में बनते हैं।"
+  },
+  "indian_context": "Pranayama is culturally free and needs no equipment, which makes it the most realistic daily practice for Indian households where gym access, time and money are all constrained. It pairs naturally with the existing morning routine in most homes, and is one of the very few 'exercises' that is safe to do indoors during North India's winter smog season, when outdoor activity is actively harmful. One important caution for Indian practitioners: kapalbhati and bhastrika (forceful breathing) are often taught in the same class, but those are stimulating, not calming, and are not what this entry describes.",
+  "evidence": "moderate",
+  "sources": [
+    "Zaccaro A et al. How breath-control can change your life: a systematic review on psycho-physiological correlates of slow breathing. Front Hum Neurosci. 2018",
+    "Lehrer PM, Gevirtz R. Heart rate variability biofeedback: how and why does it work? Front Psychol. 2014",
+    "Brenner J et al. Evaluation of an established slow-paced breathing protocol on blood pressure and heart rate variability. Front Physiol. 2020",
+    "Cramer H et al. Yoga for hypertension: a systematic review and meta-analysis. Am J Hypertens. 2014"
+  ],
+  "caution": "Slow, gentle pranayama is safe for almost everyone. Forceful techniques (kapalbhati, bhastrika) and long breath-holds (kumbhaka) are a different matter: avoid them if you have uncontrolled high blood pressure, glaucoma, a hernia, recent abdominal or eye surgery, epilepsy, or are pregnant. Stop if you feel dizzy or tingly — that is over-breathing (low CO₂), not spiritual progress. Pranayama supports blood-pressure and anxiety treatment but does not replace prescribed medication.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Heart slows within minutes, mind quiets for a few hours",
+      "effects": [
+        {
+          "target": "vagus-nerve",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Slow exhales and the vibration of bhramari increase vagal outflow to the heart. Heart rate visibly drops on every exhale — this respiratory sinus arrhythmia is the mechanism behind the calm.",
+          "metric": { "label": "Breathing rate during practice", "value": "~5–6 breaths/min vs 12–16 normal" }
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "During and just after the session, heart rate falls roughly 5–10 bpm and heart rate variability rises sharply. Blood pressure drops a few mmHg for the next hour or two.",
+          "metric": { "label": "Heart rate during session", "value": "−5 to −10 bpm" }
+        },
+        {
+          "target": "adrenal-glands",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Sympathetic drive falls, so circulating adrenaline and cortisol come down. This is why 20 minutes can undo the physical residue of a stressful morning."
+        },
+        {
+          "target": "diaphragm",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "The diaphragm does most of the work instead of the neck and shoulder muscles. On day one it may feel like effort — most adults have shallow chest-breathing habits."
+        },
+        {
+          "target": "prefrontal-cortex",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Attention on the breath engages prefrontal control networks and dampens amygdala reactivity, which is felt as a quieter mind rather than measured as anything."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Sleep gets easier, breathing pattern starts changing on its own",
+      "effects": [
+        {
+          "target": "autonomic-nerves",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Baroreflex sensitivity — how quickly your body corrects a blood-pressure change — improves measurably within a week of daily slow breathing. This is the earliest hard adaptation."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Most people report falling asleep faster within the first week, especially with an evening session. Pre-sleep sympathetic arousal is the main thing being removed."
+        },
+        {
+          "target": "diaphragm",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Diaphragmatic breathing starts to feel natural rather than deliberate. Accessory neck muscles relax, which often reduces low-grade neck and jaw tension."
+        },
+        {
+          "target": "amygdala",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "The threat-detection circuit fires less readily. Practically: the same traffic, the same boss, less body reaction."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Resting blood pressure begins to move; anxiety scores drop",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "In people with high-normal or stage-1 hypertension, four weeks of daily slow breathing typically drops resting blood pressure by about 4–6 mmHg systolic. In people with normal BP the change is small.",
+          "metric": { "label": "Systolic blood pressure (if elevated)", "value": "−4 to −6 mmHg" }
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Resting heart rate is typically 2–5 bpm lower and resting HRV higher. Unlike aerobic training, this comes from autonomic rebalancing, not a stronger heart.",
+          "metric": { "label": "Resting heart rate", "value": "−2 to −5 bpm" }
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The HPA (stress hormone) axis resets to a lower set-point. Morning cortisol curves in trial participants become less exaggerated."
+        },
+        {
+          "target": "lungs",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Tidal volume increases and the lower lobes of the lungs, usually under-ventilated in chest breathers, get used properly. Ventilation-perfusion matching improves slightly."
+        },
+        {
+          "target": "prefrontal-cortex",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Sustained-attention tests improve modestly after a month. The effect size is real but smaller than the popular claims — expect steadier focus, not a different brain."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Stress reactivity is the thing that has actually changed",
+      "effects": [
+        {
+          "target": "autonomic-nerves",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "The measurable change at two months is not resting state but recovery: after an argument or a stressful call, heart rate and BP return to baseline faster than they used to."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Blood-pressure reduction holds at roughly 4–8 mmHg systolic and 2–4 mmHg diastolic in hypertensive practitioners who kept the habit daily.",
+          "metric": { "label": "Blood pressure (hypertensive)", "value": "−4 to −8 / −2 to −4 mmHg" }
+        },
+        {
+          "target": "diaphragm",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Inspiratory muscle endurance improves. This is a small but real strength adaptation in the diaphragm and intercostals, similar in kind to any other trained muscle."
+        },
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Markers of chronic inflammation such as IL-6 and CRP trend down in some trials, most likely secondary to lower cortisol and better sleep rather than a direct immune effect."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "A different baseline nervous system, and a genuinely useful skill",
+      "effects": [
+        {
+          "target": "vagus-nerve",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Vagal tone measured as resting HRV sits meaningfully higher than baseline. Higher HRV tracks with lower cardiovascular and all-cause mortality across cohort studies."
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Combined with medication and diet, six months of daily pranayama is a real adjunct in hypertension management — not a replacement, but enough to matter clinically for some people."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Anxiety and perceived-stress scores fall by clinically meaningful amounts in most trials of six-month yogic breathing programmes. Depression effects are smaller and less consistent."
+        },
+        {
+          "target": "lungs",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "In people with asthma or COPD, breath training improves symptom scores and quality of life, though lung-function numbers (FEV₁) barely move. Manage expectations honestly here."
+        },
+        {
+          "target": "hippocampus",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Better sleep quality and lower cortisol both protect the hippocampus. The evidence for direct memory improvement from breathing alone is limited — most of the benefit is indirect."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "The nervous system holds its new set-point; benefits plateau",
+      "effects": [
+        {
+          "target": "autonomic-nerves",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Autonomic adaptations plateau around 6–12 months. What remains is maintenance: the benefits persist while the practice does, and fade within weeks of stopping."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Sustained modest BP reduction over a year translates into a real reduction in stroke and cardiac event risk at a population level, though pranayama alone was never tested for hard endpoints."
+        },
+        {
+          "target": "amygdala",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Long-term practitioners show lower amygdala reactivity on imaging tasks. In daily life this looks like a longer fuse rather than an absence of stress."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Important honesty check: pranayama does not build cardiovascular fitness, muscle or bone. It complements exercise, it does not substitute for the WHO's 150 min/week of physical activity."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "A tool you own for life, with a real but bounded ceiling",
+      "effects": [
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Five years of maintained lower blood pressure and higher HRV is meaningful cardiovascular protection, particularly for South Asians, who develop hypertension and heart disease earlier than most populations."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "The strongest long-term outcome is behavioural: a reliable self-regulation skill available in seconds during any acute stress, which no drug provides."
+        },
+        {
+          "target": "diaphragm",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Respiratory muscle strength normally declines with age; regular breath training slows that decline and helps maintain functional breathing into the sixties and beyond."
+        },
+        {
+          "target": "adrenal-glands",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Years of lower average cortisol exposure protects against the downstream costs of chronic stress: visceral fat, insulin resistance and poor sleep."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "No harm has emerged in long-term practitioners of gentle pranayama. The main risk over five years is doing it instead of exercise rather than alongside it."
+        }
+      ]
+    }
+  ]
+}

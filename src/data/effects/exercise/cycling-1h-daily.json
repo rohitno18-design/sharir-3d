@@ -1,0 +1,298 @@
+{
+  "id": "cycling-1h-daily",
+  "name": { "en": "Cycling 1 hour every day", "hi": "रोज़ 1 घंटा साइकिल चलाना" },
+  "category": "exercise",
+  "icon": "🚴",
+  "dose": "60 minutes of cycling daily at a moderate, conversational-to-slightly-breathless pace (roughly 18–22 km/h on flat road, or 15–20 km on a commute), starting from a mostly sedentary baseline. Assumes a correctly sized bike and a helmet.",
+  "summary": {
+    "en": "Cycling is a high-volume aerobic stimulus with almost none of the impact cost of running. The legs do concentric work against resistance, so quadriceps and glutes build endurance and some size while knees, shins and Achilles stay largely protected. Expect plasma volume and mitochondria to rise in weeks, VO₂max up 10–20% by three months, resting heart rate down 5–10 bpm, and meaningful blood-pressure and blood-sugar improvements by six months. The main trade-off is what cycling does not do: because it is non-weight-bearing, it does not build bone, so serious cyclists need separate resistance work.",
+    "hi": "साइकिल चलाना दिल और फेफड़ों के लिए दौड़ने जितना असरदार है, पर घुटनों और टखनों पर उसका आधा भी बोझ नहीं डालता। पैरों की मांसपेशियाँ ताकत और स्टैमिना दोनों बनाती हैं। कुछ हफ्तों में खून की मात्रा बढ़ती है, तीन महीने में स्टैमिना 10–20% बेहतर होता है, आराम की धड़कन 5–10 कम हो जाती है, और छह महीने में बीपी और शुगर दोनों सुधरते हैं। एक कमी ज़रूर है — साइकिल में शरीर का वज़न पैरों पर नहीं पड़ता, इसलिए हड्डियाँ मज़बूत नहीं होतीं। उसके लिए अलग से वेट ट्रेनिंग चाहिए।"
+  },
+  "indian_context": "Cycling is the most practical Indian aerobic exercise for anyone with knee concerns or high body weight, and a bicycle commute converts travel time into training time. The two real obstacles are traffic safety — India has among the world's highest road fatality rates for vulnerable road users — and air quality: at cycling ventilation rates you inhale several times the pollutant dose of a seated commuter, so on days when AQI crosses 200 in Delhi-NCR, Kanpur or Patna, an indoor trainer or gym cycle is the honest choice. Summer heat and humidity make 1.5–2 L/hour sweat losses realistic, so fluid and some salt matter more than any supplement. Vegetarian cyclists should watch iron and B12, as low iron blunts endurance adaptation and is very common in Indian women.",
+  "evidence": "strong",
+  "sources": [
+    "WHO. Guidelines on physical activity and sedentary behaviour. 2020",
+    "Celis-Morales CA et al. Association between active commuting and incident cardiovascular disease, cancer, and mortality: prospective cohort study. BMJ. 2017",
+    "Oja P et al. Health benefits of cycling: a systematic review. Scand J Med Sci Sports. 2011",
+    "ACSM's Guidelines for Exercise Testing and Prescription, 11th ed. 2021",
+    "Nichols JF et al. Bone mineral density in competitive male road cyclists. Med Sci Sports Exerc. 2003"
+  ],
+  "caution": "The commonest cycling injuries are not from overuse but from crashes — wear a helmet, use lights, and avoid high-speed traffic corridors. Knee pain in new cyclists is almost always saddle height (too low) rather than the knee itself. Numbness in the hands (ulnar nerve) or genital numbness from saddle pressure means the fit is wrong and needs correcting, not tolerating. Because cycling does not load bone, cyclists who do no other exercise are at genuine risk of low bone density over years.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Legs burn, glycogen empties, heart works hard for an hour",
+      "effects": [
+        {
+          "target": "quadriceps",
+          "kind": "strain",
+          "intensity": 0.6,
+          "note": "Cycling is dominated by concentric quadriceps work with very little eccentric loading, which is why soreness after a first ride is milder than after a first run despite the same effort.",
+          "metric": { "label": "Muscle glycogen used", "value": "~50–70% depleted in 1 h" }
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.6,
+          "note": "Heart rate sits around 65–80% of maximum for the hour and cardiac output rises 4–5 fold. This is the exact stimulus that drives cardiac remodelling over the following months."
+        },
+        {
+          "target": "glutes",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "The glutes drive the top half of the pedal stroke, especially when climbing or pushing a bigger gear. Beginners usually feel this before they feel their quads."
+        },
+        {
+          "target": "lungs",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Ventilation rises to 50–90 L/min. In clean air this is pure benefit; in high-AQI city air it means inhaling several times the particulate dose of a person sitting indoors."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Endorphins, endocannabinoids and a BDNF pulse lift mood for a few hours and deepen sleep that night — the most immediately noticeable effect of day one."
+        },
+        {
+          "target": "skin",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Airflow while riding evaporates sweat efficiently, so you can lose 1–1.5 L in an Indian summer hour without feeling as wet as a runner would. Dehydration sneaks up on cyclists.",
+          "metric": { "label": "Sweat loss (hot conditions)", "value": "~1–1.5 L/hour" }
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Blood volume expands, the same ride starts feeling easier",
+      "effects": [
+        {
+          "target": "blood-vessels",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Plasma volume expands roughly 8–12% within the first week. More blood per beat is the fastest of all endurance adaptations and explains why week two feels dramatically easier than week one.",
+          "metric": { "label": "Plasma volume", "value": "+8–12%" }
+        },
+        {
+          "target": "quadriceps",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Glycogen storage capacity increases as the muscle learns to expect daily depletion. Pedalling economy also improves — you use less oxygen for the same speed."
+        },
+        {
+          "target": "knee-joint",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Cycling loads the knee with almost no impact, which is why it is prescribed in osteoarthritis rehab. Anterior knee pain this week almost always means the saddle is too low or too far forward."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Sleep depth and mood stability improve within days. Aerobic exercise is among the best-supported non-drug treatments for mild anxiety and low mood."
+        },
+        {
+          "target": "hands",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Weight through the handlebars compresses the ulnar nerve at the wrist. Tingling in the ring and little fingers is common in the first weeks and is fixed with padded gloves and changing hand position."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Mitochondria multiply; resting heart rate drops",
+      "effects": [
+        {
+          "target": "quadriceps",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Mitochondrial biogenesis via PGC-1α plus new capillaries mean the leg muscles extract more oxygen and burn more fat at the same wattage. Lactate accumulation at a given pace falls.",
+          "metric": { "label": "VO₂max", "value": "+5–10%" }
+        },
+        {
+          "target": "heart-muscle",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Stroke volume is rising and resting heart rate is typically 3–5 bpm lower than a month ago.",
+          "metric": { "label": "Resting heart rate", "value": "−3 to −5 bpm" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Daily glycogen depletion means muscle pulls glucose out of the blood aggressively for hours after each ride, largely independent of insulin. Post-meal spikes flatten noticeably."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "An hour of moderate cycling burns roughly 400–600 kcal depending on body weight and pace. Without full dietary compensation, expect 1–2 kg of fat loss in the first month.",
+          "metric": { "label": "Energy per hour", "value": "~400–600 kcal" }
+        },
+        {
+          "target": "hip-flexors",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Cycling keeps the hips permanently flexed. Combined with a desk job, this shortens the hip flexors further — the single most important reason cyclists need to stretch and do hip extension work."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Visible leg development, lower blood pressure, cleaner blood work",
+      "effects": [
+        {
+          "target": "quadriceps",
+          "kind": "positive",
+          "intensity": 0.6,
+          "visual": { "scale": 1.04 },
+          "note": "Two months in, the quads are visibly denser and more defined. Cycling builds mostly oxidative fibres, so expect firm, hard legs rather than bodybuilder bulk unless you sprint or climb heavily."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Better endothelial nitric oxide production relaxes the arteries. Systolic blood pressure typically falls 4–7 mmHg, with the largest drops in those who started highest.",
+          "metric": { "label": "Systolic blood pressure", "value": "−4 to −7 mmHg" }
+        },
+        {
+          "target": "glutes",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.03 },
+          "note": "Gluteus maximus strengthens through the power phase of the pedal stroke — one of the reasons cycling helps desk workers whose glutes have stopped firing."
+        },
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Triglycerides fall and HDL rises with sustained aerobic training. Liver fat drops measurably even in people whose scale weight has not changed much."
+        },
+        {
+          "target": "calves",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "The calves stabilise the ankle through the stroke rather than driving it, so they firm up without the size gains that running or skipping produce."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "A trained cardiovascular system — but bone stays untouched",
+      "effects": [
+        {
+          "target": "heart-muscle",
+          "kind": "positive",
+          "intensity": 0.7,
+          "visual": { "scale": 1.03 },
+          "note": "Mild eccentric left-ventricular remodelling: the chamber fills more and ejects more per beat. Resting heart rate is often 8–10 bpm below baseline and VO₂max is up 15–20%.",
+          "metric": { "label": "VO₂max", "value": "+15–20%" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "HbA1c falls roughly 0.3–0.7% in people with prediabetes or type 2 diabetes, driven by improved muscle insulin sensitivity plus loss of visceral fat.",
+          "metric": { "label": "HbA1c (if prediabetic/diabetic)", "value": "−0.3 to −0.7%" }
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Visceral fat is the first depot to shrink with high-volume aerobic work, which matters particularly for the South Asian tendency to store fat around the organs at normal BMI."
+        },
+        {
+          "target": "bones",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "The real downside: cycling is non-weight-bearing, and competitive cyclists who do nothing else consistently show lower spine and hip bone density than sedentary controls. Add squats, deadlifts or even walking.",
+          "metric": { "label": "Spine BMD in cyclists-only training", "value": "Lower than sedentary controls" }
+        },
+        {
+          "target": "hippocampus",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Sustained BDNF signalling from six months of daily aerobic exercise supports hippocampal function, with measurable gains in memory and executive attention."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Fitness near its ceiling for this dose; disease risk down sharply",
+      "effects": [
+        {
+          "target": "heart-muscle",
+          "kind": "positive",
+          "intensity": 0.7,
+          "visual": { "scale": 1.04 },
+          "note": "Cardiac adaptation for a steady one-hour moderate dose is largely complete; further gains need intervals or longer rides. Blood pressure, resting heart rate and HRV all sit in a healthier band."
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "In a UK Biobank cohort of over 260,000 commuters, cycling to work was associated with roughly 41% lower all-cause mortality and 46% lower cardiovascular disease incidence over five years.",
+          "metric": { "label": "All-cause mortality (cycle commuters)", "value": "~−41% (cohort data)" }
+        },
+        {
+          "target": "knee-joint",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "A year of low-impact cyclical loading strengthens the muscles around the knee and nourishes cartilage. Cycling is one of the few high-volume activities that is knee-protective rather than knee-costly."
+        },
+        {
+          "target": "lungs",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "If most riding happened on high-AQI city roads, cumulative particulate exposure is now substantial. Modelling suggests the cardiovascular benefit still outweighs the pollution harm in almost all cities — but route choice and timing matter."
+        },
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Chronic inflammatory markers (CRP, IL-6) sit lower than baseline, and immune surveillance improves with regular moderate exercise."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Long-term protection, with bone density the one thing to manage",
+      "effects": [
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.8,
+          "visual": { "scale": 1.04 },
+          "note": "Five years of daily cycling puts you in the highest cardiorespiratory fitness bands, which is among the strongest single predictors of long-term survival in any population studied."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Arterial stiffness tracks years younger than chronological age, and plaque progression in the coronary and carotid arteries is slower than in sedentary peers."
+        },
+        {
+          "target": "bones",
+          "kind": "negative",
+          "intensity": 0.4,
+          "visual": { "opacity": 0.85 },
+          "note": "Five years of cycling-only training leaves hip and spine bone density measurably lower than it should be for the training load. This is fixable — twice-weekly resistance training completely solves it."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Long-term aerobic training is associated with roughly 20–30% lower dementia and depression risk in cohort studies, plus better preserved processing speed with age."
+        },
+        {
+          "target": "prostate",
+          "kind": "strain",
+          "intensity": 0.2,
+          "note": "Very high-volume cycling on a poorly fitted saddle can cause perineal numbness and erectile issues in men. A cut-out saddle and correct fit prevent it; the risk at one hour a day is small."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,274 @@
+{
+  "id": "sleep-8h-nightly",
+  "name": { "en": "Consistent 7.5–8 hours of sleep", "hi": "रोज़ 7.5–8 घंटे की पक्की नींद" },
+  "category": "sleep",
+  "icon": "🛏️",
+  "dose": "7.5–8 hours of sleep every night at roughly the same clock time, including weekends, in a dark, cool, quiet room. Assumes an adult moving here from a habitual 5–6 hours.",
+  "summary": {
+    "en": "Sleep is not downtime — it is when the body does its scheduled maintenance: growth hormone pulses in deep sleep, memories are consolidated and pruned, the glymphatic system flushes metabolic waste out of the brain, and insulin sensitivity is restored. Going from chronic 5–6 hours to a consistent 7.5–8 restores glucose control and mood within about two weeks, blood pressure and recovery capacity within a couple of months, and over years is one of the strongest predictors of healthy ageing. Regularity of timing matters nearly as much as duration.",
+    "hi": "नींद आराम नहीं, मरम्मत का समय है। गहरी नींद में ग्रोथ हार्मोन निकलता है, दिन की यादें दिमाग़ में पक्की होती हैं, दिमाग़ की सफाई होती है, और इंसुलिन सेंसिटिविटी वापस ठीक होती है। 5–6 घंटे से 7.5–8 घंटे पर आते ही दो हफ्तों में शुगर कंट्रोल और मूड सुधरता है, दो महीने में बीपी और रिकवरी, और सालों में यह सेहतमंद बुढ़ापे की सबसे मज़बूत गारंटी बन जाती है। समय पर सोना उतना ही ज़रूरी है जितना पूरी नींद लेना।"
+  },
+  "indian_context": "The main obstacle in urban India is not the wake-up time but the bedtime: dinner at 9–10 PM, TV or phone until midnight, and an alarm at 6 for the commute. Shifting dinner earlier and putting the phone outside the bedroom usually buys the missing 90 minutes without changing anything else. Summer heat above 30 °C at night fragments deep sleep badly — a fan, cross-ventilation or cooling the room to the mid-20s does more for sleep quality than any supplement. For night-shift IT and BPO workers, full blackout curtains and a fixed daytime sleep window are the realistic version of this intervention.",
+  "evidence": "strong",
+  "sources": [
+    "Watson NF et al. Recommended amount of sleep for a healthy adult: AASM and Sleep Research Society joint consensus. Sleep. 2015",
+    "Xie L et al. Sleep drives metabolite clearance from the adult brain. Science. 2013",
+    "Cappuccio FP et al. Sleep duration and all-cause mortality: a systematic review and meta-analysis. Sleep. 2010",
+    "Irwin MR. Sleep and inflammation: partners in sickness and in health. Nat Rev Immunol. 2019"
+  ],
+  "caution": "If you spend 8 hours in bed and still wake unrefreshed, the problem is sleep quality, not quantity — loud snoring, witnessed pauses in breathing, or morning headaches point to obstructive sleep apnoea, which needs a sleep study. Do not chase sleep with alcohol or sedating antihistamines: both suppress REM and deep sleep. Regularly needing more than 9–10 hours in an adult is itself a signal worth investigating.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "One full night: sharper brain, calmer hormones, better blood sugar",
+      "effects": [
+        {
+          "target": "prefrontal-cortex",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Attention, working memory and impulse control return to full capacity after a single adequate night. The difference from a 5-hour night is roughly the difference between sober and mildly drunk.",
+          "metric": { "label": "Reaction time vs sleep-restricted", "value": "Returns to baseline" }
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Ghrelin and leptin normalise, so appetite tracks actual energy need. Most people find they stop craving sugar mid-afternoon within a day or two of proper sleep."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Insulin sensitivity recovers overnight. A full night's sleep before a carb-heavy meal means a visibly smaller glucose spike than the same meal after a short night."
+        },
+        {
+          "target": "pineal",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "With a dark room and a consistent bedtime, melatonin rises on schedule about 2 hours before sleep. This clock signal is what makes the next night easier, not just this one.",
+          "metric": { "label": "Melatonin onset", "value": "~2 h before habitual sleep time" }
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Most of the day's growth hormone is released in the first deep-sleep cycles. Cutting sleep cuts that pulse; protecting it is why sleep is the highest-leverage recovery tool for anyone training."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Sleep pressure rebalances, mornings stop being a fight",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "The first few nights carry rebound deep sleep and REM as the body repays debt. By day 5–7 the architecture normalises and you start waking before the alarm."
+        },
+        {
+          "target": "amygdala",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "REM sleep strips the emotional charge off the day's memories. A week of adequate REM shows up as visible emotional stability, not just less tiredness."
+        },
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Natural killer cell activity and antibody responses recover. People sleeping 7+ hours are roughly three times less likely to develop a cold after exposure than those under 6."
+        },
+        {
+          "target": "adrenal-glands",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The cortisol curve steepens back to normal: high at waking, low by evening. That evening drop is what lets you fall asleep without effort."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Body composition, blood sugar and mood all move in the right direction",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "A month of adequate sleep restores insulin sensitivity that chronic restriction had degraded. Fasting insulin falls and post-meal glucose excursions shrink."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Trials extending sleep in short sleepers show spontaneous reductions of roughly 250–270 kcal/day in intake without any dieting instruction — the appetite system simply works properly again.",
+          "metric": { "label": "Spontaneous intake reduction", "value": "~−250 kcal/day" }
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Depressive and anxiety symptoms improve measurably with a month of restored sleep. Sleep is now understood as a driver of mood disorders, not only a symptom."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "For anyone training, this is when the effect becomes obvious: better recovery between sessions, more strength progression, less lingering soreness. Sleep is the cheapest supplement available."
+        },
+        {
+          "target": "hippocampus",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Deep sleep replays and files the day's learning while REM links it to existing knowledge. Retention of anything studied or practised improves noticeably within a month."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Blood pressure settles, recovery capacity is visibly higher",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Blood pressure dips properly overnight again. In people whose BP had risen with sleep restriction, restoring sleep typically returns 3–6 mmHg systolic.",
+          "metric": { "label": "Systolic blood pressure", "value": "−3 to −6 mmHg" }
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Resting heart rate falls a few beats and heart rate variability rises as parasympathetic tone recovers overnight — the same direction as aerobic training, by a different route."
+        },
+        {
+          "target": "testes",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Testosterone in men rises back toward normal, since most of the daily pulse depends on the first three sleep cycles. Libido and energy usually follow.",
+          "metric": { "label": "Testosterone recovery (men)", "value": "+10–15% vs restricted sleep" }
+        },
+        {
+          "target": "skin",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Overnight is when skin barrier repair and collagen synthesis peak. Two months of consistent sleep shows up as better skin tone and less under-eye darkness."
+        },
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Chronic inflammatory markers (CRP, IL-6) fall back toward normal, which is the mechanistic link between good sleep and lower long-term disease risk."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Stable circadian rhythm; risk profile genuinely improved",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Six months of adequate deep sleep means six months of efficient glymphatic clearance of metabolic waste, including amyloid-beta. This is the strongest known link between sleep and long-term brain health."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Sustained good sleep meaningfully lowers type 2 diabetes risk, which matters more for South Asians, who develop insulin resistance at lower body weights than other populations."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Body composition improves without a diet: with normal appetite hormones and better training recovery, fat trends down and lean mass is protected."
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "The circadian clock is now firmly entrained. Regular timing — same bedtime and wake time within about 30 minutes daily — predicts health outcomes almost as strongly as total duration."
+        },
+        {
+          "target": "prefrontal-cortex",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Decision quality, emotional regulation and creative problem-solving all operate at full capacity. Most people underestimate how much of their 'personality' was sleep debt."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "The compounding asset: every other health habit works better",
+      "effects": [
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.7,
+          "note": "Sleep is the multiplier: training adaptation, diet adherence, insulin sensitivity and mood all depend on it. A year of 7.5–8 hours makes every other intervention in this app work better."
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "The AHA added sleep duration as the eighth component of cardiovascular health (Life's Essential 8) in 2022 precisely because of this cumulative protective effect."
+        },
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Fewer infections per year, better vaccine responses, and lower background inflammation than a matched short sleeper."
+        },
+        {
+          "target": "hippocampus",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "A year of intact memory consolidation compounds: skills, languages and professional knowledge acquired over that year are actually retained."
+        },
+        {
+          "target": "brain",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Honest limit: more is not better. Consistently sleeping over 9 hours is associated with worse outcomes in cohort data, usually as a marker of underlying illness rather than a cause."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Slower biological ageing across nearly every system",
+      "effects": [
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.8,
+          "note": "In large cohorts, sleeping 7–8 hours regularly sits at the lowest point of the mortality curve — meaningfully better than both short and very long sleepers.",
+          "metric": { "label": "All-cause mortality", "value": "Lowest risk band (7–8 h)" }
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.7,
+          "note": "Long-term good sleep is associated with lower dementia risk and better preserved cognition into the seventies. It is one of the few dementia risk factors you fully control."
+        },
+        {
+          "target": "coronary-arteries",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Years of proper nocturnal blood-pressure dipping and lower inflammation mean slower coronary plaque progression than a short-sleeping peer."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Sustained insulin sensitivity is a major protective factor against type 2 diabetes over five years, especially against the South-Asian pattern of early-onset diabetes at normal BMI."
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "A stable circadian rhythm keeps hormone release, body temperature, appetite and metabolism aligned. Circadian disruption, not just short sleep, is what makes shift work so costly."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,204 @@
+{
+  "id": "creatine-5g-daily",
+  "name": { "en": "Creatine 5 g every day", "hi": "रोज़ 5 ग्राम क्रिएटिन" },
+  "category": "supplement",
+  "icon": "🧪",
+  "dose": "5 g creatine monohydrate once daily, mixed in water, milk or a shake, with a meal. No loading phase. Any time of day; consistency matters more than timing.",
+  "molecule": "creatine",
+  "summary": {
+    "en": "Creatine is a nitrogen compound your liver and kidneys already make (~1 g/day) and store in muscle as phosphocreatine, the fastest way to regenerate ATP for 5–10 second bursts of effort. Taking 5 g daily raises muscle stores by roughly 20–40% over 3–4 weeks. You notice one or two more reps on heavy sets, slightly fuller muscles from intracellular water, and about 1–2 kg extra on the scale in the first weeks.",
+    "hi": "क्रिएटिन आपका शरीर खुद बनाता है और मांसपेशियों में फॉस्फोक्रिएटिन के रूप में जमा करता है — यह भारी वज़न उठाने या स्प्रिंट जैसे 5–10 सेकंड के ज़ोर के लिए सबसे तेज़ ऊर्जा है। रोज़ 5 ग्राम लेने से 3–4 हफ़्ते में मांसपेशियों का स्टोर 20–40% बढ़ जाता है। असर में भारी सेट पर 1–2 रेप ज़्यादा, मांसपेशियाँ थोड़ी भरी-भरी, और शुरुआती हफ़्तों में वज़न 1–2 किलो बढ़ा हुआ (पानी) दिखता है।"
+  },
+  "indian_context": "Creatine comes almost entirely from meat and fish, so Indian vegetarians start with lower muscle creatine and show a bigger response to supplementation than meat-eaters. Plain creatine monohydrate costs roughly ₹1–2 per 5 g dose in India; the expensive 'HCl', 'buffered' or 'nitrate' forms have no proven advantage. The common gym myth that creatine damages kidneys comes from the harmless rise in blood creatinine it causes, not from any kidney injury in healthy people.",
+  "evidence": "strong",
+  "sources": [
+    "Kreider RB et al. International Society of Sports Nutrition position stand: safety and efficacy of creatine supplementation in exercise, sport, and medicine. J Int Soc Sports Nutr. 2017",
+    "Antonio J et al. Common questions and misconceptions about creatine supplementation: what does the scientific evidence really show? J Int Soc Sports Nutr. 2021",
+    "Burke DG et al. Effect of creatine and weight training on muscle creatine and performance in vegetarians. Med Sci Sports Exerc. 2003",
+    "Hultman E et al. Muscle creatine loading in men. J Appl Physiol. 1996"
+  ],
+  "caution": "Safe for healthy adults at 3–5 g/day in trials up to 5 years. If you already have kidney disease, or take nephrotoxic drugs, get a doctor to check before starting. Expect blood creatinine to read slightly high on a lab test; tell the doctor you take creatine so it is not mistaken for kidney damage. Drink normally; you do not need to force extra water.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Absorbed within an hour; muscle stores barely move yet",
+      "effects": [
+        {
+          "target": "small-intestine",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Creatine is absorbed almost completely from the gut within 1–2 hours and travels to muscle via a sodium-dependent transporter. Blood levels peak and fall; nothing you can feel.",
+          "metric": { "label": "Gut absorption", "value": "~95–99%" }
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Muscle picks up a little creatine today, but at 5 g/day the store rises only about 1–2% per day. No performance change is detectable on day one.",
+          "metric": { "label": "Muscle creatine stores", "value": "+1–2%" }
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Any creatine the muscle cannot take up is filtered and passed in urine unchanged. This is normal handling, not stress."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Cells pull in water; scale reads +0.5–1 kg",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "visual": { "scale": 1.02 },
+          "note": "Creatine is osmotically active, so as it accumulates inside muscle fibres it drags water in with it. Muscles look slightly fuller; this is intracellular water, not fat and not yet new protein.",
+          "metric": { "label": "Body weight (water)", "value": "+0.5–1 kg" }
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Some people notice mild bloating in the first week, more common with poorly dissolved powder or when the dose is taken all at once without food."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Blood creatinine (creatine's breakdown product) rises a little because there is more creatine to break down. Kidney filtration itself is unchanged.",
+          "metric": { "label": "Serum creatinine", "value": "+0.1–0.2 mg/dL" }
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Muscle stores near saturation; extra reps on heavy sets",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.6,
+          "visual": { "scale": 1.03 },
+          "note": "Without a loading phase, 5 g/day reaches close to full muscle saturation by about 28 days. Phosphocreatine regenerates ATP faster between reps, so you can do 1–2 more reps at a given weight and recover quicker between sets.",
+          "metric": { "label": "Muscle creatine stores", "value": "+20–40%" }
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.35,
+          "note": "Total water-related weight gain typically settles at 1–2 kg. It stays as long as you keep taking creatine and leaves over 4–6 weeks if you stop.",
+          "metric": { "label": "Body weight", "value": "+1–2 kg" }
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "Brain creatine rises more slowly and less than muscle. Small trials show modest gains in short-term memory and mental fatigue, strongest in vegetarians and the sleep-deprived; the effect for a well-fed omnivore is small."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Training volume adds up; measurable strength gain",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.65,
+          "visual": { "scale": 1.03 },
+          "note": "Creatine does not build muscle by itself; it lets you do more work per session, and those extra reps over 8 weeks compound into more strength and lean mass than training alone. Studies typically show a 5–15% larger gain in high-intensity performance.",
+          "metric": { "label": "Strength gain vs training alone", "value": "~+5–15%" }
+        },
+        {
+          "target": "quadriceps",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Large muscle groups trained heavily show the clearest benefit; leg press and squat 1RM improvements are the most consistently reported."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Two months in, filtration markers other than creatinine (cystatin C, urine protein) stay normal in healthy adults across studies."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Plateau: stores stay full, benefits maintained",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.55,
+          "visual": { "scale": 1.03 },
+          "note": "Muscle creatine is saturated and stays there; the daily 5 g simply replaces the ~2 g a day lost as creatinine. There is no tolerance and no need to cycle off.",
+          "metric": { "label": "Daily creatine turnover", "value": "~2 g" }
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "In older adults combining creatine with resistance training, some trials show slightly better bone density retention at the hip than training alone. Evidence in young adults is not there yet."
+        },
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.1,
+          "note": "The liver makes less of its own creatine while you supplement; this is normal feedback and reverses within weeks of stopping."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "One year: same benefit, no cumulative harm found",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.03 },
+          "note": "Benefit is stable, not growing; it is the training you did that year that built muscle, with creatine adding a few percent. If you stopped today, stores fall back to baseline in about 4–6 weeks and your own production restarts."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "One-year studies at 5 g/day, including in people with a single kidney and older adults, show no decline in kidney function."
+        },
+        {
+          "target": "hair",
+          "kind": "neutral",
+          "intensity": 0.1,
+          "note": "One small 2009 rugby study reported higher DHT with loading doses; no trial has shown actual hair loss. Treat the hair-loss claim as unproven, not disproven."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Long-term data up to 5 years: safe in healthy adults",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "The longest safety trials run about 5 years. Muscle keeps the extra creatine as long as you supplement; the lasting gain is the extra training quality accumulated over those years."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "No kidney damage has been demonstrated at 3–5 g/day over years in people with normal kidneys. The elevated creatinine remains a lab artefact."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "Creatine is being studied for brain energy in ageing and depression; the long-term evidence is early and mostly small trials, so keep expectations modest."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,253 @@
+{
+  "id": "milk-500ml-daily",
+  "name": { "en": "500 ml of full-fat milk every day", "hi": "रोज़ 500 ml फुल क्रीम दूध" },
+  "category": "drink",
+  "icon": "🥛",
+  "dose": "500 ml of full-cream cow milk (6% fat) or buffalo milk (6–7% fat) a day — roughly 17 g protein, 28–33 g fat of which about 19 g is saturated, 24 g lactose, ~600 mg calcium, ~2 µg B12 and 350–420 kcal. Usually taken as two glasses, or as milk plus chai.",
+  "summary": {
+    "en": "Half a litre of full-fat milk covers most of a day's calcium and B12, delivers 17 g of very high-quality protein, and is one of the few foods that reliably supports peak bone mass. The trade-off is real: it also brings close to a full day's saturated fat allowance, about 24 g of lactose that a majority of South Indians cannot digest, and enough IGF-1 stimulation to worsen acne in teenagers. Toned milk gives the same protein and calcium with a third of the fat.",
+    "hi": "आधा लीटर फुल क्रीम दूध दिन भर का ज़्यादातर कैल्शियम और B12 दे देता है, 17 ग्राम बेहतरीन प्रोटीन देता है, और हड्डियों की मज़बूती के लिए सबसे भरोसेमंद खाने में से एक है। लेकिन कीमत भी असली है: इसमें लगभग पूरे दिन जितना सैचुरेटेड फैट है, करीब 24 ग्राम लैक्टोज़ है जिसे दक्षिण भारत के ज़्यादातर लोग पचा नहीं पाते, और इतना IGF-1 असर है कि किशोरों के मुहाँसे बढ़ सकते हैं। टोंड दूध में वही प्रोटीन और कैल्शियम है, फैट एक-तिहाई।"
+  },
+  "indian_context": "India drinks more milk than any country on earth, and most of it is buffalo or full-cream cow milk — far fattier than the Western milk that most research is done on. Lactase non-persistence is the norm, not the exception: genetic and breath-test studies put lactose malabsorption at roughly two-thirds of South Indians versus about a quarter of North Indians, which is why 'doodh se gas banti hai' is a real physiological complaint and not fussiness. Curd and paneer are usually far better tolerated because fermentation and draining remove much of the lactose. The A2 'desi cow' milk premium is commercially huge in India and scientifically thin — the evidence for A2 benefit is limited and mostly industry-funded.",
+  "evidence": "moderate",
+  "sources": [
+    "Dehghan M et al. Association of dairy intake with cardiovascular disease and mortality in 21 countries from five continents (PURE): a prospective cohort study. Lancet 2018",
+    "Babu J et al. Frequency of lactose malabsorption among healthy southern and northern Indian populations by genetic analysis and lactose hydrogen breath and tolerance tests. Am J Clin Nutr 2010",
+    "ICMR-NIN. Nutrient Requirements for Indians — Recommended Dietary Allowances, 2020",
+    "FSSAI. National Milk Safety and Quality Survey, India, 2018",
+    "World Cancer Research Fund / AICR. Continuous Update Project Expert Report: Diet, Nutrition, Physical Activity and Cancer, 2018"
+  ],
+  "caution": "If you get bloating, cramps or loose stools within 1–2 hours of milk, that is lactose malabsorption — switch to curd, paneer or lactose-free milk rather than forcing it. Anyone with high LDL, established heart disease or a family history of early heart attack should use toned or double-toned milk instead of full cream: the protein and calcium are identical, the saturated fat is not. Infants under 1 year should not be given plain cow or buffalo milk as a main drink.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Calcium and B12 covered; gas within hours if you lack lactase",
+      "effects": [
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "About 600 mg of highly absorbable calcium, delivered with the lactose, casein phosphopeptides and vitamin D that improve its uptake. That is over half the ICMR adult requirement in two glasses.",
+          "metric": { "label": "Calcium", "value": "~600 mg of the 1,000 mg/day ICMR RDA" }
+        },
+        {
+          "target": "small-intestine",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "24 g of lactose needs lactase at the brush border. In most Indian adults — especially South Indians — lactase activity has switched off after childhood, so the lactose passes through undigested."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Colonic bacteria ferment undigested lactose into hydrogen, methane and short-chain fatty acids. Result: bloating, flatulence, cramps and osmotic loose stools 30 minutes to 2 hours after drinking."
+        },
+        {
+          "target": "pancreas",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Milk has a low glycaemic index but a surprisingly high insulin response — whey protein is strongly insulinotropic. Blood glucose stays flat while insulin rises."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "17 g of protein split between fast whey and slow casein, with about 1.7 g leucine. Casein's slow digestion makes milk at night genuinely useful for overnight muscle protein synthesis."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Either the gut settles or it does not — and that decides everything",
+      "effects": [
+        {
+          "target": "large-intestine",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "Colonic bacteria partially adapt to a regular lactose load over days, so symptoms often soften even in true malabsorbers. People who still bloat after a week genuinely should not be drinking this much milk.",
+          "metric": { "label": "Lactose malabsorption prevalence", "value": "~66% South Indians, ~27% North Indians" }
+        },
+        {
+          "target": "arteries",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Around 19 g of saturated fat daily — close to the entire WHO limit of 10% of energy — from one item alone. In a diet that also has ghee and fried food, this is where the total goes over."
+        },
+        {
+          "target": "bone-marrow",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "About 2 µg of B12, roughly a full adult requirement. For lacto-vegetarian Indians milk is often the only meaningful dietary B12 source there is."
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Milk protein is highly satiating. Whether that helps weight depends on whether the 400 kcal replaces something or is added on top."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "IGF-1 rises measurably; calcium balance turns positive",
+      "effects": [
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Sustained adequate calcium plus milk protein shifts calcium balance positive. In adolescents and young adults this translates into higher peak bone mass — the single biggest determinant of osteoporosis risk 40 years later.",
+          "metric": { "label": "Serum IGF-1", "value": "typically +10–20% on regular milk intake" }
+        },
+        {
+          "target": "skin",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Milk raises IGF-1 and insulin, both of which drive sebaceous gland activity and follicular keratinisation. Cohort studies link milk intake — skimmed slightly more than full-fat — with acne severity in teenagers."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "With resistance training, milk is one of the best-studied post-exercise recovery drinks: it beats sports drinks for rehydration, glycogen and protein synthesis together."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "400 kcal a day is not trivial. Full-cream milk added on top of an unchanged diet is roughly 1.5 kg of fat gain over a few months if nothing else is reduced."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "LDL response shows up; bone turnover markers improve",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Saturated fat from milk raises LDL cholesterol, though dairy's effect appears smaller than the same fat from butter — the milk fat globule membrane and calcium seem to blunt it. The direction is still upward.",
+          "metric": { "label": "LDL cholesterol", "value": "typically +5–15 mg/dL vs toned milk" }
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Bone resorption markers fall as parathyroid hormone drops on a calcium-replete diet. Adequate calcium stops the skeleton being raided to keep blood calcium normal."
+        },
+        {
+          "target": "teeth",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Milk casein and calcium phosphate buffer plaque acid and help remineralise early enamel lesions. Milk is one of the few drinks that is protective for teeth — as long as no sugar is added."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Higher dairy calcium intake is consistently associated with lower colorectal cancer risk — one of the better-supported dairy findings in the cancer literature."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Bone density gains in the young; the fat load matters in the middle-aged",
+      "effects": [
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "In children, teenagers and young adults, six months of calcium-adequate intake shows measurable bone mineral density gains. After about age 30, milk maintains bone rather than builds it.",
+          "metric": { "label": "Bone mineral density (adolescents)", "value": "measurable gain vs low-calcium intake" }
+        },
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Roughly 3.5 kg of saturated fat consumed over six months from milk alone. In an Indian body already prone to atherogenic dyslipidaemia, this is the main argument for switching to toned milk."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "The PURE cohort found higher whole-fat dairy intake associated with lower, not higher, mortality — an inconvenient finding that keeps the full-fat versus toned debate genuinely open."
+        },
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "No specific liver effect from milk itself. The calories can contribute to fatty liver if they push you into surplus, which is a general rule, not a dairy one."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Bone protection banked; cancer signals point in two directions",
+      "effects": [
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "A year of calcium and protein adequacy is meaningful insurance against later osteoporosis, particularly for Indian women, who combine low calcium intake, low vitamin D and early menopause. Milk alone does not prevent fractures — weight-bearing exercise is the other half.",
+          "metric": { "label": "Calcium delivered", "value": "~220 g over the year" }
+        },
+        {
+          "target": "prostate",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "The World Cancer Research Fund grades high dairy intake as a probable increase in prostate cancer risk, plausibly via sustained IGF-1 elevation. The absolute risk increase is small; it is a genuine trade-off, not a scare."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The same body of evidence grades dairy and calcium as probably protective against colorectal cancer. Two real effects in opposite directions, in the same food."
+        },
+        {
+          "target": "immune-system",
+          "kind": "strain",
+          "intensity": 0.2,
+          "note": "Indian food safety surveys have found aflatoxin M1 above permitted limits in a small percentage of milk samples — a contamination issue of the supply chain, not of milk itself. Pasteurised branded milk is the safer choice."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "A genuinely useful food; the fat percentage is the decision that matters",
+      "effects": [
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Five years of calcium and protein adequacy in the 20s and 30s directly raises the bone mass you carry into old age. This is the strongest long-term case for daily milk in India.",
+          "visual": { "opacity": 1.0 },
+          "metric": { "label": "Peak bone mass effect", "value": "each 10% higher peak bone mass delays osteoporosis by years" }
+        },
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "About 35 kg of saturated fat over five years from full cream versus roughly 11 kg from toned. That difference is the entire cardiovascular argument, and it is easily avoided without losing a single nutrient."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "For a lactose malabsorber who pushed through anyway, five years of daily colonic fermentation means chronic bloating often misdiagnosed as IBS. Curd would have solved it on day one."
+        },
+        {
+          "target": "bone-marrow",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Sustained B12 adequacy for lacto-vegetarians, preventing the megaloblastic anaemia and nerve damage that pure vegetarians in India commonly develop."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Cohort evidence on milk and total mortality is genuinely conflicting — some large studies show benefit, at least one large Swedish cohort suggested harm at very high intakes. Anyone claiming certainty here is overselling."
+        }
+      ]
+    }
+  ]
+}

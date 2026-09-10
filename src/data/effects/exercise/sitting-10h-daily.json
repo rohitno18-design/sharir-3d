@@ -1,0 +1,291 @@
+{
+  "id": "sitting-10h-daily",
+  "name": { "en": "Sitting 10 hours a day, no exercise", "hi": "रोज़ 10 घंटे बैठना, कोई कसरत नहीं" },
+  "category": "habit",
+  "icon": "🪑",
+  "dose": "About 10 hours of seated time per day — desk work, commute, meals and evening screens — in long unbroken blocks, with under 4,000 steps and no structured exercise. The typical Indian desk-job day.",
+  "summary": {
+    "en": "Sitting is not just the absence of exercise; long unbroken sitting is its own physiological signal. Within hours, the enzyme that clears fat from blood (lipoprotein lipase) drops sharply in inactive leg muscles, glucose disposal slows, and blood pools in the legs. Over months the hip flexors shorten, the glutes stop firing, the spine takes sustained flexion load, and cardiorespiratory fitness declines measurably. The important nuance: breaking sitting every 30 minutes removes a large part of the harm, and 30–40 minutes of daily moderate activity offsets most of it.",
+    "hi": "ज़्यादा बैठना सिर्फ़ 'कसरत न करना' नहीं है — लगातार बैठना खुद एक अलग नुकसान है। कुछ ही घंटों में पैरों की मांसपेशियों में खून से चर्बी साफ़ करने वाला एंज़ाइम गिर जाता है, शुगर धीरे-धीरे पचती है और पैरों में खून जमा होने लगता है। महीनों में कूल्हे की मांसपेशियाँ छोटी हो जाती हैं, ग्लूट्स काम करना बंद कर देते हैं, कमर पर लगातार दबाव पड़ता है और स्टैमिना गिर जाता है। अच्छी बात — हर 30 मिनट में उठकर चलना और रोज़ 30–40 मिनट की एक्टिविटी इस नुकसान का बड़ा हिस्सा मिटा देती है।"
+  },
+  "indian_context": "The Indian IT, BPO and finance workday routinely runs 9–11 hours seated, and the commute adds 1–2 more in a car, bus or metro. ICMR-INDIAB data show diabetes and prediabetes prevalence rising fastest in exactly this urban, sedentary, desk-working group. South Asians carry more visceral fat and are more insulin-resistant at a given BMI, so a 'normal weight' Indian professional sitting 10 hours a day can be metabolically unhealthy at a BMI of 23. Air pollution and unsafe or missing footpaths remove the easiest fix — walking — from many Indian cities, which makes deliberate indoor movement breaks the practical answer.",
+  "evidence": "strong",
+  "sources": [
+    "WHO. Guidelines on physical activity and sedentary behaviour. 2020",
+    "Ekelund U et al. Does physical activity attenuate the association between sitting time and mortality? A harmonised meta-analysis of over 1 million adults. Lancet. 2016",
+    "Dunstan DW et al. Breaking up prolonged sitting reduces postprandial glucose and insulin responses. Diabetes Care. 2012",
+    "Anjana RM et al. ICMR-INDIAB: metabolic non-communicable disease health report of India. Lancet Diabetes Endocrinol. 2023"
+  ],
+  "caution": "If you get calf pain, swelling or warmth in one leg — especially after a long flight, train journey or illness — get it checked for deep vein thrombosis rather than assuming it is muscle cramp. Anyone with existing back or neck pain should get a proper chair and monitor height rather than pushing through. The fix here is boringly simple and genuinely works: stand or walk 2–3 minutes every half hour, plus 150 min/week of moderate activity.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Leg muscles switch off; fat and sugar clearance slows within hours",
+      "effects": [
+        {
+          "target": "quadriceps",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "The large postural muscles of the legs are electrically near-silent while seated. Lipoprotein lipase activity in these muscles falls sharply within hours, so blood triglycerides clear more slowly after meals.",
+          "metric": { "label": "Muscle lipoprotein lipase activity", "value": "Falls sharply within hours" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Without muscle contraction there is little insulin-independent glucose uptake, so post-lunch glucose and insulin run higher than they would after the same meal with a short walk.",
+          "metric": { "label": "Post-meal glucose vs walking breaks", "value": "~20–25% higher" }
+        },
+        {
+          "target": "leg-veins",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "The calf muscle pump is what returns blood from the legs. Sitting still stops it, so blood pools, ankles swell by evening and venous pressure rises."
+        },
+        {
+          "target": "hip-flexors",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Sitting holds the hip flexors in a shortened position for 10 hours. On day one this is only stiffness on standing up — repeated daily, it becomes an adaptation."
+        },
+        {
+          "target": "erector-spinae",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Slumped sitting shifts load from the back muscles onto passive spinal structures — discs and ligaments — which creep under sustained load. This is why the lower back aches after a long seated day."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Stiffness becomes routine; neck and back pain start",
+      "effects": [
+        {
+          "target": "spine",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Lumbar discs are loaded more in slumped sitting than in standing. A week of sustained flexion increases pressure on the posterior disc and starts the familiar end-of-day back ache."
+        },
+        {
+          "target": "trapezius",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "A forward head position adds several kilos of effective load to the neck extensors. Upper trapezius and levator scapulae hold a low-grade contraction all day, which is the source of most 'desk neck'."
+        },
+        {
+          "target": "glutes",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "The glutes are compressed and unused. Reciprocal inhibition from tight hip flexors means they fire less on standing tasks — the start of gluteal amnesia."
+        },
+        {
+          "target": "eyes",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Ten hours seated is usually ten hours of near focus. Blink rate falls by more than half, so dry, gritty eyes and end-of-day focusing difficulty are common within a week."
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Non-exercise activity thermogenesis (NEAT) — the calories burned by fidgeting, standing and walking — can differ by 300–500 kcal/day between an active and a fully seated person.",
+          "metric": { "label": "NEAT difference vs active day", "value": "~300–500 kcal/day" }
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Fitness measurably lower, posture visibly changed",
+      "effects": [
+        {
+          "target": "heart",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Cardiorespiratory fitness declines without a stimulus. In a previously active person, a month of full sedentariness costs roughly 5–10% of VO₂max; stroke volume and plasma volume both fall.",
+          "metric": { "label": "VO₂max", "value": "−5 to −10%" }
+        },
+        {
+          "target": "hip-flexors",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "The psoas and rectus femoris adapt to their shortened position by losing sarcomeres in series. Hip extension range drops, which tilts the pelvis forward and exaggerates the lumbar curve."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "negative",
+          "intensity": 0.4,
+          "visual": { "scale": 0.98 },
+          "note": "Muscle protein synthesis falls without loading. Disuse atrophy is slow but real — roughly 0.5% of leg lean mass per week of true inactivity in older adults, less in the young."
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "A month of sedentary days raises fasting insulin and pushes the whole glucose curve upward. This happens before any weight gain and is invisible without a blood test."
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "The energy gap from missing NEAT typically adds 0.5–1.5 kg in a month if intake stays the same, deposited preferentially as visceral fat in South Asian bodies."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Metabolic markers drift; the spine and hips are now adapted to sitting",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Two months in, fasting glucose and triglycerides are typically measurably higher and HDL lower — the beginning of a metabolic syndrome profile.",
+          "metric": { "label": "Fasting triglycerides", "value": "Rising; HDL falling" }
+        },
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Fat that is not oxidised by muscle ends up in the liver. Sedentary behaviour is an independent risk factor for non-alcoholic fatty liver disease, which is now extremely common in urban India."
+        },
+        {
+          "target": "glutes",
+          "kind": "negative",
+          "intensity": 0.5,
+          "visual": { "scale": 0.97 },
+          "note": "Gluteus maximus and medius weaken measurably. Weak hip abductors are a leading cause of knee pain when a sedentary person suddenly starts running or climbing stairs."
+        },
+        {
+          "target": "spine",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Discs rely on movement for nutrient exchange, since they have no direct blood supply. Two months of static loading degrades that pumping mechanism, not just the muscles around it."
+        },
+        {
+          "target": "bones",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Bone responds to impact and load. Without either, remodelling tilts slightly toward resorption. The effect is slow but adds to India's already high rate of low bone density and vitamin D deficiency."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Independent cardiometabolic risk, on top of everything else",
+      "effects": [
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Sitting over 8 hours a day with no activity is associated with cardiovascular risk comparable in size to obesity and smoking in the largest harmonised meta-analysis to date.",
+          "metric": { "label": "Sitting >8 h + no activity", "value": "Risk comparable to obesity/smoking" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Six months of sedentary living meaningfully raises the odds of crossing into prediabetes, and does so at a lower BMI in South Asians than in most other populations."
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Visceral fat — the metabolically dangerous kind wrapped around the organs — accumulates preferentially. Waist circumference is a better warning sign here than the weighing scale."
+        },
+        {
+          "target": "leg-veins",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Chronic venous pressure damages valves in the leg veins, which is how varicose veins and evening ankle swelling become permanent rather than occasional."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Sedentary time is independently associated with higher rates of depression and anxiety, partly through lost BDNF signalling and partly through reduced daylight and social contact."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "A body shaped by the chair",
+      "effects": [
+        {
+          "target": "whole-body",
+          "kind": "negative",
+          "intensity": 0.7,
+          "note": "Meta-analysis of over a million adults: sitting more than 8 h/day with under 5 min/day of moderate activity carries roughly 60% higher mortality than the least sedentary, most active group.",
+          "metric": { "label": "All-cause mortality (most vs least sedentary)", "value": "~+60% (meta-analysis)" }
+        },
+        {
+          "target": "spine",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Chronic low back pain is now the norm rather than the exception, and it is the single largest cause of years lived with disability worldwide."
+        },
+        {
+          "target": "heart",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Low cardiorespiratory fitness is one of the strongest single predictors of mortality — a stronger predictor than smoking, diabetes or hypertension in several cohort studies."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "negative",
+          "intensity": 0.5,
+          "visual": { "scale": 0.96 },
+          "note": "A year of disuse accelerates the age-related loss of muscle mass and strength. Sarcopenia starting in the thirties instead of the fifties is a real consequence of a decade of desk work."
+        },
+        {
+          "target": "hip-joint",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Restricted hip extension changes gait and loads the lower back and knees abnormally. Many 'knee problems' in desk workers actually start at the hip."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Compounded disease risk — but reversible at almost any point",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.7,
+          "note": "Five sedentary years is a common route into type 2 diabetes for urban Indians in their thirties and forties, often diagnosed at a BMI that would look unremarkable in a European."
+        },
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.7,
+          "note": "Years of high triglycerides, low HDL, high blood pressure and visceral fat drive coronary plaque. Indians develop coronary artery disease roughly a decade earlier than Western populations."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Prolonged sitting is associated with higher colon and endometrial cancer risk in cohort data, likely via insulin resistance, chronic inflammation and slower gut transit."
+        },
+        {
+          "target": "bones",
+          "kind": "negative",
+          "intensity": 0.4,
+          "visual": { "opacity": 0.8 },
+          "note": "Five years without loading leaves measurably lower hip and spine bone density than an active peer, compounding India's widespread vitamin D and calcium shortfall."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Physical inactivity is one of the largest modifiable contributors to dementia risk in the Lancet Commission's model, acting through vascular damage and lost neurotrophic signalling."
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The reversal is genuinely fast: 30–40 minutes of daily moderate activity offsets most of the mortality risk of 10 hours of sitting, and 2-minute movement breaks every half hour fix most of the glucose problem."
+        }
+      ]
+    }
+  ]
+}

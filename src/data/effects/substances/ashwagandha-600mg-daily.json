@@ -1,0 +1,200 @@
+{
+  "id": "ashwagandha-600mg-daily",
+  "name": { "en": "Ashwagandha 600 mg root extract every day", "hi": "रोज़ 600 मिलीग्राम अश्वगंधा जड़ का सत्व" },
+  "category": "supplement",
+  "icon": "🌱",
+  "dose": "600 mg/day of a standardised root extract (KSM-66 type, ~5% withanolides), as 300 mg twice daily or 600 mg at night, for a limited course of 8–12 weeks with a break. Not raw churna, whose withanolide content is unpredictable.",
+  "molecule": "ashwagandha-withaferin",
+  "summary": {
+    "en": "Ashwagandha (Withania somnifera) root extract contains withanolides that appear to dampen the stress axis (hypothalamus-pituitary-adrenal) and act on GABA signalling. In 8–12 week trials it lowers morning cortisol by roughly 20–30%, reduces anxiety scores and improves sleep onset, with small gains in strength and a modest rise in testosterone in stressed or infertile men. The trials are small, mostly Indian and industry-funded; long-term safety past 3 months is not established, and rare cases of liver injury are documented.",
+    "hi": "अश्वगंधा की जड़ के सत्व में विथेनोलाइड होते हैं, जो स्ट्रेस सिस्टम (हाइपोथैलेमस-पिट्यूटरी-एड्रिनल) को शांत करते और GABA पर असर करते दिखते हैं। 8–12 हफ़्ते की स्टडीज़ में सुबह का कॉर्टिसोल करीब 20–30% कम, चिंता कम, नींद जल्दी आना, और तनावग्रस्त पुरुषों में टेस्टोस्टेरोन में हल्की बढ़त दिखी है। पर ये स्टडीज़ छोटी, ज़्यादातर भारतीय और कंपनी-प्रायोजित हैं; 3 महीने से आगे की सुरक्षा साबित नहीं है, और लिवर को नुक़सान के कुछ मामले दर्ज हैं।"
+  },
+  "indian_context": "Ashwagandha is India's most-sold Ayurvedic herb and is now a global supplement export; most of the clinical trials come from Indian centres using KSM-66 (Ixoreal, Hyderabad) or Sensoril. It is sold as churna, tablets, and gummies, with withanolide content varying 10-fold between products; AYUSH-licensed brands must list the extract but not the standardisation. It is widely taken by Indian gym-goers for 'testosterone' and by working professionals for 'stress', usually indefinitely, which is exactly the use pattern with no safety data. Denmark's food authority has warned against it, and several European countries restrict it.",
+  "evidence": "moderate",
+  "sources": [
+    "Chandrasekhar K, Kapoor J, Anishetty S. A prospective, randomized double-blind, placebo-controlled study of safety and efficacy of a high-concentration full-spectrum extract of ashwagandha root in reducing stress and anxiety in adults. Indian J Psychol Med. 2012",
+    "Lopresti AL et al. An investigation into the stress-relieving and pharmacological actions of an ashwagandha extract. Medicine (Baltimore). 2019",
+    "Wankhede S et al. Examining the effect of Withania somnifera supplementation on muscle strength and recovery. J Int Soc Sports Nutr. 2015",
+    "Björnsson HK et al. Ashwagandha-induced liver injury: a case series from Iceland and the US Drug-Induced Liver Injury Network. Liver Int. 2020",
+    "NIH LiverTox: Clinical and Research Information on Drug-Induced Liver Injury. Ashwagandha. National Institute of Diabetes and Digestive and Kidney Diseases"
+  ],
+  "caution": "Avoid in pregnancy (traditionally considered abortifacient at high doses), while breastfeeding, in hyperthyroidism or on thyroid medication (it can raise T3/T4), in autoimmune disease, and with any liver disease. Stop immediately and get liver tests if you develop dark urine, yellow eyes, itching or upper-right abdominal pain. It adds to the sedation of sleeping pills and alcohol. Use in courses, not year-round.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Mild calm or drowsiness within hours; nothing structural",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Withanolides are absorbed over 1–2 hours and appear to enhance GABA-A signalling. Some people feel a gentle calm or sleepiness the first evening; many feel nothing on day one."
+        },
+        {
+          "target": "stomach",
+          "kind": "strain",
+          "intensity": 0.2,
+          "note": "Mild nausea, loose stools or a bitter aftertaste are the most common early complaints, more with churna than with capsules."
+        },
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "The liver metabolises withanolides. In the rare idiosyncratic liver injury cases, symptoms appeared 2–12 weeks in, not on day one."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Sleep onset a little faster; stress axis starting to settle",
+      "effects": [
+        {
+          "target": "hypothalamus",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "The proposed mechanism is reduced CRH drive from the hypothalamus, which over days lowers ACTH and cortisol output. Trials measure the cortisol change at 4–8 weeks; a week in, the shift has only begun."
+        },
+        {
+          "target": "pineal",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Time to fall asleep shortens by several minutes on average in trials of the sleep-focused extracts; the effect is small but consistent, larger in people with insomnia."
+        },
+        {
+          "target": "amygdala",
+          "kind": "positive",
+          "intensity": 0.25,
+          "note": "Reduced anxiety scores begin to separate from placebo around 1–2 weeks; the subjective feeling is a lower baseline of worry rather than sedation."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Cortisol lower; anxiety scores down; strength trials show small gains",
+      "effects": [
+        {
+          "target": "adrenal-glands",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "By 4–8 weeks, morning serum cortisol falls by around 20–30% versus placebo in chronically stressed adults in the trials. Whether this is a benefit or simply a marker depends on whether the person was over-stressed to begin with.",
+          "metric": { "label": "Morning cortisol (vs placebo)", "value": "~−20 to −30%" }
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Perceived Stress Scale and anxiety scores fall meaningfully by one month in the trials; sleep quality scores improve. These are self-reported outcomes, which are the ones most vulnerable to expectation."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.25,
+          "note": "In an 8-week resistance-training trial, the ashwagandha group gained somewhat more bench press and leg extension strength and showed lower creatine kinase after exercise; a single small study, so a hint rather than a fact."
+        },
+        {
+          "target": "thyroid",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Ashwagandha raises T4 and lowers TSH in people with subclinical hypothyroidism after 8 weeks in one trial; in someone with normal or high thyroid function this could tip into overactivity."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "End of the typical trial window: the most that is proven",
+      "effects": [
+        {
+          "target": "testes",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "In infertile or overweight middle-aged men, 8–12 weeks raises testosterone by roughly 10–15% and improves sperm count and motility. In young healthy men with normal levels, the change is small or absent; it is not a testosterone booster in the gym sense.",
+          "metric": { "label": "Testosterone (stressed/infertile men)", "value": "~+10–15%" }
+        },
+        {
+          "target": "adrenal-glands",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Cortisol reduction is stable at 8 weeks. The trials mostly end here; what happens with continued dosing is extrapolation."
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "The documented liver-injury cases cluster at 2–12 weeks: cholestatic hepatitis with jaundice and itching, resolving over 1–5 months after stopping. Rare (case reports, not a percentage), but real enough that a liver test at 2 months is reasonable."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Beyond the evidence: continuous use, unknown long-term safety",
+      "effects": [
+        {
+          "target": "adrenal-glands",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Whether the cortisol-lowering effect persists, plateaus or leads to a blunted stress response after six months has not been studied. Many practitioners advise 8–12 weeks on, 2–4 weeks off, partly for this reason."
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.25,
+          "note": "Most liver injury appears earlier, but the absence of long-term surveillance means later reactions cannot be ruled out. Products mixed with other herbs (like guggul or green tea extract) are more often implicated."
+        },
+        {
+          "target": "brain",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Some users report emotional flattening or 'anhedonia' with prolonged daily use; this appears in user reports rather than trials, so its frequency is unknown."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "A year of daily use: no trial has looked this far",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "For an anxious, poorly sleeping person the benefit likely persists with tolerance being uncommon, but no one-year randomised data exist. It should not substitute for treating the cause of the stress."
+        },
+        {
+          "target": "thyroid",
+          "kind": "strain",
+          "intensity": 0.2,
+          "note": "Case reports of thyrotoxicosis on long-term ashwagandha exist. Anyone on year-round use should have thyroid function checked at least once."
+        },
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "In someone who has taken it a year without liver symptoms, the idiosyncratic reaction is unlikely to appear now, but the general rule for herbs applies: an annual liver panel costs little."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years: traditional use says fine; modern data says untested",
+      "effects": [
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Ayurveda has used ashwagandha for centuries, but at variable doses and not as a concentrated daily extract. There are no five-year safety data for standardised extracts; the honest statement is 'probably safe in courses, unknown continuously'."
+        },
+        {
+          "target": "adrenal-glands",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Long-term suppression of a healthy stress response is a theoretical concern with any chronic HPA-axis modulator; there is no evidence of adrenal insufficiency, but no one has looked."
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.2,
+          "note": "Cumulative exposure over years is exactly the pattern in which the rare herb-induced liver injuries surface in pharmacovigilance databases. Courses with breaks are the sensible default."
+        }
+      ]
+    }
+  ]
+}

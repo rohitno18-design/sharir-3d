@@ -1,0 +1,290 @@
+{
+  "id": "sleep-5h-nightly",
+  "name": { "en": "Sleeping only 5 hours a night", "hi": "रोज़ सिर्फ़ 5 घंटे की नींद" },
+  "category": "sleep",
+  "icon": "😴",
+  "dose": "About 5 hours of actual sleep per night, every night, in an adult who needs 7–9 hours. Assumes late nights and a fixed early wake-up, with weekend catch-up sleep that only partly repays the debt.",
+  "summary": {
+    "en": "Five hours a night is chronic sleep restriction, and the body treats it as a stressor. Within days, glucose handling worsens, hunger hormones shift toward eating more, cortisol stays high into the evening and reaction time degrades to roughly the level of mild alcohol intoxication. Over months and years the costs compound: higher blood pressure, higher risk of type 2 diabetes and heart disease, impaired memory consolidation, and a weaker immune response. The cruel part is that people adapt to feeling normal long before their performance and physiology recover — they don't.",
+    "hi": "पाँच घंटे की नींद शरीर के लिए एक लगातार चलने वाला तनाव है। कुछ ही दिनों में शुगर संभालने की क्षमता गिरती है, भूख के हार्मोन बिगड़ते हैं, कोर्टिसोल रात तक ऊँचा रहता है और रिएक्शन टाइम इतना धीमा हो जाता है जितना हल्के नशे में होता है। महीनों-सालों में यह बीपी, डायबिटीज़, दिल की बीमारी और कमज़ोर याददाश्त में बदल जाता है। सबसे ख़तरनाक बात — आदमी को 'आदत' लग जाती है और वो नॉर्मल महसूस करने लगता है, जबकि शरीर की हालत सुधरी नहीं होती।"
+  },
+  "indian_context": "Long commutes in metros, late dinners at 9–10 PM, night-shift and US-hours IT/BPO work, and phone use in bed make 5–6 hours the real Indian urban average for working adults. This lands on a population already at high genetic risk of insulin resistance: for South Asians, sleep restriction pushes diabetes risk up from a baseline that is already elevated at lower BMI than in Europeans. Joint-family sleeping arrangements, ambient noise and 30 °C-plus summer nights without cooling also fragment sleep quality even when the hours look adequate on paper.",
+  "evidence": "strong",
+  "sources": [
+    "Spiegel K, Leproult R, Van Cauter E. Impact of sleep debt on metabolic and endocrine function. Lancet. 1999",
+    "Van Dongen HPA et al. The cumulative cost of additional wakefulness: dose-response effects on neurobehavioral functions. Sleep. 2003",
+    "Cappuccio FP et al. Sleep duration and all-cause mortality: a systematic review and meta-analysis. Sleep. 2010",
+    "Watson NF et al. Recommended amount of sleep for a healthy adult: AASM and Sleep Research Society joint consensus. Sleep. 2015"
+  ],
+  "caution": "Chronic short sleep meaningfully raises crash risk while driving — drowsy driving at 5 hours is comparable to driving over the legal alcohol limit. If you sleep 7–8 hours and still wake unrefreshed, snore loudly or stop breathing in sleep, get assessed for obstructive sleep apnoea; it is under-diagnosed in India and common in men with thick necks and central obesity. Sleep loss also destabilises bipolar disorder and worsens most psychiatric conditions.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "One short night: slower brain, higher hunger, worse glucose",
+      "effects": [
+        {
+          "target": "prefrontal-cortex",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "The prefrontal cortex is the first region to fail. Attention lapses, working memory and judgement drop after a single 5-hour night, with reaction times comparable to a blood alcohol level around 0.05%.",
+          "metric": { "label": "Reaction-time impairment", "value": "≈ 0.05% blood alcohol equivalent" }
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Ghrelin (hunger) rises and leptin (fullness) falls after one restricted night, which typically drives 250–400 extra calories the next day, mostly carbohydrate and fat.",
+          "metric": { "label": "Extra intake next day", "value": "~+250–400 kcal" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Even a single night of 4–5 hours reduces whole-body insulin sensitivity measurably the next morning. Muscle takes up glucose less readily, so post-meal sugar runs higher."
+        },
+        {
+          "target": "adrenal-glands",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Evening cortisol stays elevated instead of falling, which is exactly the pattern that makes the next night's sleep harder to start. The loop begins here."
+        },
+        {
+          "target": "amygdala",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "With the prefrontal brake weakened, the amygdala responds up to 60% more strongly to negative images. Practically: shorter temper, more emotional reactions to small things."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Sleep debt compounds; you stop noticing how impaired you are",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Across a week of 5-hour nights, cognitive performance keeps declining in a straight line while self-rated sleepiness plateaus. You feel adjusted; the tests say otherwise."
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "In classic sleep-restriction studies, a week of short sleep in healthy young men produced glucose tolerance resembling a pre-diabetic state.",
+          "metric": { "label": "Glucose tolerance", "value": "Shifts toward pre-diabetic range" }
+        },
+        {
+          "target": "immune-system",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Natural killer cell activity drops and antibody response to vaccination is roughly halved in short sleepers. You catch more of what goes around."
+        },
+        {
+          "target": "hippocampus",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Deep sleep and REM are when the day's memories are consolidated. A week of truncated sleep — especially cut REM in the last hours of the night — measurably degrades what you retain."
+        },
+        {
+          "target": "arteries",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Sympathetic activity stays elevated overnight, so blood pressure never dips as it should. Nocturnal non-dipping is an early marker of cardiovascular risk."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Weight creeps up, mood drops, blood pressure edges higher",
+      "effects": [
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "The hunger-hormone shift plus late-night eating plus lower daytime activity reliably adds fat, typically 1–2 kg over a month, disproportionately visceral.",
+          "metric": { "label": "Typical weight change", "value": "+1–2 kg/month" }
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Chronic short sleep is one of the strongest modifiable risk factors for anxiety and depressive symptoms, and the relationship runs both ways — each worsens the other."
+        },
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Resting blood pressure typically drifts up 3–5 mmHg with a month of restriction, driven by sustained sympathetic tone and impaired nocturnal dipping.",
+          "metric": { "label": "Systolic blood pressure", "value": "+3 to +5 mmHg" }
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Growth hormone is released mostly in deep sleep; cutting sleep cuts that pulse. Trainees who sleep 5 hours recover worse and lose more lean mass when dieting."
+        },
+        {
+          "target": "skin",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Slower barrier repair and higher cortisol show up as dullness, under-eye darkening and worse acne — the most visible and least serious of the effects."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Metabolic damage becomes measurable on a blood test",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Beta cells compensate for insulin resistance by secreting more insulin. Fasting insulin rises, and in susceptible people fasting glucose and HbA1c start creeping upward.",
+          "metric": { "label": "HbA1c drift", "value": "+0.1 to +0.3%" }
+        },
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Insulin resistance plus higher intake pushes fat storage into the liver. Short sleep is an independent risk factor for non-alcoholic fatty liver disease."
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Resting heart rate runs higher and heart rate variability lower — the autonomic signature of a body that never fully switches off."
+        },
+        {
+          "target": "testes",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Testosterone is released mainly during sleep. One week of 5-hour nights lowers daytime testosterone in young men by 10–15%; sustained restriction keeps it suppressed.",
+          "metric": { "label": "Daytime testosterone (men)", "value": "−10 to −15%" }
+        },
+        {
+          "target": "hippocampus",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Two months of poor consolidation shows up as everyday forgetfulness: names, where you kept things, what was decided in a meeting."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Established risk factors: weight, blood pressure, blood sugar",
+      "effects": [
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Six months of short sleep typically means 4–7 kg gained, concentrated around the abdomen. For South Asians this visceral pattern carries more metabolic risk per kilo than it does in Europeans."
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.7,
+          "note": "Meta-analyses put habitual short sleep at roughly 30% higher risk of developing type 2 diabetes. In an Indian population with high baseline risk, that is a large absolute increase.",
+          "metric": { "label": "Type 2 diabetes risk", "value": "~+30% (cohort data)" }
+        },
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Blood pressure and arterial stiffness are both higher. Short sleepers show more endothelial dysfunction, an early step in atherosclerosis."
+        },
+        {
+          "target": "immune-system",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Chronic low-grade inflammation (raised CRP and IL-6) is now established, and it is the common thread linking short sleep to heart disease, diabetes and depression."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "The glymphatic system clears metabolic waste, including amyloid-beta, mostly during deep sleep. Six months of restricted deep sleep means six months of reduced clearance."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "A year of debt the body cannot repay on weekends",
+      "effects": [
+        {
+          "target": "whole-body",
+          "kind": "negative",
+          "intensity": 0.7,
+          "note": "Weekend catch-up sleep restores alertness partly but does not reverse the insulin resistance or blood-pressure changes of the working week. The debt is not fully repayable."
+        },
+        {
+          "target": "heart",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Pooled cohort data associate habitual sleep under 6 hours with roughly 20–48% higher risk of coronary heart disease compared with 7–8 hours.",
+          "metric": { "label": "Coronary heart disease risk", "value": "~+20 to +48% (cohort data)" }
+        },
+        {
+          "target": "hippocampus",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Long-term short sleepers show smaller hippocampal volumes on imaging. Whether sleep loss causes the shrinkage or accelerates existing decline is still debated."
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Obesity risk is markedly higher in habitual short sleepers, and it is very difficult to lose fat on 5 hours: dieting on short sleep costs disproportionately more muscle than fat."
+        },
+        {
+          "target": "prefrontal-cortex",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Persistent deficits in decision-making, impulse control and emotional regulation — the exact capacities most people are staying up late to try to buy more of."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Compounded cardiometabolic and cognitive cost",
+      "effects": [
+        {
+          "target": "whole-body",
+          "kind": "negative",
+          "intensity": 0.8,
+          "note": "Meta-analyses of long-term cohorts link habitual short sleep to roughly 12% higher all-cause mortality versus 7–8 hours. Reverse causation (illness causing short sleep) explains part of it, not all.",
+          "metric": { "label": "All-cause mortality", "value": "~+12% (meta-analysis)" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.7,
+          "note": "In someone genetically predisposed, five years of short sleep is often the difference between staying pre-diabetic and crossing into type 2 diabetes."
+        },
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.7,
+          "note": "Years of higher blood pressure, inflammation and insulin resistance accelerate coronary plaque. This is the mechanism behind the elevated heart-attack and stroke rates in short sleepers."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Chronically reduced deep sleep is associated with greater amyloid burden and higher dementia risk in longitudinal studies, though causality is not settled."
+        },
+        {
+          "target": "immune-system",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Sustained inflammatory signalling and reduced immune surveillance are also why long-term short sleep appears in cohort data as a modest independent cancer risk factor."
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The genuinely good news: most of these markers — insulin sensitivity, blood pressure, mood, cognition — improve substantially within weeks of returning to 7–8 hours. Very little of this is permanent."
+        }
+      ]
+    }
+  ]
+}

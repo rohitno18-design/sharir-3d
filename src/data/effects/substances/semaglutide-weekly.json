@@ -1,0 +1,261 @@
+{
+  "id": "semaglutide-weekly",
+  "name": { "en": "Weekly semaglutide injection for obesity", "hi": "मोटापे के लिए हफ़्ते में एक सेमाग्लूटाइड इंजेक्शन" },
+  "category": "medicine",
+  "icon": "💉",
+  "dose": "One subcutaneous injection a week into the abdomen, thigh or upper arm. Started at 0.25 mg weekly and stepped up every 4 weeks — 0.5, 1.0, 1.7, then 2.4 mg — over about 16 weeks, because escalating faster mostly produces vomiting rather than faster weight loss.",
+  "summary": {
+    "en": "Semaglutide is a modified copy of GLP-1, the gut hormone released after a meal, engineered to resist the enzyme that normally destroys it and to bind albumin, which stretches its half-life from minutes to about a week. It acts mainly on the brain — in the hypothalamic arcuate nucleus and the brainstem — where it activates the neurons that signal fullness and quietens those that drive hunger. It also slows stomach emptying and makes insulin release glucose-dependent. The result is not willpower: food simply stops occupying mental space. At 2.4 mg weekly with lifestyle support, average weight loss is about 12–15% of body weight at 68 weeks, several times what lifestyle change alone achieves.",
+    "hi": "सेमाग्लूटाइड असल में GLP-1 नाम के उस आँतों वाले हार्मोन की बदली हुई नक़ल है जो खाना खाने के बाद निकलता है। इसे ऐसे बनाया गया है कि शरीर इसे जल्दी तोड़ न पाए — इसलिए ये मिनटों के बजाय लगभग एक हफ़्ता टिकता है। ये मुख्य रूप से दिमाग़ पर काम करता है: भूख बढ़ाने वाले सिग्नल शांत करता है और पेट भरे होने का एहसास बढ़ाता है। साथ ही पेट से खाना धीरे निकलता है और इंसुलिन ज़रूरत के हिसाब से निकलता है। असर ये कि खाने का ख़याल ही दिमाग़ से हट जाता है — ये इच्छाशक्ति का मामला नहीं है। 2.4 मि.ग्रा. साप्ताहिक डोज़ पर 68 हफ़्तों में औसतन शरीर का 12–15% वज़न कम होता है।"
+  },
+  "indian_context": "GLP-1 drugs arrived in the Indian retail market only recently and cost roughly ₹15,000–25,000 a month depending on dose and brand — entirely out of pocket, because Indian health insurance does not cover obesity treatment. That price creates two predictable problems: people stop when the money runs out, at which point the weight returns, and a grey market has appeared in unlicensed vials, compounded 'semaglutide' from unverified sources and injections sold without any prescription. There is a clinical reason to be careful in Indians specifically: South Asians carry more body fat and far more visceral fat at any given BMI, which is why Indian guidance uses lower obesity cut-offs and waist thresholds around 90 cm for men and 80 cm for women — so the people who genuinely qualify here often do not look like the trial participants. And because roughly a quarter to a third of the weight lost on any weight-loss intervention is lean mass, a typical Indian vegetarian diet already low in protein makes muscle loss the main avoidable harm — protein intake and resistance training are not optional add-ons to this drug, they are part of the prescription.",
+  "evidence": "strong",
+  "sources": [
+    "Wilding JPH et al. Once-weekly semaglutide in adults with overweight or obesity (STEP 1). New England Journal of Medicine. 2021",
+    "Wilding JPH et al. Weight regain and cardiometabolic effects after withdrawal of semaglutide: the STEP 1 trial extension. Diabetes, Obesity and Metabolism. 2022",
+    "Lincoff AM et al. Semaglutide and cardiovascular outcomes in obesity without diabetes (SELECT). New England Journal of Medicine. 2023",
+    "Marso SP et al. Semaglutide and cardiovascular outcomes in patients with type 2 diabetes (SUSTAIN-6). New England Journal of Medicine. 2016",
+    "Wegovy (semaglutide) injection — US FDA prescribing information"
+  ],
+  "caution": "Semaglutide carries a boxed warning against use in anyone with a personal or family history of medullary thyroid carcinoma or multiple endocrine neoplasia type 2, based on rodent thyroid C-cell tumours. It should not be used in pregnancy — stop it at least two months before trying to conceive, and note that it can make oral contraceptives less reliable during the phase when stomach emptying is slowed. Stop and seek care for severe persistent abdominal pain radiating to the back, which may indicate pancreatitis. Gallstones become more likely with rapid weight loss. In people with type 2 diabetes and existing retinopathy, rapid glucose lowering has been associated with short-term worsening of eye disease, so get a retinal check first. Tell your anaesthetist you are on it before any procedure requiring sedation, because the stomach may not be empty despite fasting. And be clear-eyed about the deal: this is treatment for a chronic condition, not a course — stopping means the weight comes back.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "First 0.25 mg dose: appetite signals shift within a day or two",
+      "effects": [
+        {
+          "target": "hypothalamus",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Semaglutide crosses into the arcuate nucleus and brainstem, activating POMC neurons that signal satiety and inhibiting the NPY/AgRP neurons that drive hunger. Many people notice the change within the first two days as food simply becoming less interesting.",
+          "metric": { "label": "Half-life", "value": "~7 days" }
+        },
+        {
+          "target": "stomach",
+          "kind": "neutral",
+          "intensity": 0.45,
+          "note": "Gastric emptying slows, so meals sit longer and fullness arrives earlier and lasts longer. This is also the source of most of the nausea, and it is the effect that fades most with continued dosing."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Insulin release from beta cells is enhanced only when blood glucose is high, and glucagon is suppressed. Because the action is glucose-dependent, semaglutide alone does not cause hypoglycaemia."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "The starting dose of 0.25 mg is deliberately sub-therapeutic for weight loss. It exists purely to let the gut acclimatise before the dose that actually works."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Portions shrink without effort; nausea is the main cost",
+      "effects": [
+        {
+          "target": "stomach",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Nausea affects a large share of users in the first weeks, with vomiting, constipation or diarrhoea in a substantial minority. Smaller meals, less fat and fried food, and stopping at the first sign of fullness help more than any anti-emetic."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Users consistently describe the quieting of 'food noise' — the background mental chatter about the next meal. This reduction in food reward salience is probably a bigger driver of the effect than delayed stomach emptying."
+        },
+        {
+          "target": "small-intestine",
+          "kind": "neutral",
+          "intensity": 0.35,
+          "note": "Gut motility slows throughout. Constipation is common and worsens as food and fluid intake drop; fibre and water need deliberate attention from week one."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.25,
+          "note": "Weight starts to fall from the first weeks, but early loss is largely water and glycogen. Real fat loss follows over months and depends on the sustained calorie deficit."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "First dose step-up; 2–4 kg down and metabolic markers improving",
+      "effects": [
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Typical loss at one month is around 2–4 kg, driven by an intake reduction of roughly 25–35% that most people are not consciously imposing.",
+          "metric": { "label": "Weight loss at 1 month", "value": "~2–4 kg" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "In people with type 2 diabetes, HbA1c falls substantially — in the 1.5 percentage point range at the higher doses. In people without diabetes, fasting insulin and post-meal glucose both improve."
+        },
+        {
+          "target": "stomach",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Nausea usually improves between dose steps and then returns briefly after each escalation. Roughly 5–7% of trial participants discontinued because of gastrointestinal side effects."
+        },
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Liver fat begins to fall early and disproportionately — relevant given how often fatty liver accompanies central obesity in Indian adults at a normal-looking weight."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Approaching the target dose; roughly 5–8% of body weight gone",
+      "effects": [
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.6,
+          "visual": { "opacity": 0.75 },
+          "note": "By two months most people have lost around 5–8% of body weight, with visceral fat shrinking proportionally more than subcutaneous fat — the depot that carries the cardiometabolic risk.",
+          "metric": { "label": "Weight loss at 2 months", "value": "~5–8% of body weight" }
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Systolic blood pressure typically falls by around 5 mmHg, triglycerides drop and CRP falls. These improvements are partly weight-driven and partly independent of it."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "As with any substantial weight loss, roughly a quarter to 40% of what is lost is lean tissue. Without adequate protein and resistance training this is muscle you will not automatically get back."
+        },
+        {
+          "target": "gallbladder",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Rapid weight loss and slower gallbladder emptying together raise gallstone risk. Right upper abdominal pain after fatty food deserves an ultrasound rather than being written off as a drug side effect."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Steady loss continues; the drug is doing what lifestyle alone cannot",
+      "effects": [
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.7,
+          "visual": { "opacity": 0.65 },
+          "note": "Weight loss continues steadily rather than plateauing early, typically reaching 10–12% by six months. This is the key difference from diet-only interventions, which almost always stall around month four.",
+          "metric": { "label": "Weight loss at 6 months", "value": "~10–12% of body weight" }
+        },
+        {
+          "target": "face",
+          "kind": "neutral",
+          "intensity": 0.35,
+          "note": "Loss of the deep and superficial fat pads in the cheeks and temples produces the hollowed look people call 'Ozempic face'. It is ordinary rapid fat loss showing up where it is most visible, not a specific drug effect."
+        },
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Hepatic steatosis improves markedly, with falling transaminases and, in trials, resolution of steatohepatitis in a meaningful proportion of patients."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Beta-cell function partially recovers as glucotoxicity and lipotoxicity ease. Many people with type 2 diabetes reduce or stop other glucose-lowering drugs at this stage — under supervision, not on their own."
+        },
+        {
+          "target": "kidneys",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "GLP-1 agonists slow the decline in kidney function in people with type 2 diabetes and albuminuria, an effect that appears to go beyond glucose and weight control alone."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Around 68 weeks: peak effect, roughly 12–15% of body weight lost",
+      "effects": [
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.8,
+          "visual": { "opacity": 0.6 },
+          "note": "The landmark trial of 2.4 mg weekly plus lifestyle support showed a mean loss of about 15% of body weight at 68 weeks versus about 2.4% on placebo, with roughly a third of participants losing 20% or more.",
+          "metric": { "label": "Mean weight loss at 68 weeks", "value": "~12–15% of body weight" }
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "In people with established cardiovascular disease and obesity but without diabetes, semaglutide reduced major cardiovascular events by around 20% — the finding that moved this from a weight drug to a cardiovascular one.",
+          "metric": { "label": "Major cardiovascular events (SELECT)", "value": "~−20%" }
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "A year of substantial weight loss without resistance training leaves measurably less lean mass and a lower resting metabolic rate — which is part of why weight returns so readily on stopping."
+        },
+        {
+          "target": "retina",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "In the diabetes cardiovascular outcome trial, a small excess of retinopathy complications appeared, likely reflecting rapid glucose lowering in people with pre-existing eye disease rather than direct toxicity."
+        },
+        {
+          "target": "thyroid",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "The boxed warning comes from C-cell tumours in rodents, whose thyroid C-cells carry far more GLP-1 receptors than human ones. No clear human signal has emerged, but the contraindication in medullary thyroid cancer and MEN2 stands."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Long-term: it works while you take it — and only while you take it",
+      "effects": [
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.6,
+          "note": "The most important long-term finding is what happens on stopping: in the trial extension, participants regained about two-thirds of the lost weight within a year of withdrawal, and cardiometabolic improvements reversed with it. Obesity behaves like hypertension — treatment is ongoing, not a course.",
+          "metric": { "label": "Weight regain 1 year after stopping", "value": "~two-thirds of the loss" }
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Sustained treatment maintains the cardiovascular benefit, and the outcome trial data now extend to around four years. Lower blood pressure, better lipids and less visceral fat all persist while the drug continues."
+        },
+        {
+          "target": "pancreas",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Pancreatitis remains a rare but recognised event. Large trials have not confirmed the pancreatic cancer signal raised early on, and surveillance to date has been reassuring."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Cumulative lean mass loss over years matters most in older users, where it can accelerate sarcopenia. Protein at roughly 1.2–1.6 g per kg and twice-weekly resistance training is the standard mitigation."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.35,
+          "note": "Five-year real-world data are still accumulating, and long-term safety beyond the trial horizon is genuinely not settled. The honest position is strong short- and medium-term evidence, a clear cardiovascular benefit, and open questions past a few years."
+        }
+      ]
+    }
+  ]
+}

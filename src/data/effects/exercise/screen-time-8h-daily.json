@@ -1,0 +1,283 @@
+{
+  "id": "screen-time-8h-daily",
+  "name": { "en": "8+ hours of screen time daily", "hi": "रोज़ 8 घंटे से ज़्यादा स्क्रीन" },
+  "category": "habit",
+  "icon": "📱",
+  "dose": "8–10 hours a day of near-focus screen use — laptop through the workday, phone in every gap, and 45–90 minutes of scrolling or streaming in bed after lights-out. Assumes an adult, indoor most of the day, screen 30–50 cm from the eyes.",
+  "molecule": "melatonin",
+  "summary": {
+    "en": "A screen is three separate exposures at once: a fixed near-focus target for the eyes, a static forward-head posture for the neck, and a bright blue-enriched light source for the body clock. Blink rate drops by roughly half while you stare, so the tear film breaks up and eyes burn and blur by evening. The head sits forward of the shoulders for hours, multiplying the load on the neck. And light after sunset hitting melanopsin cells in the retina tells the hypothalamus it is still daytime, so the pineal gland delays melatonin and sleep starts late — the effect that quietly does the most long-term damage.",
+    "hi": "स्क्रीन एक साथ तीन चीज़ें करती है: आँखों को घंटों एक ही पास की दूरी पर टिकाए रखती है, गर्दन को आगे झुकाए रखती है, और रात में तेज़ नीली रोशनी शरीर की घड़ी पर डालती है। स्क्रीन देखते वक़्त पलक झपकना लगभग आधा हो जाता है, इसलिए आँसू की परत टूटती है और शाम तक आँखें जलती और धुंधली लगती हैं। सिर घंटों कंधों से आगे रहता है, जिससे गर्दन पर वज़न कई गुना पड़ता है। और सूरज ढलने के बाद की रोशनी दिमाग़ को बताती है कि अभी दिन है — मेलाटोनिन देर से बनता है और नींद पीछे खिसक जाती है। सबसे बड़ा नुक़सान यही चुपचाप वाला है।"
+  },
+  "indian_context": "India has the cheapest mobile data in the world and among the highest per-user screen hours, and the pandemic pushed school itself onto phones — urban Indian school children now show far higher myopia rates than rural children of the same age, and Indian myopia prevalence is projected to keep climbing. Air-conditioned offices and ceiling fans dry the tear film further, so dry-eye symptoms in Indian IT workers are near-universal by evening. Late-night screen use collides with an already late Indian dinner and 11 PM–midnight bedtime, and then a fixed early office or school start — so the melatonin delay turns straight into chronic sleep debt rather than a later wake-up.",
+  "evidence": "moderate",
+  "sources": [
+    "Sheppard AL, Wolffsohn JS. Digital eye strain: prevalence, measurement and amelioration. BMJ Open Ophthalmology. 2018",
+    "Chang AM, Aeschbach D, Duffy JF, Czeisler CA. Evening use of light-emitting eReaders negatively affects sleep, circadian timing, and next-morning alertness. PNAS. 2015",
+    "Holden BA et al. Global prevalence of myopia and high myopia and temporal trends from 2000 through 2050. Ophthalmology. 2016",
+    "He M et al. Effect of time spent outdoors at school on the development of myopia among children in China: a randomized clinical trial. JAMA. 2015",
+    "Saxena R et al. Prevalence of myopia and its risk factors in urban school children in Delhi: the North India Myopia Study (NIM Study). PLoS One. 2015",
+    "WHO. Guidelines on physical activity and sedentary behaviour. 2020"
+  ],
+  "caution": "Sudden blurring in one eye, eye pain rather than dryness, flashes, floaters or a curtain across the vision are not screen strain — get an eye examination the same week. Children under 12 with a new squint, headache or falling classroom performance need a cycloplegic refraction, not just reading glasses off the shelf. If you fall asleep only after 2 AM despite being tired, or wake unrefreshed for months, that is a circadian problem worth treating rather than pushing through with more coffee.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Blink rate halves, neck loads up, melatonin runs late tonight",
+      "effects": [
+        {
+          "target": "eyes",
+          "kind": "strain",
+          "intensity": 0.6,
+          "note": "Concentrating on a screen cuts blink rate from roughly 15–20 per minute to 5–8, and many of those blinks are incomplete. The tear film evaporates between blinks, so the surface feels gritty, burns and blurs by late afternoon.",
+          "metric": { "label": "Blink rate while on screen", "value": "~5–8/min vs 15–20 normal" }
+        },
+        {
+          "target": "pineal",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Blue-enriched light after sunset hits melanopsin-containing retinal cells that report directly to the hypothalamic clock, which then tells the pineal gland to hold off on melatonin. Evening screen use has been shown to blunt the melatonin rise and push its onset back by over an hour.",
+          "metric": { "label": "Melatonin onset delay", "value": "~1–1.5 hours" }
+        },
+        {
+          "target": "trapezius",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Looking down at a phone tips the head forward; at 30–45° of neck flexion the effective load on the cervical spine rises several times above the head's own 4–5 kg. The upper trapezius and levator scapulae hold that position isometrically for hours and ache by evening."
+        },
+        {
+          "target": "eyes",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "The ciliary muscle stays contracted to hold near focus all day. It fatigues like any muscle, which is the actual cause of the headache behind the eyes and the few seconds of blur when you finally look up at something far away."
+        },
+        {
+          "target": "whole-body",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Eight screen hours are almost always eight seated hours. Muscle contraction stops, so lipoprotein lipase activity in the legs falls and post-meal glucose and triglycerides clear more slowly than on a day with movement breaks."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Sleep debt stacks up; eyes dry by mid-afternoon, not evening",
+      "effects": [
+        {
+          "target": "hypothalamus",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "The body clock has now been pushed later every night for a week, but the alarm has not moved. Sleep is typically 45–90 minutes shorter each night, and the debt does not clear on its own.",
+          "metric": { "label": "Sleep lost per week", "value": "~5–8 hours" }
+        },
+        {
+          "target": "eyes",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Repeated tear-film breakup inflames the ocular surface and starts to affect the meibomian glands in the lids, which supply the oily layer that stops tears evaporating. Symptoms now start earlier in the day and linger after you close the laptop."
+        },
+        {
+          "target": "prefrontal-cortex",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Short sleep hits the prefrontal cortex first: sustained attention, working memory and impulse control degrade before you notice feeling sleepy. Most people rate their own performance as normal at this stage, which is the trap."
+        },
+        {
+          "target": "spine",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Sustained forward-head, rounded-shoulder posture keeps the deep neck flexors switched off and the cervical extensors loaded. Stiffness on waking and a dull ache between the shoulder blades are the first signals."
+        },
+        {
+          "target": "hip-flexors",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Hours in a chair keep the hip flexors shortened and the glutes silent. Nothing is damaged yet, but the pattern that later shows up as low-back tightness is being learned now."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Chronic dry eye pattern set; body clock now genuinely shifted later",
+      "effects": [
+        {
+          "target": "eyes",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "A month of low blink rate produces a stable evaporative dry-eye picture: burning, redness, fluctuating vision and the paradox of watery eyes as the surface reflexively over-tears. Air-conditioning and fans make it measurably worse.",
+          "metric": { "label": "Digital eye strain symptoms in heavy screen users", "value": "reported by ~50–90%" }
+        },
+        {
+          "target": "pineal",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "This is no longer one late night — the whole circadian phase has drifted later. Natural sleep onset now sits well past midnight even on days without screens, and morning light exposure (the main correction signal) is being missed because you wake indoors and late."
+        },
+        {
+          "target": "trapezius",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Persistent low-level contraction in the upper trapezius creates trigger points and referred headache at the base of the skull. This is the pattern usually labelled 'tech neck' or cervicogenic headache."
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Short sleep raises ghrelin and lowers leptin, and late screen time sits alongside late eating. Together they push intake up by a few hundred calories a day without any conscious decision to eat more."
+        },
+        {
+          "target": "wrist",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Sustained wrist extension on a laptop keyboard and thumb abduction on a phone load the extensor tendons and the first dorsal compartment. This is where 'texting thumb' (de Quervain's tenosynovitis) begins."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Two months of short sleep: mood, glucose and blood pressure all shift",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Chronic partial sleep restriction reliably lowers mood, raises emotional reactivity and slows reaction time to a degree comparable with mild alcohol intoxication. Memory consolidation, which depends on deep and REM sleep, is measurably poorer."
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Experimental sleep restriction reduces whole-body insulin sensitivity within days and keeps it lowered while the restriction continues. Combined with prolonged sitting, post-meal glucose runs higher than it did two months ago."
+        },
+        {
+          "target": "eyes",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "In children and teenagers, two months of heavy near work with almost no outdoor time is enough to accelerate axial elongation of the eyeball. In adults the refraction is largely stable, so the cost here is comfort and focusing stamina rather than power."
+        },
+        {
+          "target": "arteries",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "Sympathetic tone stays elevated when sleep is short. Resting blood pressure and heart rate creep up by a few points, and the normal night-time dip in blood pressure is blunted."
+        },
+        {
+          "target": "adrenal-glands",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "Evening cortisol falls more slowly and the morning peak flattens when the clock is shifted — the hormonal signature of being permanently slightly jet-lagged in your own city."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Myopia progressing in the young; sleep debt now a habit, not an event",
+      "effects": [
+        {
+          "target": "retina",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "In children and adolescents, sustained near work with under 1–2 hours of daily outdoor light drives axial elongation of the globe. School-based trials show extra outdoor time meaningfully cuts new myopia — the protective factor is bright outdoor light, not the absence of screens as such.",
+          "metric": { "label": "Typical myopia progression, school-age", "value": "~−0.5 to −1.0 D/year" }
+        },
+        {
+          "target": "eyes",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Meibomian gland dropout becomes visible on lid imaging in long-term heavy users. Once glands are lost they do not regrow, which is why dry eye at this stage becomes a condition to manage rather than a symptom that resolves on a holiday."
+        },
+        {
+          "target": "spine",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Six months of forward-head loading remodels the cervical discs and facet joints unevenly. Chronic neck pain and reduced rotation range are common; imaging often looks normal, because the problem is load distribution rather than structural damage."
+        },
+        {
+          "target": "hippocampus",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Deep sleep is when the hippocampus transfers the day's memories to the cortex and when glymphatic clearance of metabolic waste peaks. Six months of truncated sleep costs a measurable amount of both."
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "The combination of sitting, late eating and short sleep favours visceral fat specifically — the depot South Asians already accumulate readily at a normal-looking BMI and waist."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "A full year: refraction, neck and metabolic markers have all moved",
+      "effects": [
+        {
+          "target": "eyes",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "For a child or teenager, a year of this pattern typically means a new prescription. For an adult, refraction usually holds, but the tear film, focusing stamina and evening headaches are now a fixed part of the day."
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "The circadian delay is now self-sustaining: you are alert at midnight and foggy at 8 AM regardless of intention. Resetting it takes deliberate morning bright light and a screen curfew, not just going to bed earlier one night."
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "A year of short and mistimed sleep plus 8–10 sedentary hours is an independent risk factor for type 2 diabetes, over and above diet. Fasting glucose and HbA1c drift upward even in people whose weight has not changed much."
+        },
+        {
+          "target": "amygdala",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Chronic sleep restriction increases amygdala reactivity while weakening prefrontal control over it. Practically: shorter fuse, more anxiety, less tolerance for ordinary friction."
+        },
+        {
+          "target": "leg-veins",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Long unbroken sitting slows venous return from the legs. Ankle swelling by evening is common; in people with other risk factors, very prolonged immobility raises clot risk."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Cumulative: higher myopia, dry-eye disease, and years of sleep debt",
+      "effects": [
+        {
+          "target": "retina",
+          "kind": "negative",
+          "intensity": 0.65,
+          "note": "Someone who progressed through school years this way can reach high myopia (beyond about −6 D), where the stretched eye carries a genuinely higher lifetime risk of retinal detachment, myopic maculopathy and glaucoma. This is the one screen-related outcome that is permanent and sight-threatening.",
+          "metric": { "label": "Risk category", "value": "high myopia beyond ~−6 D" }
+        },
+        {
+          "target": "eyes",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Five years produces established dry-eye disease in a large share of heavy users: chronic surface inflammation, gland loss and dependence on lubricating drops. Vision fluctuates through the day rather than being crisply stable."
+        },
+        {
+          "target": "spine",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Degenerative changes in the lower cervical discs appear earlier than they should in people who spent years head-down. Combined with weak deep neck flexors, this is a recurring rather than a passing problem."
+        },
+        {
+          "target": "heart",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Five years of high sedentary time and short sleep together carry a real cardiovascular cost — higher blood pressure, worse lipids and more visceral fat. Notably, the harm from sitting is only partly offset by a daily workout; breaking up the sitting matters separately."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Long-run short sleep is consistently associated with higher rates of depression and with poorer cognitive ageing. The encouraging part is that circadian timing responds well to correction at any age — morning daylight, a fixed wake time and a screen curfew shift it back within weeks."
+        }
+      ]
+    }
+  ]
+}

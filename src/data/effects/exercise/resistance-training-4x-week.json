@@ -1,0 +1,299 @@
+{
+  "id": "resistance-training-4x-week",
+  "name": { "en": "Full-body resistance training 4× a week", "hi": "हफ्ते में 4 बार पूरे शरीर की वेट ट्रेनिंग" },
+  "category": "exercise",
+  "icon": "🏋️",
+  "dose": "4 sessions a week of 45–60 min, full-body or upper/lower split, 10–20 hard sets per muscle group per week, progressive overload (adding weight or reps over time), with 1.6–2.2 g protein per kg body weight per day. Assumes an untrained adult starting point.",
+  "molecule": "leucine",
+  "summary": {
+    "en": "Lifting weights with progressive overload drives three separate adaptations on three separate clocks: the nervous system learns to recruit muscle within 2–4 weeks (strength jumps before size), muscle fibres thicken visibly by 6–8 weeks, and bone and tendon remodel over months. Alongside, insulin sensitivity, blood pressure, resting metabolism and mental health improve. A novice can gain roughly 0.5–1 kg of muscle a month in the first half-year, slowing sharply after that.",
+    "hi": "वज़न उठाने से शरीर तीन अलग-अलग रफ्तार पर बदलता है: पहले 2–4 हफ्तों में दिमाग और नसें मांसपेशियों को बेहतर चलाना सीखती हैं (ताकत पहले बढ़ती है, साइज़ बाद में), 6–8 हफ्तों में मांसपेशियाँ दिखने लगती हैं, और हड्डियाँ व टेंडन महीनों में मज़बूत होते हैं। साथ में इंसुलिन बेहतर काम करता है, बीपी घटता है, मेटाबॉलिज़्म बढ़ता है। शुरू के 6 महीनों में हर महीने आधा से एक किलो मांसपेशी बनना आम है, उसके बाद रफ्तार धीमी हो जाती है।"
+  },
+  "indian_context": "The hard part in India is usually protein, not training: a typical vegetarian thali gives 40–60 g protein a day, well short of the ~100–150 g a 70 kg lifter needs, so dal, paneer, curd, soya chunks, eggs (if eaten) and whey have to be planned deliberately. South-Asian adults have lower muscle mass and higher insulin resistance at the same BMI as Europeans, which makes resistance training unusually valuable here for diabetes prevention. Common gym myths that slow progress: chest-and-biceps every day, skipping legs, training till failure on every set, and buying 'mass gainers' that are mostly sugar. Vitamin D deficiency (70–90% of urban Indians) and iron deficiency in women both blunt recovery; test and correct them.",
+  "evidence": "strong",
+  "sources": [
+    "ACSM Position Stand. Progression models in resistance training for healthy adults. Med Sci Sports Exerc. 2009",
+    "Schoenfeld BJ, Ogborn D, Krieger JW. Dose-response relationship between weekly resistance training volume and increases in muscle mass: a systematic review and meta-analysis. J Sports Sci. 2017",
+    "Morton RW et al. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength in healthy adults. Br J Sports Med. 2018",
+    "Momma H et al. Muscle-strengthening activities are associated with lower risk and mortality in major non-communicable diseases: a systematic review and meta-analysis of cohort studies. Br J Sports Med. 2022",
+    "Seynnes OR, de Boer M, Narici MV. Early skeletal muscle hypertrophy and architectural changes in response to high-intensity resistance training. J Appl Physiol. 2007"
+  ],
+  "caution": "Learn the big lifts (squat, hinge, press, row) with light loads first; most gym injuries come from poor technique under ego loads, not from lifting itself. People with uncontrolled hypertension, hernias, recent surgery, or retinal problems should avoid heavy breath-holding (Valsalva) lifts until cleared. Rest days are part of the programme: muscle is built between sessions, not during them.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Muscle protein synthesis switched on, soreness on its way",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "strain",
+          "intensity": 0.7,
+          "note": "Mechanical tension and micro-damage to muscle fibres trigger the mTOR pathway; muscle protein synthesis rises ~50–100% and stays elevated for 24–48 h in a beginner. Delayed-onset soreness (DOMS) builds over the next 24–72 h.",
+          "metric": { "label": "Muscle protein synthesis", "value": "elevated 24–48 h" }
+        },
+        {
+          "target": "joints",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Tendons, ligaments and joint cartilage take the load too, but their adaptation clock is much slower than muscle's. Nothing is damaged yet; they are simply being asked to work."
+        },
+        {
+          "target": "adrenal-glands",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "Cortisol, adrenaline, growth hormone and testosterone all spike during and shortly after a hard session. These acute pulses are normal and are not what builds muscle; the local mechanical signal is."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Worked muscle soaks up glucose for hours afterwards to refill glycogen, so post-workout meals cause a smaller insulin response."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "A session raises alertness and mood via dopamine and endorphins, and improves sleep depth that night."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Nervous system learning fast, DOMS fading, appetite up",
+      "effects": [
+        {
+          "target": "spinal-cord",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Most early strength gain is neural: motor neurons fire faster, recruit more fibres at once, and antagonist muscles stop fighting the movement. Weights that felt heavy last week move more smoothly."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "The repeated-bout effect kicks in: the second and third sessions cause much less soreness than the first, even at the same load."
+        },
+        {
+          "target": "tendons",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Collagen synthesis in tendons is up, but tendons stiffen over months, not days. This mismatch is why beginners are told to add load gradually."
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Appetite rises to match energy and protein demand; this is the moment protein intake needs to go up deliberately."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Strength up 10–20%, first measurable muscle growth",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Strength on main lifts is up ~10–20%, still mostly neural. Ultrasound studies detect a 2–4% increase in muscle cross-sectional area by 3–4 weeks, before it is visible in the mirror.",
+          "metric": { "label": "Strength on main lifts", "value": "+10–20%" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "More GLUT4 transporters and more muscle mass mean better glucose disposal; fasting insulin drops and post-meal glucose spikes shrink."
+        },
+        {
+          "target": "bones",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "Loading has started the bone remodelling cycle. In the first weeks resorption slightly precedes formation, so no density gain is measurable yet."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Body weight may not change much, but composition is shifting: roughly 0.5–1 kg of muscle gained and a similar amount of fat lost is typical in month one if protein is adequate."
+        },
+        {
+          "target": "prefrontal-cortex",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Resistance training improves executive function and reduces anxiety and depressive symptoms, with effects seen within the first month."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Visible muscle: fibres thicker, shape changing",
+      "effects": [
+        {
+          "target": "quadriceps",
+          "kind": "positive",
+          "intensity": 0.7,
+          "visual": { "scale": 1.04 },
+          "note": "By 6–8 weeks hypertrophy is visible to others: the quads, glutes and back respond first because they are the biggest muscles with the most loading. Fibre cross-sectional area is up ~5–8%."
+        },
+        {
+          "target": "pectorals",
+          "kind": "positive",
+          "intensity": 0.6,
+          "visual": { "scale": 1.04 },
+          "note": "Chest and shoulders fill out; total lean mass is typically up 1–2 kg from baseline.",
+          "metric": { "label": "Lean mass gained", "value": "~+1–2 kg" }
+        },
+        {
+          "target": "lats",
+          "kind": "positive",
+          "intensity": 0.6,
+          "visual": { "scale": 1.04 },
+          "note": "Rows and pull-downs thicken the lats and upper back, which also stabilises the shoulders for pressing."
+        },
+        {
+          "target": "glutes",
+          "kind": "positive",
+          "intensity": 0.6,
+          "visual": { "scale": 1.04 },
+          "note": "Squats and hinges build the glutes and hamstrings; hip extension strength is up 20–30%."
+        },
+        {
+          "target": "biceps",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.04 },
+          "note": "Arms grow from compound pulling and pressing even without many isolation sets."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Resting blood pressure falls ~3–5 mmHg in meta-analyses of resistance training, similar in size to aerobic exercise.",
+          "metric": { "label": "Resting blood pressure", "value": "~−3 to −5 mmHg" }
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "3–5 kg more muscle, stronger bones, higher resting metabolism",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.8,
+          "visual": { "scale": 1.06 },
+          "note": "A typical male novice has gained 3–5 kg of muscle, a female novice 1.5–3 kg. Strength on the main lifts is up 30–50%. Gains now start to slow as the easy adaptations are used up.",
+          "metric": { "label": "Muscle gained (novice)", "value": "~3–5 kg men, ~1.5–3 kg women" }
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Bone mineral density in the spine and hip is measurably higher, typically +1–2%, because osteoblasts lay down bone along the lines of muscle pull."
+        },
+        {
+          "target": "tendons",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Tendons are stiffer and thicker, transmitting force more efficiently; the muscle-tendon mismatch of the early months has closed."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Resting metabolic rate is up roughly 50–100 kcal/day from extra muscle, and visceral fat is lower; waist typically down 2–4 cm even if scale weight is stable."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "HbA1c falls by roughly 0.3–0.5% in people with type 2 diabetes; resistance training is as effective as aerobic training for glucose control.",
+          "metric": { "label": "HbA1c (if diabetic)", "value": "−0.3 to −0.5%" }
+        },
+        {
+          "target": "testes",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Baseline testosterone rises modestly in men who lose fat and gain muscle, mainly by reducing the fat-driven conversion of testosterone to oestrogen; this is a health effect, not a 'bulking' one."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "A different body: +5–8 kg muscle, strength up 50% or more",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.9,
+          "visual": { "scale": 1.08 },
+          "note": "First-year gains for a consistent novice with adequate protein: roughly 5–8 kg muscle in men, 2.5–4 kg in women. Strength on squats, deadlifts and presses is often up 50–100% from the first month.",
+          "metric": { "label": "Strength on main lifts", "value": "+50–100% vs month 1" }
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Spine and hip bone density up ~2–4%, the single most reliable non-drug way to build bone in adults. This protects against osteoporosis decades later."
+        },
+        {
+          "target": "heart-muscle",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "visual": { "scale": 1.02 },
+          "note": "Heavy lifting produces mild, symmetrical thickening of the left ventricular wall (concentric remodelling) as an adaptation to pressure spikes. In healthy lifters this is benign and reverses with detraining."
+        },
+        {
+          "target": "joints",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Stronger muscles around the knee, hip and shoulder mean less joint load per step and lower risk of osteoarthritis and injury; ligaments are thicker."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Regular resistance training is linked to better memory and executive function and lower depression risk; trials in older adults show preserved white-matter integrity."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Slower gains, durable protection against disease and ageing",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.8,
+          "visual": { "scale": 1.08 },
+          "note": "Gains after year two slow to ~0.5–1 kg a year; most lifters are now maintaining a body that is 8–12 kg more muscular than their sedentary self. Muscle is an insurance policy against sarcopenia after 50."
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.7,
+          "note": "Cohort meta-analyses link regular muscle-strengthening activity to ~15% lower all-cause mortality, and ~15–20% lower cardiovascular disease, cancer and diabetes incidence; combined with aerobic activity the reduction is larger.",
+          "metric": { "label": "All-cause mortality (cohort data)", "value": "~−10 to −17%" }
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Bone density stays high through the years when it would otherwise start to decline; fracture risk in later life is substantially lower."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Sustained higher muscle mass is a permanent glucose sink; risk of type 2 diabetes remains lower for as long as training continues."
+        },
+        {
+          "target": "tendons",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "The main long-term risk is cumulative tendinopathy (shoulder, elbow, knee) in people who chase loads with poor technique or never deload. Well-programmed lifters have low injury rates."
+        }
+      ]
+    }
+  ]
+}

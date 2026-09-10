@@ -1,0 +1,241 @@
+{
+  "id": "antibiotic-course-7-days",
+  "name": { "en": "A 7-day antibiotic course", "hi": "7 दिन का एंटीबायोटिक कोर्स" },
+  "category": "medicine",
+  "icon": "💉",
+  "dose": "Amoxicillin–clavulanate 625 mg three times a day for 7 days — the most commonly prescribed broad-spectrum oral antibiotic in India, taken for a chest, throat, sinus, dental or urinary infection.",
+  "summary": {
+    "en": "Amoxicillin is a beta-lactam: it blocks the enzymes that cross-link bacterial cell wall peptidoglycan, so growing bacteria burst under their own internal pressure. Clavulanate is not an antibiotic at all — it is a decoy that occupies bacterial beta-lactamase enzymes so the amoxicillin survives long enough to work. Your human cells have no cell wall, which is why the drug is so safe for you and so lethal to bacteria. The cost is that it cannot tell your gut flora from the pathogen: a 7-day course wipes out a large share of your intestinal bacteria, and full recovery takes months.",
+    "hi": "एमॉक्सिसिलिन बैक्टीरिया की दीवार बनाने वाले एंज़ाइम को रोक देता है, जिससे बढ़ता हुआ बैक्टीरिया अपने ही अंदरूनी दबाव से फट जाता है। क्लैवुलेनेट ख़ुद एंटीबायोटिक नहीं है — वो बैक्टीरिया के बचाव वाले एंज़ाइम को उलझाए रखता है ताकि एमॉक्सिसिलिन काम कर सके। हमारी अपनी कोशिकाओं में ऐसी दीवार होती ही नहीं, इसीलिए ये दवा हमारे लिए सुरक्षित और बैक्टीरिया के लिए जानलेवा है। नुक़सान ये कि दवा दुश्मन और दोस्त में फ़र्क़ नहीं कर पाती — 7 दिन का कोर्स आँतों के अच्छे बैक्टीरिया को भी बड़े पैमाने पर मार देता है, और उन्हें वापस आने में महीनों लगते हैं।"
+  },
+  "indian_context": "India is among the world's largest consumers of antibiotics and a global epicentre of antimicrobial resistance — the NDM-1 resistance gene is named after New Delhi. Antibiotics are routinely sold across the counter here without a prescription despite Schedule H1 rules, and are handed out for viral fevers, colds and loose motions where they do nothing at all. ICMR's annual AMR surveillance reports show falling susceptibility of E. coli and Klebsiella to almost every oral option, so the drugs that will treat your grandchildren's infections are being used up on this year's viral sore throats. Stopping a course early because you feel better, a very common Indian habit, is exactly how resistant survivors get selected.",
+  "evidence": "strong",
+  "sources": [
+    "ICMR Annual Report: Antimicrobial Resistance Research and Surveillance Network. Indian Council of Medical Research",
+    "WHO Global Antimicrobial Resistance and Use Surveillance System (GLASS) Report. 2022",
+    "Palleja A et al. Recovery of gut microbiota of healthy adults following antibiotic exposure. Nat Microbiol. 2018",
+    "Murray CJL et al. Global burden of bacterial antimicrobial resistance in 2019. Lancet. 2022",
+    "National Treatment Guidelines for Antimicrobial Use in Infectious Diseases, NCDC India"
+  ],
+  "caution": "Antibiotics do nothing for viral illness — most fevers, colds, sore throats and loose motions in India are viral, and taking them anyway gives you all the harm and none of the benefit. Never buy antibiotics without a prescription, never use leftovers from a previous illness, and never stop early because you feel better. Tell your doctor about any penicillin allergy: true anaphylaxis is rare but real. Watch for severe watery diarrhoea during or after the course — Clostridioides difficile colitis can appear weeks later and is dangerous. Amoxicillin–clavulanate is the single commonest cause of drug-induced liver injury in the world; jaundice or dark urine after a course needs immediate medical review.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Bacterial cell walls start failing within hours",
+      "effects": [
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Amoxicillin binds penicillin-binding proteins and stops peptidoglycan cross-linking, so dividing bacteria lyse. Blood levels peak in 1–2 hours, and three-times-daily dosing tracks the drug's short half-life.",
+          "metric": { "label": "Half-life", "value": "~1–1.5 hours" }
+        },
+        {
+          "target": "large-intestine",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "The gut microbiome takes the first hit. Clavulanate in particular is poorly absorbed and reaches the colon in quantity, which is why the combination causes far more diarrhoea than plain amoxicillin."
+        },
+        {
+          "target": "stomach",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Nausea and stomach upset are common on day one; taking it with food reduces this without meaningfully reducing absorption."
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "If the infection is genuinely bacterial, fever and malaise start improving within 24–48 hours. If nothing changes after 72 hours, it was probably never bacterial."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Course finished: infection cleared, gut flora flattened",
+      "effects": [
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "For a true bacterial infection, seven days is enough to clear the organism and prevent complications like abscess, rheumatic fever or kidney involvement. This is the whole point, and it works."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Sequencing studies show a large fall in gut bacterial diversity by the end of a course, with beneficial genera like Bifidobacterium and butyrate producers hit hardest. Antibiotic-associated diarrhoea occurs in a substantial minority."
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Clavulanate can trigger an immune-mediated cholestatic hepatitis, typically 1–6 weeks after the course. It is rare but it is the leading single cause of drug-induced liver injury worldwide."
+        },
+        {
+          "target": "skin",
+          "kind": "strain",
+          "intensity": 0.25,
+          "note": "Rashes are common with aminopenicillins — often a delayed maculopapular rash rather than true allergy. A rash that comes with swelling, wheeze or blistering is a different matter and needs emergency care."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Microbiome rebuilding, but not the same as before",
+      "effects": [
+        {
+          "target": "large-intestine",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "Most gut species recover within about 1–2 months, but studies tracking healthy volunteers found several common species still missing at six months. The community that returns is similar, not identical."
+        },
+        {
+          "target": "immune-system",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Resistance genes selected during the course persist in the gut for months. You now carry a slightly more resistant personal bacterial population, which you also share with your household."
+        },
+        {
+          "target": "vagina",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "In women, loss of protective Lactobacillus commonly leads to candida overgrowth — the itching and discharge that so often follows a course of antibiotics."
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "The infection is gone and has not relapsed. It is worth remembering how good that outcome is: pre-antibiotic, a serious pneumonia or a deep dental infection routinely killed people."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Gut mostly recovered; resistance carriage still present",
+      "effects": [
+        {
+          "target": "large-intestine",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Diversity is close to baseline for most people by two months. Recovery is slower in older adults, in anyone who had several courses in a year, and in those on a low-fibre diet."
+        },
+        {
+          "target": "immune-system",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Resistant E. coli and Klebsiella carriage remains detectable in stool for months after a single course. In India, ambient community resistance means re-colonisation with resistant strains is easy."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "Clostridioides difficile infection typically appears within eight weeks of a course, presenting as profuse watery diarrhoea. Older people and hospital patients are at highest risk."
+        },
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "If no jaundice or transaminase rise has appeared by two months, the clavulanate liver risk window has passed."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Six months: mostly restored, some species never came back",
+      "effects": [
+        {
+          "target": "large-intestine",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "In the Palleja study, healthy adults regained most of their microbiome by six months but a handful of common commensal species remained undetectable. The functional consequence of that gap is not yet known."
+        },
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "For the individual, a correctly indicated single course is a clear net win. The harms discussed here are mostly the price of unnecessary courses, not necessary ones."
+        },
+        {
+          "target": "whole-body",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Epidemiological studies link repeated childhood and adult antibiotic courses to modestly higher rates of obesity, asthma and inflammatory bowel disease. The association is consistent; causality is still argued."
+        },
+        {
+          "target": "immune-system",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "The resistance cost is not individual — it is shared. Every unnecessary course in a community pushes local E. coli, Klebsiella and Salmonella further along the resistance curve for everyone."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "One year on: the personal effect fades, the collective one doesn't",
+      "effects": [
+        {
+          "target": "large-intestine",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Microbiome composition is essentially back to a stable personal baseline in most healthy adults a year after a single course, provided no further courses intervened."
+        },
+        {
+          "target": "immune-system",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "The Indian pattern is not one course a year — it is three or four, often self-prescribed. Repeated exposure is what selects for the ESBL-producing and carbapenem-resistant organisms that ICMR surveillance keeps reporting."
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "One properly indicated course a year is an excellent trade. The problem is never the necessary antibiotic — it is the four unnecessary ones taken for viral fevers alongside it."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Amoxicillin is cleared by the kidneys and needs dose reduction in kidney disease, but it causes no lasting renal damage in people with normal function."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years of repeat courses: the drug stops working when you need it",
+      "effects": [
+        {
+          "target": "immune-system",
+          "kind": "negative",
+          "intensity": 0.7,
+          "note": "The consequence of repeated unnecessary courses shows up here: a urinary or chest infection that once cleared with an oral tablet now needs an intravenous drug in hospital. AMR was associated with an estimated 1.27 million deaths globally in 2019.",
+          "metric": { "label": "Deaths attributable to AMR, 2019", "value": "~1.27 million globally" }
+        },
+        {
+          "target": "large-intestine",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Repeated courses over years leave lower baseline diversity, especially in older adults, and each course raises the risk of C. difficile more than the last."
+        },
+        {
+          "target": "whole-body",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Cumulative lifetime antibiotic exposure is associated in cohort studies with higher risk of colorectal cancer and metabolic disease. The signal is modest and confounded, but it is consistent across studies."
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.25,
+          "note": "Repeat exposure to amoxicillin–clavulanate raises the cumulative chance of hitting its idiosyncratic liver injury, which is more common in older adults and after repeated courses."
+        },
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Used correctly across five years — right drug, right indication, full course, no self-medication — antibiotics remain among the highest-value medicines ever made. Protecting them is the point."
+        }
+      ]
+    }
+  ]
+}

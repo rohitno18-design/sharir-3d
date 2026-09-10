@@ -1,0 +1,254 @@
+{
+  "id": "smoking-10-cigarettes-daily",
+  "name": { "en": "Smoking 10 cigarettes a day", "hi": "रोज़ 10 सिगरेट पीना" },
+  "category": "substance",
+  "icon": "🚬",
+  "dose": "10 cigarettes daily — roughly 10–12 mg of absorbed nicotine plus around 7,000 combustion chemicals, of which about 70 are known carcinogens. Half a pack a day, every day.",
+  "molecule": "nicotine",
+  "summary": {
+    "en": "Nicotine from the smoke reaches the brain in about 10–20 seconds and switches on nicotinic acetylcholine receptors, releasing dopamine in the reward circuit — that is the 'settled' feeling. The nicotine is what hooks you; the tar, carbon monoxide and oxidants are what kill you. At 10 a day the damage is not dramatic on any single day, it is the slow, silent stripping of lung airways, arterial lining and DNA repair capacity over years.",
+    "hi": "सिगरेट का निकोटीन 10–20 सेकंड में दिमाग़ तक पहुँचता है और डोपामिन छोड़ता है — इसी से वो 'सुकून' मिलता है। लत निकोटीन लगाता है, लेकिन मारता है टार, कार्बन मोनोऑक्साइड और धुएँ के ऑक्सीडेंट। रोज़ 10 सिगरेट पर एक दिन में कुछ ख़ास नहीं दिखता, पर साल-दर-साल फेफड़ों की नलियाँ, धमनियों की अंदरूनी परत और DNA की मरम्मत करने की ताक़त चुपचाप ख़त्म होती जाती है।"
+  },
+  "indian_context": "India has roughly 100 million adult smokers, and the Indian pattern is heavily bidi- and loose-cigarette-driven — single sticks sold at the paan shop make 10 a day feel casual rather than a 'pack habit'. Indians develop tobacco-related coronary disease about a decade earlier than Western populations, on top of an already high baseline of diabetes and central obesity. COTPA law requires pictorial warnings on 85% of the pack, and the national quitline (1800-11-2356) plus government tobacco cessation centres are free.",
+  "evidence": "strong",
+  "sources": [
+    "US Surgeon General. The Health Consequences of Smoking — 50 Years of Progress. 2014",
+    "WHO Report on the Global Tobacco Epidemic, 2023",
+    "Global Adult Tobacco Survey (GATS-2) India, Ministry of Health and Family Welfare, 2016–17",
+    "Doll R, Peto R et al. Mortality in relation to smoking: 50 years' observations on male British doctors. BMJ. 2004",
+    "Jha P et al. A nationally representative case-control study of smoking and death in India. N Engl J Med. 2008"
+  ],
+  "caution": "There is no safe number of cigarettes; even 1–4 a day roughly doubles cardiovascular risk. If you have chest pain, cough up blood, get breathless climbing stairs you used to manage, or have unexplained weight loss, see a doctor now. Quitting works at any age — stopping before 40 avoids almost all of the excess death risk. Nicotine replacement (patches, gum) and varenicline roughly double quit success versus willpower alone; they are safe compared with smoking. Never smoke during pregnancy.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Nicotine hits in seconds; blood already carries carbon monoxide",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Inhaled nicotine crosses into the brain in 10–20 seconds and binds α4β2 nicotinic receptors on dopamine neurons in the ventral tegmental area. The dopamine spike in the nucleus accumbens is what makes the very first puff of the day feel the best.",
+          "metric": { "label": "Nicotine to brain", "value": "10–20 seconds" }
+        },
+        {
+          "target": "lungs",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Hot smoke paralyses the cilia lining the airways within minutes, so the mucus escalator that normally sweeps out dust and bacteria stops moving. Tar begins depositing on the alveolar surface today."
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "strain",
+          "intensity": 0.45,
+          "note": "Carbon monoxide binds haemoglobin 200 times harder than oxygen, so part of your red cell capacity is out of service all day. Nicotine simultaneously constricts arteries and raises heart rate about 10–15 bpm per cigarette.",
+          "metric": { "label": "Blood carboxyhaemoglobin", "value": "4–8% (non-smoker <1%)" }
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "Each cigarette raises heart rate and blood pressure for 20–30 minutes through adrenaline release, so a 10-a-day habit keeps the heart mildly sympathetically driven through the waking hours."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Receptors multiply — the body now expects nicotine",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.65,
+          "note": "Nicotinic receptors are upregulated in number after repeated exposure. Going 3–4 hours without a cigarette now produces irritability and craving, because baseline dopamine signalling has become nicotine-dependent.",
+          "metric": { "label": "Nicotine half-life", "value": "~2 hours" }
+        },
+        {
+          "target": "airways",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Goblet cells increase mucus production while cilia stay suppressed, which is the start of the classic dry morning throat clearing."
+        },
+        {
+          "target": "mouth",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Smoke reduces salivary flow and coats the tongue papillae with tar, dulling taste and smell within days. Food starts tasting flatter than it did."
+        },
+        {
+          "target": "skin",
+          "kind": "strain",
+          "intensity": 0.2,
+          "note": "Nicotine-driven vasoconstriction reduces dermal blood flow, which is why smokers' skin looks a shade duller and cuts heal a little slower even this early."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Smoker's cough appears; stamina slips before the lungs look abnormal",
+      "effects": [
+        {
+          "target": "lungs",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Chronic irritation of the small airways causes inflammation and mucus buildup, giving the morning cough. Spirometry is usually still 'normal' at this stage — the damage is real but not yet measurable on a standard test."
+        },
+        {
+          "target": "immune-system",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Alveolar macrophage function is impaired and airway defences are weaker, so smokers pick up more colds, bronchitis and, in India, have a substantially higher risk of active tuberculosis."
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Resting heart rate in regular smokers typically sits about 7–10 bpm above their non-smoking baseline, an ongoing sympathetic load rather than an acute event.",
+          "metric": { "label": "Resting heart rate", "value": "+7–10 bpm" }
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Tar stains enamel and reduced gum blood flow masks bleeding, so gum disease progresses silently. Smokers lose teeth earlier than non-smokers at the same brushing habits."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Arterial lining inflamed; HDL falls, clotting rises",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Oxidants in smoke damage the endothelium and reduce nitric oxide availability, so arteries stiffen and dilate poorly. This endothelial dysfunction is the earliest measurable step toward atherosclerosis.",
+          "metric": { "label": "HDL cholesterol", "value": "typically −5 to −10%" }
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Smoking makes platelets stickier and raises fibrinogen, so the blood clots more readily. This is why heart attacks in smokers often occur on modest, not severe, plaques."
+        },
+        {
+          "target": "lungs",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Neutrophils recruited into the lung release elastase; the antiprotease shield (alpha-1 antitrypsin) is also oxidised by smoke. Elastic tissue starts being digested — the seed of emphysema."
+        },
+        {
+          "target": "skin",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "Smoke activates matrix metalloproteinases that break down dermal collagen faster than it is replaced, accelerating fine wrinkling around eyes and lips."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Lung function measurably declining; fitness clearly worse",
+      "effects": [
+        {
+          "target": "lungs",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Smokers lose FEV1 roughly two to three times faster than the natural age-related decline. Six months of daily smoking will not show on a chest X-ray, but the loss curve has already changed slope.",
+          "metric": { "label": "FEV1 decline rate", "value": "~2–3× normal ageing" }
+        },
+        {
+          "target": "whole-body",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Lower oxygen carrying capacity from carbon monoxide plus stiffer airways cuts exercise capacity; most people notice it on stairs or when playing with children."
+        },
+        {
+          "target": "testes",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Smoking lowers sperm count, motility and normal morphology, and increases sperm DNA fragmentation. In women it reduces ovarian reserve and brings menopause forward by about a year."
+        },
+        {
+          "target": "stomach",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "Nicotine relaxes the lower oesophageal sphincter and impairs mucosal defence, so reflux and peptic ulcers are more common and heal more slowly."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "One year: plaque building, DNA damage accumulating",
+      "effects": [
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "A year of daily smoking meaningfully accelerates coronary plaque formation. Even light smoking (1–5/day) carries roughly half the heart attack risk of 20/day — the risk curve is steep at the low end, not linear."
+        },
+        {
+          "target": "lungs",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Bronchial epithelium shows squamous metaplasia — the normal ciliated lining is being replaced by tougher, flatter cells with accumulating mutations in genes like TP53 and KRAS."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "The dependence is now well entrenched: most 10-a-day smokers light up within 30 minutes of waking. Stopping causes 2–4 weeks of irritability, poor concentration and disturbed sleep before the receptors normalise."
+        },
+        {
+          "target": "bones",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "Smoking suppresses osteoblast activity and lowers oestrogen, so bone mineral density drops faster and fractures heal more slowly."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years: COPD changes, real cancer risk, heart disease years earlier",
+      "effects": [
+        {
+          "target": "lungs",
+          "kind": "negative",
+          "intensity": 0.85,
+          "visual": { "opacity": 0.65 },
+          "note": "Alveolar walls have been destroyed in patches — emphysema. Lung tissue becomes less dense and more air-trapped, which is why the lung looks 'thinner' rather than bigger. Lung cancer risk for a 10-a-day smoker runs roughly 10–15 times a never-smoker's.",
+          "metric": { "label": "Lung cancer risk vs never-smoker", "value": "~10–15×" }
+        },
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.75,
+          "note": "Smoking roughly doubles to triples the risk of heart attack, and in Indians it brings that event forward to the 40s and early 50s. Half the cardiovascular risk resolves within a year of quitting."
+        },
+        {
+          "target": "carotid-arteries",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Carotid plaque and stiffness raise stroke risk two- to fourfold. Small vessel damage in the brain also contributes to earlier cognitive decline."
+        },
+        {
+          "target": "bladder",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Aromatic amines from smoke are concentrated in urine and sit against the bladder lining. Smoking causes about half of all bladder cancers — a link most smokers have never heard of."
+        },
+        {
+          "target": "kidneys",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Chronic vasoconstriction and endothelial damage accelerate the decline in filtration rate, and smoking multiplies kidney damage in anyone who also has diabetes or hypertension."
+        },
+        {
+          "target": "skin",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "The 'smoker's face' — deep perioral lines, greyish tone, loss of elasticity — is established by now and does not fully reverse after quitting."
+        }
+      ]
+    }
+  ]
+}

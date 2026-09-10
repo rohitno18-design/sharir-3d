@@ -1,0 +1,292 @@
+{
+  "id": "anabolic-steroid-cycle",
+  "name": { "en": "Anabolic steroid cycle: testosterone 500 mg/week × 12 weeks", "hi": "स्टेरॉयड साइकिल: टेस्टोस्टेरोन 500 मिलीग्राम/हफ़्ता, 12 हफ़्ते" },
+  "category": "drug",
+  "icon": "💉",
+  "dose": "Testosterone enanthate 250 mg intramuscular twice a week (500 mg/week) for 12 weeks, then stopped. This is a typical illicit 'first cycle' and is roughly 5–7 times the body's own weekly production. Described for education; it is illegal without prescription and not a medical dose.",
+  "molecule": "testosterone",
+  "summary": {
+    "en": "Testosterone enanthate is a slow-release ester with a half-life of about 4–5 days. At 500 mg/week, blood testosterone sits far above the natural range and drives muscle protein synthesis, red-cell production and water retention, while the excess aromatises to oestrogen. The brain senses the flood and shuts down its own LH/FSH signal within days, so the testes stop making testosterone and sperm and shrink. In Bhasin's landmark trial, 600 mg/week for 10 weeks added about 3 kg of lean mass without training and 6 kg with it. After the cycle, natural production takes 3–6 months to recover in most and over a year in some; blood pressure, cholesterol, red-cell count and heart-muscle thickening are the costs that accumulate with repeated cycles.",
+    "hi": "टेस्टोस्टेरोन एनैन्थेट धीरे रिलीज़ होने वाला रूप है (हाफ़-लाइफ़ 4–5 दिन)। 500 मिलीग्राम/हफ़्ते पर खून में टेस्टोस्टेरोन कुदरती सीमा से कई गुना ऊपर रहता है — मसल तेज़ी से बनती है, लाल कोशिकाएँ बढ़ती हैं, पानी रुकता है, और फ़ालतू हॉर्मोन एस्ट्रोजन में बदलता है। दिमाग़ इसे भाँपकर कुछ ही दिनों में अपना LH/FSH सिग्नल बंद कर देता है, जिससे अंडकोष टेस्टोस्टेरोन और शुक्राणु बनाना बंद कर सिकुड़ जाते हैं। 10–12 हफ़्ते में बिना ट्रेनिंग करीब 3 किलो, ट्रेनिंग के साथ करीब 6 किलो मसल जुड़ती है। साइकिल के बाद कुदरती उत्पादन लौटने में ज़्यादातर को 3–6 महीने, कुछ को एक साल से ज़्यादा लगता है; ब्लड प्रेशर, कोलेस्ट्रॉल, गाढ़ा खून और दिल की दीवार का मोटा होना बार-बार साइकिल करने की क़ीमत है।"
+  },
+  "indian_context": "Injectable testosterone is a Schedule H prescription drug in India, but gym trainers in most cities sell 'cycles' openly, often Pakistani, Thai or veterinary-grade vials of unknown purity, with shared or reused needles. The 'mass gainer' and 'transformation' culture in Indian gyms normalises a first cycle in the early 20s, before natural peak muscle is reached. South Asians already carry higher baseline cardiovascular risk and earlier heart attacks, so the lipid and blood-pressure damage lands on a worse starting point. Post-cycle drugs (clomiphene, tamoxifen, hCG) are bought from the same trainers without any blood tests, and the low-testosterone crash afterward is routinely 'treated' with another cycle.",
+  "evidence": "strong",
+  "sources": [
+    "Bhasin S et al. The effects of supraphysiologic doses of testosterone on muscle size and strength in normal men. N Engl J Med. 1996",
+    "Pope HG et al. Adverse health consequences of performance-enhancing drugs: an Endocrine Society scientific statement. Endocr Rev. 2014",
+    "Baggish AL et al. Cardiovascular toxicity of illicit anabolic-androgenic steroid use. Circulation. 2017",
+    "Rahnema CD et al. Anabolic steroid-induced hypogonadism: diagnosis and treatment. Fertil Steril. 2014",
+    "Liu PY et al. Rate, extent, and modifiers of spermatogenic recovery after hormonal male contraception: an integrated analysis. Lancet. 2006"
+  ],
+  "caution": "This is not medical use. Supraphysiological testosterone without prescription is illegal in India and dangerous: it shuts down fertility for months, thickens the blood (stroke and clot risk), raises blood pressure, drops HDL cholesterol, thickens the heart wall and can trigger mania or depression. Anyone who has done a cycle should get testosterone, LH/FSH, haematocrit, lipids, blood pressure and liver tests checked, and never share needles (hepatitis B/C and HIV transmission is documented in Indian gyms). If you are under 25, the hormone shutdown is hitting a system that has not finished maturing.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "First injection: levels climbing, nothing visible yet",
+      "effects": [
+        {
+          "target": "glutes",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "250 mg of oily ester sits in the gluteal muscle as a depot. Post-injection soreness and a warm lump are normal; a hot, red, spreading swelling over the next days means abscess, common with non-sterile Indian gym vials."
+        },
+        {
+          "target": "pituitary",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Within 24 hours the rising testosterone and its oestrogen metabolite begin suppressing GnRH pulses and LH/FSH release. The shutdown of the natural axis starts on day one, before any muscle is gained."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Blood testosterone is already above the natural range by evening. Mood lift, drive and libido rise are early and mostly psychological at this point; the anabolic effects take weeks."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Blood levels 3–5× normal; water and pump; testes going quiet",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.02 },
+          "note": "Androgen receptors in muscle are saturated. Protein synthesis rises and nitrogen retention turns strongly positive, but most of the first week's 1–2 kg is water and glycogen from sodium retention and oestrogen.",
+          "metric": { "label": "Body weight (mostly water)", "value": "+1–2 kg" }
+        },
+        {
+          "target": "testes",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "LH has fallen to near zero. The Leydig cells stop making testosterone and the Sertoli cells lose FSH support; sperm production begins winding down."
+        },
+        {
+          "target": "bone-marrow",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Testosterone stimulates erythropoietin and iron availability; red-cell production is already accelerating."
+        },
+        {
+          "target": "skin",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Sebaceous glands respond to DHT within days: oily skin, then acne on the back and shoulders for those predisposed."
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Sodium and water retention plus a rising red-cell mass push systolic blood pressure up 5–10 mmHg within the first weeks.",
+          "metric": { "label": "Systolic BP", "value": "+5–10 mmHg" }
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Real muscle now; testes shrinking; lipids and blood thickening",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.75,
+          "visual": { "scale": 1.05 },
+          "note": "Muscle fibre cross-section is growing and satellite cells are adding new nuclei; strength on compound lifts is up noticeably. Deltoids and traps, rich in androgen receptors, grow first and most.",
+          "metric": { "label": "Lean mass gained (with training)", "value": "~+2–3 kg so far" }
+        },
+        {
+          "target": "testes",
+          "kind": "negative",
+          "intensity": 0.6,
+          "visual": { "scale": 0.9 },
+          "note": "A month without LH: testicular volume is visibly down and intratesticular testosterone has collapsed, which is what sperm production needs. Sperm counts are falling toward zero over the coming weeks."
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "Injectable testosterone is much less liver-toxic than oral steroids, but HDL cholesterol has already dropped 10–20% via hepatic lipase, and LDL is drifting up.",
+          "metric": { "label": "HDL cholesterol", "value": "−10 to −20%" }
+        },
+        {
+          "target": "bone-marrow",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Haematocrit is rising toward or past 50%; thicker blood means higher clotting risk and higher blood pressure.",
+          "metric": { "label": "Haematocrit", "value": "+3–5 points" }
+        },
+        {
+          "target": "breasts",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Aromatisation of 500 mg/week yields oestradiol well above normal. Nipple sensitivity and early gland growth (gynecomastia) appear in a susceptible minority at this stage."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Mid-cycle peak: maximal size, maximal shutdown",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.85,
+          "visual": { "scale": 1.08 },
+          "note": "Two months in, the gains are at their steepest. Bhasin's data suggest ~4–6 kg of lean mass by this point with training. Tendons have not strengthened at the same rate, and tendon and pectoral tears cluster here.",
+          "metric": { "label": "Lean mass gained (with training)", "value": "~+4–6 kg" }
+        },
+        {
+          "target": "testes",
+          "kind": "negative",
+          "intensity": 0.7,
+          "visual": { "scale": 0.85 },
+          "note": "Testes are at their smallest, often 30–50% down in volume. Most men are now azoospermic or nearly so; the body is running entirely on the injected hormone."
+        },
+        {
+          "target": "heart-muscle",
+          "kind": "strain",
+          "intensity": 0.45,
+          "note": "The heart is pumping thicker blood at higher pressure with androgen receptors in its own wall being stimulated; early increases in left ventricular wall thickness are measurable on echo within one cycle."
+        },
+        {
+          "target": "hair",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "DHT, made from the excess testosterone, accelerates male-pattern hair loss in the genetically predisposed. The recession that shows up now would have taken years to appear otherwise."
+        },
+        {
+          "target": "amygdala",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Irritability, short temper and, in some, hypomanic mood are common at supraphysiological levels; sleep quality drops and sleep apnoea worsens."
+        },
+        {
+          "target": "prostate",
+          "kind": "strain",
+          "intensity": 0.25,
+          "note": "The prostate grows in response to DHT; in a young man this is usually silent, but urinary symptoms are reported in some, and PSA rises."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Three months post-cycle: crash, lost gains, slow hormonal recovery",
+      "effects": [
+        {
+          "target": "testes",
+          "kind": "negative",
+          "intensity": 0.6,
+          "visual": { "scale": 0.9 },
+          "note": "The injected ester cleared by about 3–4 weeks after the last shot, leaving a body with no testosterone of its own. LH typically restarts within 4–8 weeks and testosterone returns to the normal range in most men by 3–6 months; sperm counts lag and are still often low at this point.",
+          "metric": { "label": "Natural testosterone recovery", "value": "typically 3–6 months; >1 yr in some" }
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "negative",
+          "intensity": 0.5,
+          "visual": { "scale": 1.03 },
+          "note": "With testosterone low for weeks, muscle protein breakdown outpaces synthesis and water leaves; a third to a half of the cycle's gain is usually gone by now. What remains depends on training and how fast the axis recovered."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "The post-cycle window of low testosterone brings fatigue, low libido, erectile problems and often depression; this hypogonadal crash is the main driver of the next cycle, i.e. of dependence."
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "Blood pressure and haematocrit are normalising. HDL recovers over 2–3 months after the last injection. Any wall thickening from a single cycle is likely to regress, though this has not been proven for every user."
+        },
+        {
+          "target": "breasts",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "Gynecomastia that formed glandular tissue during the cycle does not fully regress once oestrogen falls; the residual lump is what surgeons see in ex-users."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "One year: most recover from a single cycle; some do not",
+      "effects": [
+        {
+          "target": "testes",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "visual": { "scale": 0.95 },
+          "note": "By a year after a single 12-week cycle, testosterone and sperm counts are back to baseline in the large majority. A minority, especially those with longer cycles, higher doses or pre-existing low levels, have persistent hypogonadism needing medical treatment.",
+          "metric": { "label": "Sperm count recovery", "value": "most within 6–12 months" }
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.35,
+          "visual": { "scale": 1.02 },
+          "note": "Studies suggest the extra myonuclei gained on steroids persist for years, which is why regaining size is easier afterward (the basis of 'muscle memory' and of the anti-doping argument for long bans). Actual size settles close to what training alone would have built."
+        },
+        {
+          "target": "heart-muscle",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "After a single cycle, echocardiographic changes mostly reverse. The concern is that the user who has recovered now sees the cycle as 'safe' and repeats it, which is where cumulative damage begins."
+        },
+        {
+          "target": "hair",
+          "kind": "negative",
+          "intensity": 0.3,
+          "visual": { "opacity": 0.9 },
+          "note": "Hair lost to DHT-driven follicle miniaturisation does not regrow when levels normalise; the cycle permanently moved the hairline forward in time for the predisposed."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Single cycle: little lasting harm. Repeated cycles: heart, vessels, fertility",
+      "effects": [
+        {
+          "target": "heart-muscle",
+          "kind": "negative",
+          "intensity": 0.7,
+          "visual": { "scale": 1.05 },
+          "note": "In long-term users (Baggish's cohort averaged ~7 years), left ventricular mass is higher, ejection fraction lower and diastolic function impaired compared with non-users, with partial recovery only in those who stopped. For a one-time user, this cardiac finding largely does not apply.",
+          "metric": { "label": "LV ejection fraction, chronic users", "value": "~−6 to −8 points vs non-users" }
+        },
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Coronary plaque volume tracks lifetime steroid exposure: years of low HDL, high LDL, high blood pressure and thick blood build atherosclerosis a decade or two early. Case series of heart attacks in bodybuilders in their 30s and 40s are the visible end of this.",
+          "metric": { "label": "Mortality in long-term users (cohort data)", "value": "~2–3× non-users" }
+        },
+        {
+          "target": "testes",
+          "kind": "negative",
+          "intensity": 0.55,
+          "visual": { "scale": 0.9 },
+          "note": "Repeated cycles over years leave 10–20% of men with hypogonadism that does not recover: permanently on prescription testosterone, often infertile without hCG/FSH treatment. A single cycle five years ago has almost always fully recovered."
+        },
+        {
+          "target": "kidneys",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Long-term high-dose users show focal segmental glomerulosclerosis and protein leak, driven by hypertension, high body mass and direct androgen effects. Not seen after a single cycle."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Chronic users show higher rates of depression, anxiety and dependence, and imaging studies report structural brain differences after many years of use. About 30% of long-term users meet criteria for steroid dependence."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Five years after a single cycle, muscle is what your training built since; five years into repeated cycling, muscle is far beyond natural limits, and every other organ on this list is paying for it."
+        }
+      ]
+    }
+  ]
+}

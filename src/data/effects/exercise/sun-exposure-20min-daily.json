@@ -1,0 +1,264 @@
+{
+  "id": "sun-exposure-20min-daily",
+  "name": { "en": "20 minutes of midday sun daily", "hi": "रोज़ 20 मिनट दोपहर की धूप" },
+  "category": "habit",
+  "icon": "☀️",
+  "dose": "About 20 minutes of direct sun on face, arms and forearms (roughly 20–25% of skin area) between 11 AM and 2 PM, no sunscreen on those areas, 4–7 days a week. Indian skin types IV–V need roughly 2–3 times longer than fair skin for the same vitamin D — realistically 30–45 minutes.",
+  "molecule": "vitamin-d3",
+  "summary": {
+    "en": "UVB photons hit 7-dehydrocholesterol in the skin and convert it to pre-vitamin D3, which the liver and kidney then activate into calcitriol — the hormone that controls calcium absorption, bone mineralisation and a long list of immune functions. Separately, morning and midday light through the eyes anchors the circadian clock, which improves sleep and mood. Blood vitamin D takes 6–8 weeks to rise; bone and immune benefits take months. The trade-off is real and dose-dependent: the same UV that makes vitamin D also causes photoageing and skin cancer risk at higher doses.",
+    "hi": "धूप की UVB किरणें त्वचा में मौजूद एक कोलेस्ट्रॉल जैसे पदार्थ को विटामिन D3 में बदल देती हैं, जिसे लिवर और किडनी मिलकर एक हार्मोन बनाते हैं — यही कैल्शियम सोखने, हड्डियाँ मज़बूत रखने और इम्यूनिटी संभालने का काम करता है। साथ ही, दिन की रोशनी आँखों के ज़रिए शरीर की घड़ी सेट करती है, जिससे नींद और मूड सुधरते हैं। खून में विटामिन D को बढ़ने में 6–8 हफ्ते लगते हैं। पर ध्यान रहे — ज़्यादा धूप वही किरणें हैं जो त्वचा को बूढ़ा करती हैं, इसलिए मात्रा सही रखनी है।"
+  },
+  "indian_context": "India is one of the world's great vitamin D paradoxes: despite abundant sunlight, surveys report deficiency in roughly 50–90% of the population, especially urban office workers, women in covering clothing, and older adults. The reasons are structural — melanin in Fitzpatrick IV–V skin cuts vitamin D synthesis several-fold, indoor work removes midday exposure, air pollution over North Indian cities absorbs a meaningful share of UVB, and dietary sources are almost absent from a vegetarian diet (no oily fish, little fortified milk). Cultural preference for fair skin also pushes people away from sun exposure entirely. Above roughly 30° N (Delhi, Punjab, Kashmir), winter sun is too weak from November to February for adequate synthesis at any duration.",
+  "evidence": "strong",
+  "sources": [
+    "Holick MF. Vitamin D deficiency. N Engl J Med. 2007",
+    "Ritu G, Gupta A. Vitamin D deficiency in India: prevalence, causalities and interventions. Nutrients. 2014",
+    "ICMR-NIN Dietary Guidelines for Indians. 2024",
+    "Blume C, Garbazza C, Spitschan M. Effects of light on human circadian rhythms, sleep and mood. Somnologie. 2019"
+  ],
+  "caution": "Do not confuse 'enough sun for vitamin D' with tanning or burning — sunburn gives no extra vitamin D and only adds skin cancer risk. If you have a history of skin cancer, lupus, or take photosensitising drugs (some antibiotics, diuretics, isotretinoin), talk to a doctor before deliberate sun exposure and use supplements instead. If your vitamin D is already very low (below 20 ng/mL), sun alone is usually too slow — a supplement corrects it faster, then sun maintains it. Protect the face with sunscreen if photoageing matters to you and expose arms and legs instead; that costs little vitamin D.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Vitamin D synthesis starts in minutes; the body clock resets",
+      "effects": [
+        {
+          "target": "skin",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "UVB converts 7-dehydrocholesterol in the epidermis to pre-vitamin D3 within minutes. Synthesis is self-limiting — beyond about 20–30 minutes for fair skin the reaction plateaus and further exposure only adds damage.",
+          "metric": { "label": "Skin vitamin D3 synthesis", "value": "Plateaus after ~20–30 min" }
+        },
+        {
+          "target": "eyes",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Outdoor light is 10,000–100,000 lux versus 300–500 lux indoors. Specialised retinal cells sense this and signal the hypothalamic clock — the single strongest cue for setting circadian timing.",
+          "metric": { "label": "Outdoor vs indoor light", "value": "~10,000+ lux vs ~300–500 lux" }
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Bright daytime light advances the clock and sharpens the evening melatonin rise. Most people notice easier sleep onset the same night, before any vitamin D has moved."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Daylight exposure acutely raises serotonergic activity and alertness. This is the mechanism behind light therapy for seasonal and non-seasonal depression."
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "UVA releases nitric oxide stores from the skin into the circulation, producing a small, short-lived drop in blood pressure independent of vitamin D."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Sleep timing improves; blood vitamin D is only starting to move",
+      "effects": [
+        {
+          "target": "pineal",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "A week of consistent bright daylight consolidates the melatonin rhythm: earlier onset at night, faster clearance in the morning. Morning grogginess drops noticeably."
+        },
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "The liver hydroxylates skin-made vitamin D3 into 25(OH)D, the storage form measured on blood tests. It has a half-life of 2–3 weeks, which is why levels rise slowly, not in days.",
+          "metric": { "label": "25(OH)D half-life", "value": "~2–3 weeks" }
+        },
+        {
+          "target": "skin",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "Melanin production increases as a protective response — a light tan in Fitzpatrick IV–V skin. This also slows further vitamin D synthesis, so the same 20 minutes yields less over time."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Mood improvement from daily outdoor light is usually reported within the first week, well ahead of any vitamin D change. Do not credit the vitamin for what the light did."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Blood vitamin D climbing; calcium absorption improves",
+      "effects": [
+        {
+          "target": "kidneys",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "The kidney converts 25(OH)D into active calcitriol. With more substrate available, calcitriol production is no longer supply-limited and parathyroid hormone starts falling."
+        },
+        {
+          "target": "small-intestine",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Calcitriol drives calcium-transport proteins in the gut. Calcium absorption efficiency roughly doubles when moving from deficient to sufficient vitamin D — from about 10–15% to 30–40% of intake.",
+          "metric": { "label": "Dietary calcium absorption", "value": "~15% → ~30–40%" }
+        },
+        {
+          "target": "thyroid",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The parathyroid glands (sitting behind the thyroid) stop over-secreting PTH once vitamin D is adequate. Falling PTH is the earliest laboratory sign that repletion is working."
+        },
+        {
+          "target": "skin",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Cumulative UVA exposure begins collagen breakdown via matrix metalloproteinases. Photoageing is a dose effect: 20 sensible minutes is a small cost, two hours of midday sun is not."
+        },
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Vitamin D receptors sit on T cells, B cells and macrophages. Correcting deficiency modestly reduces acute respiratory infection risk — the effect is real but small, mainly in the deficient."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Vitamin D reaches a plateau; bone chemistry normalises",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Serum 25(OH)D typically plateaus by 6–8 weeks of consistent exposure. Whether a deficient Indian adult reaches sufficiency on sun alone depends on skin tone, latitude, pollution and how much skin is exposed.",
+          "metric": { "label": "25(OH)D target", "value": "≥20–30 ng/mL" }
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "With calcium absorption restored, bone mineralisation proceeds normally. In severe deficiency this is the point where bone pain and the dull ache of osteomalacia begin to fade."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Vitamin D deficiency causes proximal muscle weakness — trouble climbing stairs or getting up from the floor. Correcting it improves strength and reduces fall risk in older adults."
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Two months of stable light exposure means a firmly entrained circadian rhythm: consistent sleep timing, more stable appetite and better daytime alertness."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Bone density improves in the previously deficient; skin ageing accrues",
+      "effects": [
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "In adults who started deficient, six months of sufficiency plus adequate dietary calcium measurably improves bone mineral density. In people who were already sufficient, essentially nothing changes.",
+          "metric": { "label": "BMD gain (if previously deficient)", "value": "~+1–2%" }
+        },
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Fewer respiratory infections in previously deficient people, per the Cochrane-level evidence on vitamin D and acute respiratory infection. The benefit disappears in the already-sufficient."
+        },
+        {
+          "target": "skin",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Six months of daily midday UV is a real cumulative dose. Fine lines, uneven pigmentation and — in Indian skin especially — melasma and tanning on the face are the usual first signs."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Regular outdoor light exposure is one of the most reliable non-drug supports for mood and sleep quality. The behavioural benefit is easier to demonstrate than most vitamin D claims."
+        },
+        {
+          "target": "eyes",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "In children and teenagers, 2+ hours of daily outdoor time is one of the few interventions shown to slow the progression of myopia — increasingly relevant given rising rates in urban India."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Stable vitamin D status through most of the year, except winter",
+      "effects": [
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "A year of sufficiency plus calcium and resistance exercise is genuine fracture protection into later life. Vitamin D alone, without calcium or loading, does much less than the supplement industry claims."
+        },
+        {
+          "target": "skin",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Cumulative photoageing is now visible: coarser texture, pigment spots, loss of elasticity. Protecting the face while exposing arms and legs is the sensible compromise."
+        },
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "North of about 30° N — Delhi, Chandigarh, Lucknow — the winter sun is too low-angle for UVB to make vitamin D at all. Levels dip every winter regardless of how long you sit outside.",
+          "metric": { "label": "Winter synthesis above 30° N", "value": "Near zero, Nov–Feb" }
+        },
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Vitamin D sufficiency is associated in observational data with lower autoimmune disease incidence; the interventional evidence is weaker and should not be oversold."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Strong bones, better rhythm — and a real, dose-dependent skin cost",
+      "effects": [
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Five years of maintained vitamin D and calcium sufficiency substantially reduces osteoporosis and hip fracture risk — a major issue for Indian women, who often reach menopause already deficient."
+        },
+        {
+          "target": "skin",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Cumulative UV dose is the primary driver of both photoageing and skin cancer. Skin cancer is far less common in Indian skin types than in fair skin, but the ageing effect applies to everyone."
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Years of a well-anchored circadian rhythm support metabolic health, mood stability and sleep. This is arguably the most underrated benefit of daily outdoor time."
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Observational studies link higher vitamin D to lower cardiovascular and cancer mortality, but large randomised supplement trials (VITAL, D-Health) largely failed to confirm cause. Correct deficiency; do not expect miracles."
+        },
+        {
+          "target": "eyes",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Years of unprotected midday sun raise cataract and pterygium risk. Sunglasses protect the eyes without reducing vitamin D synthesis in the skin at all."
+        }
+      ]
+    }
+  ]
+}

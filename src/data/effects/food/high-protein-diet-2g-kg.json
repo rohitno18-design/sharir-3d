@@ -1,0 +1,252 @@
+{
+  "id": "high-protein-diet-2g-kg",
+  "name": { "en": "2 g of protein per kg body weight, daily", "hi": "रोज़ हर किलो वज़न पर 2 ग्राम प्रोटीन" },
+  "category": "food",
+  "icon": "🍗",
+  "dose": "2 g of protein per kg of body weight per day — about 140 g for a 70 kg adult — spread across 3–4 meals of roughly 30–40 g each, alongside resistance training 3–4 times a week. In Indian terms that means eggs, chicken or fish, paneer, curd, soya chunks, sprouted dal and usually a whey scoop, because dal alone cannot get you there.",
+  "molecule": "leucine",
+  "summary": {
+    "en": "Every meal above roughly 2.5–3 g of leucine flips on mTOR in muscle and raises protein synthesis for about three to five hours; four such meals a day plus a training stimulus is the whole recipe for building muscle. But the dose-response curve flattens around 1.6 g/kg — the extra 0.4 g/kg you are eating buys very little additional muscle, mostly insurance and satiety. The kidney scare is the most persistent myth here: in people with healthy kidneys, high protein raises filtration rate and urea without any evidence of damage. If your kidneys are already diseased, the picture is completely different.",
+    "hi": "हर उस खाने के बाद जिसमें करीब 2.5–3 ग्राम ल्यूसिन हो, मांसपेशी में mTOR चालू हो जाता है और 3–5 घंटे तक प्रोटीन बनना बढ़ जाता है; दिन में चार ऐसे मील और साथ में वेट ट्रेनिंग — मसल बनाने का पूरा नुस्खा यही है। लेकिन फ़ायदा करीब 1.6 ग्राम प्रति किलो पर ही सपाट हो जाता है — उसके ऊपर वाला हिस्सा ज़्यादा मसल नहीं देता, बस पेट भरा रखता है। किडनी वाला डर सबसे पुराना मिथक है: स्वस्थ किडनी में ज़्यादा प्रोटीन से फ़िल्ट्रेशन और यूरिया बढ़ते हैं, नुक़सान का कोई सबूत नहीं। हाँ, अगर किडनी पहले से खराब है तो बात बिलकुल अलग है।"
+  },
+  "indian_context": "ICMR-NIN's RDA is 0.83 g/kg/day, and most Indians do not even reach that, so 2 g/kg is more than double the national norm — the gap is enormous and it is why so many Indians train for years without visible change. The practical problem is vegetarian: a katori of cooked dal carries only about 4–6 g of protein, so hitting 140 g means paneer, curd, soya chunks, sprouts and whey rather than more dal. Plant protein also has lower leucine and lower digestibility, so a vegetarian typically needs 10–20% more total grams for the same muscle signal. One warning specific to India: independent testing of protein powders sold here has repeatedly found label mismatches and adulteration, so buy from a brand with third-party testing rather than the cheapest tub in the shop.",
+  "evidence": "strong",
+  "sources": [
+    "Jäger R et al. International Society of Sports Nutrition Position Stand: Protein and Exercise. Journal of the International Society of Sports Nutrition, 2017",
+    "Morton RW et al. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength. British Journal of Sports Medicine, 2018",
+    "Devries MC et al. Changes in Kidney Function Do Not Differ between Healthy Adults Consuming Higher- Compared with Lower- or Normal-Protein Diets. Journal of Nutrition, 2018",
+    "ICMR-NIN. Nutrient Requirements for Indians: RDA and EAR, 2020 (protein RDA 0.83 g/kg/day)",
+    "KDIGO CKD Work Group. Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease, 2024"
+  ],
+  "caution": "Do not do this if you have chronic kidney disease — KDIGO advises restricting protein to around 0.8 g/kg in CKD, and high intake accelerates decline in an already damaged kidney. Get a creatinine and urine albumin test before starting if you are diabetic, hypertensive or over 50. If you form kidney stones or have gout, keep the protein weighted toward dairy and plants rather than red and organ meat, and drink more water — urine volume matters more than the protein itself. This dose only makes sense with resistance training; without it you are just eating expensive calories.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Four muscle-building windows opened; the liver clears the nitrogen",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Each meal crossing the leucine threshold raises muscle protein synthesis for about 3–5 hours. Four spaced meals keep you in a net building state for most of the waking day rather than one big spike at dinner.",
+          "metric": { "label": "Leucine needed per meal", "value": "~2.5–3 g, which is about 30–40 g of good-quality protein" }
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "Amino groups stripped from surplus amino acids become ammonia, which the liver converts to urea. This is routine work for a healthy liver, just more of it than usual."
+        },
+        {
+          "target": "kidneys",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "Glomerular filtration rate rises to clear the extra urea — hyperfiltration. It is an adaptive response, not injury, and it reverses when protein intake drops."
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Protein is the most satiating macronutrient. Appetite over the rest of the day falls, which is why high-protein diets produce weight loss even when nobody counts calories."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Positive nitrogen balance; thirst and urine volume both up",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Net protein balance is positive across the day for the first time in most people's lives. Actual new muscle is still minimal at one week — the training adaptations are almost entirely neural right now.",
+          "metric": { "label": "Protein intake vs the Indian RDA", "value": "2 g/kg is roughly 2.4× the ICMR-NIN recommendation of 0.83 g/kg" }
+        },
+        {
+          "target": "bladder",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "More urea means more obligatory water loss in urine. Thirst rises genuinely — this is not a supplement-industry talking point, it is osmotic arithmetic."
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Protein has a thermic effect of 20–30%, versus 5–10% for carbohydrate and under 3% for fat. Roughly a quarter of the calories in that chicken are burned just processing it."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Constipation is the commonest early complaint, because protein foods displace fibre. Fix it with vegetables and dal rather than by cutting protein."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Strength climbing fast; the first real lean mass appears",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "In a beginner, month one strength gains are largely the nervous system learning to recruit motor units. Measurable hypertrophy is beginning underneath but is still small.",
+          "visual": { "scale": 1.02 },
+          "metric": { "label": "Lean mass gain in month 1", "value": "typically 0.5–1 kg in a novice with training and adequate protein" }
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Higher protein with training preserves lean mass in a calorie deficit, so a larger share of any weight lost is actually fat. This is the single best reason to eat more protein while dieting."
+        },
+        {
+          "target": "kidneys",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "Creatinine looks slightly higher on a blood test — partly from more muscle, partly from meat intake, and not evidence of kidney damage. Doctors unfamiliar with this misread it constantly."
+        },
+        {
+          "target": "tendons",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Tendon and ligament remodel far more slowly than muscle does. Strength rising faster than connective tissue can adapt is exactly how beginners injure shoulders and elbows in month two."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Visible hypertrophy; the extra 0.4 g/kg is doing almost nothing",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Muscle fibres are adding contractile protein and the change is visible in the mirror. Meta-analysis puts the benefit plateau at roughly 1.6 g/kg/day — beyond that, more protein adds very little muscle.",
+          "visual": { "scale": 1.03 },
+          "metric": { "label": "Where the benefit plateaus", "value": "~1.6 g/kg/day (upper confidence limit ~2.2 g/kg)" }
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "The old claim that high protein weakens bone was wrong. Protein raises urinary calcium slightly but also improves calcium absorption and IGF-1; combined with loading from lifting, net bone effect is positive."
+        },
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Urea cycle enzymes are upregulated to match the load. A healthy liver adapts to this within weeks and shows no strain on function tests."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "A protein-dominant, fibre-poor diet shifts colonic fermentation from carbohydrate to protein, producing more ammonia, phenols and hydrogen sulfide and less butyrate. Keep the vegetables in."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "2–4 kg of real muscle in a beginner; body composition clearly changed",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.65,
+          "note": "Six months of consistent training with protein at or above the plateau is where novices see their largest gains of a lifetime. The gains slow sharply after this — that is normal, not a plateau you can eat past.",
+          "visual": { "scale": 1.05 },
+          "metric": { "label": "Lean mass gain in 6 months", "value": "typically 2–4 kg in a training novice; far less in an experienced lifter" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "More muscle means more GLUT4 transporters and a bigger glucose sink. Insulin sensitivity improves measurably — one of the most useful things an Indian body can do given the local diabetes risk."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Six months in, meta-analysis of healthy adults shows no difference in GFR between high- and normal-protein diets. The hyperfiltration is adaptation, not damage."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Waist usually falls even when weight does not, because muscle is being added while fat is lost. In South Asians, replacing visceral fat with muscle is the highest-value trade available."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Gains slow to a crawl; metabolic health keeps improving",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Year two brings a fraction of year one. Protein remains necessary to hold what you built, but it is no longer the limiting factor — training quality and sleep are.",
+          "visual": { "scale": 1.06 },
+          "metric": { "label": "Lean mass gain in year 2", "value": "typically under 1–2 kg even with everything correct" }
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "A year of loading plus adequate protein raises bone mineral density measurably. This is the most underrated benefit for Indians, who reach old age with poor bone reserves and high fracture risk."
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Higher lean mass, lower visceral fat and better insulin sensitivity all lower cardiovascular risk. The protein is the enabler; the training does the actual work."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Still no evidence of harm in a healthy kidney after a year. The caveat has not changed: this reassurance does not extend to anyone with existing kidney disease."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "The muscle you keep into old age is the point",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Muscle mass begins declining from around 30 at roughly 1% a year and accelerates after 60. Five years of this habit means entering that decline from a much higher starting point — which is what actually determines independence at 75.",
+          "visual": { "scale": 1.06 },
+          "metric": { "label": "Age-related muscle loss without training", "value": "roughly 1% per year after 30, faster after 60" }
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Five years of high protein in healthy kidneys still shows no evidence of accelerated decline. But nobody has run a 20-year randomised trial, so 'no evidence of harm' is not the same as 'proven safe forever'."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Five years of higher muscle mass and lower visceral fat is one of the strongest available defences against type 2 diabetes in a South Asian body."
+        },
+        {
+          "target": "joints",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Strong muscle around a joint takes load off the cartilage. Well-programmed lifting protects knees and backs over decades; badly programmed lifting is how you damage them."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "The one real long-term caveat is the source, not the amount. Five years of heavy processed and red meat intake carries a colorectal cancer signal; the same protein from dairy, eggs, fish, poultry and plants does not."
+        }
+      ]
+    }
+  ]
+}

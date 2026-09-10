@@ -1,0 +1,237 @@
+{
+  "id": "meditation-20min-daily",
+  "name": { "en": "Meditation 20 minutes daily", "hi": "रोज़ 20 मिनट ध्यान" },
+  "category": "habit",
+  "icon": "🧘",
+  "dose": "20 minutes a day of seated focused-attention or mindfulness practice — attention resting on the breath or a mantra, noticing when the mind wanders, returning without judgement. Same time each day, eyes closed, sitting upright. No app, chanting or posture requirement beyond staying awake.",
+  "summary": {
+    "en": "Meditation is attention training, and the body follows the attention. Within a single session, slow steady breathing and the absence of threat appraisal shift autonomic balance toward the vagus nerve: heart rate falls, heart rate variability rises, and cortisol drops. Repeated daily, the more interesting change is in the brain itself — the amygdala becomes less reactive and the prefrontal cortex better at regulating it, which is why 8-week programmes show real, if moderate, reductions in anxiety, depressive symptoms and pain. It is a skill with a training curve, not a switch.",
+    "hi": "ध्यान असल में ध्यान लगाने की ट्रेनिंग है, और शरीर दिमाग़ के पीछे-पीछे चलता है। एक ही बैठक में धीमी साँस और ख़तरे का एहसास न होने से नर्वस सिस्टम आराम वाले मोड में आ जाता है — धड़कन धीमी, हार्ट रेट वेरिएबिलिटी ऊपर, कॉर्टिसोल नीचे। रोज़ करने पर असली बदलाव दिमाग़ में होता है: डर वाला हिस्सा (एमिग्डाला) कम भड़कता है और सोचने वाला अगला हिस्सा उस पर बेहतर काबू पाता है। इसीलिए 8 हफ़्ते के कोर्स में घबराहट, उदासी और दर्द में सच में फ़र्क़ दिखता है। ये एक हुनर है जो अभ्यास से आता है, कोई स्विच नहीं।"
+  },
+  "indian_context": "India is where most of these techniques came from, which is both an advantage and a trap: the practice is culturally normal, free and available in every city through Vipassana centres, Isha, Brahma Kumaris and Art of Living, but it is often treated as a religious ritual to be performed rather than a skill to be trained, so people expect a result on day one and quit in week two. For an Indian urban professional with a two-hour commute, a joint family and a phone that never stops, 20 minutes of deliberate non-doing is the hardest thing in the day to schedule — anchoring it to an existing habit like waking or the post-bath slot works far better than 'finding time'. One thing worth being blunt about: meditation supports treatment for depression, anxiety and high blood pressure, it does not replace medication, and stopping prescribed tablets after a good retreat is a genuinely dangerous pattern.",
+  "evidence": "moderate",
+  "sources": [
+    "Goyal M et al. Meditation programs for psychological stress and well-being: a systematic review and meta-analysis. JAMA Internal Medicine. 2014",
+    "Tang YY, Hölzel BK, Posner MI. The neuroscience of mindfulness meditation. Nature Reviews Neuroscience. 2015",
+    "Hölzel BK et al. Mindfulness practice leads to increases in regional brain gray matter density. Psychiatry Research: Neuroimaging. 2011",
+    "Pascoe MC et al. Mindfulness mediates the physiological markers of stress: a systematic review and meta-analysis. Journal of Psychiatric Research. 2017",
+    "Brook RD et al. Beyond medications and diet: alternative approaches to lowering blood pressure. AHA Scientific Statement. Hypertension. 2013"
+  ],
+  "caution": "Meditation is safe for most people but not inert. A minority experience increased anxiety, intrusive memories, depersonalisation or low mood, particularly on long silent retreats, with intensive practice, or where there is a history of trauma, psychosis or bipolar disorder — if practice consistently makes you worse rather than uncomfortable-then-better, stop and speak to a mental health professional rather than pushing through. It is an addition to treatment for depression, anxiety or hypertension, never a replacement for prescribed medication.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Calm within minutes; the mind wanders constantly and that is normal",
+      "effects": [
+        {
+          "target": "vagus-nerve",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Sitting still with slow unforced breathing raises vagal outflow to the heart within a few minutes. Heart rate drops, heart rate variability rises, and skin conductance falls — the measurable signature of a parasympathetic shift.",
+          "metric": { "label": "Heart rate during practice", "value": "typically −5 to −10 bpm" }
+        },
+        {
+          "target": "adrenal-glands",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Without threat appraisal to sustain it, sympathetic drive falls and circulating cortisol declines over the session. The effect is real but short — a single sit changes the next few hours, not the next week."
+        },
+        {
+          "target": "prefrontal-cortex",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "On day one this is effortful. The mind wanders every 10–20 seconds and noticing that is the entire exercise; each return is one repetition of the attention 'lift'. Beginners often find the first sessions more restless than restful."
+        },
+        {
+          "target": "cerebral-cortex",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "EEG during practice shows more alpha and theta activity and reduced beta — a relaxed but awake state distinct from both drowsiness and normal task focus."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Sitting still gets easier; sleep onset is usually the first real gain",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "The first consistent benefit most beginners report is falling asleep faster, because the practice trains you to disengage from rumination rather than to stop thinking. Trials of mindfulness for insomnia show effects comparable to standard sleep-hygiene programmes."
+        },
+        {
+          "target": "autonomic-nerves",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Baseline heart rate variability starts to rise slightly between sessions, not just during them — the earliest sign that the shift is carrying over into the rest of the day."
+        },
+        {
+          "target": "prefrontal-cortex",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The gap between a thought arriving and being swept away by it widens a little. This 'meta-awareness' is the mechanism behind almost every downstream benefit, and it is the first thing to actually improve."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Some people feel more, not less, agitated in week one, as the practice removes the usual distraction from background stress. This commonly settles by week three and is not a sign of doing it wrong."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Reactivity drops before mood does; the pause gets longer",
+      "effects": [
+        {
+          "target": "amygdala",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Imaging studies after 4–8 weeks of daily practice show reduced amygdala response to emotional stimuli. In daily life this appears as a slightly longer fuse and a faster return to baseline after an argument or bad news."
+        },
+        {
+          "target": "prefrontal-cortex",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Connectivity between prefrontal regulatory areas and the amygdala strengthens. The effect is less 'feeling nothing' and more 'feeling it without being run by it'."
+        },
+        {
+          "target": "adrenal-glands",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Meta-analyses of mindfulness training show modest reductions in cortisol reactivity to a laboratory stressor after roughly eight weeks. The stress response is smaller and shuts off faster.",
+          "metric": { "label": "Cortisol response to acute stress", "value": "modest reduction (small–moderate effect)" }
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "The 8-week mark is where the trial evidence sits: moderate improvements in anxiety and depressive symptoms, with effect sizes around 0.3 — comparable to what an antidepressant achieves in mild-to-moderate cases, though the two are not interchangeable.",
+          "metric": { "label": "Anxiety and depressive symptoms (meta-analysis)", "value": "effect size ~0.3" }
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Default-mode network quietens; less time lost to rumination",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Activity in the default-mode network — the mind-wandering, self-referential circuit that runs when you are doing nothing — is reduced both during and after practice. Less of the day is spent replaying old conversations."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Meditation programmes produce small but real blood-pressure reductions, on the order of 3–5 mmHg systolic, largest in people who were hypertensive to begin with. Useful as an add-on, not a substitute for treatment.",
+          "metric": { "label": "Systolic blood pressure", "value": "~−3 to −5 mmHg" }
+        },
+        {
+          "target": "hippocampus",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Structural MRI after an 8-week programme has shown increased grey matter density in the hippocampus and posterior cingulate. These are small changes in small studies — real, but not the dramatic 'brain rewiring' the headlines claim."
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Resting heart rate and heart rate variability both sit in a healthier range through the day, reflecting a lower baseline sympathetic load rather than anything happening to the heart muscle itself."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "From state to trait: stress recovery is visibly faster",
+      "effects": [
+        {
+          "target": "prefrontal-cortex",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "At six months the skill generalises: attention control, working memory and the ability to stay with an unpleasant task without escaping to the phone all improve. Long-term practitioners show these differences off the cushion, not just on it."
+        },
+        {
+          "target": "amygdala",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Threat reactivity is lower at rest, not only during practice. This is the transition from a state you enter for 20 minutes to a trait you carry, and it is the point at which most people stop having to force themselves to sit."
+        },
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Some trials report reduced inflammatory markers such as CRP and IL-6 with sustained practice. The evidence here is genuinely mixed and the effect, if present, is small — treat it as a bonus, not a reason to practise."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "For recurrent depression specifically, mindfulness-based cognitive therapy has trial evidence for reducing relapse, roughly comparable to maintenance antidepressants in people with multiple past episodes."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "A year in: steadier baseline, better sleep, clearer decisions",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Gains plateau rather than compound at this dose. Twenty minutes a day maintains a steadier emotional baseline and better sleep; going further usually requires longer sessions or retreats rather than more months of the same."
+        },
+        {
+          "target": "autonomic-nerves",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Resting vagal tone stays higher than a year ago. Practically, the stress response starts later, peaks lower and switches off faster — the physiological definition of resilience."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "The blood-pressure benefit holds only as long as the practice does. It is a small, maintenance-dependent effect — worth having alongside salt reduction, exercise and medication, not instead of them."
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "A consistent daily sit at a fixed time also acts as a circadian anchor, which is part of why sleep timing tends to stabilise in long-term practitioners."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Long-term practitioners: attention preserved, stress load lower",
+      "effects": [
+        {
+          "target": "cerebral-cortex",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Cross-sectional studies of long-term meditators suggest better-preserved cortical thickness in prefrontal and insular regions with age. These are observational comparisons, so self-selection explains part of the difference — read them as suggestive, not proven."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Five years of lower chronic stress load is the most plausible long-run benefit: cumulative cortisol exposure damages the hippocampus and cardiovascular system, and this is one of the few free interventions that reliably lowers it."
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Cardiovascular outcome data for meditation is thin — supportive but far weaker than for exercise, diet or blood-pressure medication. Position it honestly as a stress and mental-health tool with cardiovascular side benefits."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Nothing accumulates as harm and there is no tolerance. Stopping simply returns you toward your untrained baseline over weeks to months, exactly as detraining does with exercise."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,199 @@
+{
+  "id": "whey-protein-30g-daily",
+  "name": { "en": "One 30 g whey scoop every day", "hi": "रोज़ एक स्कूप (30 ग्राम) व्हे प्रोटीन" },
+  "category": "supplement",
+  "icon": "🥛",
+  "dose": "One 30 g scoop of whey concentrate or isolate (about 22–25 g protein, ~2.5–3 g leucine) in water or milk, once daily, usually after training or as a meal top-up.",
+  "molecule": "leucine",
+  "summary": {
+    "en": "Whey is the fast-digesting protein fraction of milk. Its leucine content (around 2.5–3 g per scoop) switches on mTORC1, the enzyme signal that tells muscle to build new protein, and muscle protein synthesis rises for 3–4 hours after each scoop. On its own a scoop is just food; combined with resistance training it adds a modest amount of extra lean mass over months.",
+    "hi": "व्हे दूध का तेज़ पचने वाला प्रोटीन है। एक स्कूप में करीब 2.5–3 ग्राम ल्यूसीन होता है, जो मांसपेशियों को नया प्रोटीन बनाने का सिग्नल (mTORC1) चालू करता है, और हर स्कूप के बाद 3–4 घंटे तक मसल बनना तेज़ रहता है। सिर्फ़ स्कूप से कुछ नहीं होता — जिम में वज़न उठाने के साथ लेने पर ही महीनों में थोड़ी अतिरिक्त मसल बनती है।"
+  },
+  "indian_context": "Most Indian diets get protein from dal, roti and rice, which are low in leucine and average well under 1 g protein per kg body weight; a whey scoop is often the only high-leucine feed in the day for a vegetarian who lifts. Lactase non-persistence is common in Indian adults (especially South and East India), so concentrate can cause bloating; isolate or hydrolysate has almost no lactose. FSSAI has flagged adulteration and label mismatch in domestic whey brands, so buy from tested brands. The gym-trainer rule that you must drink it within a 30-minute window is a myth; total daily protein matters far more than timing.",
+  "evidence": "strong",
+  "sources": [
+    "Morton RW et al. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength in healthy adults. Br J Sports Med. 2018",
+    "Jäger R et al. International Society of Sports Nutrition position stand: protein and exercise. J Int Soc Sports Nutr. 2017",
+    "Devries MC et al. Changes in kidney function do not differ between healthy adults consuming higher- compared with lower- or normal-protein diets: a systematic review and meta-analysis. J Nutr. 2018",
+    "ICMR-NIN. Nutrient Requirements for Indians (RDA and EAR). 2020"
+  ],
+  "caution": "Whey is safe for healthy adults; it does not harm normal kidneys. If you already have chronic kidney disease, total protein needs a doctor's limit. Milk-protein allergy (rare in adults) is a reason to avoid it. Check the label for added sugar, and for 'proprietary blends' that pad the scoop with cheaper protein.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Amino acids peak in blood within an hour; muscle-building signal on",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Leucine in blood peaks 45–90 minutes after the scoop and switches on mTORC1 in muscle. Muscle protein synthesis roughly doubles for 3–4 hours, then returns to baseline; if you trained today, the response is larger and lasts longer.",
+          "metric": { "label": "Muscle protein synthesis (3–4 h)", "value": "~+50–100%" }
+        },
+        {
+          "target": "small-intestine",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Whey empties from the stomach fast and is digested to amino acids in the small intestine within 1–2 hours; that speed is why it is called a 'fast' protein."
+        },
+        {
+          "target": "stomach",
+          "kind": "strain",
+          "intensity": 0.2,
+          "note": "Concentrate carries 1–3 g lactose per scoop; in a lactose-intolerant person that is enough for gas or loose stools a few hours later."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Daily protein intake up; body adjusts to the new load",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Seven daily pulses of leucine keep net protein balance positive on training days. No visible size change yet; muscle adds protein at grams per week, not kilograms."
+        },
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "The liver upregulates urea-cycle enzymes to handle the extra nitrogen. Blood urea reads slightly higher on a test; this is a marker of intake, not injury."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Kidneys filter and excrete the extra urea; filtration rate rises a little (normal adaptation) and urine volume may increase. Drink to thirst."
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "Protein is the most satiating macronutrient; a scoop in the evening often trims late-night snacking."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Consistent training + protein: first measurable lean gain",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.01 },
+          "note": "With 3–4 resistance sessions a week, a month of adequate protein yields roughly 0.2–0.5 kg extra lean mass compared with training under-fed. Without training the scoop is simply 120 kcal of food.",
+          "metric": { "label": "Lean mass (with training)", "value": "+0.2–0.5 kg" }
+        },
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.15,
+          "note": "Whey is rich in cysteine, the limiting amino acid for glutathione; in people who were under-eating protein, this modestly supports antioxidant defence."
+        },
+        {
+          "target": "skin",
+          "kind": "strain",
+          "intensity": 0.15,
+          "note": "Some acne-prone people see more breakouts on whey, likely via insulin/IGF-1 signalling from milk proteins. It is real but not universal; isolate does not fix it."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Strength up; the scoop is doing its job as a top-up",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.55,
+          "visual": { "scale": 1.02 },
+          "note": "Two months of hitting ~1.6 g protein/kg/day (roughly the ceiling for extra gains in meta-analyses) produces measurable strength and size improvements beyond training alone.",
+          "metric": { "label": "Protein target for gains", "value": "~1.6 g/kg/day" }
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "Higher protein does not leach calcium; it raises calcium absorption and IGF-1, which is mildly favourable for bone when calcium intake is adequate."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "In a calorie deficit, whey helps keep muscle while fat is lost; in a surplus, the extra calories still count and can add fat."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Visible change if training continued; none if it did not",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.55,
+          "visual": { "scale": 1.03 },
+          "note": "Meta-analysis across 6-month-scale trials: protein supplementation adds about 0.3 kg fat-free mass on top of what training alone gives. Small but real, and it is the training that carries most of the result.",
+          "metric": { "label": "Extra fat-free mass vs training alone", "value": "~+0.3 kg" }
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Six months at 1.6–2 g/kg/day: pooled trials show no fall in filtration rate in healthy adults."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Habit locked in; benefit stays proportional to training",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.03 },
+          "note": "The benefit is not cumulative in itself; it keeps each training year slightly more productive. Skipping training for a month and keeping the scoop does not preserve muscle."
+        },
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "No liver injury has been linked to whey itself. Cases in the literature involve multi-ingredient 'mass gainers' with added herbs or undeclared steroids, not plain whey."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "A protein-heavy, fibre-light diet shifts gut bacteria towards protein fermenters (more sulfurous gas). Adding fibre fixes this; the whey is not the problem by itself."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years: a food, not a drug; kidneys fine if healthy",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Adequate protein across years of training is a large part of why long-term lifters hold more muscle into their 40s and 50s; the scoop is a convenient way to hit the number, not a magic ingredient."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Long-term cohort data do not show kidney decline from high protein in people with normal kidneys. In existing CKD, high protein does accelerate decline, which is why the caution applies only there."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "Higher-protein diets over years are associated with slightly higher bone density and lower hip-fracture risk, especially when combined with loading exercise."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,253 @@
+{
+  "id": "chai-4-cups-daily",
+  "name": { "en": "4 cups of sweet milk chai every day", "hi": "रोज़ 4 कप मीठी दूध वाली चाय" },
+  "category": "drink",
+  "icon": "🫖",
+  "dose": "Four 150 ml cups of Indian-style boiled milk chai a day: roughly 30–50 mg caffeine, 1.5–2 tsp sugar and 40–60 ml milk per cup. That totals about 120–200 mg caffeine and 25–35 g added sugar. Bed tea, mid-morning tapri chai, 4 pm office chai and one after dinner is the classic pattern.",
+  "molecule": "caffeine",
+  "summary": {
+    "en": "Chai is three things at once: a mild stimulant, a sugar delivery system, and — the part almost nobody knows — a powerful blocker of iron absorption. The caffeine load is modest and safe for most adults. The real damage in India comes from the 8 teaspoons of sugar a day and from drinking chai with or just after meals, where tea tannins can cut the iron you absorb from dal, roti and sabzi by more than half.",
+    "hi": "चाय एक साथ तीन चीज़ें है: हल्का उत्तेजक, चीनी पहुँचाने का ज़रिया, और — जो कोई नहीं जानता — आयरन सोखने में सबसे बड़ी रुकावट। कैफ़ीन की मात्रा ज़्यादातर लोगों के लिए ठीक है। असली नुकसान भारत में दो चीज़ों से है: दिन भर की 8 चम्मच चीनी, और खाने के साथ या तुरंत बाद चाय पीना — चाय के टैनिन दाल, रोटी और सब्ज़ी से मिलने वाले आयरन का आधे से ज़्यादा हिस्सा रोक देते हैं।"
+  },
+  "indian_context": "This is the most quietly consequential habit in the country. Nearly 6 in 10 Indian women of reproductive age are anaemic (NFHS-5), most of them on plant-based non-heme iron, and the standard habit of chai right after lunch is a direct attack on that iron. ICMR-NIN specifically advises keeping tea and coffee away from meals for this reason. Add 8 teaspoons of sugar a day in a population that already develops diabetes at a lower BMI, plus 'bed tea' on an empty stomach driving acidity, and you have a habit that looks harmless and is not.",
+  "evidence": "moderate",
+  "sources": [
+    "Hurrell RF, Reddy M, Cook JD. Inhibition of non-haem iron absorption in man by polyphenolic-containing beverages. Br J Nutr 1999",
+    "ICMR-NIN Dietary Guidelines for Indians 2024 (advice on tea/coffee timing and iron absorption)",
+    "EFSA Panel on Dietetic Products. Scientific Opinion on the safety of caffeine. EFSA Journal 2015",
+    "National Family Health Survey (NFHS-5), India 2019–21 — anaemia prevalence",
+    "WHO Guideline: Sugars intake for adults and children. World Health Organization, 2015"
+  ],
+  "caution": "If you are anaemic, pregnant, menstruating heavily, or vegetarian, the timing matters more than the quantity — leave at least an hour between chai and any iron-containing meal or iron tablet. Chai on an empty stomach worsens acidity and reflux in people prone to it. Over 400 mg caffeine a day (roughly 8–10 strong cups) is where palpitations, tremor and insomnia start; pregnancy limit is about 200 mg.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Alert within 30 minutes; iron from lunch quietly blocked",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Caffeine blocks adenosine receptors, so the accumulating 'sleep pressure' signal is masked. Alertness, reaction time and mood lift within 30–45 minutes and last 4–6 hours per cup.",
+          "metric": { "label": "Caffeine per day", "value": "~120–200 mg (well under the 400 mg adult limit)" }
+        },
+        {
+          "target": "small-intestine",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Tea polyphenols bind non-heme iron in the gut and make it unabsorbable. A cup of tea with a meal has been shown to cut non-heme iron absorption by roughly 60–70% — the single biggest modifiable factor in Indian dietary anaemia."
+        },
+        {
+          "target": "stomach",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Caffeine and the hot liquid stimulate gastric acid secretion. On an empty stomach at 6 am, this is why 'bed tea' gives some people burning and nausea."
+        },
+        {
+          "target": "pancreas",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Four sweet cups mean four small insulin surges spread across the day — the same repeated-exposure pattern that matters more than one large sugar hit."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Caffeine has a mild diuretic effect at first exposure, but tolerance develops in days. Chai still counts towards daily fluid intake — the 'tea dehydrates you' line is largely a myth at these doses."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Sleep onset drifts later; tolerance to the lift begins",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "Adenosine receptors upregulate within days, so the same cup gives less lift and skipping it now produces a withdrawal headache. The 4 pm cup is genuinely restoring you to normal rather than boosting you above it.",
+          "metric": { "label": "Caffeine half-life", "value": "~4–6 hours — a 6 pm cup is still half-active at 11 pm" }
+        },
+        {
+          "target": "pineal",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Evening chai delays melatonin onset and pushes sleep latency out. Even when people fall asleep fine, deep-sleep quality measurably drops with late caffeine."
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Tannins stain enamel brown-yellow, and the sugar in each cup gives oral bacteria four separate acid-producing windows a day."
+        },
+        {
+          "target": "small-intestine",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "A week of chai-with-meals means a week of substantially reduced iron uptake. Nothing feels different yet — the body draws on stored ferritin."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Iron stores start drawing down; sugar load adds up to ~1 kg of sugar",
+      "effects": [
+        {
+          "target": "bone-marrow",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "With absorption chronically suppressed and menstrual or dietary losses continuing, the marrow draws on ferritin reserves to keep making red cells. Haemoglobin still reads normal at this stage — ferritin is what falls first.",
+          "metric": { "label": "Added sugar in a month", "value": "~800–1,000 g from chai alone" }
+        },
+        {
+          "target": "stomach",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Persistent acid stimulation plus an empty-stomach first cup drives the 'gas and acidity' complaint that sends millions of Indians to antacids."
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.2,
+          "note": "Around 30 g of added sugar daily keeps a low but steady de novo lipogenesis load on the liver — small on its own, meaningful when stacked with biscuits and mithai."
+        },
+        {
+          "target": "heart",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Acute blood pressure rises of 3–8 mmHg after a cup largely disappear once tolerance develops. Habitual moderate caffeine is not linked to hypertension in cohort data."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Ferritin low in the vulnerable; caffeine now a dependency, not a boost",
+      "effects": [
+        {
+          "target": "bone-marrow",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "In menstruating women, adolescents and vegetarians, serum ferritin often drops below 30 ng/mL — iron deficiency without anaemia. Symptoms are fatigue, hair fall and breathlessness on stairs, usually blamed on 'weakness' or work stress.",
+          "metric": { "label": "Serum ferritin", "value": "commonly <30 ng/mL in at-risk groups" }
+        },
+        {
+          "target": "brain",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "Full tolerance. The morning cup now mainly relieves overnight withdrawal — headache, irritability and poor focus if it is missed."
+        },
+        {
+          "target": "hair",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Iron deficiency is one of the commonest reversible causes of diffuse hair fall in Indian women, and it often shows up before the haemoglobin does."
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Visible tannin staining, and early demineralisation at the gum line from four daily sugar exposures."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Iron-deficiency anaemia becomes real for the at-risk group",
+      "effects": [
+        {
+          "target": "bone-marrow",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Once ferritin is exhausted, haemoglobin falls and red cells are produced small and pale (microcytic hypochromic). This is the classic Indian picture — and it is often treated with iron tablets that are then taken with chai, which blocks them too.",
+          "metric": { "label": "Haemoglobin", "value": "may fall below 12 g/dL (women) / 13 g/dL (men)" }
+        },
+        {
+          "target": "whole-body",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Lower oxygen-carrying capacity means breathlessness, poor exercise tolerance and daytime tiredness — usually treated with more chai, which deepens the loop."
+        },
+        {
+          "target": "pancreas",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "About 5.5 kg of added sugar in six months. In a South Asian with central obesity that contributes measurably to insulin resistance."
+        },
+        {
+          "target": "brain",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Moderate habitual caffeine appears neutral-to-mildly-protective for cognition in cohort studies. The chai is not the problem here — the sugar and the timing are."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Anaemia, sugar load and staining — all reversible, all ignored",
+      "effects": [
+        {
+          "target": "bone-marrow",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Established iron deficiency in the vulnerable groups. It corrects fast once chai is moved away from meals and iron intake improves — ferritin responds within 2–3 months.",
+          "metric": { "label": "Correction time after fixing timing", "value": "ferritin recovers over ~8–12 weeks" }
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "About 11 kg of sugar a year, roughly 44,000 kcal. If uncompensated, that alone is a few kilograms of fat, mostly central."
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Cavities and permanent staining. Sugar frequency — four separate exposures — matters more for caries than the total gram count."
+        },
+        {
+          "target": "esophagus",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "In people prone to reflux, a year of very hot, caffeinated, acid-stimulating drinks maintains chronic lower-oesophageal irritation. Drinking chai scalding hot is independently linked to oesophageal irritation."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "The caffeine was never the problem — the sugar and the timing were",
+      "effects": [
+        {
+          "target": "bone-marrow",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Years of suppressed iron absorption in a plant-based diet is a major reason India's anaemia numbers barely move despite supplementation programmes. Tablets given with, or near, chai are largely wasted.",
+          "metric": { "label": "Iron absorbed from a veg meal with chai", "value": "roughly one-third of what it would be without" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Roughly 55 kg of added sugar over five years from chai alone. A meaningful contributor to the insulin-resistance trajectory in a susceptible South Asian body."
+        },
+        {
+          "target": "brain",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Long-term moderate caffeine at these doses shows no cognitive harm and possibly a small protective association with Parkinson's disease in observational data. The stimulant part of the habit is the safest part."
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Cumulative restorations and entrenched staining. Switching to unsweetened or jaggery-free chai stops new damage but does not undo old."
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "Worth saying plainly: chai without sugar, taken between meals rather than with them, is a genuinely harmless — arguably mildly beneficial — daily habit. Two changes fix almost everything on this list."
+        }
+      ]
+    }
+  ]
+}

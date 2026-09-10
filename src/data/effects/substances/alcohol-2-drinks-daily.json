@@ -1,0 +1,255 @@
+{
+  "id": "alcohol-2-drinks-daily",
+  "name": { "en": "Two drinks every day", "hi": "रोज़ दो पैग" },
+  "category": "substance",
+  "icon": "🥃",
+  "dose": "2 standard drinks daily — about 60 ml of 40% whisky, or 2 × 330 ml beer, or 2 × 150 ml wine. Roughly 20–28 g of ethanol every evening, seven days a week.",
+  "molecule": "ethanol",
+  "summary": {
+    "en": "Ethanol is a small molecule that dissolves straight through cell membranes and enhances GABA while blocking glutamate — that is the relaxation. The liver clears roughly one standard drink per hour via alcohol dehydrogenase, and while it does that it stops burning fat and starts storing it. Two a day is below the level that causes visible drunkenness but well above the level at which fat accumulates in the liver, sleep quality falls, blood pressure rises, and cancer risk climbs.",
+    "hi": "अल्कोहल एक छोटा अणु है जो सीधे कोशिका की झिल्ली से गुज़र जाता है, GABA को बढ़ाकर और ग्लूटामेट को दबाकर वो 'रिलैक्स' वाला असर देता है। लिवर एक घंटे में लगभग एक पैग ही साफ़ कर पाता है, और उस दौरान वो चर्बी जलाना बंद करके जमा करने लगता है। रोज़ दो पैग से नशा नहीं दिखता, लेकिन लिवर में चर्बी जमना, नींद की क्वालिटी गिरना, बीपी बढ़ना और कैंसर का ख़तरा बढ़ना — ये सब इसी स्तर पर शुरू हो जाता है।"
+  },
+  "indian_context": "Indians carry a high rate of ALDH2 and ADH variants that change how fast acetaldehyde clears, and Indian drinkers develop alcoholic liver disease at lower lifetime intake and younger ages than Western populations — the average Indian patient with alcoholic cirrhosis presents in the 40s. Non-alcoholic fatty liver is already present in roughly a quarter to a third of urban Indian adults, so two drinks a day lands on a liver that is often already fatty. The 'daily peg is good for the heart' idea persists here, but the 2018 Lancet Global Burden of Disease analysis found the safest level of consumption for overall health is zero.",
+  "evidence": "strong",
+  "sources": [
+    "GBD 2016 Alcohol Collaborators. Alcohol use and burden for 195 countries and territories, 1990–2016. Lancet. 2018",
+    "WHO. No level of alcohol consumption is safe for our health. 2023",
+    "IARC Monographs Vol. 100E: Personal Habits and Indoor Combustions — Alcohol consumption. 2012",
+    "EASL Clinical Practice Guidelines: Management of alcohol-related liver disease. J Hepatol. 2018",
+    "Wood AM et al. Risk thresholds for alcohol consumption: combined analysis of 83 prospective studies. Lancet. 2018"
+  ],
+  "caution": "If you have hepatitis B or C, existing fatty liver, pancreatitis, uncontrolled hypertension, or take paracetamol regularly, daily alcohol is meaningfully more dangerous for you. Never combine with sedatives, opioids, or metronidazole. Alcohol raises breast cancer risk in women at doses this low. If you cannot go a week without a drink, or need one to sleep, that is dependence, not a habit — and stopping abruptly after years of heavy daily drinking can cause seizures, so withdrawal from high intake needs medical supervision.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Relaxation in 20 minutes, ruined deep sleep by 3 a.m.",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Ethanol enhances GABA-A and blocks NMDA glutamate receptors, which is the anxiolytic, disinhibited feeling. It also blunts prefrontal control, which is why judgement goes before coordination does.",
+          "metric": { "label": "Peak blood alcohol", "value": "~0.03–0.05% after 2 drinks" }
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.45,
+          "note": "Alcohol dehydrogenase converts ethanol to acetaldehyde — a directly toxic, carcinogenic aldehyde — and then to acetate. While this runs, the liver's NADH ratio soars and fat oxidation stops. Clearance is roughly one drink per hour."
+        },
+        {
+          "target": "kidneys",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Ethanol suppresses vasopressin from the pituitary, so you make dilute urine and lose more fluid than you drank. That, plus acetaldehyde, is most of the hangover."
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Alcohol shortens sleep latency but suppresses REM in the first half of the night and causes rebound awakenings in the second. You fall asleep faster and sleep worse."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Liver fat begins accumulating; sleep debt builds",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Steatosis — fat droplets in hepatocytes — begins within days of regular drinking because ethanol metabolism blocks fatty acid oxidation and promotes fat synthesis. It is fully reversible at this stage."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Chronically disrupted REM and deep sleep show up as daytime fatigue and lower morning motivation, which most daily drinkers blame on work rather than on the peg."
+        },
+        {
+          "target": "stomach",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Ethanol directly irritates the gastric mucosa and increases acid secretion; nightly drinking is a common hidden cause of morning acidity and reflux."
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "Two drinks add roughly 250–350 kcal a day that the body burns preferentially and stores nothing else during — plus alcohol lowers inhibition around late-night food.",
+          "metric": { "label": "Extra energy", "value": "~250–350 kcal/day" }
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Fatty liver measurable; blood pressure creeping up",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "A month of daily drinking produces detectable steatosis on ultrasound in a substantial share of people, especially those with an Indian metabolic profile. GGT is often the first blood marker to rise, before ALT and AST."
+        },
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Daily alcohol raises blood pressure in a dose-dependent way — roughly 2–4 mmHg systolic for two drinks a day. It is one of the most common reversible causes of 'unexplained' hypertension.",
+          "metric": { "label": "Systolic BP", "value": "+2–4 mmHg" }
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Alcohol calories preferentially deposit as visceral fat around the abdomen — the classic drinker's belly on otherwise thin limbs, and the pattern Indians are already prone to."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Tolerance is developing: GABA receptors downregulate and NMDA receptors upregulate, so the same two drinks now feel like less, and the underlying anxiety on non-drinking evenings feels like more."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Triglycerides and uric acid up; drink no longer optional",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Steatosis is established. Some people also show mild transaminase elevation with an AST:ALT ratio above 2, the classic alcohol signature that distinguishes it from ordinary fatty liver."
+        },
+        {
+          "target": "pancreas",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Alcohol makes pancreatic secretions more protein-rich and prone to plugging ducts. Daily drinking is the leading cause of chronic pancreatitis in Indian men."
+        },
+        {
+          "target": "whole-body",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Serum triglycerides and uric acid both rise with regular alcohol; gout attacks and abnormal lipid panels often trace back to a nightly two pegs nobody thought to mention to the doctor."
+        },
+        {
+          "target": "hippocampus",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Chronic sleep fragmentation impairs memory consolidation. This is not brain damage yet, but it is a real, daily cognitive tax."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Liver visibly enlarged and fatty on ultrasound",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.7,
+          "visual": { "scale": 1.07 },
+          "note": "Fat accumulation physically enlarges the liver — hepatomegaly with a bright, echogenic appearance on ultrasound. Roughly 90% of people who drink daily at this level develop fatty liver, though most never progress further.",
+          "metric": { "label": "Fatty liver in daily drinkers", "value": "~90%" }
+        },
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Sustained blood pressure elevation and higher atrial fibrillation risk. Even 'moderate' daily drinking is now firmly linked to AF in large cohort studies."
+        },
+        {
+          "target": "breasts",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "In women, each daily drink raises breast cancer risk by roughly 7–10%, mediated by acetaldehyde and by higher circulating oestrogen. There is no safe threshold for this particular risk.",
+          "metric": { "label": "Breast cancer risk per drink/day", "value": "+7–10%" }
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Imaging studies show reduced grey matter volume even at moderate intake, with the dose–response curve starting well below what most people consider heavy drinking."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "A year in: fibrosis begins in a minority, everyone pays metabolically",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.75,
+          "visual": { "scale": 1.08 },
+          "note": "In a subset — perhaps 20–30% of sustained daily drinkers — steatosis progresses to steatohepatitis with stellate cell activation and early fibrosis. That transition is silent; no symptom announces it."
+        },
+        {
+          "target": "esophagus",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Acetaldehyde is a Group 1 carcinogen. Daily alcohol raises oesophageal, oral, throat, liver and colorectal cancer risk, and the effect multiplies dramatically if you also smoke or chew tobacco."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Physical dependence is now likely: skipping a night brings restlessness, sweating and poor sleep. Most daily drinkers do not identify this as withdrawal."
+        },
+        {
+          "target": "heart",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "The old 'red wine protects the heart' finding largely disappeared once studies separated lifelong abstainers from people who quit because they were sick. Mendelian randomisation studies show no cardiac benefit at any dose."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years: fibrosis, and for some, cirrhosis",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.9,
+          "visual": { "scale": 0.9, "opacity": 0.7 },
+          "note": "In those who progress, repeated injury and scarring shrink and harden the liver — cirrhosis. A cirrhotic liver is smaller, nodular and stiff, not enlarged. Roughly 10–20% of long-term heavy daily drinkers reach this; Indian drinkers reach it sooner and at lower total intake.",
+          "metric": { "label": "Cirrhosis in long-term daily drinkers", "value": "~10–20%" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Chronic calcific pancreatitis with permanent loss of enzyme production and, eventually, diabetes. Once it starts, the pain and malabsorption persist even after quitting."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Cortical and cerebellar volume loss with impaired executive function and balance. Thiamine deficiency from poor intake and absorption adds a separate, preventable risk of Wernicke's encephalopathy."
+        },
+        {
+          "target": "peripheral-nerves",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Alcoholic polyneuropathy — burning, tingling and numbness starting in the feet — from direct ethanol toxicity plus B1, B6 and B12 deficiency."
+        },
+        {
+          "target": "heart",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Alcoholic cardiomyopathy: the heart muscle dilates and pumps weakly after years of heavy intake. It partially recovers if drinking stops early enough."
+        },
+        {
+          "target": "testes",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Chronic alcohol suppresses testosterone production and impairs sperm quality, and in cirrhosis the liver's failure to clear oestrogen produces gynaecomastia and testicular atrophy."
+        }
+      ]
+    }
+  ]
+}

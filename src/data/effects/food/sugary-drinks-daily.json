@@ -1,0 +1,256 @@
+{
+  "id": "sugary-drinks-daily",
+  "name": { "en": "One 500 ml cola or energy drink every day", "hi": "रोज़ एक 500 ml कोल्ड ड्रिंक या एनर्जी ड्रिंक" },
+  "category": "drink",
+  "icon": "🥤",
+  "dose": "One 500 ml bottle a day of a regular sugar-sweetened cola, lemon-lime drink, packaged 'juice' drink or energy drink — roughly 50–58 g sugar and 200–240 kcal. Energy drinks add about 150–160 mg caffeine and taurine on top.",
+  "molecule": "sucrose",
+  "summary": {
+    "en": "A bottle of cola delivers a day's entire WHO sugar limit in about four minutes, in liquid form with no fibre, protein or fat to slow it down. Liquid sugar is barely compensated for — you do not eat less later — so it lands as a near-pure surplus. Half of it is fructose, which the liver converts to fat and uric acid; the phosphoric and citric acid in the drink dissolves enamel directly. An energy drink adds a caffeine and blood-pressure load on top of the same sugar.",
+    "hi": "एक बोतल कोल्ड ड्रिंक चार मिनट में पूरे दिन की चीनी की सीमा दे देती है — वो भी तरल रूप में, जिसमें फाइबर, प्रोटीन या फैट कुछ नहीं जो उसे धीमा करे। तरल चीनी से पेट नहीं भरता, इसलिए आप बाद में कम नहीं खाते — यह सीधा फ़ालतू कैलोरी है। इसका आधा हिस्सा फ्रुक्टोज़ है जिसे लिवर चर्बी और यूरिक एसिड में बदलता है, और ड्रिंक का एसिड दाँतों की परत को सीधे घोलता है। एनर्जी ड्रिंक में ऊपर से कैफ़ीन और ब्लड प्रेशर का बोझ भी है।"
+  },
+  "indian_context": "The 500 ml PET bottle with a thali, the Sting/Monster habit among delivery riders and gym-goers, and the belief that 'cold drink se khana hazam hota hai' make this one of the fastest-growing calorie sources in urban and now small-town India. Packaged mango drinks and 'real fruit' juices are often no better — many carry 12–15 g sugar per 100 ml. Because South Asians store fat viscerally and develop diabetes at a lower BMI, one bottle a day has a bigger metabolic effect in an Indian body than the same bottle in a European one.",
+  "evidence": "strong",
+  "sources": [
+    "Malik VS et al. Sugar-sweetened beverages and risk of metabolic syndrome and type 2 diabetes: a meta-analysis. Diabetes Care 2010",
+    "Imamura F et al. Consumption of sugar sweetened beverages, artificially sweetened beverages, and fruit juice and incidence of type 2 diabetes: systematic review, meta-analysis, and estimation of population attributable fraction. BMJ 2015",
+    "Maersk M et al. Sucrose-sweetened beverages increase fat storage in the liver, muscle, and visceral fat depot: a 6-mo randomized intervention study. Am J Clin Nutr 2012",
+    "Choi HK, Curhan G. Soft drinks, fructose consumption, and the risk of gout in men: prospective cohort study. BMJ 2008",
+    "WHO Guideline: Sugars intake for adults and children. World Health Organization, 2015"
+  ],
+  "caution": "Energy drinks should not be mixed with alcohol, taken before high-intensity exercise in the heat, or used by anyone under 18, pregnant, or with a heart rhythm problem — case reports of arrhythmia and hypertensive episodes are real. If you already have gout, fatty liver, prediabetes or diabetes, a daily sugary drink is the single easiest thing to remove.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "A sugar spike in minutes, acid on enamel, uric acid up",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Liquid sucrose empties from the stomach fast and needs no digestion, so blood glucose climbs within 15–30 minutes and insulin has to surge harder than for the same sugar eaten in solid food.",
+          "metric": { "label": "Glucose rise after 500 ml cola", "value": "typically +40–70 mg/dL in 30–45 min" }
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Cola sits at pH 2.4–2.8 from phosphoric and citric acid. That is acidic enough to erode enamel chemically, independent of bacteria — so even 'diet' versions erode teeth. Sipping slowly over an hour is worse than drinking it in one go."
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "About 25–29 g of fructose hits the liver in one bolus. Rapid fructose metabolism consumes ATP and generates uric acid as a by-product, which is why serum urate rises within an hour of a sugary drink."
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Liquid calories produce very little satiety signalling. Feeding studies show people do not meaningfully eat less at the next meal — the 210 kcal is added, not swapped."
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Only for energy drinks: 150–160 mg caffeine raises heart rate and systolic blood pressure by a few mmHg for several hours, and can trigger palpitations in sensitive people."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Roughly 1,500 surplus calories banked with no hunger signal",
+      "effects": [
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Seven bottles is about 1,400–1,600 kcal that the appetite system never accounted for. In South Asians the surplus is preferentially routed to visceral and liver fat rather than under the skin.",
+          "metric": { "label": "Weekly surplus energy", "value": "~1,400–1,600 kcal" }
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Daily fructose boluses keep de novo lipogenesis switched on. Fasting triglycerides begin drifting upward within the first weeks."
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Enamel erosion plus bacterial acid from the sugar — a double attack. Sensitivity to cold water is often the first symptom people notice."
+        },
+        {
+          "target": "kidneys",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Higher serum uric acid means a higher urate load in urine, which raises the risk of urate and mixed stones in already stone-prone people."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Liver fat and visceral fat both climbing",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "In a six-month randomised trial, one litre of regular cola a day raised liver fat dramatically compared with milk, diet cola or water. At half a litre the direction is the same, at roughly half the dose.",
+          "metric": { "label": "Liver fat", "value": "clear rise; +143% at 1 L/day in 6-month RCT" }
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Visceral fat around the intestines and liver rises before subcutaneous fat does. Waist circumference is the metric to watch, not weight."
+        },
+        {
+          "target": "pancreas",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Daily sharp glucose peaks mean repeated maximal beta-cell output. Fasting insulin rises while fasting glucose still reads normal."
+        },
+        {
+          "target": "stomach",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Carbonation causes gastric distension and belching, which is where the 'helps digestion' feeling comes from. It does not improve digestion; it just relieves fullness by releasing gas."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Triglycerides up, insulin sensitivity down, BP nudged",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "The lipid picture shifts to high triglycerides, low HDL and small dense LDL — the atherogenic pattern that is common in Indians even at 'normal' cholesterol readings.",
+          "metric": { "label": "Fasting triglycerides", "value": "commonly +20–35% on daily SSB intake" }
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Muscle glucose uptake per unit insulin declines. Intramuscular fat also rises in the same trials, which further blunts insulin signalling."
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "With energy drinks specifically, daily caffeine plus poor sleep raises resting heart rate and blood pressure modestly and can mask fatigue rather than fix it."
+        },
+        {
+          "target": "joints",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Sustained higher serum urate is the substrate for gout. Men drinking two or more sugary drinks a day had roughly double the gout risk of rare drinkers in a large prospective cohort."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Fatty liver visible on scan; 1–3 kg of new fat, mostly central",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Non-alcoholic fatty liver disease becomes detectable on ultrasound. In the six-month cola trial this happened in young adults without them becoming obese — total body weight barely changed.",
+          "visual": { "scale": 1.05 },
+          "metric": { "label": "ALT", "value": "often mildly elevated" }
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Typically 1–3 kg gained over six months, disproportionately visceral. Skeletal muscle fat and pericardial fat also increase in the same studies."
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Erosion has thinned the enamel enough that the yellow dentine underneath starts showing through at the biting edges, and cavities appear between teeth."
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Fat begins accumulating in the pancreas itself in some people, which is one proposed mechanism for the beta-cell failure that follows."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Diabetes risk measurably higher — independent of weight gain",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Pooled cohort data show roughly 18% higher incidence of type 2 diabetes per daily serving of sugar-sweetened beverage, and about 13% higher even after adjusting for BMI — so it is not only about the calories.",
+          "metric": { "label": "Type 2 diabetes incidence", "value": "~+13–18% per daily serving" }
+        },
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Established NAFLD in many. Fully reversible: swapping the daily bottle for water measurably reduces liver fat within 8–12 weeks in intervention studies.",
+          "visual": { "scale": 1.05 }
+        },
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Prospective cohorts link one sugary drink a day with roughly a fifth higher coronary heart disease risk in men, mediated through triglycerides, inflammation and insulin resistance."
+        },
+        {
+          "target": "kidneys",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Chronic high urate and fructose exposure is associated with albuminuria and faster kidney function decline in observational data. Causation is not settled, but the association is consistent."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Diabetes, fatty liver, gout and eroded teeth — the full picture",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.7,
+          "note": "For a South Asian with family history and central obesity, five years of a daily bottle is one of the most reliable ways to convert genetic risk into actual type 2 diabetes.",
+          "metric": { "label": "HbA1c trajectory", "value": "commonly into the 5.7–6.4% band or above" }
+        },
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "A subset progress from simple steatosis to steatohepatitis with inflammation and fibrosis. India now has one of the largest NAFLD burdens in the world, in a population that drinks relatively little alcohol.",
+          "visual": { "scale": 1.06 }
+        },
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Five years of high triglycerides, low HDL and low-grade inflammation is measurable plaque. Indians present with their first heart attack roughly a decade earlier than Western populations."
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Permanent enamel loss. This is the one effect here that no amount of stopping later can undo — enamel does not regrow."
+        },
+        {
+          "target": "joints",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Recurrent gout attacks in predisposed men, classically starting at the base of the big toe, and urate stones in the kidney."
+        }
+      ]
+    }
+  ]
+}

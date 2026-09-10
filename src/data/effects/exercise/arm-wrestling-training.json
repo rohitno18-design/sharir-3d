@@ -1,0 +1,293 @@
+{
+  "id": "arm-wrestling-training",
+  "name": { "en": "Arm-wrestling training 3× a week", "hi": "हफ्ते में 3 बार आर्म-रेसलिंग ट्रेनिंग" },
+  "category": "exercise",
+  "icon": "🤼",
+  "dose": "Three sessions a week: one or two of table time (live pulls and static holds against a partner), plus specific work for wrist flexion, pronation, cupping/finger strength, back pressure (rows) and side pressure, using cables, wrist rollers, thick handles and heavy dumbbells. Assumes a beginner with general gym experience and no elbow history.",
+  "summary": {
+    "en": "Arm wrestling loads a small chain of tissues to their limit: the forearm flexors and pronators, the brachialis and biceps, the tendons at the inner elbow, the elbow ligaments and the humerus itself, which is twisted under enormous torque. Muscle strength rises within weeks, forearm and upper-arm size within 2–3 months, and the dominant arm's bone and tendons thicken over a year or more. Because tendons, ligaments and bone adapt far more slowly than muscle, the first 3–6 months carry the real injury risks: medial epicondyle tendinopathy, ligament sprain and, in untrained people pulling at full power, spiral fracture of the humerus.",
+    "hi": "आर्म-रेसलिंग में हाथ की कुछ खास चीज़ें अपनी सीमा तक लोड होती हैं: कलाई के फ्लेक्सर और प्रोनेटर, ब्रैकियालिस और बाइसेप्स, कोहनी के अंदर के टेंडन, कोहनी के लिगामेंट, और खुद ह्यूमरस हड्डी जो भारी मरोड़ झेलती है। मांसपेशियों की ताकत हफ्तों में बढ़ती है, फोरआर्म और बाज़ू का साइज़ 2–3 महीने में, और हड्डी-टेंडन साल भर या ज़्यादा में मोटे होते हैं। क्योंकि टेंडन, लिगामेंट और हड्डी मांसपेशी से बहुत धीमे ढलते हैं, असली खतरा शुरू के 3–6 महीनों में है — कोहनी के अंदर का दर्द, लिगामेंट की मोच, और बिना तैयारी पूरी ताकत से लड़ने वालों में ह्यूमरस का टूटना।"
+  },
+  "indian_context": "Arm wrestling is booming in India (Pro Panja League, state federations, college dhabas), and most new pullers arrive with big biceps from gym curls but zero forearm, wrist or pronator conditioning, which is exactly the profile that gets hurt on a table. Casual dhaba and hostel matches with no technique, elbow lifting off the pad and shoulders squared are where the humerus spiral fractures reported in Indian orthopaedic departments come from. On a vegetarian diet the connective-tissue side needs attention too: adequate protein and vitamin C for collagen, and vitamin D (deficient in 70–90% of urban Indians) for bone.",
+  "evidence": "moderate",
+  "sources": [
+    "Ogawa K, Ui M. Humeral shaft fracture sustained during arm wrestling: report on 30 cases and review of the literature. J Trauma. 1997",
+    "Khashaba A. Broken arm wrestler. Br J Sports Med. 2000",
+    "Jones HH et al. Humeral hypertrophy in response to exercise. J Bone Joint Surg Am. 1977",
+    "Magnusson SP, Kjaer M. The impact of loading, unloading, ageing and injury on the human tendon. J Physiol. 2019",
+    "Leong DP et al. Prognostic value of grip strength: findings from the Prospective Urban Rural Epidemiology (PURE) study. Lancet. 2015"
+  ],
+  "caution": "Never pull at full power with a stranger or an untrained friend: keep the shoulder behind the hand, the elbow on the pad and never let the arm go into the 'break-arm' position (hand falling behind the shoulder line) — that is how the humerus snaps. Persistent inner-elbow pain, numbness in the ring and little fingers, or a sudden pop with swelling needs a sports-medicine review. Isometric max holds spike blood pressure; people with uncontrolled hypertension should be careful.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Forearms flooded, elbow tendons irritated, blood pressure spiking on holds",
+      "effects": [
+        {
+          "target": "forearm-muscles",
+          "kind": "strain",
+          "intensity": 0.8,
+          "note": "The wrist flexors, pronator teres and finger flexors work near-maximally in long isometric holds; they pump up hard, then micro-damage produces deep forearm soreness for 2–3 days."
+        },
+        {
+          "target": "biceps",
+          "kind": "strain",
+          "intensity": 0.6,
+          "note": "The brachialis (under the biceps) and the biceps hold the elbow angle against the opponent; static holds at 90° or less are a heavy eccentric-isometric stimulus."
+        },
+        {
+          "target": "elbow-joint",
+          "kind": "strain",
+          "intensity": 0.6,
+          "note": "The common flexor-pronator tendon at the medial epicondyle and the ulnar collateral ligament take valgus and torsional stress that ordinary gym training never produces. They will feel tender tomorrow."
+        },
+        {
+          "target": "arteries",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Maximal isometric effort with breath-holding sends blood pressure well above 200 mmHg systolic for the seconds of a hold; it returns to normal quickly in healthy people."
+        },
+        {
+          "target": "hands",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "The fingers and thumb are crushed and wrenched in every grip; skin, small joints and finger flexor tendons are all loaded."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Grip strength climbing fast; connective tissue barely started",
+      "effects": [
+        {
+          "target": "forearm-muscles",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Neural adaptation is quick: grip and wrist-flexion strength are up 5–10% purely from better motor-unit recruitment. Soreness after each session drops with the repeated-bout effect."
+        },
+        {
+          "target": "tendons",
+          "kind": "strain",
+          "intensity": 0.6,
+          "note": "Tendon collagen has a turnover time of months. After a week the flexor-pronator tendon is loaded three times but has remodelled almost nothing; this gap is the whole injury story of arm wrestling."
+        },
+        {
+          "target": "ligaments",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "The ulnar collateral ligament of the elbow resists the sideways force of an opponent's hook; it adapts even more slowly than tendon."
+        },
+        {
+          "target": "lats",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Back pressure (pulling the opponent's hand toward you) comes from the lats and rear shoulder; they are sore after the first live sessions."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Noticeably stronger hand and wrist; the danger window opens",
+      "effects": [
+        {
+          "target": "forearm-muscles",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Grip strength typically up 10–20% and pronation strength more; early hypertrophy of the flexor-pronator mass is measurable though still subtle to the eye.",
+          "metric": { "label": "Grip strength", "value": "+10–20%" }
+        },
+        {
+          "target": "elbow-joint",
+          "kind": "strain",
+          "intensity": 0.6,
+          "note": "Muscle now generates far more torque than a month ago, while tendon and ligament have barely begun to remodel. Weeks 4–16 are when medial epicondylitis (golfer's elbow) most often starts in new pullers."
+        },
+        {
+          "target": "bones",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "Torsional loading has started remodelling in the humerus. In the first phase of the cycle bone is resorbed before new bone is laid down, so the shaft is not yet stronger and may be transiently more vulnerable."
+        },
+        {
+          "target": "biceps",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Brachialis and biceps strength in the bent-arm position is up sharply; static hold time against the same partner is noticeably longer."
+        },
+        {
+          "target": "wrist",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Cupping and wrist flexion under an opponent's pressure load the wrist ligaments and the scapholunate region; aching after sessions is common at this stage."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Forearms visibly bigger; tendon adaptation finally under way",
+      "effects": [
+        {
+          "target": "forearm-muscles",
+          "kind": "positive",
+          "intensity": 0.7,
+          "visual": { "scale": 1.04 },
+          "note": "Forearm circumference is up 1–2 cm on the pulling arm; the flexor-pronator mass near the elbow is thicker and harder. This asymmetry between arms will grow."
+        },
+        {
+          "target": "biceps",
+          "kind": "positive",
+          "intensity": 0.6,
+          "visual": { "scale": 1.03 },
+          "note": "Brachialis hypertrophy pushes the biceps up and widens the upper arm from the side."
+        },
+        {
+          "target": "tendons",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Collagen synthesis in the flexor-pronator and biceps tendons is now clearly up; tendon stiffness has started to rise, though it is still months behind the muscle."
+        },
+        {
+          "target": "elbow-joint",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Ulnar collateral ligament stress continues; some pullers already have inner-elbow pain that flares with hook-style pulling."
+        },
+        {
+          "target": "lats",
+          "kind": "positive",
+          "intensity": 0.4,
+          "visual": { "scale": 1.03 },
+          "note": "Rowing and back-pressure work have thickened the lats and rear deltoid on the pulling side."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "A puller's arm: thick forearm, stiffer tendons, humerus starting to thicken",
+      "effects": [
+        {
+          "target": "forearm-muscles",
+          "kind": "positive",
+          "intensity": 0.8,
+          "visual": { "scale": 1.06 },
+          "note": "Forearm and hand strength are transformed: grip is often 30–50% above baseline, and the pronator/flexor mass is visibly dominant on the pulling arm.",
+          "metric": { "label": "Grip strength", "value": "+30–50%" }
+        },
+        {
+          "target": "biceps",
+          "kind": "positive",
+          "intensity": 0.6,
+          "visual": { "scale": 1.05 },
+          "note": "Upper arm circumference up 2–3 cm, largely brachialis and biceps, with a strong side-to-side asymmetry."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "The remodelling cycle has turned to net formation: cortical bone in the humeral shaft and forearm bones is thickening along the torsional stress lines, the same adaptation seen in the dominant arm of tennis players."
+        },
+        {
+          "target": "tendons",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "The flexor-pronator tendon is thicker and stiffer; pullers who built up gradually are now past the peak tendinopathy window. Those who pulled hard from day one are often nursing a chronic inner elbow."
+        },
+        {
+          "target": "ligaments",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "The ulnar collateral ligament is thickening in response to repeated valgus stress, as it does in cricket fast bowlers and baseball pitchers; adaptive, but it also means the elbow is being reshaped."
+        },
+        {
+          "target": "pectorals",
+          "kind": "positive",
+          "intensity": 0.3,
+          "visual": { "scale": 1.03 },
+          "note": "Side pressure and the press style recruit the chest and front deltoid; they have grown modestly on the pulling side."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Bone and tendon caught up; the elbow is now a specialised joint",
+      "effects": [
+        {
+          "target": "forearm-muscles",
+          "kind": "positive",
+          "intensity": 0.8,
+          "visual": { "scale": 1.08 },
+          "note": "Forearm size and grip strength near a plateau for this dose; the pulling arm is visibly larger than the other. Progress now comes from technique and volume management."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "The humerus on the pulling side has measurably thicker cortex; long-term racquet-sport data show 10–30% more cortical bone in the dominant arm, and arm wrestling loads the same way. Fracture risk in trained pullers is far lower than in untrained ones.",
+          "metric": { "label": "Dominant-arm cortical thickness (racquet-sport data)", "value": "~+10–30%" }
+        },
+        {
+          "target": "biceps",
+          "kind": "positive",
+          "intensity": 0.6,
+          "visual": { "scale": 1.06 },
+          "note": "Biceps and brachialis at a strong, functional size; hook strength in the bent-arm position is the puller's signature."
+        },
+        {
+          "target": "peripheral-nerves",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Repeated elbow flexion under load with a thickened flexor mass can irritate the ulnar nerve in the cubital tunnel: tingling in the ring and little fingers after sessions is common in pullers and should not be ignored."
+        },
+        {
+          "target": "elbow-joint",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Chronic low-grade medial epicondylitis is the most common long-term complaint; managed with load control and eccentric wrist-flexor work it stays mild."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Elite grip, reinforced bone, a joint that has paid a price",
+      "effects": [
+        {
+          "target": "forearm-muscles",
+          "kind": "positive",
+          "intensity": 0.8,
+          "visual": { "scale": 1.08 },
+          "note": "Grip and wrist strength in the top percentiles; grip strength itself is one of the strongest predictors of healthy ageing and lower mortality in large cohorts, though whether training it directly gives the same protection is not proven."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Humerus and forearm bones on the pulling side are permanently denser and thicker-walled; bone adaptation from years of torsional loading persists even after training stops."
+        },
+        {
+          "target": "elbow-joint",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Long-term pullers frequently develop degenerative changes at the elbow: thickened ligaments, small bone spurs and reduced full extension. Serious pain is not inevitable but some loss of range is common, similar to veteran throwers."
+        },
+        {
+          "target": "tendons",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Cumulative flexor-pronator and biceps tendinopathy in those who never managed load; healthy pullers who deloaded and trained the antagonists have thick, resilient tendons instead."
+        },
+        {
+          "target": "peripheral-nerves",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Ulnar nerve irritation at the elbow can become chronic in a minority, with weakness in the small hand muscles; early treatment prevents it."
+        },
+        {
+          "target": "heart",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Arm wrestling is a strength-power sport with little aerobic load; cardiovascular fitness, blood pressure and glucose control depend on what else is done. Serious pullers add conditioning for exactly this reason."
+        }
+      ]
+    }
+  ]
+}

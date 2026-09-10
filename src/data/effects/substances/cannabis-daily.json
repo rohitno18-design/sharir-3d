@@ -1,0 +1,256 @@
+{
+  "id": "cannabis-daily",
+  "name": { "en": "Smoking cannabis every day", "hi": "रोज़ गाँजा पीना" },
+  "category": "substance",
+  "icon": "🌿",
+  "dose": "Daily smoked cannabis — one or more joints of ganja or charas, typically rolled with tobacco in India. Modern material contains roughly 10–20% THC, several times the potency of the 1990s.",
+  "molecule": "thc",
+  "summary": {
+    "en": "THC is a partial agonist at CB1 cannabinoid receptors, which sit densely in the hippocampus, prefrontal cortex, basal ganglia and cerebellum — that distribution explains almost every effect, from the memory gap to the slowed reaction time to the appetite. Smoked, it reaches the brain in minutes and the high lasts 2–4 hours, but THC is fat-soluble and takes weeks to fully clear. Daily use downregulates CB1 receptors, so tolerance builds fast, and roughly one in ten users — closer to one in six if they start as teenagers — becomes dependent.",
+    "hi": "THC दिमाग़ के CB1 रिसेप्टर्स पर काम करता है, जो याददाश्त (हिप्पोकैम्पस), सोच-समझ (प्रीफ़्रंटल कॉर्टेक्स), मूवमेंट और बैलेंस वाले हिस्सों में सबसे ज़्यादा हैं — इसीलिए भूलना, धीमा रिएक्शन और भूख लगना, सब इसी से समझ आता है। पीने पर असर मिनटों में शुरू होकर 2–4 घंटे रहता है, पर THC चर्बी में घुलनशील है और शरीर से निकलने में हफ़्ते लगते हैं। रोज़ लेने से रिसेप्टर कम हो जाते हैं, टॉलरेंस तेज़ी से बनता है, और हर दस में से लगभग एक को इसकी लत लग जाती है।"
+  },
+  "indian_context": "Cannabis occupies a strange legal space in India: the NDPS Act 1985 bans charas and ganja (the resin and flowering tops) but leaves bhang — the leaves — outside the definition, which is why government bhang shops are legal in some states while a joint is not. Indian users almost always mix cannabis with tobacco in a joint or chillum, so nicotine dependence and tobacco lung damage ride along invisibly with the cannabis. NIMHANS national survey data put current cannabis use at roughly 2–3% of Indian adults, with a much smaller fraction dependent. Cultural framing around Shiva and festivals makes bhang feel harmless, but potency of street charas today is far above traditional preparations.",
+  "evidence": "moderate",
+  "sources": [
+    "National Academies of Sciences, Engineering, and Medicine. The Health Effects of Cannabis and Cannabinoids. 2017",
+    "Volkow ND et al. Adverse health effects of marijuana use. N Engl J Med. 2014",
+    "Di Forti M et al. The contribution of cannabis use to variation in the incidence of psychotic disorder (EU-GEI). Lancet Psychiatry. 2019",
+    "Ambekar A et al. Magnitude of Substance Use in India. National Drug Dependence Treatment Centre, AIIMS / Ministry of Social Justice. 2019",
+    "WHO. The health and social effects of nonmedical cannabis use. 2016"
+  ],
+  "caution": "Do not use if you have a personal or family history of psychosis, schizophrenia or bipolar disorder — high-potency daily use is associated with several-fold higher odds of a psychotic disorder, and the risk is highest in those who start before 18. Do not drive for at least 6–8 hours after use; cannabis roughly doubles crash risk and combining it with alcohol is far worse than either alone. Avoid entirely in pregnancy. Cannabinoid hyperemesis syndrome — cycles of severe vomiting relieved only by hot showers — is under-recognised and only resolves on stopping. Possession of charas or ganja is a criminal offence in India.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "High in minutes: memory offline, heart rate up, appetite on",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "THC partially activates CB1 receptors, which normally act as a brake on neurotransmitter release. Peak effect comes 10–30 minutes after smoking and lasts 2–4 hours; the fat-soluble THC then redistributes and takes days to leave.",
+          "metric": { "label": "High duration (smoked)", "value": "2–4 hours" }
+        },
+        {
+          "target": "hippocampus",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "CB1 density is highest in the hippocampus, so short-term memory encoding is disrupted while high. This is why conversations from a stoned evening are genuinely not stored, not merely forgotten."
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.45,
+          "note": "THC raises heart rate by 20–50 bpm for 1–3 hours and can drop blood pressure on standing. Heart attack risk is transiently elevated in the hour after use, which matters for anyone with coronary disease.",
+          "metric": { "label": "Heart rate", "value": "+20–50 bpm" }
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "CB1 activation in the hypothalamus increases ghrelin signalling and enhances the reward value of food — the appetite surge is a direct receptor effect, not just boredom."
+        },
+        {
+          "target": "eyes",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Conjunctival vasodilation causes the red eyes, and intraocular pressure falls for a few hours — the basis of the old glaucoma claim, though the effect is far too short-lived to be useful treatment."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Tolerance starts; sleep architecture already changing",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "CB1 receptors begin downregulating within days of daily exposure. The same amount produces less high, which is the first step toward using more."
+        },
+        {
+          "target": "lungs",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Cannabis smoke contains many of the same combustion irritants and carcinogens as tobacco smoke, and the deep, held inhalation deposits more per puff. In India the tobacco mixed into the joint adds its own full dose of harm."
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "neutral",
+          "intensity": 0.35,
+          "note": "REM sleep is suppressed. Daily users report falling asleep faster but dreaming less; when they stop, vivid dreams return in a rush as REM rebounds."
+        },
+        {
+          "target": "prefrontal-cortex",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Working memory, attention and decision speed are impaired while intoxicated and for some hours after. In daily users there is rarely a fully sober window."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "The high shrinks, the habit doesn't — and motivation dips",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Substantial CB1 downregulation is measurable on PET imaging within about four weeks of daily use. Tolerance means users escalate dose or potency to get the original effect."
+        },
+        {
+          "target": "prefrontal-cortex",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "The 'amotivational' picture — flattened drive, deferred plans, reduced effort for delayed rewards — reflects blunted dopamine responsiveness in the striatum with chronic use. It is real and it improves on stopping."
+        },
+        {
+          "target": "airways",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Chronic bronchitis symptoms — daily cough, sputum, wheeze — are consistently more common in regular smokers of cannabis and improve when they stop."
+        },
+        {
+          "target": "basal-ganglia",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "CB1 receptors in the basal ganglia slow motor initiation and reaction time; simulator studies show impairment persisting several hours beyond the subjective high."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Withdrawal is now real if you stop",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Cannabis withdrawal is a recognised syndrome: irritability, anxiety, insomnia, vivid dreams, loss of appetite and sweating, starting within 1–3 days and settling over 1–2 weeks. It is not dangerous, but it is exactly what keeps daily use going."
+        },
+        {
+          "target": "hippocampus",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Verbal learning and memory are measurably poorer in daily users than in non-users, and largely recover after roughly a month of abstinence in adults."
+        },
+        {
+          "target": "lungs",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Airway inflammation and large-airway obstruction accumulate. Where tobacco is mixed in — the Indian norm — the combined damage is worse than either alone."
+        },
+        {
+          "target": "testes",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Chronic THC exposure lowers sperm concentration and motility and mildly suppresses testosterone. Effects reverse over months after stopping."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Cognition dulled between highs; anxiety often worse, not better",
+      "effects": [
+        {
+          "target": "prefrontal-cortex",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Six months of daily use leaves measurable deficits in attention and executive function. In adults these largely recover with abstinence; in people who started as teenagers the recovery is less complete."
+        },
+        {
+          "target": "amygdala",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Many daily users start with cannabis for anxiety and end up with more of it. Chronic CB1 downregulation raises baseline anxiety between doses, and high-THC low-CBD material is the most anxiogenic."
+        },
+        {
+          "target": "lungs",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Large-airway inflammation and hyperinflation are established. Unlike tobacco, cannabis alone has not been convincingly shown to cause emphysema or lung cancer — but almost every Indian user is also smoking tobacco in the same joint."
+        },
+        {
+          "target": "stomach",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "Cannabinoid hyperemesis syndrome can appear after months to years of daily use: recurring bouts of intense vomiting and abdominal pain, oddly relieved by hot showers, and cured only by stopping."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Dependence in roughly one in ten; psychosis risk in the vulnerable",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "About 9% of people who ever use cannabis develop dependence, rising to roughly 17% among those who start in adolescence and 25–50% among daily users. A year of daily use puts you squarely in that group.",
+          "metric": { "label": "Dependence in daily users", "value": "~25–50%" }
+        },
+        {
+          "target": "cerebral-cortex",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Daily use of high-potency cannabis is associated with several-fold higher odds of a psychotic disorder in large European case-control data. Causality is debated, but the association is strongest exactly for the daily, high-THC pattern."
+        },
+        {
+          "target": "heart",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Cohort studies increasingly link regular cannabis use to higher rates of heart attack and stroke in younger adults, probably through sympathetic activation and vascular effects."
+        },
+        {
+          "target": "lungs",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "A year of daily smoking, especially mixed with tobacco, produces persistent chronic bronchitis and reduced airway conductance."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years: the cost is mostly cognitive, social and respiratory",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Long-term daily users show lower educational and occupational attainment than matched peers, and those who began in adolescence show persisting deficits in verbal IQ and processing speed. The evidence for permanent damage in adult-onset users is weaker.",
+          "metric": { "label": "Adolescent-onset cognitive effect", "value": "persists after abstinence" }
+        },
+        {
+          "target": "prefrontal-cortex",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Sustained blunting of motivation and reward sensitivity. Most users describe the return of drive within a few months of stopping, which is the strongest evidence that much of it is reversible."
+        },
+        {
+          "target": "lungs",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Five years of daily smoke exposure, almost always with tobacco in the Indian pattern, means the full tobacco trajectory — chronic bronchitis, accelerated FEV1 loss, and lung cancer risk from the tobacco component."
+        },
+        {
+          "target": "cerebral-cortex",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "In people with genetic vulnerability, five years of daily high-potency use can precipitate a first psychotic episode. Age of onset is typically pulled several years earlier than it would otherwise have been."
+        },
+        {
+          "target": "testes",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Prolonged suppression of sperm quality and testosterone; fertility clinics increasingly ask about cannabis for exactly this reason."
+        },
+        {
+          "target": "heart",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Cumulative cardiovascular risk from years of repeated tachycardia, and from the tobacco that goes with it in most Indian joints."
+        }
+      ]
+    }
+  ]
+}

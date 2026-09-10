@@ -1,0 +1,204 @@
+{
+  "id": "iron-supplement-daily",
+  "name": { "en": "Iron 60 mg daily for iron-deficiency anaemia", "hi": "आयरन की कमी वाले एनीमिया के लिए रोज़ 60 मिलीग्राम आयरन" },
+  "category": "supplement",
+  "icon": "🩸",
+  "dose": "60 mg elemental iron daily (one Indian IFA tablet: ferrous sulphate/fumarate 60 mg elemental iron + 500 mcg folic acid), ideally on an empty stomach or with lemon water, at least 1–2 hours away from tea, coffee, milk or calcium. Alternate-day dosing absorbs about as much with fewer side effects.",
+  "molecule": "ferrous",
+  "summary": {
+    "en": "Iron is the core of haemoglobin, the oxygen carrier in red cells, and of myoglobin and many enzymes. In iron deficiency the marrow makes small, pale red cells and the body runs low on oxygen delivery: fatigue, breathlessness on stairs, hair fall, brittle nails, restless legs, poor concentration. A daily 60 mg tablet restores haemoglobin by roughly 1 g/dL every 2–3 weeks and has to continue about 3 months after the count is normal to refill ferritin (the iron store). The price is gut side effects in a third of people.",
+    "hi": "आयरन हीमोग्लोबिन का मूल हिस्सा है, जो खून में ऑक्सीजन ले जाता है। कमी होने पर छोटी-पीली लाल कोशिकाएँ बनती हैं और शरीर ऑक्सीजन की कमी में चलता है — थकान, सीढ़ियों पर साँस फूलना, बाल झड़ना, कमज़ोर नाख़ून, ध्यान न लगना। रोज़ 60 मिलीग्राम की गोली से हीमोग्लोबिन हर 2–3 हफ़्ते में करीब 1 g/dL बढ़ता है, और खून ठीक होने के बाद भी 3 महीने और लेना पड़ता है ताकि फेरिटिन (आयरन का स्टोर) भरे। हर तीसरे इंसान को पेट की तकलीफ़ या कब्ज़ होती है।"
+  },
+  "indian_context": "NFHS-5 (2019–21) found 57% of Indian women aged 15–49 and 67% of children under five anaemic, mostly from iron deficiency; menstrual loss, plant-based iron (non-haem, poorly absorbed) and phytate-rich cereal diets drive it. Chai with meals is a major absorption blocker: tea tannins can cut iron absorption by more than half. The government's Anaemia Mukt Bharat programme gives free IFA tablets, yet compliance is low because of nausea and black stools. Thalassaemia trait is common in some Indian communities and also causes small red cells but must NOT be treated with iron; a ferritin test tells the two apart.",
+  "evidence": "strong",
+  "sources": [
+    "WHO. Guideline: Daily iron supplementation in adult women and adolescent girls. World Health Organization. 2016",
+    "Stoffel NU et al. Iron absorption from oral iron supplements given on consecutive versus alternate days and as single morning doses versus twice-daily split dosing in iron-depleted women. Lancet Haematol. 2017",
+    "Tolkien Z et al. Ferrous sulfate supplementation causes significant gastrointestinal side-effects in adults: a systematic review and meta-analysis. PLoS One. 2015",
+    "National Family Health Survey (NFHS-5) 2019–21. Ministry of Health and Family Welfare, Government of India",
+    "Anaemia Mukt Bharat operational guidelines. MoHFW, Government of India. 2018"
+  ],
+  "caution": "Only take iron for a confirmed deficiency (low haemoglobin with low ferritin). Iron given to someone who is not deficient, or to someone with thalassaemia or haemochromatosis, accumulates in the liver, heart and pancreas. Keep tablets locked away from children: iron overdose is a leading cause of fatal poisoning in toddlers. If haemoglobin does not rise after 4 weeks, the cause needs investigation (blood loss, coeliac disease, H. pylori, wrong diagnosis).",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "10–15% absorbed; gut irritation and dark stools begin",
+      "effects": [
+        {
+          "target": "small-intestine",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "Ferrous iron is absorbed in the duodenum via the DMT1 transporter; in a deficient person 10–20% of the dose gets in, the rest passes through. The absorbed iron triggers a hepcidin rise that blocks further absorption for about 24 hours.",
+          "metric": { "label": "Fraction absorbed", "value": "~10–20%" }
+        },
+        {
+          "target": "stomach",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Unabsorbed ferrous iron generates free radicals against the stomach and gut lining. Nausea, metallic taste and cramping in the first hours are common, worse on an empty stomach."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Stools turn black-green from unabsorbed iron sulphide within a day or two. Harmless, but it can mask a genuine upper-gut bleed, so mention it to a doctor if stools also become tarry and sticky."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Marrow responding: reticulocytes rise, first energy return",
+      "effects": [
+        {
+          "target": "bone-marrow",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "With iron arriving, the marrow starts filling red-cell precursors with haemoglobin again. Reticulocytes rise from day 3–5 and peak around day 7–10.",
+          "metric": { "label": "Reticulocyte peak", "value": "Day 7–10" }
+        },
+        {
+          "target": "large-intestine",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Constipation or, less often, diarrhoea affects roughly a third of people on ferrous sulphate; this is the main reason tablets get abandoned. Alternate-day dosing halves the daily load on the gut.",
+          "metric": { "label": "GI side effects", "value": "~30–40% of users" }
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.25,
+          "note": "Iron-dependent enzymes in the brain (for dopamine synthesis and mitochondrial function) respond before haemoglobin does; restless legs and fatigue often improve within the first week or two."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Haemoglobin up ~1–2 g/dL; breathlessness easing",
+      "effects": [
+        {
+          "target": "bone-marrow",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "A month of daily iron should lift haemoglobin by 1–2 g/dL. If it has not moved, something else is going on: ongoing bleeding, malabsorption, or not actually iron deficiency.",
+          "metric": { "label": "Haemoglobin at 4 weeks", "value": "+1 to +2 g/dL" }
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "In anaemia the heart pumps harder and faster to move enough oxygen. As haemoglobin recovers, resting heart rate falls and palpitations on exertion fade."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Myoglobin and muscle mitochondrial enzymes refill with iron; climbing stairs and exercise tolerance improve noticeably by the end of the first month."
+        },
+        {
+          "target": "stomach",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Gut symptoms typically settle a little after the first weeks as people learn to time the tablet, but they rarely vanish on daily dosing."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Near-normal haemoglobin; stores still empty",
+      "effects": [
+        {
+          "target": "bone-marrow",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "Most women with mild-to-moderate anaemia reach a normal haemoglobin by 6–10 weeks. Red cells are now normal-sized, but ferritin is still low because the marrow has used every atom for haemoglobin.",
+          "metric": { "label": "Haemoglobin normalises", "value": "~6–10 weeks" }
+        },
+        {
+          "target": "hair",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Hair follicles are among the last tissues to get iron. Shedding slows around 2–3 months; visible regrowth takes 4–6 months after ferritin recovers."
+        },
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "Iron-deficient people have weaker T-cell and neutrophil function; two months of repletion restores it. Excess iron, on the other hand, feeds some bacteria, which is why iron is not given during active infection."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Ferritin refilled; stopping point for most",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "The liver is the main ferritin store. About 3 months beyond haemoglobin normalisation, ferritin is usually above 30–50 ng/mL, which is the signal to stop unless losses continue (heavy periods, pregnancy).",
+          "metric": { "label": "Ferritin target before stopping", "value": ">30–50 ng/mL" }
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Cold intolerance, brittle nails, ice-craving (pica) and exercise limitation are gone. The person now feels like a different body, which is the real measure of iron deficiency having been the problem."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Gut symptoms resolve completely within days of stopping. For those who must continue (heavy menstrual loss), alternate-day dosing is the sustainable option."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "If continued beyond need: iron starts to accumulate",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "In someone who is replete and keeps taking 60 mg daily, hepcidin limits absorption to a few percent, but iron still creeps upward. Ferritin above 200–300 ng/mL after a year of unnecessary iron is a sign to stop and recheck."
+        },
+        {
+          "target": "bone-marrow",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "In women with ongoing heavy periods, a maintenance tablet on alternate days keeps haemoglobin stable through the year; the deficiency returns within months if they stop."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "negative",
+          "intensity": 0.2,
+          "note": "Long-term unabsorbed iron shifts gut bacteria toward inflammation-associated species and can worsen gut inflammation in people with IBD; a real, modest, dose-dependent effect."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years: needed iron is life-changing; unneeded iron is organ damage",
+      "effects": [
+        {
+          "target": "bone-marrow",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "For a woman with recurrent iron deficiency, five years of intermittent treatment means five years without anaemia: better work capacity, safer pregnancies, and less low-birth-weight risk."
+        },
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "In a person with undiagnosed haemochromatosis or thalassaemia trait taking daily iron for years, iron loads the liver first, then the pancreas and heart: fibrosis, diabetes and heart failure are the endpoints. This is the reason iron is not a casual 'tonic'."
+        },
+        {
+          "target": "heart",
+          "kind": "negative",
+          "intensity": 0.2,
+          "note": "Iron overload cardiomyopathy is rare from tablets alone in people with normal genes, but it is the classic outcome of years of unneeded iron in transfusion-dependent or haemochromatosis patients."
+        }
+      ]
+    }
+  ]
+}

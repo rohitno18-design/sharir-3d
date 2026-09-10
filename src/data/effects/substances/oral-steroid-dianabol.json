@@ -1,0 +1,258 @@
+{
+  "id": "oral-steroid-dianabol",
+  "name": { "en": "Dianabol (methandienone) 30 mg/day for 6 weeks", "hi": "डायनाबोल (मेथैन्डिएनोन) 30 मिलीग्राम/दिन, 6 हफ़्ते" },
+  "category": "drug",
+  "icon": "💊",
+  "dose": "Methandienone 10 mg tablets, three a day (30 mg/day) for 6 weeks, then stopped. A typical illicit 'oral-only' cycle sold in Indian gyms. Described for education; not a medical dose and illegal without prescription.",
+  "summary": {
+    "en": "Methandienone is an oral testosterone derivative that is 17-alpha-alkylated so the liver cannot break it down on first pass, which is exactly what makes it toxic to the liver. With a half-life of only 3–6 hours it gives fast, dramatic weight gain: 3–5 kg in 2–3 weeks, most of it water and glycogen from strong aromatisation to oestrogen and sodium retention, plus real muscle underneath. It crashes HDL cholesterol harder than injectable testosterone, raises blood pressure, strains the liver, and shuts down natural testosterone. When the tablets stop, the water leaves within days and strength drops, leaving a low-testosterone crash.",
+    "hi": "मेथैन्डिएनोन खाने वाला स्टेरॉयड है जिसे इस तरह बदला गया है (17-अल्फ़ा-अल्काइलेशन) कि लिवर इसे पहली बार में तोड़ न सके — यही चीज़ इसे लिवर के लिए ज़हरीला बनाती है। हाफ़-लाइफ़ सिर्फ़ 3–6 घंटे है और असर तेज़ दिखता है: 2–3 हफ़्ते में 3–5 किलो वज़न, जिसमें ज़्यादातर पानी और ग्लाइकोजन (एस्ट्रोजन और नमक रुकने से) और नीचे कुछ असली मसल। यह HDL कोलेस्ट्रॉल इंजेक्शन वाले टेस्टोस्टेरोन से भी ज़्यादा गिराता है, ब्लड प्रेशर बढ़ाता है, लिवर पर बोझ डालता है और कुदरती टेस्टोस्टेरोन बंद कर देता है। गोली रुकते ही पानी कुछ दिनों में निकल जाता है, ताक़त गिरती है और लो-टेस्टोस्टेरोन का क्रैश आता है।"
+  },
+  "indian_context": "'Danabol DS' and similar strips are the most common first steroid in Indian gyms because tablets feel less serious than needles and cost a few hundred rupees a strip; trainers push them for a 'bulk' before a wedding or a competition. India also has a high background rate of fatty liver and hepatitis B, so the liver hit lands on an already loaded organ. The rapid 5 kg 'transformation' photos in Indian fitness marketing are often a Dianabol water gain that disappears within a month of stopping. Adulterated tablets containing no methandienone or a different steroid altogether are common in the grey market.",
+  "evidence": "strong",
+  "sources": [
+    "Pope HG et al. Adverse health consequences of performance-enhancing drugs: an Endocrine Society scientific statement. Endocr Rev. 2014",
+    "Hartgens F, Kuipers H. Effects of androgenic-anabolic steroids in athletes. Sports Med. 2004",
+    "NIH LiverTox: Clinical and Research Information on Drug-Induced Liver Injury. Androgenic steroids. NIDDK",
+    "Baggish AL et al. Cardiovascular toxicity of illicit anabolic-androgenic steroid use. Circulation. 2017"
+  ],
+  "caution": "Oral 17-alpha-alkylated steroids are the most liver-toxic class of anabolic drug: cholestatic jaundice, peliosis hepatis and liver tumours are documented. Combined with the HDL collapse and blood-pressure rise, a 6-week 'oral-only' cycle is not the safe beginner option it is sold as. Anyone who has taken it should get liver enzymes, lipids, blood pressure and testosterone checked, and avoid alcohol and paracetamol overuse for months after. Illegal without prescription in India.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Peaks in 1–2 hours; strength feel and water begin same day",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "The 17-alpha-alkyl group blocks first-pass breakdown, so the whole dose reaches the blood and the liver is exposed to it three times a day. Liver enzymes do not move on day one, but the exposure that drives later injury starts now."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Peak blood levels within 1–2 hours of each tablet. Users report a sense of fullness and aggression in the gym on the first day, which is partly glycogen and water loading and partly expectation."
+        },
+        {
+          "target": "pituitary",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "LH/FSH suppression begins within the first day, as with any androgen; by the end of the first week natural testosterone output is falling steeply."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "+2–3 kg already: water, glycogen, oestrogen bloat",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.55,
+          "visual": { "scale": 1.04 },
+          "note": "Methandienone aromatises readily; oestrogen plus sodium retention pulls water into and around muscle. Muscles look full and strength rises fast, but real contractile tissue gained in a week is small.",
+          "metric": { "label": "Weight gain, week 1", "value": "+2–3 kg (mostly water)" }
+        },
+        {
+          "target": "face",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "The 'moon face' and smooth, puffy look of oral steroid users is subcutaneous water from oestrogen and aldosterone-like sodium retention; it is often the first thing others notice."
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Retained fluid expands blood volume; blood pressure is up 10 mmHg or more in many users within the first two weeks, with headaches and a pounding pulse after stairs.",
+          "metric": { "label": "Systolic BP", "value": "+10–15 mmHg" }
+        },
+        {
+          "target": "testes",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Natural testosterone and sperm production are shutting down; the testes begin shrinking within weeks."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Peak of the cycle: big, strong, liver enzymes up, HDL collapsed",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.65,
+          "note": "ALT and AST are typically elevated by 4 weeks; bile flow slows (cholestasis), and in a minority itching and dark urine appear. Alkylated steroids are the class linked to peliosis hepatis (blood-filled cysts) and hepatic adenomas with longer use.",
+          "metric": { "label": "ALT/AST", "value": "commonly 1.5–3× upper limit" }
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.8,
+          "visual": { "scale": 1.07 },
+          "note": "Real muscle is now being added underneath the water: nitrogen retention is strongly positive and lifts are climbing weekly. Total gain at 4 weeks is often 4–6 kg, of which perhaps a third is contractile tissue."
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Oral alkylated steroids induce hepatic lipase and crush HDL, commonly by 40–60%, while LDL rises. This atherogenic lipid profile is worse than with injectable testosterone at similar anabolic effect.",
+          "metric": { "label": "HDL cholesterol", "value": "−40 to −60%" }
+        },
+        {
+          "target": "testes",
+          "kind": "negative",
+          "intensity": 0.55,
+          "visual": { "scale": 0.9 },
+          "note": "A month of shutdown: reduced testicular volume, low intratesticular testosterone, sperm counts falling sharply."
+        },
+        {
+          "target": "breasts",
+          "kind": "negative",
+          "intensity": 0.4,
+          "visual": { "scale": 1.03 },
+          "note": "High oestradiol from aromatisation stimulates breast gland tissue; puffy or tender nipples are common, and glandular gynecomastia can form in a susceptible subset within a single cycle."
+        },
+        {
+          "target": "skin",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Oily skin and acne, especially on the back and chest; stretch marks over the shoulders and biceps from rapid expansion are common and permanent."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Two weeks after stopping: water gone, strength falling, low-T crash",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "negative",
+          "intensity": 0.5,
+          "visual": { "scale": 1.03 },
+          "note": "With a 3–6 hour half-life the drug is gone within a day or two of the last tablet. Water and glycogen leave within a week: 2–4 kg drop, softer muscles, weaker lifts. The muscle that remains is the genuine, smaller gain."
+        },
+        {
+          "target": "testes",
+          "kind": "negative",
+          "intensity": 0.6,
+          "visual": { "scale": 0.88 },
+          "note": "Natural testosterone is near zero and LH has not yet restarted. This gap, with no drug and no own hormone, is the low-testosterone crash: fatigue, low libido, low mood, poor sleep."
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.45,
+          "note": "Liver enzymes typically normalise over 4–8 weeks after stopping. Cholestatic jaundice, if it developed, can take 1–3 months to clear; this is the stage at which the yellow-eyed gym user turns up in an Indian hospital."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Depressive symptoms and irritability are typical for 2–6 weeks post-cycle and are the reason many restart. Suicidal thoughts are documented in this window in case series."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Hormones recovering; lipids back; visible gains mostly gone",
+      "effects": [
+        {
+          "target": "testes",
+          "kind": "neutral",
+          "intensity": 0.35,
+          "visual": { "scale": 0.95 },
+          "note": "Most men have testosterone back in range 2–4 months after a 6-week oral cycle, faster than after long injectable cycles; sperm counts follow over the next months."
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "HDL recovers within 2–3 months of stopping. The 6 weeks of atherogenic lipids and high blood pressure are a small, real deposit on lifetime arterial risk."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "visual": { "scale": 1.01 },
+          "note": "Six months out, size is close to what training alone would have produced; the extra myonuclei gained may help future growth, but the dramatic 6-week transformation has largely reversed."
+        },
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Enzymes normal in almost everyone by now; the liver is resilient to a single short exposure. The risk is the second and third cycle stacked on top."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "One year: a single cycle mostly reversed, except what it did to the hairline and chest",
+      "effects": [
+        {
+          "target": "testes",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Full recovery of the hormonal axis in the large majority after one oral cycle. Persistent low testosterone after a single 6-week oral course is uncommon but reported."
+        },
+        {
+          "target": "breasts",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Any glandular gynecomastia that formed does not shrink back; it is fibrous tissue now and only surgery removes it."
+        },
+        {
+          "target": "hair",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "Methandienone is a weaker DHT precursor than testosterone, but hairline recession triggered in the predisposed during the cycle stays."
+        },
+        {
+          "target": "heart",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Blood pressure and cardiac structure are back to baseline after a single short cycle in most users."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Repeated oral cycles over years: liver tumours, arteries, permanent shutdown",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.65,
+          "note": "Years of intermittent 17-alpha-alkylated steroid use are the setting for hepatic adenomas, peliosis hepatis and, rarely, hepatocellular carcinoma; these are documented mainly in long-term users, not after one cycle."
+        },
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Each cycle spends weeks with HDL halved and blood pressure high. Repeated over five years, this builds coronary plaque early; young bodybuilders' heart attacks are concentrated in oral-plus-injectable stackers."
+        },
+        {
+          "target": "heart-muscle",
+          "kind": "negative",
+          "intensity": 0.5,
+          "visual": { "scale": 1.05 },
+          "note": "Chronic users develop thicker, stiffer left ventricles with reduced pumping and relaxation; regression after stopping is partial. A single cycle five years ago does not produce this."
+        },
+        {
+          "target": "testes",
+          "kind": "negative",
+          "intensity": 0.5,
+          "visual": { "scale": 0.9 },
+          "note": "Repeated cycling for years leaves a meaningful minority with hypogonadism that does not recover and with impaired fertility; a single cycle five years back has almost certainly recovered fully."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "The honest 5-year ledger for a one-time user: a few kilos gained and mostly lost, permanent stretch marks, possibly a chest lump, and a normal body otherwise. For the repeat user: muscle beyond natural limits, and every organ above paying for it."
+        }
+      ]
+    }
+  ]
+}

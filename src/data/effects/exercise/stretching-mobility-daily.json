@@ -1,0 +1,264 @@
+{
+  "id": "stretching-mobility-daily",
+  "name": { "en": "20 minutes of mobility work daily", "hi": "रोज़ 20 मिनट स्ट्रेचिंग और मोबिलिटी" },
+  "category": "exercise",
+  "icon": "🤸",
+  "dose": "20 minutes daily of mobility work: dynamic joint circles and controlled articular rotations to start, then 3–4 static holds of 30–60 seconds per tight area (hips, hamstrings, thoracic spine, shoulders, calves), stretching to mild discomfort and never to pain.",
+  "summary": {
+    "en": "Most of what people call 'getting more flexible' in the first month is not the muscle lengthening — it is the nervous system raising its tolerance to stretch. Real structural change (added sarcomeres in series, remodelled collagen in the connective tissue) takes 8–12 weeks of consistent loading at end range. Expect noticeable range gains in 2–4 weeks, durable ones by three months, and much better positions in squats, overhead work and simple daily movement. What stretching does not do, despite the folklore: it does not prevent injury on its own, does not reduce next-day soreness meaningfully, and static stretching immediately before heavy lifting slightly reduces strength.",
+    "hi": "पहले महीने में जो 'लचीलापन' बढ़ता है, वह असल में मांसपेशी लंबी होने से नहीं — दिमाग़ की खिंचाव सहने की क्षमता बढ़ने से आता है। असली ढाँचागत बदलाव 8–12 हफ्तों में आता है। 2–4 हफ्तों में फ़र्क दिखने लगता है, तीन महीनों में वह पक्का हो जाता है, और बैठने-उठने, स्क्वाट और ऊपर हाथ उठाने में साफ़ आसानी महसूस होती है। पर एक भ्रम तोड़ना ज़रूरी है — सिर्फ़ स्ट्रेचिंग से चोट नहीं रुकती, और भारी वज़न उठाने से ठीक पहले स्टैटिक स्ट्रेचिंग ताकत थोड़ी घटा देती है।"
+  },
+  "indian_context": "Two Indian habits pull in opposite directions here. Traditional floor-sitting, squatting toilets and cross-legged eating preserve remarkable hip and ankle mobility — many older Indians in villages can hold a deep squat that a Western physiotherapist would call exceptional. Urban India has traded that for chairs, Western toilets and 10-hour desk days, and hip and ankle stiffness has followed within a single generation. Yoga gives most Indians an existing framework and vocabulary for this work, but the common gym-culture belief that stretching before lifting prevents injury is wrong and worth correcting: dynamic warm-up before, static holds after or in a separate session.",
+  "evidence": "moderate",
+  "sources": [
+    "Behm DG et al. Acute effects of muscle stretching on physical performance, range of motion, and injury incidence in healthy active individuals: a systematic review. Appl Physiol Nutr Metab. 2016",
+    "Weppler CH, Magnusson SP. Increasing muscle extensibility: a matter of increasing length or modifying sensation? Phys Ther. 2010",
+    "Herbert RD, de Noronha M, Kamper SJ. Stretching to prevent or reduce muscle soreness after exercise. Cochrane Database Syst Rev. 2011",
+    "ACSM's Guidelines for Exercise Testing and Prescription, 11th ed. 2021"
+  ],
+  "caution": "Stretching into sharp pain, tingling or numbness is nerve tension, not muscle tightness, and pushing through it can worsen a nerve irritation. People with hypermobility (easily bendy joints, frequent sprains) generally need strengthening at end range, not more stretching. Do not static-stretch a muscle you are about to load heavily; do a dynamic warm-up instead. Ballistic bouncing stretches are unnecessary and raise strain risk with no extra benefit.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Immediate range gain — mostly your nervous system relaxing",
+      "effects": [
+        {
+          "target": "hamstrings",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "A single session buys real but temporary range: about 5–10 degrees more hip flexion, lasting minutes to a few hours. The muscle has not lengthened — the stretch reflex has quieted.",
+          "metric": { "label": "Acute range gain", "value": "~5–10°, lasting minutes to hours" }
+        },
+        {
+          "target": "peripheral-nerves",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "Golgi tendon organs and muscle spindles reduce their protective firing during a sustained hold. This autogenic inhibition is why holding for 30 seconds feels much easier than the first 5."
+        },
+        {
+          "target": "hip-flexors",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "For a desk worker, hip flexor stretching gives the fastest subjective relief. Standing up straight and walking both feel easier immediately after."
+        },
+        {
+          "target": "spine",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Thoracic rotation and extension work restores mobility that a full day of slumped sitting removed. This directly reduces the compensatory strain on the neck and lower back."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Slow stretching with controlled breathing raises parasympathetic activity, which is why a mobility session is genuinely calming rather than just physically useful."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Stretch tolerance rises; positions that felt impossible get accessible",
+      "effects": [
+        {
+          "target": "hamstrings",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Range improves session over session, driven almost entirely by increased stretch tolerance. Nothing structural has changed yet — stop for two weeks now and most of it disappears."
+        },
+        {
+          "target": "ankle",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Ankle dorsiflexion is the most commonly limited joint in people who wear shoes and sit all day. Improving it changes squat depth and walking mechanics more than any other single mobility gain."
+        },
+        {
+          "target": "shoulder-joint",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Overhead reach improves as the lats and pecs allow more range. Much of what looks like a stiff shoulder is actually a stiff thoracic spine underneath it."
+        },
+        {
+          "target": "peripheral-nerves",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Nerves need to glide within their sheaths. Gentle end-range movement improves that glide, which is why sciatic-type tightness eases with careful mobility work."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Range gains hold between sessions; tissue starts adapting",
+      "effects": [
+        {
+          "target": "hamstrings",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "By four weeks the improved range persists between sessions rather than resetting daily. Trials consistently show roughly 10–20% range improvement at a month with daily stretching.",
+          "metric": { "label": "Range of motion", "value": "+10–20% at 4 weeks" }
+        },
+        {
+          "target": "hip-joint",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Hip internal and external rotation improve, which changes how the pelvis moves in walking and squatting. Restricted hip rotation is a frequent hidden cause of lower back and knee pain."
+        },
+        {
+          "target": "ligaments",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Ligaments and joint capsules should not lengthen — that is instability, not flexibility. Well-executed mobility work targets muscle and fascia and leaves the passive restraints alone."
+        },
+        {
+          "target": "spine",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Better thoracic extension reduces the compensatory hyperextension of the lumbar spine and forward head posture. This is the mechanical basis of the 'better posture' people notice at a month."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "An honest correction: stretching does not meaningfully reduce delayed-onset muscle soreness. The Cochrane review found an effect too small to notice — well under one point on a 100-point scale."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Structural change begins — sarcomeres and collagen remodel",
+      "effects": [
+        {
+          "target": "hamstrings",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Around 8 weeks, muscle adapts structurally by adding sarcomeres in series, so the muscle-tendon unit is genuinely longer at the same tension. This is when gains become durable."
+        },
+        {
+          "target": "tendons",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Collagen in tendon and fascia remodels slowly under repeated end-range load. Tendon compliance changes over months, not weeks — this is the slowest-adapting tissue in the chain."
+        },
+        {
+          "target": "hip-flexors",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Restored hip extension lets the glutes fire properly again in walking and standing. For a desk worker, this reverses the main postural consequence of years of sitting."
+        },
+        {
+          "target": "joints",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Cartilage is nourished by movement through full range, since it has no blood supply. Using the ends of your available range daily is one of the few things that maintains joint health directly."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Long-duration stretching under load does produce a small strength and hypertrophy effect at long muscle lengths — real, but far smaller than resistance training."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Movement quality is the real payoff, not the flexibility itself",
+      "effects": [
+        {
+          "target": "hip-joint",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Six months of daily mobility restores something most urban adults lose in their thirties: a full, comfortable deep squat and easy floor sitting. This is a genuine functional-age marker."
+        },
+        {
+          "target": "spine",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Chronic low back and neck pain improve substantially in most people who combine mobility with strengthening. Mobility alone helps less — the combination is what the evidence supports."
+        },
+        {
+          "target": "ligaments",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The connective tissue network is now conditioned to tolerate end-range loading. This is where the modest injury-prevention benefit actually comes from — tolerance, not looseness."
+        },
+        {
+          "target": "shoulder-joint",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Full overhead range with a stable shoulder blade means pressing, pull-ups and everyday reaching all happen without impinging the rotator cuff."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "A genuinely surprising finding: regular static stretching improves arterial stiffness and endothelial function modestly. Small studies, but replicated — the mechanism appears to be local vascular strain."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Flexibility is now a property of the body, not a project",
+      "effects": [
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "A year in, mobility is maintained with far less work than it took to build — two or three sessions a week holds what daily practice created."
+        },
+        {
+          "target": "joints",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Maintaining full active range across every major joint is one of the strongest predictors of physical independence in later life, more so than flexibility measured in isolation."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Reality check: mobility work does not build strength, cardiovascular fitness or bone. It makes those trainings possible in better positions — it is a multiplier, not a substitute."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Improved proprioception — knowing where your limbs are without looking — comes from repeatedly moving through end range. This is a nervous-system adaptation and it protects against falls."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "The difference between ageing stiff and ageing mobile",
+      "effects": [
+        {
+          "target": "joints",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Range of motion declines with age in almost everyone; consistent mobility work is the only thing that reliably slows it. At five years the gap against a sedentary peer is large and obvious."
+        },
+        {
+          "target": "spine",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Preserved thoracic extension and rotation is what prevents the stooped posture of later life. That posture is largely a use-it-or-lose-it adaptation, not an inevitability."
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "The practical five-year outcome is banal and important: still able to sit on the floor, get up unaided, tie your own shoes, reach an overhead shelf and squat comfortably."
+        },
+        {
+          "target": "peripheral-nerves",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Maintained nerve mobility reduces the chronic entrapment syndromes — sciatica, thoracic outlet, carpal tunnel — that accumulate in stiff, sedentary bodies."
+        },
+        {
+          "target": "hamstrings",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Final honest note: excessive passive flexibility without strength at those ranges is not an asset. The goal is usable, controlled range — active mobility, not just how far someone can push you."
+        }
+      ]
+    }
+  ]
+}

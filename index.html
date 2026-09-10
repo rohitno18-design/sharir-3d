@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Sharir · 3D Human Body — Interactive Indian Anatomy Atlas</title>
+  <meta name="description" content="Explore every bone, muscle, nerve, vessel and organ of the human body in 3D. Male & female, any age, and see what food, exercise, supplements and medicines do to the body over time." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='30' fill='%230b0d10'/><path d='M32 12a7 7 0 1 1 0 14 7 7 0 0 1 0-14zm-9 17h18l4 12-6 2-2-6v17h-4V38h-2v16h-4V37l-2 6-6-2z' fill='%23e9c95c'/></svg>" />
+  <link rel="stylesheet" href="/src/styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- 3D stage -->
+    <div id="stage">
+      <canvas id="gl"></canvas>
+      <svg id="label-lines" aria-hidden="true"></svg>
+      <div id="labels" aria-hidden="true"></div>
+      <div id="context-bar" class="context-bar" hidden></div>
+      <div id="stage-hint" class="hint">Drag to rotate · Scroll to zoom · Right-drag to pan · Click a part · Double-click to focus</div>
+      <div id="hover-tip" class="hover-tip" hidden></div>
+      <div id="legend" class="legend" hidden></div>
+      <div id="stage-toolbar" class="stage-toolbar">
+        <button class="tb" id="tb-reset" title="Reset view (R)">⟲</button>
+        <button class="tb" id="tb-front" title="Front">F</button>
+        <button class="tb" id="tb-back" title="Back">B</button>
+        <button class="tb" id="tb-left" title="Left side">L</button>
+        <button class="tb" id="tb-right" title="Right side">R</button>
+        <button class="tb" id="tb-top" title="Top">T</button>
+        <span class="tb-sep"></span>
+        <button class="tb" id="tb-labels" title="Labels (N)">Aa</button>
+        <button class="tb" id="tb-atlas" title="Atlas view — all systems side by side (A)">▥</button>
+        <button class="tb active" id="tb-reveal" title="Reveal selection — fade everything else so deep parts stay visible (V)">◉</button>
+        <button class="tb" id="tb-xray" title="X-ray / ghost mode (X)">◐</button>
+        <span class="tb-sep"></span>
+        <button class="tb active" id="tb-menu" title="Show / hide the left menu (\)">▤</button>
+        <button class="tb active" id="tb-details" title="Show / hide the details panel (])">▧</button>
+        <button class="tb" id="tb-shot" title="Save screenshot (S)">⤓</button>
+      </div>
+    </div>
+
+    <!-- Top bar -->
+    <header id="topbar">
+      <div class="brand">
+        <div class="brand-mark">श</div>
+        <div class="brand-text">
+          <div class="brand-name">SHARIR <span>3D</span></div>
+          <div class="brand-sub">Interactive Human Body · भारतीय शरीर रचना</div>
+        </div>
+      </div>
+
+      <div class="navbtns">
+        <button id="nav-back" class="navbtn" title="Back (Backspace)" disabled>‹</button>
+        <button id="nav-fwd" class="navbtn" title="Forward" disabled>›</button>
+        <button id="nav-home" class="navbtn home" title="Whole body — start again (Home)">⌂</button>
+        <button id="nav-help" class="navbtn" title="What is this? / How to use">?</button>
+      </div>
+
+      <nav class="modes" role="tablist">
+        <button class="mode active" data-mode="explore" role="tab">Explore</button>
+        <button class="mode" data-mode="systems" role="tab">Systems</button>
+        <button class="mode" data-mode="age" role="tab">Age</button>
+        <button class="mode" data-mode="effects" role="tab">What happens if…</button>
+      </nav>
+
+      <div class="search-wrap">
+        <svg class="search-ico" viewBox="0 0 24 24" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15zm10.5 3-5-5"/></svg>
+        <input id="search" type="search" placeholder="Search any bone, muscle, nerve, organ… (e.g. femur, दिल, vagus)" autocomplete="off" spellcheck="false" />
+        <kbd>/</kbd>
+        <div id="search-results" class="search-results" hidden></div>
+      </div>
+
+      <div class="top-right">
+        <div class="seg" id="sex-toggle" title="Body sex">
+          <button data-sex="male" class="active">♂ Male</button>
+          <button data-sex="female">♀ Female</button>
+        </div>
+        <div class="seg" id="lang-toggle" title="Label language">
+          <button data-lang="en" class="active">EN</button>
+          <button data-lang="hi">हिं</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Left panel -->
+    <aside id="left" class="panel">
+      <div class="panel-inner" id="left-content"></div>
+    </aside>
+
+    <!-- Right panel: inspector -->
+    <aside id="right" class="panel">
+      <div class="panel-inner" id="inspector"></div>
+    </aside>
+
+    <!-- Panel handles live OUTSIDE the panels: a collapsed panel is opacity:0, and a
+         child can never be visible inside a zero-opacity parent, so a handle placed
+         inside would vanish along with the panel it is meant to bring back. -->
+    <button class="handle" id="left-collapse" title="Hide / show the menu (\)"><span class="hglyph">‹</span><span class="hlabel">Menu</span></button>
+    <button class="handle" id="right-collapse" title="Hide / show the details panel (])"><span class="hglyph">›</span><span class="hlabel">Details</span></button>
+
+    <!-- Bottom dock (age slider / effects timeline) -->
+    <footer id="dock" hidden></footer>
+
+    <!-- Loading -->
+    <div id="loader">
+      <div class="loader-card">
+        <div class="loader-mark">श</div>
+        <div class="loader-title">Building the body</div>
+        <div class="loader-sub" id="loader-sub">Loading skeleton…</div>
+        <div class="bar"><div class="bar-fill" id="loader-bar"></div></div>
+        <div class="loader-foot">7,100+ named structures · 15 systems · Z-Anatomy (CC BY-SA 4.0) + BodyParts3D</div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast" hidden></div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

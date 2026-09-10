@@ -1,0 +1,276 @@
+{
+  "id": "surya-namaskar-daily",
+  "name": { "en": "12 rounds of Surya Namaskar daily", "hi": "रोज़ 12 राउंड सूर्य नमस्कार" },
+  "category": "exercise",
+  "icon": "🌅",
+  "dose": "12 rounds (24 half-rounds, one per leg) of the classical 12-posture sequence, breath-linked, at a steady pace of roughly 1–1.5 min per round, so 15–20 minutes every morning. Assumes a mostly sedentary starting point.",
+  "summary": {
+    "en": "Twelve rounds of Surya Namaskar is a moderate-intensity circuit: it raises heart rate to roughly 100–130 bpm, loads the shoulders, chest, triceps and core through repeated plank-to-cobra transitions, and takes the hamstrings, hip flexors and spine through their full range every round. Done daily it produces modest but measurable gains in cardiorespiratory fitness, upper-body endurance, flexibility and body composition over 3–6 months, with the calming effect of slow, breath-linked movement. It is not a substitute for heavy strength work or vigorous cardio, but it is a real workout.",
+    "hi": "12 राउंड सूर्य नमस्कार एक मध्यम-तीव्रता का सर्किट है: धड़कन लगभग 100–130 तक जाती है, बार-बार प्लैंक से भुजंगासन में जाने से कंधे, छाती, ट्राइसेप्स और कोर पर लोड पड़ता है, और हर राउंड में हैमस्ट्रिंग, कूल्हे के फ्लेक्सर और रीढ़ पूरी रेंज में खिंचते हैं। रोज़ करने पर 3–6 महीनों में दिल-फेफड़ों की फिटनेस, ऊपरी शरीर की सहनशक्ति, लचीलापन और बॉडी कम्पोज़िशन में छोटा पर नापने लायक सुधार आता है, और साँस के साथ धीमी गति से मन शांत होता है। यह भारी वेट ट्रेनिंग या तेज़ कार्डियो का विकल्प नहीं है, पर असली कसरत ज़रूर है।"
+  },
+  "indian_context": "Surya Namaskar needs no equipment, no gym fee and about 2 m² of floor, which makes it the most accessible daily workout for Indian homes, hostels and small flats; it also sidesteps outdoor heat and winter AQI. Indian studies (DRDO/DIPAS, medical colleges) measured its energy cost at roughly 3–4 METs at a normal pace, higher when done fast, so 12 rounds counts toward the WHO 150-minute moderate-activity target. Common Indian-specific problems: wrist pain on hard tile floors without a mat, skipping breath-linking to rush through rounds, and believing 12 rounds alone will produce major weight loss without changing rice, roti and sweet intake.",
+  "evidence": "moderate",
+  "sources": [
+    "Sinha B, Ray US, Pathak A, Selvamurthy W. Energy cost and cardiorespiratory changes during the practice of Surya Namaskar. Indian J Physiol Pharmacol. 2004",
+    "Bhutkar MV, Bhutkar PM, Taware GB, Surdi AD. How effective is sun salutation in improving muscle strength, general body endurance and body composition? Asian J Sports Med. 2011",
+    "Mody BS. Acute effects of Surya Namaskar on the cardiovascular & metabolic system. J Bodyw Mov Ther. 2011",
+    "WHO. Guidelines on physical activity and sedentary behaviour. 2020"
+  ],
+  "caution": "People with uncontrolled high blood pressure, glaucoma or recent eye surgery should avoid the head-below-heart positions initially; those with wrist, shoulder or lumbar disc problems should modify the plank/cobra and forward-fold positions. Pregnant women should follow a prenatal-yoga modification after the first trimester. Warm up the wrists and go slower than you think for the first two weeks.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Heart rate up, wrists and shoulders working, hamstrings stretched",
+      "effects": [
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Twelve continuous rounds keep the heart at ~100–130 bpm, comparable to brisk walking or a slow jog; oxygen consumption is roughly 3–4 METs at a normal pace, more if done fast.",
+          "metric": { "label": "Heart rate during 12 rounds", "value": "~100–130 bpm" }
+        },
+        {
+          "target": "deltoids",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Each round has a plank, a lowered plank (ashtanga) and a cobra: 24 push-up-like transitions load the front deltoids, chest and triceps. Beginners feel it in the shoulders first."
+        },
+        {
+          "target": "wrist",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Body weight through extended wrists on the floor compresses the carpal joints; on a bare tile floor this is the most common day-one complaint."
+        },
+        {
+          "target": "hamstrings",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Twenty-four forward folds take the hamstrings and calves to end-range; stretch tolerance is being tested, not yet changed."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Breath-linked rhythmic movement early in the day raises alertness and lowers perceived stress for hours; morning light exposure, if done near a window or outdoors, also sets the circadian clock."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Upper-body soreness settling, rounds getting smoother",
+      "effects": [
+        {
+          "target": "triceps",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The repeated-bout effect protects the shoulders, chest and triceps; DOMS after the first three days fades and the lowered-plank transitions stop feeling like a test."
+        },
+        {
+          "target": "spine",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Alternating flexion (forward fold) and extension (cobra, raised-arms) mobilises every spinal segment; morning stiffness is noticeably less by the end of the week."
+        },
+        {
+          "target": "hip-flexors",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The low lunge position stretches the iliopsoas, which is chronically shortened by chair-sitting; early gains are in stretch tolerance rather than muscle length."
+        },
+        {
+          "target": "lungs",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Linking each posture to a full inhale or exhale trains slower, deeper diaphragmatic breathing that carries over into the rest of the day."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Measurably more flexible, stronger arms, slightly fitter heart",
+      "effects": [
+        {
+          "target": "hamstrings",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Forward-fold range is typically up 3–5 cm on a sit-and-reach test after a month of daily practice, mostly through increased stretch tolerance."
+        },
+        {
+          "target": "deltoids",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Upper-body muscular endurance is up: people who could not hold a lowered plank now cycle through 24 of them. Early neural gains, not yet size."
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Resting heart rate is typically 2–4 bpm lower and VO₂max up a few percent; the stimulus is moderate, so cardiac changes are smaller than with running.",
+          "metric": { "label": "Resting heart rate", "value": "−2 to −4 bpm" }
+        },
+        {
+          "target": "abs",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Holding plank positions and controlling the spine through every transition builds the deep core; lower-back stiffness on waking is reduced."
+        },
+        {
+          "target": "prefrontal-cortex",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "A fixed morning ritual with breath focus improves self-reported mood and attention; part of this is the exercise, part the routine."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Firmer shoulders and arms, freer hips, small fat loss",
+      "effects": [
+        {
+          "target": "deltoids",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.03 },
+          "note": "Roughly 700 lowered-plank/cobra transitions over two months is a real body-weight pressing volume; front deltoids, chest and triceps are modestly thicker and more defined."
+        },
+        {
+          "target": "triceps",
+          "kind": "positive",
+          "intensity": 0.4,
+          "visual": { "scale": 1.03 },
+          "note": "Triceps endurance and tone have improved; visible in people starting from a low base, subtle in those already training."
+        },
+        {
+          "target": "hip-joint",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Hip flexor length and hip extension range are improved; the low lunge feels open rather than pinching, and walking stride is longer."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "At ~100–150 kcal per 12-round session, two months adds up to roughly 0.5–1 kg of fat loss if diet is unchanged, mostly from the abdomen. Modest, and easily undone by one extra sweet a day.",
+          "metric": { "label": "Energy per 12 rounds", "value": "~100–150 kcal" }
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Systolic blood pressure is typically 3–5 mmHg lower than baseline in people who started with elevated readings.",
+          "metric": { "label": "Systolic blood pressure", "value": "−3 to −5 mmHg" }
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Documented gains: strength, endurance, body composition",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "In a 24-week study of daily Surya Namaskar, upper-body and lower-body strength, muscular endurance and body composition all improved significantly in previously untrained adults."
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "VO₂max up roughly 5–10% and resting heart rate 4–6 bpm lower; stairs and hills are noticeably easier.",
+          "metric": { "label": "VO₂max", "value": "+5–10%" }
+        },
+        {
+          "target": "pectorals",
+          "kind": "positive",
+          "intensity": 0.4,
+          "visual": { "scale": 1.03 },
+          "note": "Chest and front shoulder are visibly toned; this is body-weight endurance hypertrophy, not gym-level size."
+        },
+        {
+          "target": "spine",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Spinal mobility in flexion and extension is well above the sedentary norm; the intervertebral discs are pumped with nutrients by the daily movement."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Daily moderate activity of this size improves insulin sensitivity and lowers fasting glucose; in people with prediabetes expect a small HbA1c drop of ~0.2–0.4%."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Regular yoga-based practice lowers anxiety and perceived-stress scores in trials; the breath-linked movement is part of the mechanism through vagal activation."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "A durable habit: fit, mobile, calm — with a clear ceiling",
+      "effects": [
+        {
+          "target": "joints",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Shoulders, hips, spine and ankles all keep a wide, pain-free range; this is the mobility base that prevents the stiffness most desk-working Indians have by 40."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Weight-bearing through the arms and the impact of stepping forward and back give a mild bone stimulus to the wrists, arms and legs; enough to slow loss, not enough to build much."
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Cardiorespiratory fitness is maintained at a moderately trained level; further gains need added intensity (faster rounds, more rounds, or a separate vigorous session)."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Waist circumference typically 2–3 cm smaller than baseline; the abdominal fat that matters most for South-Asian metabolic risk is the first to go."
+        },
+        {
+          "target": "wrist",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "A year of daily wrist loading without a mat or wrist warm-up can lead to chronic dorsal wrist pain in a minority; a folded mat under the heel of the hand fixes most cases."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Ageing more slowly in the joints and spine; heart and metabolism moderately protected",
+      "effects": [
+        {
+          "target": "spine",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Daily full-range spinal movement over years is associated with better disc health and far less of the stiffness and back pain that characterise sedentary ageing."
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Sustained moderate daily activity of this dose meets the WHO minimum and is associated with roughly 20–30% lower cardiovascular mortality versus inactivity in cohort data; the direct long-term evidence for Surya Namaskar specifically is limited."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Body-weight endurance work maintains function but does not stop the loss of muscle power after 40; adding two resistance sessions a week fills that gap."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Long-term yoga-based practice is associated with better attention, lower anxiety and preserved grey matter in observational studies; causality is plausible but not proven."
+        }
+      ]
+    }
+  ]
+}

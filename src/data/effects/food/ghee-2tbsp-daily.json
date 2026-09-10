@@ -1,0 +1,250 @@
+{
+  "id": "ghee-2tbsp-daily",
+  "name": { "en": "2 tablespoons of ghee every day", "hi": "रोज़ 2 बड़े चम्मच घी" },
+  "category": "food",
+  "icon": "🧈",
+  "dose": "About 28 g of ghee a day — 2 level tablespoons, or roughly 6 teaspoons. In practice that is a spoon on the dal, a spoon smeared on rotis, and whatever the sabzi was tempered with. Roughly 250 kcal and about 17–18 g of saturated fat.",
+  "molecule": "palmitic-acid",
+  "summary": {
+    "en": "Ghee is about 62–65% saturated fat, and the two saturated fats it is richest in — palmitic and myristic acid — are the ones that raise LDL cholesterol most reliably in feeding studies. Two tablespoons uses up roughly 80% of the entire day's saturated fat budget under WHO's 10%-of-energy limit, before a single fried snack. It is not poison and it is not medicine: as a cooking fat it is stable at high heat and genuinely better than repeatedly reheated refined oil or old vanaspati, but as an extra 250 kcal poured on top of an already adequate meal it moves your lipids and your waist in the wrong direction.",
+    "hi": "घी में लगभग 62–65% सैचुरेटेड फैट होता है, और इसमें सबसे ज़्यादा जो दो फैट हैं — पामिटिक और मिरिस्टिक — वही LDL कोलेस्ट्रॉल सबसे पक्के तौर पर बढ़ाते हैं। 2 चम्मच घी पूरे दिन के सैचुरेटेड फैट के कोटे का करीब 80% अकेले खा जाता है, तली हुई चीज़ें तो अभी बाकी हैं। घी न ज़हर है न दवा: तेज़ आँच पर पकाने के लिए यह बार-बार गरम किए रिफाइंड तेल या पुराने वनस्पति से बेहतर है, लेकिन भरे-पूरे खाने के ऊपर रोज़ 250 अतिरिक्त कैलोरी डालना लिपिड और कमर दोनों को गलत दिशा में ले जाता है।"
+  },
+  "indian_context": "ICMR-NIN advises keeping total visible cooking fat to roughly 20–30 g a day for a sedentary adult — 2 tablespoons of ghee alone is about 28 g, so the mustard oil in the sabzi and the oil in the poori are all surplus. The Indian defence of ghee usually rests on Ayurveda ('ghee lubricates the joints', 'ghee lowers cholesterol') rather than on data; neither claim has trial support. What is true is the swap argument: if that 28 g of ghee is replacing vanaspati or a bottle of refined oil that has been through the kadhai five times, ghee wins comfortably on oxidation and trans fat. South Asians already develop coronary disease about a decade earlier than Europeans, so a lipid-raising fat is a heavier bet in an Indian body than the same spoon would be elsewhere.",
+  "evidence": "strong",
+  "sources": [
+    "WHO. Saturated fatty acid and trans-fatty acid intake for adults and children: WHO guideline, 2023",
+    "Mensink RP. Effects of saturated fatty acids on serum lipids and lipoproteins: a systematic review and regression analysis. World Health Organization, 2016",
+    "Hooper L et al. Reduction in saturated fat intake for cardiovascular disease. Cochrane Database of Systematic Reviews, 2020",
+    "Sacks FM et al. Dietary Fats and Cardiovascular Disease: A Presidential Advisory from the American Heart Association. Circulation, 2017",
+    "ICMR-NIN. Dietary Guidelines for Indians, 2024 (visible fat recommendations)"
+  ],
+  "caution": "If your LDL is already above 100 mg/dL, or you have familial hypercholesterolaemia, existing heart disease, or a family history of a heart attack before 55, 2 tablespoons a day is a poor idea — cut to 1–2 teaspoons and get the calories from nuts or seeds instead. Ghee is also nearly pure milk fat, so people with a true milk protein allergy should be careful with cheap non-clarified ghee. This dose is for adults; the calorie density means a very different picture in a child.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Gallbladder empties, chylomicrons flood the blood for 4–6 hours",
+      "effects": [
+        {
+          "target": "small-intestine",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "Fat in the duodenum triggers cholecystokinin, bile pours in, and lipase breaks the ghee into fatty acids that are repackaged into chylomicrons. Blood turns visibly milky with triglyceride for several hours after a fat-heavy meal.",
+          "metric": { "label": "Energy added", "value": "~250 kcal, ~28 g fat, ~17–18 g of it saturated" }
+        },
+        {
+          "target": "gallbladder",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "A strong contraction with every ghee-containing meal. This is normal and, unlike prolonged fasting, actually keeps bile moving rather than letting it sludge."
+        },
+        {
+          "target": "eyes",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Fat is required to absorb the beta-carotene in your sabzi and the vitamins A, D, E and K on the plate. A spoon of ghee on palak or gajar genuinely increases how much of that vitamin A you actually take in."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "If the 250 kcal is on top of what you already eat, it is a surplus from day one. Fat is the macronutrient stored with the least metabolic cost — about 2–3% is burned in processing it versus 20–30% for protein."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Saturated fat starts turning down the liver's LDL receptors",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Palmitic and myristic acid reduce the number of LDL receptors on liver cells, so LDL particles stay in the blood longer instead of being cleared. This is the mechanism behind the cholesterol rise, and it starts within days.",
+          "metric": { "label": "Saturated fat load", "value": "~17–18 g/day; WHO's ceiling is ~22 g on a 2000 kcal diet" }
+        },
+        {
+          "target": "arteries",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Repeated post-meal triglyceride surges transiently stiffen the endothelium. In a healthy vessel this fully resolves between meals; the concern is doing it three times a day for years."
+        },
+        {
+          "target": "gallbladder",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "Regular fat at meals keeps the gallbladder emptying properly. Very-low-fat crash diets, not ghee, are the classic trigger for gallstone formation."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Meals feel more satisfying and stay down longer — fat slows gastric emptying. Many people genuinely eat less roti when the dal has ghee in it, which offsets part of the calorie load."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "LDL cholesterol measurably higher on a repeat lipid profile",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Controlled feeding studies show LDL responds to saturated fat within 2–4 weeks and then plateaus. How much depends entirely on whether the ghee replaced another fat or was added on top of it.",
+          "metric": { "label": "LDL cholesterol", "value": "typically +5–15 mg/dL when added on top, less if it replaces another fat" }
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "The liver is exporting more VLDL and clearing less LDL. Cholesterol from the ghee itself (about 75–80 mg per 2 tbsp) matters far less than the saturated fat does."
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "A sustained 250 kcal/day surplus with no compensation is around 0.5–1 kg a month in the early phase, slowing as the body adapts. In South Asians it deposits preferentially around the abdomen and inside the liver."
+        },
+        {
+          "target": "skin",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "Adequate dietary fat supports the skin's lipid barrier and vitamin A status. This is real but small — it needs a spoon, not six."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Waist and ApoB both drifting up if the calories weren't traded",
+      "effects": [
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Two months of surplus shows on the belt before the weighing scale. Visceral fat around the intestines and liver is the fraction that drives insulin resistance, and it is the fraction South Asians add first.",
+          "metric": { "label": "Weight drift if uncompensated", "value": "typically 1–3 kg over 2 months" }
+        },
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "ApoB — the count of atherogenic particles, and a better predictor than LDL-C in Indians — tracks upward with the LDL. Every one of those particles can enter the artery wall."
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Surplus energy from any source ends up as hepatic triglyceride. Saturated fat specifically drives liver fat harder than the same calories from unsaturated fat in overfeeding trials."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "Ghee carries small amounts of vitamin K2 (menaquinone-4) and vitamin D from the milk fat. The quantities are modest and this is not a substitute for sunlight or a D3 supplement in a deficient population."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Liver fat rising; the direction depends on what ghee replaced",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Grade 1 fatty change becomes common where the ghee sits on top of an already carbohydrate-heavy Indian plate and a sedentary day. Remove the surplus and it clears within weeks.",
+          "visual": { "scale": 1.03 },
+          "metric": { "label": "ALT (liver enzyme)", "value": "may creep to the 40–60 U/L range" }
+        },
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Six months of higher ApoB means more lipoprotein particles retained in the coronary wall. This is silent, decades-long arithmetic, not an event."
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Waist circumference above 90 cm in men or 80 cm in women is the Indian cut-off for central obesity — a lower threshold than the Western one, for exactly this reason."
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.25,
+          "note": "The honest counterpoint: if these 28 g replaced vanaspati or five-times-reheated refined oil, six months on ghee has probably lowered your trans fat and oxidised-oil exposure substantially."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "A settled, mildly atherogenic lipid pattern — plus a few kilos",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "LDL and ApoB stabilise at their new higher level and stay there as long as the habit does. Cholesterol is a cumulative exposure — it is years times concentration that produces plaque, not any single reading.",
+          "metric": { "label": "Lifetime LDL exposure", "value": "each extra 10 mg/dL sustained for years measurably raises cardiovascular risk" }
+        },
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Established fatty liver in a meaningful share of people who added ghee without removing calories elsewhere — and India is finding this in lean people, not only in the obviously overweight.",
+          "visual": { "scale": 1.04 }
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "3–6 kg over a year is the typical drift when 250 kcal is added and nothing is traded away. Appetite adapts, so it is usually less than the arithmetic predicts, but it is rarely zero."
+        },
+        {
+          "target": "pancreas",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Visceral fat and liver fat together push up fasting insulin. The ghee itself does not spike glucose — the weight it carries does the damage indirectly."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Real added plaque — modest, cumulative, still reversible",
+      "effects": [
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Five years of a higher ApoB is genuine extra atherosclerosis, not a theoretical risk. The Cochrane evidence is consistent: cutting saturated fat lowers cardiovascular events by roughly a sixth, mostly through the LDL it lowers.",
+          "metric": { "label": "Cutting saturated fat", "value": "~17% fewer cardiovascular events in randomised trials" }
+        },
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Most people stay at simple fatty liver; a minority progress to inflammation and early fibrosis. There is no symptom that tells you which group you are in.",
+          "visual": { "scale": 1.05 }
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Central fat accumulated over five years is metabolically active tissue draining inflammatory signals and free fatty acids straight into the portal vein and the liver behind it."
+        },
+        {
+          "target": "joints",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "The popular claim that ghee lubricates joints has no trial support — joint cartilage is fed by synovial fluid, not by dietary fat. Any weight it adds actually loads the knees harder."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Dose is the whole argument. One to two teaspoons a day, inside your fat budget and instead of another oil, is a reasonable and pleasant way to eat. Six teaspoons on top is a different food."
+        }
+      ]
+    }
+  ]
+}

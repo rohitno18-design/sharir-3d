@@ -1,0 +1,286 @@
+{
+  "id": "hiit-3x-week",
+  "name": { "en": "HIIT 20 minutes, 3 times a week", "hi": "हफ़्ते में 3 बार 20 मिनट HIIT" },
+  "category": "exercise",
+  "icon": "🔥",
+  "dose": "20 minutes, 3 times a week, on non-consecutive days: 5 min warm-up, then 8–10 rounds of 60 seconds hard (85–95% of max heart rate — hard enough that talking is impossible) alternating with 60 seconds easy, then a 3 min cool-down. Bike, treadmill, rower, hill sprints or bodyweight circuits all work. Assumes a healthy adult with no known heart disease.",
+  "summary": {
+    "en": "HIIT works by taking the cardiovascular and muscular systems close to their ceiling repeatedly in a short window. Each hard interval drives heart rate to 85–95% of max, depletes muscle ATP and phosphocreatine, floods the cell with AMP and calcium, and switches on PGC-1α — the master signal for building mitochondria. Because the stimulus is intensity rather than duration, VO₂max climbs faster per minute invested than with steady cardio: typically 10–20% in about three months from a sedentary start. The trade-off is a much higher acute load on the heart, joints and nervous system, which is why the frequency stays at three and the sessions stay at twenty minutes.",
+    "hi": "HIIT का असर इसलिए होता है क्योंकि ये दिल और मांसपेशियों को बार-बार उनकी हद के क़रीब ले जाता है, वो भी कम समय में। हर तेज़ राउंड में धड़कन 85–95% तक जाती है, मांसपेशी की तुरंत मिलने वाली ऊर्जा ख़त्म होती है, और कोशिका के अंदर वो सिग्नल चालू होता है जो नए माइटोकॉन्ड्रिया (ऊर्जा फ़ैक्टरी) बनाता है। इसीलिए हर मिनट के हिसाब से फ़ायदा सामान्य कार्डियो से ज़्यादा है — शुरुआत से लगभग तीन महीने में VO₂max 10–20% तक बढ़ जाता है। क़ीमत ये है कि दिल, जोड़ों और नर्वस सिस्टम पर एक बार का दबाव कहीं ज़्यादा है — इसलिए हफ़्ते में तीन बार और सिर्फ़ बीस मिनट।"
+  },
+  "indian_context": "For a time-poor Indian professional, 60 minutes of total training a week is often the only honestly achievable dose, and HIIT is the highest return available in that budget. It is also entirely indoor-compatible, which matters for the half of the year when Delhi-NCR winter AQI crosses 200 and for the 35–40 °C summer when outdoor training before 7 AM is the only safe window. The catch is screening: South Asians develop coronary disease and diabetes about a decade earlier and at a lower BMI than Europeans, and a large share of Indians with hypertension or high blood sugar do not know they have it — so a 35-year-old copying a YouTube HIIT video from a sedentary baseline is exactly the profile that should get a BP check and a basic evaluation first, not the profile that is safe by default. Add a gym floor without air conditioning in June and dehydration becomes a real limiter, not a footnote.",
+  "evidence": "strong",
+  "sources": [
+    "Milanović Z, Sporiš G, Weston M. Effectiveness of high-intensity interval training and continuous endurance training for VO2max improvements: a systematic review and meta-analysis. Sports Medicine. 2015",
+    "Gibala MJ et al. Physiological adaptations to low-volume, high-intensity interval training in health and disease. Journal of Physiology. 2012",
+    "Weston KS, Wisløff U, Coombes JS. High-intensity interval training in patients with lifestyle-induced cardiometabolic disease: a systematic review and meta-analysis. British Journal of Sports Medicine. 2014",
+    "WHO. Guidelines on physical activity and sedentary behaviour. 2020",
+    "ACSM's Guidelines for Exercise Testing and Prescription, 11th ed. 2021"
+  ],
+  "caution": "The one absolute rule with HIIT is screening before intensity. Anyone over 40 starting from sedentary, or with chest pain on exertion, known coronary disease, uncontrolled hypertension, an irregular heartbeat, or diabetes of long standing, should be evaluated before doing maximal intervals — the rare exercise-related cardiac event almost always happens in someone with undiagnosed disease going very hard. Three sessions a week is a ceiling, not a starting point: the commonest failure mode is doing HIIT five or six days a week, which produces stalled progress, poor sleep, a raised resting heart rate and eventually injury. Build a 4–6 week base of easy aerobic work first if you are starting from zero.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Heart near maximum, lactate spikes, metabolism stays raised for hours",
+      "effects": [
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.75,
+          "note": "Each hard interval drives heart rate to 85–95% of maximum and cardiac output to near its ceiling. This is a genuine acute load — far more than steady cardio — and it is exactly why the adaptation signal is so strong.",
+          "metric": { "label": "Heart rate during intervals", "value": "~85–95% of max" }
+        },
+        {
+          "target": "quadriceps",
+          "kind": "strain",
+          "intensity": 0.65,
+          "note": "Muscle ATP and phosphocreatine are driven down and lactate rises steeply. The burn is not lactic acid damaging tissue — it is the accumulation of hydrogen ions and metabolites that trip the signalling cascade for adaptation.",
+          "metric": { "label": "Blood lactate after intervals", "value": "~8–14 mmol/L" }
+        },
+        {
+          "target": "lungs",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Ventilation climbs past 100 L/min and stays high between intervals to repay the oxygen deficit. Breathlessness lags the effort, which is why the recovery minute feels harder than the work minute."
+        },
+        {
+          "target": "adrenal-glands",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Adrenaline, noradrenaline, growth hormone and cortisol all spike sharply. Metabolic rate stays elevated for hours afterwards (EPOC), though the extra calorie burn is modest — roughly 6–15% of the session's cost, not the doubling often claimed."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Glucose uptake into muscle rises through contraction-driven GLUT4 movement, which works independently of insulin. Blood sugar handling is measurably better for the next 24–48 hours after a single session."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Three sessions in: mitochondrial machinery already switching on",
+      "effects": [
+        {
+          "target": "quadriceps",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "PGC-1α signalling after each session increases mitochondrial enzyme content within days. Two weeks of interval training measurably raises muscle oxidative capacity — one of the fastest adaptations in all of exercise physiology."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Insulin sensitivity improves within the first week, before any change in weight or body composition. This is the earliest clinically meaningful benefit, and it is the one that matters most for the South Asian metabolic profile."
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Plasma volume expands by roughly 8–10% in the first week. The same interval feels slightly less brutal because each beat now moves more blood."
+        },
+        {
+          "target": "tendons",
+          "kind": "strain",
+          "intensity": 0.45,
+          "note": "Connective tissue adapts far slower than the heart and mitochondria. In week one the cardiovascular system is already improving while Achilles tendons, knees and hips are still working at their untrained tolerance — the mismatch that causes most early HIIT injuries."
+        },
+        {
+          "target": "brain",
+          "kind": "neutral",
+          "intensity": 0.35,
+          "note": "Sleep can get worse before it gets better if sessions are done late in the evening; the adrenaline and core temperature rise take 3–4 hours to settle. Moving the session earlier usually fixes it."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "VO₂max climbing, resting heart rate dropping, intervals repeatable",
+      "effects": [
+        {
+          "target": "heart-muscle",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Stroke volume rises through better ventricular filling and stronger contraction. VO₂max in a previously sedentary adult is typically up 5–10% at one month, and resting heart rate is 3–6 bpm lower.",
+          "metric": { "label": "VO₂max", "value": "+5–10%" }
+        },
+        {
+          "target": "quadriceps",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "More mitochondria and more capillaries per fibre mean lactate is cleared faster at the same effort. Practically: you can hold the hard minute at a higher pace and recover inside the easy minute."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Sixty minutes a week burns relatively few calories directly — roughly 600–900. Fat loss at one month is modest and comes mostly from improved insulin sensitivity and appetite regulation rather than from the burn itself.",
+          "metric": { "label": "Weekly training energy cost", "value": "~600–900 kcal" }
+        },
+        {
+          "target": "lungs",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Ventilatory efficiency improves: the same workload now needs less air moved. Breathlessness at the start of each interval is noticeably less than in week one."
+        },
+        {
+          "target": "knee-joint",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Weeks 3–8 are the classic injury window if the intervals are running or jumping based. Switching part of the work to a bike or rower keeps the cardiovascular stimulus and removes most of the impact."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Two months: aerobic ceiling higher, metabolic markers improved",
+      "effects": [
+        {
+          "target": "heart-muscle",
+          "kind": "positive",
+          "intensity": 0.65,
+          "note": "Left ventricular filling and stroke volume are clearly improved, and resting heart rate typically sits 5–10 bpm below baseline. HIIT reliably produces larger VO₂max gains than an equal-time block of moderate steady cardio.",
+          "metric": { "label": "Resting heart rate", "value": "−5 to −10 bpm" }
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Repeated high-flow episodes are a strong stimulus for endothelial nitric oxide production. Flow-mediated dilation improves and systolic blood pressure falls by roughly 4–8 mmHg in people who started high.",
+          "metric": { "label": "Systolic blood pressure (if elevated)", "value": "−4 to −8 mmHg" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "In people with prediabetes or metabolic syndrome, two months of interval training lowers fasting insulin and post-meal glucose excursions. HbA1c is beginning to move, though it lags the underlying change by weeks."
+        },
+        {
+          "target": "quadriceps",
+          "kind": "positive",
+          "intensity": 0.45,
+          "visual": { "scale": 1.02 },
+          "note": "Unlike long steady cardio, hard intervals recruit type II fibres, so there is a small amount of genuine hypertrophy in the legs alongside the endurance adaptation."
+        },
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Liver fat falls measurably with interval training even without weight loss — relevant given how common non-alcoholic fatty liver is in Indian adults at normal body weight."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Fitness near this dose's ceiling; three sessions is now maintenance",
+      "effects": [
+        {
+          "target": "heart-muscle",
+          "kind": "positive",
+          "intensity": 0.7,
+          "visual": { "scale": 1.02 },
+          "note": "VO₂max gains of 10–20% from a sedentary start are typically banked by three to six months and then plateau. Pushing higher needs added volume — usually easy aerobic work on the off days — not harder intervals.",
+          "metric": { "label": "VO₂max vs baseline", "value": "+10–20%" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "HbA1c falls by roughly 0.3–0.6% in people with prediabetes or type 2 diabetes at this point, driven by better muscle glucose disposal and less visceral fat.",
+          "metric": { "label": "HbA1c (if elevated)", "value": "−0.3 to −0.6%" }
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Visceral fat around the organs shrinks proportionally more than subcutaneous fat. Waist circumference often falls further than the scale does, which is the change that actually matters for cardiometabolic risk in South Asians."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Mitochondrial density and capillary supply are now substantially higher. Fat oxidation at submaximal effort improves, so ordinary daily activity feels easier and recovery between hard efforts is quicker."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Vigorous exercise is a strong BDNF stimulus and among the best-evidenced non-drug treatments for mild anxiety and low mood. Sleep depth improves as long as sessions are not done within 3 hours of bedtime."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "One year: aerobic fitness held, but 60 min/week has real limits",
+      "effects": [
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.65,
+          "note": "Cardiorespiratory fitness is one of the strongest single predictors of long-term mortality, and a year at this level has moved you a full risk category above a sedentary peer. The adaptation is stable but not still climbing."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Interval training alone does little for maximal strength or bone loading. After a year, the honest gap is resistance training — 60 minutes of HIIT a week protects the heart but not muscle mass or bone density over the decades ahead."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Arterial stiffness measures track lower than age-matched sedentary peers, and blood pressure control is maintained as long as the training is. Detraining reverses most of this within 4–8 weeks of stopping."
+        },
+        {
+          "target": "adrenal-glands",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "If sessions have crept up to five or six a week, this is where overreaching shows: rising resting heart rate, falling heart rate variability, disturbed sleep and stalled performance. The fix is fewer hard days, not more."
+        },
+        {
+          "target": "tendons",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "Tendons and joints have now adapted to the impact and are stiffer and more tolerant. The early injury window is behind you provided the intensity was built gradually rather than jumped into."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years of vigorous training: far lower cardiometabolic risk",
+      "effects": [
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.75,
+          "note": "Sustained vigorous activity is associated with roughly 25–35% lower all-cause and cardiovascular mortality in large cohorts. Sixty vigorous minutes a week comfortably meets the WHO minimum of 75–150 minutes of vigorous activity.",
+          "metric": { "label": "All-cause mortality (cohort data)", "value": "~−25 to −35%" }
+        },
+        {
+          "target": "coronary-arteries",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "Better endothelial function, lower blood pressure, lower triglycerides and higher HDL over five years translate into slower coronary plaque progression — the outcome that matters most given how early South Asians develop coronary disease."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "Five years of maintained insulin sensitivity is a major brake on progression from prediabetes to type 2 diabetes, which is a highly relevant endpoint given how many Indian adults sit in that prediabetic band."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Long-term cardiorespiratory fitness is consistently associated with lower dementia and depression risk. The mechanism is largely vascular: what protects the coronary arteries protects the cerebral ones."
+        },
+        {
+          "target": "joints",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Five years of high-impact intervals in someone who never varied the movement pattern can accumulate wear at the knees and hips. Rotating between bike, rower, hills and bodyweight work spreads the load and is the simplest form of longevity insurance here."
+        }
+      ]
+    }
+  ]
+}

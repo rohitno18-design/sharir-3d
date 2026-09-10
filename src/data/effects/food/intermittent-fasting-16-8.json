@@ -1,0 +1,247 @@
+{
+  "id": "intermittent-fasting-16-8",
+  "name": { "en": "16:8 intermittent fasting, every day", "hi": "रोज़ 16:8 वाला इंटरमिटेंट फ़ास्टिंग" },
+  "category": "habit",
+  "icon": "⏱️",
+  "dose": "All food inside an 8-hour window, nothing but water, black coffee or plain tea for the other 16 hours. Two versions matter and they are not equal: an early window (about 9 am–5 pm) and a late window (about 12 noon–8 pm, made by skipping breakfast). Calories are not counted — only the clock.",
+  "summary": {
+    "en": "Sixteen hours without food empties most of the liver's glycogen, keeps insulin low for far longer than a normal eating day, and shifts the body toward burning fat, with a modest rise in ketones by the end of the fast. In trials it produces real but unspectacular weight loss — usually 1–3 kg — and almost all of it is explained by the fact that people eat less when the window is shorter, not by any magic in the fasting itself. The one place timing genuinely seems to matter on its own is the early window: eating in daylight, when your body handles glucose best, improves insulin sensitivity even without weight loss.",
+    "hi": "सोलह घंटे बिना खाए रहने से लिवर का ज़्यादातर ग्लाइकोजन खाली हो जाता है, इंसुलिन सामान्य दिन के मुक़ाबले कहीं ज़्यादा देर तक नीचे रहता है, और शरीर चर्बी जलाने की तरफ़ झुक जाता है। ट्रायल में वज़न असल में घटता है, पर मामूली — आम तौर पर 1–3 किलो — और लगभग पूरा फ़ायदा इसलिए है कि खिड़की छोटी होने पर लोग कम खा लेते हैं, फ़ास्टिंग में कोई जादू नहीं है। एक चीज़ ज़रूर अलग है: खिड़की सुबह-दोपहर की रखें तो इंसुलिन सेंसिटिविटी वज़न घटे बिना भी सुधरती है, क्योंकि शरीर दिन के उजाले में शुगर बेहतर संभालता है।"
+  },
+  "indian_context": "Fasting is not a new import here — Ekadashi, Navratri, Ramzan, Jain upvas and Karva Chauth have run versions of this for centuries, so adherence is culturally easy for most Indians. The catch is which 8 hours people pick: the typical Indian version is skipping breakfast and still eating dinner at 10 pm, which is the worst of both worlds and closer to circadian misalignment than to time-restricted eating. If the window ends at 7 pm instead, the same habit works with your clock rather than against it. Also watch the food inside the window — 8 hours of poori, rice and mithai is not a metabolic intervention, and Indian vegetarians in particular struggle to fit adequate protein into two meals.",
+  "evidence": "moderate",
+  "sources": [
+    "Lowe DA et al. Effects of Time-Restricted Eating on Weight Loss and Other Metabolic Parameters (TREAT randomized clinical trial). JAMA Internal Medicine, 2020",
+    "Liu D et al. Calorie Restriction with or without Time-Restricted Eating in Weight Loss. N Engl J Med, 2022",
+    "Sutton EF et al. Early Time-Restricted Feeding Improves Insulin Sensitivity, Blood Pressure, and Oxidative Stress even without Weight Loss in Men with Prediabetes. Cell Metabolism, 2018",
+    "Patterson RE, Sears DD. Metabolic Effects of Intermittent Fasting. Annual Review of Nutrition, 2017",
+    "International Diabetes Federation and DAR International Alliance. Diabetes and Ramadan: Practical Guidelines, 2021"
+  ],
+  "caution": "Do not do this on insulin, sulfonylureas (glimepiride, glibenclamide) or without adjusting doses if you are diabetic — the hypoglycaemia risk is real, and the Ramadan diabetes guidelines exist for exactly this reason. Avoid it in pregnancy, while breastfeeding, in anyone under 18, with a history of an eating disorder, or with untreated gallstones. If you get acidity or gastritis, a 16-hour empty stomach usually makes it worse, not better. And if you train hard, you must still fit your full protein into the window or you will lose muscle along with the fat.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Liver glycogen runs low; hunger peaks at your old meal times",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.45,
+          "note": "The liver holds roughly 80–100 g of glycogen. By 14–16 hours most of it is spent and the liver switches to making glucose from lactate, glycerol and amino acids to hold blood sugar steady.",
+          "metric": { "label": "Blood ketones at 16 hours", "value": "typically 0.1–0.5 mmol/L — mild, not nutritional ketosis" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Insulin stays at its basal floor for 16 hours instead of being pushed up by chai, biscuits and three meals. Low insulin is the permission signal for fat cells to release fatty acids."
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Ghrelin is trained to your habitual meal times, so the first few days produce sharp hunger at exactly 8 am even though nothing physiological requires food. It fades because the clock resets, not because your stomach shrinks."
+        },
+        {
+          "target": "brain",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Headache, irritability and poor concentration are common on day 1–3, mostly from caffeine timing changes and mild dehydration rather than low blood sugar, which stays normal in a healthy person."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Hunger settles down; the body gets efficient at the switch",
+      "effects": [
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Longer low-insulin periods mean more hours of net fat release from fat cells. Whether that turns into fat loss depends entirely on total calories across the day.",
+          "metric": { "label": "Typical spontaneous calorie reduction", "value": "roughly 200–500 kcal/day just from the shorter window" }
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "neutral",
+          "intensity": 0.35,
+          "note": "Ghrelin rhythm re-entrains to the new window within about a week. This is the single most important adaptation — it is why week two feels easy when week one did not."
+        },
+        {
+          "target": "stomach",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Acidity and gastritis flare in a subset of people, especially those who fill the fasting hours with black coffee or strong tea on an empty stomach."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Muscle uses more fat for fuel during the fasted hours. No loss of muscle at this stage as long as protein across the two or three meals is adequate."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "1–2 kg down — because you ate less, not because you fasted",
+      "effects": [
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Weight loss in randomised trials of 16:8 is consistently modest and matches what the calorie deficit predicts. When calories are matched between groups, the fasting group does not do better.",
+          "metric": { "label": "Weight change at ~1 month", "value": "typically 1–2 kg, mostly explained by reduced intake" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Fasting insulin falls, and it falls further with an early window than a late one. This is the change with the best mechanistic support behind it."
+        },
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Repeated glycogen depletion plus a mild deficit reduces liver fat measurably in a month. Fatty liver responds faster to this than almost any other organ."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "The TREAT trial found a worrying share of the weight lost on 16:8 was lean mass in people who did not do resistance training. Fasting without lifting and without protein costs you muscle."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Waist and triglycerides down; the window you chose starts to matter",
+      "effects": [
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Visceral fat comes off preferentially in a calorie deficit, which is exactly the compartment South Asians need to lose. Waist usually moves faster than total weight.",
+          "metric": { "label": "Waist circumference", "value": "typically 2–4 cm down over two months" }
+        },
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Triglycerides fall and liver fat continues to clear. For someone with grade 1 fatty liver this is one of the most effective non-drug interventions available."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Blood pressure drops a few mmHg, mostly through weight loss. The early-window studies suggest a small additional effect independent of weight."
+        },
+        {
+          "target": "gallbladder",
+          "kind": "strain",
+          "intensity": 0.25,
+          "note": "Sixteen hours without a fat stimulus means the gallbladder sits full and undisturbed. Prolonged fasting plus rapid weight loss is a recognised setup for gallstone formation — the reason very-low-calorie diets warn about it."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "The plateau: results now equal any other diet you'd have stuck to",
+      "effects": [
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Six-month trials land at 2–4 kg on average and then flatten. This is the honest ceiling of 16:8 on its own, and it is the same ceiling as any other approach with a similar deficit.",
+          "metric": { "label": "Weight loss at 6 months", "value": "typically 2–4 kg; no better than matched calorie restriction" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "HbA1c improves modestly in people with prediabetes, more so with an early window. Meaningful, but smaller than what metformin or 150 minutes a week of exercise deliver."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Without resistance training and roughly 1.6 g/kg of protein, six months of this typically costs lean mass. Losing muscle to lose weight makes the next 5 kg harder, not easier.",
+          "visual": { "opacity": 0.94 }
+        },
+        {
+          "target": "brain",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "The autophagy and 'cellular cleaning' claims come mostly from yeast, worms and rodents on far longer fasts. Human evidence at 16 hours is thin — treat it as plausible, not proven."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "It works only if you kept it — and adherence is the whole story",
+      "effects": [
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The best year-long trial compared calorie restriction with and without a time window and found no extra benefit from the window. The reason to choose 16:8 is that a simple clock rule is easier to obey than counting calories.",
+          "metric": { "label": "12-month head-to-head trial", "value": "no significant difference between time-restricted eating and calorie restriction alone" }
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Weight is maintained where it landed if the habit stuck. Regain follows the same rules as for any diet — the fasting window does nothing to protect against it."
+        },
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Sustained lower liver fat and normalised ALT in people who started with fatty liver. This is arguably the strongest, most reliable benefit of the whole habit."
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Some people report a genuinely better relationship with hunger — clearer signals, less grazing. Others develop a rigid, anxious relationship with the clock. Both outcomes are common."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "No long-term human data — safe as far as we know, unproven",
+      "effects": [
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.35,
+          "note": "There is no five-year randomised trial of 16:8 in humans. The lifespan claims come from rodents on severe restriction, and rodents are not small people. Honest answer: we do not know.",
+          "metric": { "label": "Longest good human trial", "value": "12 months — nothing beyond that" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "If the habit kept 3–4 kg off and lowered fasting insulin for five years, the diabetes-prevention benefit is real — but it comes from the sustained weight and the discipline, not the clock."
+        },
+        {
+          "target": "gallbladder",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Years of long daily fasts plus periods of rapid weight loss modestly increase gallstone risk. Worth knowing if you already have sludge on an ultrasound."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.35,
+          "note": "Over five years the muscle question becomes the decisive one, particularly after 50. Done with resistance training and enough protein, lean mass is preserved; done as pure restriction, it is not."
+        },
+        {
+          "target": "bones",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Long-term calorie restriction of any kind can lower bone mineral density, especially if calcium and vitamin D intake fall inside the smaller eating window. Weight-bearing exercise offsets most of it."
+        }
+      ]
+    }
+  ]
+}

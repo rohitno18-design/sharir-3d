@@ -1,0 +1,249 @@
+{
+  "id": "sugar-50g-daily",
+  "name": { "en": "50 g of added sugar every day", "hi": "रोज़ 50 ग्राम चीनी (लगभग 12 चम्मच)" },
+  "category": "food",
+  "icon": "🍬",
+  "dose": "About 50 g of added/free sugar a day — roughly 12 teaspoons. In an Indian day that is typically 4 cups of sweet chai (8 tsp), two-three biscuits, and one small mithai or a sweetened curd. Sugar naturally present inside whole fruit, milk or dal is NOT counted here.",
+  "molecule": "sucrose",
+  "summary": {
+    "en": "50 g is not a binge — it is exactly the WHO's upper limit of 10% of daily energy, and most urban Indians are already at or above it without ever eating a dessert. Sucrose splits into glucose and fructose: the glucose half forces four to six insulin surges a day, the fructose half goes almost entirely to the liver where surplus is converted into fat. The visible results build slowly — liver fat, triglycerides, waist, and cavities — which is exactly why nobody notices until a report is abnormal.",
+    "hi": "50 ग्राम कोई ज़्यादती नहीं है — यह WHO की तय की हुई ऊपरी सीमा है, और ज़्यादातर शहरी भारतीय बिना मिठाई खाए भी इतना पहुँच जाते हैं। चीनी टूटकर ग्लूकोज़ और फ्रुक्टोज़ बनती है: ग्लूकोज़ दिन में चार-पाँच बार इंसुलिन का झटका देता है, और फ्रुक्टोज़ सीधा लिवर जाता है जहाँ बचा हुआ हिस्सा चर्बी बन जाता है। असर धीरे-धीरे बनता है — लिवर में फैट, ट्राइग्लिसराइड, कमर और दाँतों में कैविटी — इसीलिए पता तब चलता है जब रिपोर्ट खराब आती है।"
+  },
+  "indian_context": "Indian sugar is invisible: it arrives in chai, not in cake. Two spoons per cup times four cups already crosses half the WHO limit before breakfast biscuits, Sunday mithai, or the 'healthy' fruit juice. South Asians develop insulin resistance and fatty liver at a lower BMI and a lower waist than Europeans, so the same 50 g does more metabolic damage in an Indian body than in a European one. Festival months — Diwali, Holi, wedding season — are not a small deviation; they can triple this intake for weeks.",
+  "evidence": "strong",
+  "sources": [
+    "WHO Guideline: Sugars intake for adults and children. World Health Organization, 2015",
+    "Te Morenga L, Mallard S, Mann J. Dietary sugars and body weight: systematic review and meta-analyses of randomised controlled trials and cohort studies. BMJ 2012",
+    "Moynihan PJ, Kelly SA. Effect on caries of restricting sugars intake: systematic review to inform WHO guidelines. J Dent Res 2014",
+    "Jensen T et al. Fructose and sugar: a major mediator of non-alcoholic fatty liver disease. J Hepatol 2018",
+    "Anjana RM et al. Metabolic non-communicable disease health report of India: the ICMR-INDIAB national cross-sectional study. Lancet Diabetes Endocrinol 2023"
+  ],
+  "caution": "If you already have type 2 diabetes, prediabetes, fatty liver or a waist above 90 cm (men) / 80 cm (women), 50 g/day is not a neutral habit — it is actively feeding the problem. Children are the bigger concern: the same 50 g in a 25 kg body is proportionally far more, and caries in milk teeth is now epidemic in Indian cities.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Four to six insulin surges; acid on teeth after every exposure",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Each sweet chai or biscuit pushes blood glucose up within 20–40 minutes and beta cells release a bolus of insulin to clear it. Healthy beta cells handle this easily; what matters is that it happens every single day.",
+          "metric": { "label": "Post-snack glucose rise", "value": "typically +30–60 mg/dL, back to baseline in ~2 h" }
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Oral Streptococcus mutans ferments sucrose into acid within minutes, dropping plaque pH below 5.5 — the point at which enamel starts dissolving. The damage tracks how many times a day you eat sugar, not how much."
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "The fructose half of sucrose bypasses the main glucose control step and is metabolised almost entirely in the liver. At 25 g fructose a day, most is burned or stored as glycogen, but a fraction is converted straight into fat (de novo lipogenesis)."
+        },
+        {
+          "target": "basal-ganglia",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Sweet taste triggers dopamine release in the striatum. This is normal reward signalling, but repeated daily it makes unsweetened chai genuinely taste wrong for a few weeks after you cut down."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Liver starts making fat from the fructose half",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "De novo lipogenesis is upregulated within days of a steady sugar load. New triglyceride is packaged into VLDL and sent out, and some stays behind in hepatocytes as droplets.",
+          "metric": { "label": "Fasting triglycerides", "value": "may rise ~10–20% on a habitual high-sugar intake" }
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "200 extra kcal a day, if not compensated elsewhere, is a surplus. Randomised trials show adding free sugars to an ad-libitum diet produces small but consistent weight gain."
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Repeated acid attacks outpace the remineralising effect of saliva and fluoride toothpaste. White demineralised spots form near the gum line before any hole appears."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Energy feels stable to most people — the post-sugar 'crash' is usually mild in someone without diabetes and is more about the low-protein snack than the sugar itself."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Measurable liver fat and a slow creep at the waist",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Controlled overfeeding studies show liver fat rises within 2–4 weeks of a sustained sugar load, and falls again within weeks of removing it. At 50 g/day the change is small but real, and it stacks on top of whatever fried food and alcohol are already doing.",
+          "metric": { "label": "Liver fat fraction", "value": "measurable rise within weeks in overfeeding trials" }
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Fat is deposited preferentially in the abdomen in South Asians. Waist circumference moves before body weight does — a belt notch is a better early signal than the weighing scale."
+        },
+        {
+          "target": "pancreas",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Beta cells increase basal insulin output to keep fasting glucose normal. Fasting insulin rises before fasting glucose does — this is the silent phase that a routine sugar test misses."
+        },
+        {
+          "target": "skin",
+          "kind": "negative",
+          "intensity": 0.2,
+          "note": "High-glycaemic-load diets are modestly associated with acne severity, probably via insulin and IGF-1 signalling in sebaceous glands. The effect is real but small."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Insulin resistance sets in quietly; cavities become visible",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Fat-laden hepatocytes respond less well to insulin, so the liver keeps releasing glucose even after a meal. This is where fasting glucose starts drifting up in the 100–110 mg/dL range.",
+          "metric": { "label": "Fasting glucose", "value": "may drift into 100–110 mg/dL (prediabetic range)" }
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Demineralised enamel finally cavitates. Once there is a hole, it does not remineralise — it needs a filling."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Muscle takes up less glucose per unit of insulin. In a sedentary person this happens faster because there is no training stimulus keeping GLUT4 transporters active."
+        },
+        {
+          "target": "arteries",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Higher triglycerides push the lipid profile towards small dense LDL and lower HDL — the classic 'Indian' dyslipidaemia pattern that appears even at normal total cholesterol."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Fatty liver on ultrasound; HbA1c edging up",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Grade 1 fatty liver is now commonly visible on ultrasound, often reported as an incidental finding. In India this is being found in lean people with normal BMI, which is why 'I'm not fat' is not reassurance.",
+          "visual": { "scale": 1.04 },
+          "metric": { "label": "ALT (liver enzyme)", "value": "often mildly raised, 40–60 U/L" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Sustained hyperinsulinaemia. Beta cells are compensating successfully but working at a higher baseline than they were designed for."
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Typical drift of 1–3 kg over six months if intake is not compensated, concentrated as visceral fat around the liver and intestines."
+        },
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Raised triglyceride-rich remnant particles begin depositing in the arterial wall. This is early, silent atherosclerosis, decades before any symptom."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Prediabetes territory for many; liver fat established",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "In people with a genetic predisposition — which includes a very large share of Indians — beta-cell compensation starts to slip and HbA1c crosses into the 5.7–6.4% prediabetic band.",
+          "metric": { "label": "HbA1c", "value": "may rise 0.2–0.5% in susceptible people" }
+        },
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Established non-alcoholic fatty liver disease. Still fully reversible at this stage — removing added sugar for 8–12 weeks measurably clears liver fat.",
+          "visual": { "scale": 1.05 }
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Multiple cavities and, in many people, gum inflammation. Sugar plus poor glycaemic control is also what makes periodontitis progress faster."
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Visceral fat is now metabolically active tissue releasing inflammatory signals (TNF-α, IL-6) and free fatty acids straight into the portal vein."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Type 2 diabetes and heart disease risk both meaningfully higher",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Five years of daily hyperinsulinaemia in a susceptible person is a common path into type 2 diabetes. India already has over 100 million people with diabetes and a similar number with prediabetes; habitual added sugar is one contributor, not the only one.",
+          "metric": { "label": "Type 2 diabetes risk", "value": "clearly elevated, especially with central obesity" }
+        },
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "A minority progress from simple fatty liver to steatohepatitis with inflammation and early fibrosis. Most do not — but you cannot tell which group you are in without a scan."
+        },
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Cohort data link high added-sugar intake with cardiovascular mortality independent of body weight. Indians already develop coronary disease roughly a decade earlier than Western populations."
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Cumulative restorations, root canals and extractions. Dental damage is the one effect of sugar that is completely irreversible."
+        },
+        {
+          "target": "kidneys",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Only relevant once diabetes develops — but that is precisely the route. Diabetic kidney disease is now the leading cause of dialysis in urban India."
+        }
+      ]
+    }
+  ]
+}

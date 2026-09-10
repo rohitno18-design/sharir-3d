@@ -1,0 +1,244 @@
+{
+  "id": "omeprazole-long-term",
+  "name": { "en": "Omeprazole 20 mg daily, long term", "hi": "लंबे समय तक रोज़ 20 मि.ग्रा. ओमेप्राज़ोल" },
+  "category": "medicine",
+  "icon": "💊",
+  "molecule": "omeprazole",
+  "dose": "20 mg once daily, 30–60 minutes before breakfast, continued for months to years. The timing is not fussiness: the drug only works on proton pumps that are actively switched on, which happens when a meal is anticipated.",
+  "summary": {
+    "en": "Omeprazole is a prodrug that becomes active only in the extremely acidic space beside the stomach's parietal cells, where it irreversibly locks the H+/K+-ATPase — the proton pump that is the final common step of acid secretion. Because the block is permanent for each pump, acid output only recovers as new pumps are made, so the full effect takes 3–5 days and lasts far longer than the drug stays in your blood. It is genuinely excellent medicine for ulcers, erosive oesophagitis and gastro-protection. The problems come from taking it for years for undiagnosed 'gas' — stomach acid is not a design flaw, it kills swallowed bacteria and frees vitamin B12, iron, calcium and magnesium from food.",
+    "hi": "ओमेप्राज़ोल खुद में दवा नहीं है — ये पेट की एसिड वाली कोशिकाओं के पास पहुँचकर ही सक्रिय होता है और वहाँ उस पंप को हमेशा के लिए बंद कर देता है जिससे एसिड बनता है। हर पंप का ताला पक्का लगता है, इसलिए एसिड तभी लौटता है जब शरीर नए पंप बनाता है — पूरा असर 3–5 दिन में आता है और दवा खून से निकलने के बाद भी टिका रहता है। अल्सर, खाने की नली की जलन और दर्द की दवाओं से पेट बचाने के लिए ये बेहतरीन दवा है। दिक़्क़त तब है जब बिना जाँच के सालों तक 'गैस' के लिए चलती रहे — पेट का एसिड कोई ख़राबी नहीं है, वो निगले हुए बैक्टीरिया मारता है और खाने से विटामिन B12, आयरन, कैल्शियम और मैग्नीशियम अलग करता है।"
+  },
+  "indian_context": "Proton pump inhibitors are among the highest-selling drug classes in India, and the reason is prescribing habit rather than disease: a PPI gets tacked onto almost every prescription as 'gastric cover', regardless of whether the other medicine needs it. Pantoprazole and omeprazole are also sold across the counter at any chemist despite prescription rules, so millions of people are on a strip a month for years, self-renewed, for symptoms driven by a 10 PM heavy dinner, chai on an empty stomach, chillies, smoking or genuine H. pylori infection — and Indian H. pylori prevalence is among the highest in the world, so the single most useful thing in a long-term PPI user here is often a test for it, since eradication can cure what the tablet is only suppressing. The B12 issue compounds specifically in India: vegetarian diets are already the leading cause of B12 deficiency here, and long-term acid suppression removes the step that releases B12 from food protein. At ₹1–3 a day the drug is too cheap to prompt anyone to ask whether it is still needed.",
+  "evidence": "moderate",
+  "sources": [
+    "Moayyedi P et al. Safety of proton pump inhibitors based on a large, multi-year, randomized trial of patients receiving rivaroxaban or aspirin. Gastroenterology. 2019",
+    "Reimer C et al. Proton-pump inhibitor therapy induces acid-related symptoms in healthy volunteers after withdrawal of therapy. Gastroenterology. 2009",
+    "Lam JR et al. Proton pump inhibitor and histamine 2 receptor antagonist use and vitamin B12 deficiency. JAMA. 2013",
+    "Freedberg DE, Kim LS, Yang YX. The risks and benefits of long-term use of proton pump inhibitors: expert review and best practice advice from the American Gastroenterological Association. Gastroenterology. 2017",
+    "US FDA Drug Safety Communication: Low magnesium levels can be associated with long-term use of proton pump inhibitors. 2011",
+    "NICE clinical guideline CG184. Gastro-oesophageal reflux disease and dyspepsia in adults: investigation and management"
+  ],
+  "caution": "The important question with a PPI is not whether it is dangerous but whether you still need it — most long-term Indian users have never had an endoscopy or an H. pylori test, and treating that infection or that hiatus hernia is a cure where the tablet is only a mask. Alarm features need investigation, not a repeat strip: difficulty swallowing, vomiting, black stools, unintended weight loss, anaemia, or new symptoms after 50. Acid suppression can also mask the early symptoms of stomach cancer, which matters in a country with high H. pylori prevalence. Do not stop abruptly after months of use — rebound acid hypersecretion causes worse heartburn than you started with and convinces people they can never come off. Taper over weeks, with an H2 blocker or antacid to cover the transition. Check magnesium, B12 and iron periodically on multi-year use, and tell your doctor if you take clopidogrel, methotrexate or an HIV medicine.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Roughly two-thirds of the pumps shut down on day one",
+      "effects": [
+        {
+          "target": "stomach",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "The prodrug is protonated and trapped only in the acidic canaliculus of the parietal cell, where it forms a covalent disulphide bond with the proton pump. That pump is dead for good — the cell must build a new one.",
+          "metric": { "label": "Acid output, day 1", "value": "roughly two-thirds suppressed" }
+        },
+        {
+          "target": "esophagus",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "With less acid refluxing upward, the inflamed lower oesophagus begins to settle. Symptom relief on day one is partial — people expecting an antacid's instant effect often assume the tablet has failed."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Headache, nausea and loose stools are the commonest immediate side effects, affecting a small percentage and usually transient."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Full acid suppression; gastrin quietly starts climbing",
+      "effects": [
+        {
+          "target": "stomach",
+          "kind": "positive",
+          "intensity": 0.65,
+          "note": "By days 3–5 enough pumps are blocked that acid output is maximally suppressed — roughly 70% or more of 24-hour acid production. Ulcers and erosive oesophagitis start healing from here."
+        },
+        {
+          "target": "stomach",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Low acid removes the negative feedback on G-cells, so blood gastrin rises two- to four-fold. This hormone rise is the root of both the rebound on stopping and the cell changes seen with years of use.",
+          "metric": { "label": "Serum gastrin", "value": "2–4× baseline" }
+        },
+        {
+          "target": "esophagus",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "Heartburn and regurgitation are usually well controlled by the end of week one. In erosive oesophagitis, healing rates at 8 weeks with a PPI are far higher than with any H2 blocker."
+        },
+        {
+          "target": "small-intestine",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Acid is required to free vitamin B12 from food protein and to convert dietary iron into its absorbable form. That absorption step is now impaired — irrelevant this week, relevant across years."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Ulcers healing well; the gut's acid barrier is down",
+      "effects": [
+        {
+          "target": "stomach",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Duodenal ulcers heal in roughly 4 weeks and gastric ulcers in 8. If the underlying cause was H. pylori or NSAIDs and that has not been addressed, the ulcer will simply return after stopping."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Stomach acid is a barrier that kills most swallowed bacteria. With it suppressed, more organisms survive into the intestine — the mechanism behind higher rates of enteric infection, which was the one risk confirmed in a large randomised safety trial."
+        },
+        {
+          "target": "small-intestine",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Reduced acidity favours small intestinal bacterial overgrowth in susceptible people, which can paradoxically cause the bloating and gas the tablet was started for."
+        },
+        {
+          "target": "esophagus",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "This is the point at which the guideline question arises: after 4–8 weeks of symptom control, has anyone reassessed whether the drug should continue, step down to on-demand use, or stop?"
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Symptoms controlled, but the drug is now hard to stop",
+      "effects": [
+        {
+          "target": "stomach",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Sustained hypergastrinaemia drives enterochromaffin-like cell hyperplasia and an increased mass of acid-producing machinery. Stop the drug now and acid output overshoots baseline — genuine rebound, demonstrated even in healthy volunteers who never had reflux."
+        },
+        {
+          "target": "stomach",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "For the right indication — a bleeding ulcer, Barrett's oesophagus, severe oesophagitis, or gastro-protection alongside long-term NSAIDs or aspirin — continuing is clearly correct and the benefit far outweighs the risks."
+        },
+        {
+          "target": "small-intestine",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Magnesium absorption in the intestine depends partly on an acid-sensitive transport process. Levels drift slowly; clinically significant hypomagnesaemia is uncommon and usually appears after a year or more."
+        },
+        {
+          "target": "immune-system",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "Observational studies link PPI use to more community-acquired pneumonia and Clostridioides difficile infection. Confounding is heavy in this literature, and the randomised data found only enteric infections clearly increased."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Half a year on: absorption deficits become measurable",
+      "effects": [
+        {
+          "target": "small-intestine",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Six months or more of acid suppression is where B12 absorption from food is measurably impaired. B12 injections and tablets are unaffected — it is only protein-bound B12 in food that needs acid to be released."
+        },
+        {
+          "target": "bones",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Calcium carbonate — the cheapest and commonest supplement form in India — needs acid to dissolve. Calcium citrate does not, and is the sensible switch for anyone on a long-term PPI."
+        },
+        {
+          "target": "stomach",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "There is no tolerance: the drug keeps working indefinitely. That is precisely why nobody reviews it — nothing forces the conversation about whether it is still needed."
+        },
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Omeprazole is metabolised by CYP2C19 and inhibits it, which can reduce the activation of clopidogrel. Where both are needed, pantoprazole or rabeprazole interact less."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "A year of low acid: B12, magnesium and iron all worth checking",
+      "effects": [
+        {
+          "target": "peripheral-nerves",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "B12 deficiency after a year or more of PPI use causes tingling, numbness and, if prolonged and untreated, irreversible nerve and spinal cord damage. In an Indian vegetarian this is a double hit, since dietary intake was already marginal.",
+          "metric": { "label": "B12 deficiency risk with ≥2 years' use", "value": "clearly increased vs non-users" }
+        },
+        {
+          "target": "heart",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "PPI-induced low magnesium, though uncommon, typically appears after a year and can cause muscle cramps, tetany and arrhythmias. It often does not correct with oral magnesium while the PPI continues — a specific FDA safety warning."
+        },
+        {
+          "target": "bones",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Observational data show a modest increase in hip, wrist and spine fractures with long-term high-dose use. The effect is small and probably partly confounded, but it is on the product label."
+        },
+        {
+          "target": "stomach",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Long-term acid suppression in someone with untreated H. pylori accelerates atrophic changes in the stomach lining. This is the strongest argument for testing and eradicating H. pylori before committing to years of PPI — especially in India."
+        },
+        {
+          "target": "kidneys",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "Acute interstitial nephritis is a rare idiosyncratic reaction, and observational studies suggest a small association with chronic kidney disease. Causality is not established, but unexplained creatinine rise in a long-term user should prompt a review."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years: mostly safe, mostly unnecessary, and hard to stop",
+      "effects": [
+        {
+          "target": "stomach",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Chronic hypergastrinaemia and ECL cell hyperplasia persist. Reassuringly, the tumours seen in rodent studies have not translated into human gastric neuroendocrine tumours at usual doses over decades of use."
+        },
+        {
+          "target": "small-intestine",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Five years of reduced acid means a real cumulative deficit in B12, iron and magnesium status for a subset of users. Periodic blood tests are far cheaper than treating the neuropathy or anaemia that follows."
+        },
+        {
+          "target": "stomach",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "By this point the rebound problem is entrenched: any attempt to stop abruptly produces days to weeks of severe acid symptoms, which most people read as proof they need the drug forever. A structured taper over 4–8 weeks with alternate-day dosing usually works."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "The gut microbiome shifts durably with years of acid suppression, with more oral-type bacteria colonising the intestine. What this means clinically is still being worked out, beyond the confirmed rise in enteric infections."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.35,
+          "note": "The honest summary from the best randomised evidence — three years of daily PPI versus placebo — is that the widely publicised risks are largely not confirmed, with enteric infection the exception. The strongest case against five-year use is not danger; it is that most people on it never needed it that long."
+        }
+      ]
+    }
+  ]
+}

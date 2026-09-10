@@ -1,0 +1,260 @@
+{
+  "id": "no-breakfast-late-dinner",
+  "name": { "en": "Skipping breakfast, dinner after 10 pm", "hi": "नाश्ता छोड़ना और रात 10 बजे के बाद खाना" },
+  "category": "habit",
+  "icon": "🌙",
+  "dose": "No breakfast — first food is chai in the morning and then lunch at 1–2 pm — and the largest meal of the day eaten after 10 pm, followed by sleep within an hour or so. The total calories may be perfectly normal; only the clock is wrong.",
+  "summary": {
+    "en": "Your pancreas, liver and fat cells run on their own clocks, and those clocks expect food during daylight. The same plate of rice produces a substantially higher glucose spike at 10 pm than at 8 am, partly because rising melatonin at night directly suppresses insulin release from beta cells. Add sleeping on a full stomach — which pushes acid up the oesophagus and fragments deep sleep — and you get the classic Indian urban pattern: normal calories, abnormal timing, and a metabolic profile that gets worse anyway.",
+    "hi": "आपका पैंक्रियास, लिवर और फैट सेल अपनी-अपनी घड़ी पर चलते हैं, और वो घड़ी दिन के उजाले में खाना माँगती है। वही चावल की थाली रात 10 बजे सुबह 8 बजे के मुक़ाबले कहीं ज़्यादा शुगर बढ़ाती है, क्योंकि रात में बढ़ता मेलाटोनिन इंसुलिन निकलने को दबा देता है। ऊपर से भरे पेट सोना — जिससे एसिड ऊपर चढ़ता है और गहरी नींद टूटती है। नतीजा वही शहरी भारतीय पैटर्न: कैलोरी सही, समय गलत, और रिपोर्ट फिर भी बिगड़ती जाती है।"
+  },
+  "indian_context": "This is arguably the most common eating pattern in urban India: chai at 8, no breakfast, a heavy lunch, and the family dinner at 10 or 10.30 pm because that is when everyone gets home. IT and BPO shift schedules, long commutes, and the social norm that dinner is the day's big meal all push in the same direction. Traditional advice — eat before sunset, sleep three hours after dinner — happens to be exactly what circadian research now supports. The Indian dinner also makes it worse: roti and rice are the largest carbohydrate load of the day arriving at the hour when the body handles carbohydrate worst.",
+  "evidence": "moderate",
+  "sources": [
+    "Vujović N et al. Late isocaloric eating increases hunger, decreases energy expenditure, and modifies metabolic pathways in adults with overweight and obesity. Cell Metabolism, 2022",
+    "Morris CJ et al. Endogenous circadian system and circadian misalignment impact glucose tolerance via separate mechanisms in humans. PNAS, 2015",
+    "Jakubowicz D et al. Fasting Until Noon Triggers Increased Postprandial Hyperglycemia and Impaired Insulin Response after Lunch and Dinner in Individuals with Type 2 Diabetes. Diabetes Care, 2015",
+    "Ballon A, Neuenschwander M, Schlesinger S. Breakfast Skipping Is Associated with Increased Risk of Type 2 Diabetes among Adults: A Systematic Review and Meta-Analysis. Journal of Nutrition, 2019",
+    "Katz PO et al. ACG Clinical Guideline for the Diagnosis and Management of Gastroesophageal Reflux Disease. American Journal of Gastroenterology, 2022"
+  ],
+  "caution": "If you are diabetic and on insulin or sulfonylureas, this pattern is dangerous in both directions — hypoglycaemia through a long morning, hyperglycaemia after a late heavy dinner. If you have reflux, asthma that worsens at night, or sleep apnoea, the late dinner is the single change that will help you most. Be fair to yourself about what is actually fixable: for a night-shift worker this timing is not a choice, and the useful adjustment there is to make the night meal small and protein-based rather than a full carbohydrate dinner.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "The same dinner spikes glucose far higher at 10 pm than at 8 am",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Melatonin rising in the evening binds receptors on beta cells and blunts insulin release, while insulin sensitivity is naturally lowest at night. The same carbohydrate load therefore produces a much larger and longer glucose excursion.",
+          "metric": { "label": "Glucose response to an identical meal at night", "value": "typically 20–40% higher peak than the same meal in the morning" }
+        },
+        {
+          "target": "esophagus",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Lying down within an hour of a large meal removes gravity's help and floods the lower oesophagus with acid. This is why night-time reflux is worse than daytime reflux even with the same diet."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "A large late meal raises core body temperature and delays sleep onset. Deep slow-wave sleep in the first half of the night — the part that matters most for recovery — is reduced."
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Feeding is one of the strongest time cues for the body's peripheral clocks. Eating at 10 pm and not at 8 am tells your liver and fat tissue that 'day' starts later than your alarm does."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Peripheral body clocks shift out of phase with the light-dark cycle",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "The liver's clock genes re-entrain to the feeding time while the brain's master clock stays locked to daylight. The two run out of step — this internal desynchrony is the actual mechanism behind circadian misalignment.",
+          "metric": { "label": "Main driver of the liver clock", "value": "meal timing, not light" }
+        },
+        {
+          "target": "pancreas",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Repeated large evening glucose excursions with blunted insulin response. Post-dinner glucose is now the highest reading of the day, every day."
+        },
+        {
+          "target": "stomach",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "Gastric emptying slows at night, so a heavy 10 pm meal is still in the stomach when you lie down. Morning nausea and no appetite for breakfast follow directly — the habit reinforces itself."
+        },
+        {
+          "target": "adrenal-glands",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Fragmented sleep raises the morning cortisol response and blunts its normal daily curve. That in turn raises fasting glucose — the loop closes."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Lunch glucose is now worse too — the missed breakfast rebounds",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Skipping breakfast impairs the insulin response to the next two meals, not just the missed one. Controlled work in type 2 diabetes showed markedly higher post-lunch and post-dinner glucose after a skipped breakfast.",
+          "metric": { "label": "Post-lunch glucose after skipping breakfast", "value": "substantially higher than after eating breakfast, with the same lunch" }
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "In tightly controlled feeding studies, eating the same calories late increased hunger, reduced 24-hour energy expenditure and shifted fat tissue gene expression toward storing fat rather than burning it."
+        },
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Fat synthesis in the liver is highest in the evening. A large late carbohydrate load is arriving exactly when the liver is most primed to convert it into triglyceride."
+        },
+        {
+          "target": "esophagus",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "A month of nightly acid exposure produces the classic picture — morning throat irritation, hoarseness, a cough that nobody connects to dinner."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Fasting insulin up, waist up, sleep debt accumulating",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Beta cells raise their baseline output to compensate for the nightly excursions and the poorer sleep. Fasting insulin rises long before fasting glucose does.",
+          "metric": { "label": "Fasting insulin", "value": "rises while fasting glucose still reads normal" }
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Weight tends to creep even at unchanged calories, because energy expenditure falls and hunger rises. Two months of that is a small but reliable gain, concentrated centrally in South Asians."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Chronic short and fragmented sleep raises ghrelin, lowers leptin and specifically increases craving for high-carbohydrate food at night. Another self-reinforcing loop."
+        },
+        {
+          "target": "teeth",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "Saliva flow drops to near zero during sleep. Food residue from a 10.30 pm dinner with no brushing afterwards sits on enamel all night with no protection at all."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "HbA1c drifting; oesophagitis and daytime fatigue established",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Six months of nightly hyperglycaemia moves the average. Breakfast skipping is associated with roughly a fifth to a third higher risk of type 2 diabetes across cohorts — observational, but the mechanism supports it.",
+          "metric": { "label": "HbA1c", "value": "may drift 0.2–0.4% upward in susceptible people" }
+        },
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Fatty change begins showing on ultrasound. Timing alone can produce this even when total calories and food quality have not changed at all — which is what makes it so easy to miss.",
+          "visual": { "scale": 1.03 }
+        },
+        {
+          "target": "esophagus",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Chronic reflux oesophagitis, often being managed with a daily antacid or PPI rather than by moving dinner two hours earlier. The tablet treats the acid; the clock is the cause."
+        },
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Triglycerides rise and blood pressure drifts up with poor sleep. Circadian misalignment is independently associated with hypertension in shift-work studies."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Prediabetes, fatty liver and a broken sleep-appetite loop",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Many susceptible people are in the prediabetic band by now. The frustrating part for the person is that their diet 'has not changed' — and they are right, only the timing did.",
+          "metric": { "label": "HbA1c", "value": "may cross into the 5.7–6.4% prediabetic range" }
+        },
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Established fatty liver disease. Still reversible — moving dinner to 7–8 pm and eating a real breakfast is one of the cheapest interventions in medicine.",
+          "visual": { "scale": 1.04 }
+        },
+        {
+          "target": "adipose",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "A year of raised evening insulin and lower daytime energy expenditure typically shows as 3–5 kg, and it is preferentially visceral."
+        },
+        {
+          "target": "pineal",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Late eating combined with phone light after dinner delays melatonin further, pushing sleep onset later and shortening total sleep. Every part of this pattern makes every other part worse."
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Blood pressure normally dips at night; in people who eat late and sleep poorly it dips less. Non-dipping blood pressure is an independent predictor of cardiovascular events."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "The timing habit that quietly builds diabetes at normal calories",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Five years of this in a South Asian body is a plausible route into type 2 diabetes without ever 'eating badly'. Shift workers, who live this pattern involuntarily, show consistently higher diabetes rates in cohort data.",
+          "metric": { "label": "Shift-work evidence", "value": "consistently higher type 2 diabetes and cardiovascular risk with long-term circadian misalignment" }
+        },
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Circadian misalignment is associated with higher cardiovascular events independent of body weight. Breakfast skipping in particular shows a consistent signal in large cohorts — though it usually travels with smoking, alcohol and inactivity, which muddies the picture."
+        },
+        {
+          "target": "liver",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "A minority progress from fatty liver to inflammation and fibrosis. Non-alcoholic liver disease is now one of the leading causes of chronic liver disease in urban India."
+        },
+        {
+          "target": "esophagus",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Years of nightly acid exposure cause chronic oesophagitis and, in a small minority, the Barrett's change that carries a cancer risk. Almost entirely preventable by eating three hours before lying down."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Chronic sleep restriction over years is linked with worse memory, mood disorders and higher dementia risk. The mechanism is not fully settled but the association is robust."
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "The honest good news: this is a timing problem, not a food problem, and timing is free to fix. Moving dinner to 7.30 pm and adding a protein breakfast reverses most of the glucose and reflux effects within weeks."
+        }
+      ]
+    }
+  ]
+}

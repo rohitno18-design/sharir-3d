@@ -1,0 +1,262 @@
+{
+  "id": "salt-excess-daily",
+  "name": { "en": "11 g of salt a day — the Indian average", "hi": "रोज़ 11 ग्राम नमक — भारत का औसत" },
+  "category": "food",
+  "icon": "🧂",
+  "dose": "About 11 g of salt a day (roughly 2 teaspoons), which is close to what 24-hour urine studies find Indians actually eat. That is about 4.3 g of sodium — more than double WHO's limit of 5 g of salt (2 g sodium) a day. Most of it is added during cooking, plus pickle, papad, chutney and namkeen.",
+  "molecule": "sodium-chloride",
+  "summary": {
+    "en": "Extra sodium holds extra water in the bloodstream, and the body's short-term answer is to raise the pressure needed to push that volume through. Over years the artery wall itself remodels — stiffer, thicker, less responsive — so the pressure stops coming down even when the salt does. Cutting roughly 4 g of salt a day lowers systolic pressure by about 4–5 mmHg on average, which sounds trivial until you realise that shift across a population prevents a very large number of strokes.",
+    "hi": "ज़्यादा नमक खून में ज़्यादा पानी रोक लेता है, और शरीर उस बढ़े हुए पानी को आगे धकेलने के लिए दबाव बढ़ा देता है। सालों में नस की दीवार खुद बदल जाती है — मोटी, सख़्त, कम लचीली — और फिर नमक कम करने पर भी दबाव आसानी से नहीं गिरता। रोज़ का करीब 4 ग्राम नमक कम करने से ऊपर वाला BP औसतन 4–5 mmHg गिरता है। सुनने में छोटा लगता है, पर पूरी आबादी में यही फ़र्क़ लाखों स्ट्रोक रोक देता है।"
+  },
+  "indian_context": "India's salt problem is different from the West's: there, about three-quarters of salt comes hidden inside processed food, while in Indian homes most of it goes in from the kitchen hand — which means the fix is also in your hand, not in a factory. Pickle, papad, chutney, namkeen, packet masala and restaurant food stack on top of that. Salt sensitivity is higher in South Asians and higher still in adults who were low-birthweight babies — a large group in India — so the same 11 g raises pressure more here than it would in a European. One caveat before you cut hard: Indian table salt is the country's main iodine source, so reduce the amount, do not switch to a non-iodised salt.",
+  "evidence": "strong",
+  "sources": [
+    "WHO. Guideline: Sodium intake for adults and children. World Health Organization, 2012",
+    "He FJ, Li J, MacGregor GA. Effect of longer term modest salt reduction on blood pressure: Cochrane systematic review and meta-analysis of randomised trials. BMJ, 2013",
+    "Johnson C et al. Mean population salt consumption in India: a systematic review. Journal of Hypertension, 2017",
+    "Neal B et al. Effect of Salt Substitution on Cardiovascular Events and Death (SSaSS). N Engl J Med, 2021",
+    "World Cancer Research Fund / AICR. Diet, Nutrition, Physical Activity and Stomach Cancer, 2018"
+  ],
+  "caution": "If you have hypertension, heart failure, chronic kidney disease or cirrhosis, 11 g is actively working against your medication — most BP drugs lose a chunk of their effect on a high-salt diet. Potassium-based low-sodium salt substitutes lower blood pressure and stroke risk, but they are dangerous in advanced kidney disease or on potassium-sparing diuretics, so do not switch without checking your kidney function. And when you reduce salt, keep using iodised salt — India's iodine deficiency programme depends on it.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Water pulled into the bloodstream; thirst, then a night of urination",
+      "effects": [
+        {
+          "target": "kidneys",
+          "kind": "strain",
+          "intensity": 0.45,
+          "note": "The kidney's job today is to excrete roughly 4.3 g of sodium. It does this by raising the pressure inside the glomerulus (pressure natriuresis) — effective, but the pressure is the cost.",
+          "metric": { "label": "Sodium load", "value": "~190 mmol/day vs the ~85 mmol WHO ceiling" }
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "Osmoreceptors detect the rise in blood sodium and trigger both thirst and vasopressin release. That is why a salty dinner means a glass of water at 1 am."
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "Extra sodium holds extra water in the circulation, so blood volume rises for several hours. In salt-sensitive people the pressure moves the same evening."
+        },
+        {
+          "target": "stomach",
+          "kind": "strain",
+          "intensity": 0.25,
+          "note": "Very salty foods — pickle, papad, salted fish — are directly irritant to the gastric lining and increase how easily Helicobacter pylori colonises it."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Blood pressure sits a few mmHg higher than it needs to",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "strain",
+          "intensity": 0.45,
+          "note": "A steady sodium load raises pressure in two ways: more circulating volume, and a direct effect on the vessel wall that reduces nitric-oxide-driven relaxation.",
+          "metric": { "label": "Systolic BP vs a 5 g/day intake", "value": "roughly 4–5 mmHg higher on average; more in hypertensives" }
+        },
+        {
+          "target": "kidneys",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Continuous high sodium filtering and reabsorption. In salt-sensitive individuals the kidney needs a higher perfusion pressure to clear the same load — the setpoint drifts up."
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Slightly higher afterload with every beat. Nothing measurable in a week, but this is the load the heart never gets a break from."
+        },
+        {
+          "target": "skin",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Not all excess sodium sits in blood — a substantial amount is stored bound to glycosaminoglycans in the skin and muscle interstitium, which is why puffiness after a salty week is not purely water in the veins."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Endothelium less able to relax; urinary calcium up",
+      "effects": [
+        {
+          "target": "blood-vessels",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "High sodium damages the endothelial glycocalyx and blunts nitric-oxide-mediated dilation independently of blood pressure. The vessel becomes measurably less flexible within weeks.",
+          "metric": { "label": "Endothelial function", "value": "measurably reduced on a high-sodium diet even at normal BP" }
+        },
+        {
+          "target": "kidneys",
+          "kind": "strain",
+          "intensity": 0.45,
+          "note": "Glomerular hyperfiltration — each nephron is working above its comfortable rate. Sustained, this is one of the mechanisms by which nephrons are eventually lost."
+        },
+        {
+          "target": "bones",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Roughly 40 mg of calcium leaves in the urine with every 100 mmol of sodium. On the low-calcium diet most Indians already eat, that is a loss you cannot easily replace."
+        },
+        {
+          "target": "autonomic-nerves",
+          "kind": "strain",
+          "intensity": 0.25,
+          "note": "High sodium increases sympathetic outflow and blunts the baroreflex — the reflex that normally corrects a pressure rise. The body's own brake is being weakened."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Arterial stiffness measurable; the kidney's setpoint resets upward",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Pulse wave velocity — the standard measure of arterial stiffness — rises with habitual high salt intake. Stiff arteries raise systolic pressure and widen the pulse pressure, both independent risk markers.",
+          "metric": { "label": "Arterial stiffness", "value": "increases with habitual high sodium, partly independent of BP" }
+        },
+        {
+          "target": "heart-muscle",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "The left ventricle is adapting to a permanently higher afterload. Salt intake independently predicts left ventricular mass even after adjusting for blood pressure."
+        },
+        {
+          "target": "kidneys",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Sodium-driven activation of TGF-beta and local inflammation begins remodelling the kidney's small vessels. This is the start of the pressure-kidney vicious cycle."
+        },
+        {
+          "target": "stomach",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Repeated mucosal salt injury plus H. pylori — carried by a majority of Indian adults — is the combination that drives chronic atrophic gastritis over decades."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Hypertension in many; the heart wall beginning to thicken",
+      "effects": [
+        {
+          "target": "heart-muscle",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "The left ventricle thickens (concentric hypertrophy) to generate the higher pressure. A thicker wall is a stiffer wall — it fills less easily, which is the root of the commonest kind of heart failure in India.",
+          "visual": { "scale": 1.03 },
+          "metric": { "label": "Left ventricular mass", "value": "rises with sustained high salt, independent of blood pressure" }
+        },
+        {
+          "target": "kidneys",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Microalbuminuria — small amounts of protein leaking into urine — is the first hard evidence of glomerular damage, and it appears long before creatinine moves."
+        },
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Six months at a higher pressure means real mechanical stress at arterial branch points, where turbulent flow and endothelial injury allow lipid particles in."
+        },
+        {
+          "target": "retina",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "The small vessels behind the eye are the only arteries a doctor can actually see. Early hypertensive changes — narrowed arterioles, nipping where a vein crosses — show here first."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Established high blood pressure — and it takes work to reverse",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Structural remodelling means the pressure no longer falls as far as it should when salt is cut. Reducing salt still helps, but the fully reversible window has narrowed.",
+          "metric": { "label": "Hypertension threshold", "value": "consistently above 140/90 mmHg (or 130/80 by newer criteria)" }
+        },
+        {
+          "target": "heart-muscle",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Left ventricular hypertrophy on ECG or echo. This is an independent predictor of heart failure, arrhythmia and sudden death — worse news than the blood pressure number itself.",
+          "visual": { "scale": 1.05 }
+        },
+        {
+          "target": "kidneys",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Persistent proteinuria and slow nephron loss. Kidney disease and hypertension feed each other — each one accelerates the other."
+        },
+        {
+          "target": "cerebral-arteries",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "The tiny deep penetrating arteries in the brain are the most pressure-sensitive vessels in the body. Silent small-vessel damage begins here, years before any stroke."
+        },
+        {
+          "target": "bones",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "A year of extra urinary calcium loss on an already calcium-poor diet contributes to lower bone density, particularly in postmenopausal Indian women who are rarely screened."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Stroke, kidney disease and stomach cancer risk all clearly higher",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Blood pressure is the single strongest modifiable risk factor for stroke, and salt is the strongest dietary driver of blood pressure. Stroke arrives roughly a decade earlier in India than in high-income countries.",
+          "metric": { "label": "Salt substitution trial result", "value": "replacing regular salt with a potassium-based substitute cut stroke by ~14% and death by ~12%" }
+        },
+        {
+          "target": "heart-muscle",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Five years of pressure overload produces a stiff, thickened ventricle that cannot relax properly. Breathlessness on stairs is often the first thing the person notices.",
+          "visual": { "scale": 1.06 }
+        },
+        {
+          "target": "kidneys",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Hypertensive nephrosclerosis is one of the two leading causes of dialysis in India, alongside diabetes. Nephrons lost this way do not come back."
+        },
+        {
+          "target": "stomach",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Salt and salt-preserved foods are graded as a probable cause of stomach cancer, acting largely by amplifying H. pylori injury. This is a genuine risk in the high-salt, high-H.-pylori parts of India."
+        },
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Higher pressure accelerates plaque formation and rupture. Salt reduction is one of WHO's 'best buys' precisely because it works on an entire population at almost no cost."
+        },
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "The genuinely hopeful part: taste for salt is learned and it resets. Cut gradually over 6–8 weeks and food stops tasting bland — most people then find their old level unpleasantly salty."
+        }
+      ]
+    }
+  ]
+}

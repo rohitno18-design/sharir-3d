@@ -1,0 +1,252 @@
+{
+  "id": "biceps-curls-daily",
+  "name": { "en": "Biceps curls every day, nothing else", "hi": "रोज़ सिर्फ़ बाइसेप्स कर्ल, और कुछ नहीं" },
+  "category": "exercise",
+  "icon": "💪",
+  "dose": "Dumbbell/barbell curls every single day (typically 4–8 sets, 10–15 reps), with no training for any other muscle group and no rest days. Ordinary diet, no extra protein planning.",
+  "summary": {
+    "en": "Training only the biceps every day does grow the biceps: they gain strength fast through neural learning and become visibly bigger by 6–8 weeks. But a small muscle trained daily without rest hits a ceiling early, the elbow tendons and forearm flexors absorb load faster than they can remodel, and the rest of the body gets no benefit at all: no cardiovascular, metabolic, bone or leg adaptation. The honest picture is a modest arm and a rising risk of biceps and elbow tendinopathy.",
+    "hi": "सिर्फ़ बाइसेप्स को रोज़ ट्रेन करने से बाइसेप्स बढ़ते तो हैं — शुरू में ताकत तेज़ी से बढ़ती है और 6–8 हफ्तों में साइज़ दिखने लगता है। लेकिन एक छोटी मांसपेशी को बिना आराम रोज़ थकाने से बढ़त जल्दी रुक जाती है, कोहनी के टेंडन और कलाई के फ्लेक्सर ज़रूरत से ज़्यादा लोड झेलते हैं, और बाकी शरीर को कुछ नहीं मिलता — न दिल को, न शुगर को, न हड्डियों को, न टांगों को। सच यह है: थोड़ा बड़ा बाज़ू और कोहनी के दर्द का बढ़ता खतरा।"
+  },
+  "indian_context": "The 'biceps and chest only' pattern is the most common gym habit among young Indian men, driven by the visible-arm ideal and trainers who rarely program legs or back. On a typical Indian vegetarian diet (40–60 g protein/day) even the biceps gain is limited, because the small extra protein demand is not being met. Arm-only training does nothing for the South-Asian metabolic risks that actually matter (visceral fat, insulin resistance, low leg-muscle mass), so a person can have 38 cm arms and prediabetes at the same time.",
+  "evidence": "strong",
+  "sources": [
+    "Schoenfeld BJ, Ogborn D, Krieger JW. Effects of resistance training frequency on measures of muscle hypertrophy: a systematic review and meta-analysis. Sports Med. 2016",
+    "Schoenfeld BJ, Ogborn D, Krieger JW. Dose-response relationship between weekly resistance training volume and increases in muscle mass: a systematic review and meta-analysis. J Sports Sci. 2017",
+    "Magnusson SP, Kjaer M. The impact of loading, unloading, ageing and injury on the human tendon. J Physiol. 2019",
+    "ACSM Position Stand. Progression models in resistance training for healthy adults. Med Sci Sports Exerc. 2009",
+    "WHO. Guidelines on physical activity and sedentary behaviour. 2020"
+  ],
+  "caution": "Persistent pain at the front of the elbow, the inner elbow (golfer's elbow) or a sharp pop with a bulge in the upper arm needs medical review; the last one is a biceps tendon rupture. Any resistance programme needs pulling, pressing, legs and 1–2 rest days a week; daily curls are not a fitness plan, they are a hobby.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Pump, then soreness — only in the arms",
+      "effects": [
+        {
+          "target": "biceps",
+          "kind": "strain",
+          "intensity": 0.7,
+          "note": "Blood and fluid rush into the biceps and brachialis (the 'pump'), then fibre micro-damage triggers muscle protein synthesis for the next 24–48 h. DOMS peaks at day 2."
+        },
+        {
+          "target": "forearm-muscles",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "The wrist flexors and brachioradialis grip and stabilise every rep; they get an unplanned workout and are often sorer than the biceps."
+        },
+        {
+          "target": "elbow-joint",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Repeated flexion under load compresses the joint and pulls on the distal biceps tendon and the common flexor origin at the inner elbow."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Heart rate barely rises; total energy cost of a curl session is ~50–80 kcal. Nothing systemic is being trained."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Neural gains fast, no recovery window between sessions",
+      "effects": [
+        {
+          "target": "biceps",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Curl strength is up 10–15% purely from motor learning. But protein synthesis from yesterday's session is still running when today's session starts; the muscle never fully repairs before it is loaded again."
+        },
+        {
+          "target": "tendons",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Tendon collagen turnover is slow (weeks to months). Seven consecutive days of loading with zero rest is exactly the pattern that starts tendinopathy."
+        },
+        {
+          "target": "forearm-muscles",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Forearm flexors stay chronically tight; grip may feel weaker by the end of the week, an early sign of overreaching."
+        },
+        {
+          "target": "triceps",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "The elbow extensors get no work at all. The imbalance between a strengthening biceps and an untrained triceps is already beginning."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Bigger arm, tighter elbow, everything else unchanged",
+      "effects": [
+        {
+          "target": "biceps",
+          "kind": "positive",
+          "intensity": 0.6,
+          "visual": { "scale": 1.03 },
+          "note": "Early hypertrophy is measurable (a few percent in cross-sectional area). Strength gains are slowing already because daily training of one small muscle quickly outruns its recovery capacity.",
+          "metric": { "label": "Biceps cross-sectional area", "value": "~+2–4%" }
+        },
+        {
+          "target": "elbow-joint",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Many people now notice aching at the front or inner elbow after sets: irritation of the distal biceps tendon or the common flexor origin (medial epicondyle)."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Legs, back, chest and core are exactly where they were a month ago. Whole-body muscle mass is essentially unchanged."
+        },
+        {
+          "target": "heart",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "No cardiovascular adaptation: resting heart rate, blood pressure and VO₂max are unchanged, because curls never raise heart rate enough for long enough."
+        },
+        {
+          "target": "pancreas",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Glucose control is unchanged. Insulin sensitivity improves with the amount of muscle being worked, and the biceps are about 1% of body muscle."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Visible biceps, plateau approaching, tendon irritation likely",
+      "effects": [
+        {
+          "target": "biceps",
+          "kind": "positive",
+          "intensity": 0.6,
+          "visual": { "scale": 1.05 },
+          "note": "Arm circumference is up 1–2 cm and the peak is visible. This is close to the ceiling for a daily-curl-only approach; more sets per day now add fatigue, not muscle."
+        },
+        {
+          "target": "tendons",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Sixty days of unbroken daily loading: the distal biceps tendon and forearm flexor tendons show the thickening and disorganised collagen of early tendinopathy in a meaningful share of people."
+        },
+        {
+          "target": "forearm-muscles",
+          "kind": "positive",
+          "intensity": 0.4,
+          "visual": { "scale": 1.03 },
+          "note": "The forearm flexors and brachioradialis have grown as a side effect of gripping."
+        },
+        {
+          "target": "shoulder-joint",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "The long head of the biceps runs through the shoulder; heavy curls with body swing can irritate it at the front of the shoulder."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Plateau: the arm stops growing, the elbow keeps complaining",
+      "effects": [
+        {
+          "target": "biceps",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.07 },
+          "note": "Total biceps growth of perhaps 10–15% in size; most of that came in the first 3 months. Without progressive overload of the whole arm, more sessions no longer move the needle."
+        },
+        {
+          "target": "elbow-joint",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Chronic medial epicondylitis (golfer's elbow) or distal biceps tendinopathy is now common: pain on gripping, opening jars, or at the start of every set."
+        },
+        {
+          "target": "triceps",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "A biceps that is much stronger than the triceps pulls the elbow into slight resting flexion and makes the arm look thinner from the side; the untrained triceps is two-thirds of upper-arm size."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Body fat, waist size and visceral fat are unchanged. Arm training does not 'burn arm fat'; fat loss is whole-body and needs a bigger energy stimulus."
+        },
+        {
+          "target": "bones",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Bone density in the spine and hips is unaffected. Bone adapts only to the loads placed on it; curls load the forearm bones a little and nothing else."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Same arm as month 6; higher injury risk; no health benefit",
+      "effects": [
+        {
+          "target": "biceps",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "visual": { "scale": 1.07 },
+          "note": "No further growth. Strength may even dip because chronic elbow pain forces lighter loads. The arm has become a maintenance project."
+        },
+        {
+          "target": "tendons",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "A year of daily loading without rest is the textbook history for chronic tendinopathy. Distal biceps rupture is rare but its main risk factors are exactly this: heavy eccentric curls, no recovery, degenerated tendon."
+        },
+        {
+          "target": "heart",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Cardiovascular fitness is identical to a sedentary person's. WHO guidelines call for 150 min of aerobic activity plus 2 whole-body strength sessions per week; this does neither."
+        },
+        {
+          "target": "peripheral-nerves",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Tight, thickened forearm flexors can irritate the median or ulnar nerve at the elbow and wrist, causing tingling in the fingers after sessions."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Chronic elbow problems, an unbalanced arm, an untrained body",
+      "effects": [
+        {
+          "target": "elbow-joint",
+          "kind": "negative",
+          "intensity": 0.7,
+          "note": "Long-standing tendinopathy at the inner elbow and distal biceps, sometimes with calcification on X-ray. Grip-heavy daily tasks hurt; many people at this stage need months of complete rest and rehab."
+        },
+        {
+          "target": "biceps",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "visual": { "scale": 1.06 },
+          "note": "Arm size roughly where it was at one year, often slightly smaller because pain has cut training loads. Five years of effort for the result three months of balanced training would have given."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "After 30, untrained muscle mass declines ~3–8% per decade. Everything except the biceps has followed that curve; leg and back strength are lower than five years ago."
+        },
+        {
+          "target": "whole-body",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Metabolic and cardiovascular risk profile is that of a sedentary person: no reduction in diabetes, blood pressure or mortality risk. Bigger biceps did not change any of it."
+        }
+      ]
+    }
+  ]
+}

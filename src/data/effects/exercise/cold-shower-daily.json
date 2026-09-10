@@ -1,0 +1,253 @@
+{
+  "id": "cold-shower-daily",
+  "name": { "en": "3-minute cold shower daily", "hi": "रोज़ 3 मिनट ठंडे पानी का स्नान" },
+  "category": "habit",
+  "icon": "🚿",
+  "dose": "About 3 minutes under cold water (roughly 15–20 °C, or plain untreated tap water in most Indian winters), once a day, usually at the end of a normal shower. Assumes whole-body exposure, not just the legs.",
+  "summary": {
+    "en": "Cold water triggers an immediate sympathetic storm: skin vessels clamp shut, blood pressure and heart rate spike, breathing gasps, and noradrenaline rises two- to threefold and stays elevated for an hour or more. That noradrenaline surge is the source of the alertness and mood lift people chase. Over weeks the body habituates — the shock response shrinks, brown fat becomes more active, and sick-day counts drop modestly in trials. The evidence is genuinely mixed: real for alertness, mood and sick leave; weak for fat loss, immunity and 'metabolism boosting'; and cold immediately after strength training actually blunts muscle gains.",
+    "hi": "ठंडा पानी शरीर को तुरंत झटका देता है — त्वचा की नसें सिकुड़ती हैं, धड़कन और बीपी बढ़ते हैं, साँस अटकती है, और नॉरएड्रेनालिन दो-तीन गुना बढ़कर एक घंटे तक ऊँचा रहता है। यही वजह है कि दिमाग़ चमक उठता है और मूड अच्छा लगता है। हफ्तों में शरीर आदी हो जाता है, ब्राउन फैट सक्रिय होता है और बीमारी की छुट्टियाँ थोड़ी घटती हैं। पर सच यह भी है — वज़न घटाने या इम्यूनिटी के बड़े दावे कमज़ोर सबूतों पर टिके हैं, और वेट ट्रेनिंग के तुरंत बाद ठंडा पानी मसल ग्रोथ को कम कर देता है।"
+  },
+  "indian_context": "For most of India, a 'cold shower' is simply the default — bathing with untreated tap water is normal, and in a Delhi or Lucknow winter that water can be 12–18 °C, which is genuinely cold-plunge territory. In Chennai or Mumbai summer, tap water may sit at 28–30 °C, which is pleasant but too warm to trigger any real cold response, so the claimed benefits will not appear. This also means the practice most Indians have done their whole lives is what wellness influencers are now selling — the culturally interesting part is that it was never framed as biohacking here. In hot, humid Indian summers, the post-shower cooling effect is practical comfort as much as physiology.",
+  "evidence": "mixed",
+  "sources": [
+    "Buijze GA et al. The effect of cold showering on health and work: a randomized controlled trial. PLoS One. 2016",
+    "Šrámek P et al. Human physiological responses to immersion into water of different temperatures. Eur J Appl Physiol. 2000",
+    "Roberts LA et al. Post-exercise cold water immersion attenuates acute anabolic signalling and long-term adaptations to resistance training. J Physiol. 2015",
+    "van Marken Lichtenbelt WD et al. Cold-activated brown adipose tissue in healthy men. N Engl J Med. 2009"
+  ],
+  "caution": "The cold shock response causes an involuntary gasp and a sharp rise in blood pressure — dangerous if you have uncontrolled hypertension, coronary artery disease, arrhythmia, or a history of stroke. Never do cold immersion alone in open water; the gasp reflex drowns people. Avoid if you have Raynaud's phenomenon or cold urticaria. Do not use cold water immediately after resistance training if muscle growth is your goal — wait at least 4–6 hours. Start with 30 seconds at the end of a warm shower, not 3 minutes on day one.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Cold shock: gasp, spike, then an hour of sharp alertness",
+      "effects": [
+        {
+          "target": "skin",
+          "kind": "strain",
+          "intensity": 0.7,
+          "note": "Cold receptors fire en masse. Skin blood vessels constrict within seconds, shunting blood to the core — this is why the skin goes pale and then flushes red on rewarming.",
+          "metric": { "label": "Skin blood flow", "value": "Sharp vasoconstriction within seconds" }
+        },
+        {
+          "target": "adrenal-glands",
+          "kind": "strain",
+          "intensity": 0.6,
+          "note": "Noradrenaline rises roughly 2–3 fold and stays elevated for up to an hour after a cold exposure. This is the actual mechanism behind the reported focus and mood lift.",
+          "metric": { "label": "Plasma noradrenaline", "value": "~2–3× baseline" }
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.6,
+          "note": "Heart rate and blood pressure jump in the first 30 seconds. In a healthy person this is a manageable stressor; in someone with coronary disease it is a genuine trigger for events."
+        },
+        {
+          "target": "airways",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "The cold shock response drives an involuntary gasp followed by uncontrollable rapid breathing for 1–3 minutes. Learning to control this breathing is most of what 'getting used to it' means."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "The combination of noradrenaline, dopamine and intense sensory input produces genuine alertness and mood elevation for 1–2 hours. It is a real effect, not placebo."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Brown adipose tissue in the neck and upper back activates and burns fat to make heat. In an adult this contributes only a modest number of calories — nowhere near a weight-loss strategy."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "The shock shrinks; the routine starts to feel manageable",
+      "effects": [
+        {
+          "target": "autonomic-nerves",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Habituation to cold shock is fast — most of it happens within 4–6 exposures. The gasp reflex and the panic breathing both blunt substantially in a week."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The daily reliable alertness boost is the main reason people stick with it. There is also a behavioural effect worth naming: doing something deliberately uncomfortable every morning builds a real sense of agency."
+        },
+        {
+          "target": "skin",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Cold water strips less sebum than hot water, so people with dry skin or eczema often find their skin barrier improves — one of the more reliable minor benefits."
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Repeated vasoconstriction-vasodilation cycles are essentially exercise for the small vessels. The claimed circulation benefits are plausible but poorly quantified in humans."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Fewer sick days in trial data; almost no metabolic change",
+      "effects": [
+        {
+          "target": "immune-system",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "In a randomised trial of over 3,000 adults, 30–90 days of daily cold showers reduced self-reported sickness absence by 29% — but the number of actual illness days was not different.",
+          "metric": { "label": "Sickness absence (RCT)", "value": "−29%" }
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Brown fat activity increases with repeated cold. In studies using far more cold than a 3-minute shower, this adds roughly 100–200 kcal/day at most — real physiology, negligible weight effect."
+        },
+        {
+          "target": "autonomic-nerves",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "A month in, the cardiovascular response to cold is markedly smaller. This cross-adaptation may modestly improve tolerance of other stressors, though the evidence for that transfer is thin."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Small trials report improved mood and reduced depressive symptoms with regular cold exposure. Sample sizes are small and blinding is impossible, so treat this as promising rather than proven."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Important caveat for anyone lifting weights: cold water within a few hours after resistance training blunts mTOR and satellite cell signalling, and over 12 weeks measurably reduces strength and hypertrophy gains."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Fully habituated; benefits are real but modest and mostly neurological",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "The consistent, replicable benefit at two months is subjective: better alertness, better mood, more energy. Objective physiological changes remain small."
+        },
+        {
+          "target": "adrenal-glands",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "The noradrenaline surge persists even after habituation — it is the sensory response that dulls, not the hormonal one. That is why the mental lift does not fade with practice."
+        },
+        {
+          "target": "immune-system",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Honest reading of the literature: acute immune-cell counts do rise transiently after cold exposure, but no trial has shown fewer actual infections. Do not treat this as an immunity intervention."
+        },
+        {
+          "target": "heart",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "In healthy people, the blood-pressure spike is now smaller than in week one. No evidence of long-term cardiovascular benefit or harm in healthy adults at this dose."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "A durable habit with a small, mostly psychological return",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Six months of daily voluntary discomfort has an under-studied but widely reported effect: better stress tolerance and self-efficacy. This may be the largest real benefit on offer."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Brown fat is more responsive and more thermogenic than at baseline. Its metabolic contribution in adults is still too small to change body weight."
+        },
+        {
+          "target": "skin",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Less barrier disruption than daily hot showers means less dryness and itch, which matters for people with eczema, particularly in dry North Indian winters."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Reality check at six months: cold showers do not meaningfully change body composition, testosterone, VO₂max or long-term illness rates. They change how you feel, which is not nothing."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Full cold adaptation; the ceiling of this intervention is low",
+      "effects": [
+        {
+          "target": "autonomic-nerves",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "A year of daily exposure produces genuine cold acclimation: less shivering, better peripheral circulation in cold, higher subjective comfort in low temperatures."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "The mood and alertness effect does not habituate away, which is unusual among stimulating interventions. It remains the strongest reason to keep the practice."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "For anyone training seriously, a year of post-workout cold has a real cost. Move it to the morning, or to non-training days, and the conflict disappears entirely."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "No long-term harm in healthy people, and no evidence of the large longevity or immune benefits sold online. This is a small, cheap, pleasant-in-retrospect habit — not a transformation."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Safe long-term habit; benefits stay in the same modest range",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Five years of a daily deliberate-discomfort ritual has plausible long-term mood and discipline benefits, but no long-term controlled data exist. Be honest about that gap."
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Long-term cold-adapted individuals show better peripheral vascular responsiveness. Whether this translates into any cardiovascular outcome is unknown."
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "The one persistent risk: as you age and cardiovascular disease becomes more likely, the daily blood-pressure spike carries more weight. Reassess after 50 or if you develop heart disease."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Final honest verdict: sleep, exercise, diet and not smoking each outrank cold showers by an enormous margin. Use this as a small add-on, never as a substitute for the things that actually move outcomes."
+        }
+      ]
+    }
+  ]
+}

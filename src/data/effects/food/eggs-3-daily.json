@@ -1,0 +1,247 @@
+{
+  "id": "eggs-3-daily",
+  "name": { "en": "3 whole eggs every day", "hi": "रोज़ 3 साबुत अंडे" },
+  "category": "food",
+  "icon": "🥚",
+  "dose": "3 whole large eggs a day (~150 g), boiled, poached or lightly fried: about 19 g complete protein, 15 g fat (5 g saturated), 550–570 mg dietary cholesterol, ~440 mg choline and ~210 kcal. Yolks included — this is a different food from an egg-white omelette.",
+  "molecule": "cholesterol",
+  "summary": {
+    "en": "Three eggs is the cheapest complete protein in India and also the single largest source of dietary cholesterol most people will eat. The old fear was overstated: for roughly two-thirds of people, eating cholesterol barely moves blood cholesterol, because the liver simply makes less. But about a third are 'hyper-responders' whose LDL climbs clearly, and in people who already have diabetes the cohort data turn unfavourable. Everything else in the egg — choline, lutein, B12, selenium, high-quality protein — is genuinely valuable.",
+    "hi": "तीन अंडे भारत का सबसे सस्ता पूरा प्रोटीन हैं, और साथ ही सबसे बड़ा डाइटरी कोलेस्ट्रॉल का स्रोत भी। पुराना डर ज़रूरत से ज़्यादा था: करीब दो-तिहाई लोगों में खाया हुआ कोलेस्ट्रॉल खून के कोलेस्ट्रॉल को मुश्किल से बढ़ाता है, क्योंकि लिवर खुद बनाना कम कर देता है। लेकिन करीब एक-तिहाई लोग 'हाइपर-रेस्पॉन्डर' होते हैं जिनका LDL साफ़ बढ़ता है, और जिन्हें पहले से डायबिटीज़ है उनके लिए आँकड़े अच्छे नहीं हैं। बाकी सब कुछ — कोलीन, ल्यूटीन, B12, सेलेनियम, बढ़िया प्रोटीन — असली फ़ायदा है।"
+  },
+  "indian_context": "At ₹6–8 an egg, this is the most affordable route out of India's protein-quality problem — better absorbed than dal protein and far cheaper than paneer or whey. Indian doctors still commonly tell patients to eat only egg whites, advice that lags the current evidence for most people but is reasonable for a diabetic with high LDL. The 'ande se garmi hoti hai' belief has no basis. One caveat that matters here: Indians typically carry the high-triglyceride, low-HDL lipid pattern, and it is that pattern — not eggs — that drives early heart disease, so a lipid profile before and after three months tells you far more than any general rule.",
+  "evidence": "mixed",
+  "sources": [
+    "Vincent MJ et al. Meta-regression analysis of the effects of dietary cholesterol intake on LDL and HDL cholesterol. Am J Clin Nutr 2019",
+    "Drouin-Chartier JP et al. Egg consumption and risk of cardiovascular disease: three large prospective US cohort studies, systematic review, and updated meta-analysis. BMJ 2020",
+    "Zhong VW et al. Associations of dietary cholesterol or egg consumption with incident cardiovascular disease and mortality. JAMA 2019",
+    "van Vliet S et al. Consumption of whole eggs promotes greater stimulation of postexercise muscle protein synthesis than consumption of isonitrogenous amounts of egg protein. Am J Clin Nutr 2017",
+    "Tang WH et al. Intestinal microbial metabolism of phosphatidylcholine and cardiovascular risk. N Engl J Med 2013"
+  ],
+  "caution": "If you have type 2 diabetes, familial hypercholesterolaemia, or established heart disease, three yolks a day is not a neutral choice — several cohorts show a worse signal specifically in these groups. Get a lipid profile before starting and again at 12 weeks; if LDL jumps more than about 15%, you are a hyper-responder and should cut back. Eggs must be cooked through — Salmonella risk from runny yolks is real with Indian supply chains.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Liver dials down its own cholesterol production to compensate",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "Only about 50% of the ~560 mg of dietary cholesterol is absorbed, and the liver responds by suppressing HMG-CoA reductase — its own cholesterol factory. This feedback loop is why eating cholesterol is not the same as having high cholesterol.",
+          "metric": { "label": "Cholesterol absorbed", "value": "~250–300 mg of the ~560 mg eaten" }
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "19 g of the most bioavailable protein known, with about 1.6 g leucine. Whole eggs stimulate post-exercise muscle protein synthesis more than the same protein from whites alone — the yolk's fat and micronutrients matter."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Three yolks provide around 440 mg choline — most of a day's requirement. Choline is the precursor of acetylcholine and of the phospholipids in every cell membrane; Indian vegetarian diets are typically low in it."
+        },
+        {
+          "target": "gallbladder",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Egg yolk is a strong stimulus for gallbladder contraction. Harmless normally, but a reliable trigger for pain in someone with undiagnosed gallstones."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Both LDL and HDL edge up; hunger noticeably lower",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Meta-regression puts the average effect at roughly +2 mg/dL LDL per 100 mg of daily dietary cholesterol — so about +10 mg/dL for three eggs, alongside a smaller HDL rise. The LDL/HDL ratio barely moves in most people.",
+          "metric": { "label": "Expected average LDL change", "value": "~+8–12 mg/dL (highly variable between people)" }
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "An egg breakfast produces greater satiety and lower calorie intake at lunch than an isocaloric carbohydrate breakfast — a repeatable finding in feeding trials."
+        },
+        {
+          "target": "small-intestine",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Gut bacteria convert some yolk choline into TMA, which the liver oxidises into TMAO — a metabolite associated with cardiovascular risk. How much you make depends heavily on your own microbiome."
+        },
+        {
+          "target": "bone-marrow",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "About 1.5 µg of B12 plus riboflavin, selenium and vitamin A. For an eggetarian Indian, this is often the only reliable B12 in the diet."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "The split shows: two-thirds unchanged, one-third clearly higher LDL",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "By a month, hypo-responders show almost no LDL change while hyper-responders — roughly a quarter to a third of people — can be 15–20% higher. A single lipid profile at this point tells you which one you are.",
+          "metric": { "label": "Hyper-responder LDL rise", "value": "+15–20% in ~25–30% of people" }
+        },
+        {
+          "target": "eyes",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Yolk lutein and zeaxanthin are absorbed far better than the same carotenoids from spinach because they come packaged in fat. Macular pigment density measurably rises within weeks."
+        },
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Choline is required to export fat out of the liver as VLDL. Adequate choline protects against fatty liver — relevant in India, where NAFLD is common even in lean vegetarians."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "With training, the daily 19 g of high-leucine protein contributes directly to lean mass. Without training, it mostly maintains rather than builds."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Lipids stabilise; LDL particle size tends to get larger, not smaller",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "Egg feeding studies consistently shift LDL towards large buoyant particles rather than the small dense ones that are most atherogenic. The total LDL number goes up slightly while the particle quality often improves — which is why the picture stays genuinely mixed.",
+          "metric": { "label": "HDL cholesterol", "value": "typically +3–5 mg/dL" }
+        },
+        {
+          "target": "retina",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Higher macular pigment filters blue light and reduces oxidative stress at the fovea — the mechanism behind the association between lutein intake and lower age-related macular degeneration risk."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "210 kcal a day is small. In practice most people lose slightly more weight on an egg-based breakfast than a cereal one, because of the satiety effect."
+        },
+        {
+          "target": "pancreas",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "No meaningful glycaemic load — eggs barely move blood glucose. This is why they suit diabetics metabolically, even as the lipid question stays unsettled for them."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Steady state — benefit is clear, risk depends entirely on who you are",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.4,
+          "note": "Large prospective cohorts find no increased cardiovascular risk up to about one egg a day in healthy people. Three a day is beyond where good data exist, and the studies that do look at higher cholesterol intakes find a dose-dependent signal.",
+          "metric": { "label": "Dietary cholesterol", "value": "~560 mg/day vs ~300 mg in typical guidance" }
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Six months of consistently adequate high-quality protein is one of the most reliable ways to protect lean mass — especially useful for Indian vegetarians who add eggs to an otherwise cereal-pulse diet."
+        },
+        {
+          "target": "brain",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Sustained adequate choline supports acetylcholine synthesis and membrane phospholipids. Requirements are higher in pregnancy, where choline intake is linked to fetal brain development."
+        },
+        {
+          "target": "small-intestine",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Chronically higher TMAO production in some people. The evidence that TMAO causes rather than marks disease is still contested — treat it as an open question, not a verdict."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Excellent for most; a real problem for diabetics with high LDL",
+      "effects": [
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Several cohorts show a clearly worse cardiovascular signal for high egg intake specifically in people with diabetes. Given India's diabetes prevalence, this subgroup is not small — it is a large share of adults over 40.",
+          "metric": { "label": "CVD signal in diabetics", "value": "elevated in multiple cohorts at ≥1 egg/day" }
+        },
+        {
+          "target": "eyes",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "A year of high lutein and zeaxanthin intake meaningfully raises macular pigment optical density, the best available proxy for protection against macular degeneration."
+        },
+        {
+          "target": "bone-marrow",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Year-round B12, selenium and vitamin A from a cheap source. For eggetarians this closes the single most common Indian micronutrient gap after iron."
+        },
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "The liver's own cholesterol synthesis stays suppressed. There is no evidence of liver harm from long-term high egg intake in people with normal liver function."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Net verdict: strongly positive if your lipids stayed normal",
+      "effects": [
+        {
+          "target": "whole-body",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Five years of the cheapest complete protein available, with choline, lutein, B12 and selenium attached. For a healthy person whose LDL did not respond, the balance of evidence is favourable.",
+          "metric": { "label": "Protein delivered over 5 years", "value": "~35 kg of complete protein" }
+        },
+        {
+          "target": "coronary-arteries",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "For a hyper-responder who never checked, five years of an LDL 15–20% higher than baseline is real plaque burden. This is the entire argument for testing rather than following a blanket rule."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Sustained protein adequacy through the 30s and 40s is the main defence against age-related muscle loss later."
+        },
+        {
+          "target": "retina",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Long-term carotenoid deposition in the macula is among the few dietary interventions with a plausible protective mechanism for vision in later life."
+        },
+        {
+          "target": "gallbladder",
+          "kind": "strain",
+          "intensity": 0.2,
+          "note": "Daily strong gallbladder contraction is not harmful in itself, but people who develop stones for other reasons will find symptoms surface earlier on an egg-heavy diet."
+        }
+      ]
+    }
+  ]
+}

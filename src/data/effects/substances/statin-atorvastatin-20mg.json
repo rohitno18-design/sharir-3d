@@ -1,0 +1,241 @@
+{
+  "id": "statin-atorvastatin-20mg",
+  "name": { "en": "Atorvastatin 20 mg every night", "hi": "रोज़ रात 20 मि.ग्रा. एटोरवास्टेटिन" },
+  "category": "medicine",
+  "icon": "💊",
+  "molecule": "atorvastatin",
+  "dose": "20 mg once daily, conventionally at night. Atorvastatin has a long half-life with active metabolites, so unlike older statins such as simvastatin it works taken at any fixed time of day — consistency matters more than the hour.",
+  "summary": {
+    "en": "Atorvastatin blocks HMG-CoA reductase, the rate-limiting enzyme of cholesterol synthesis inside liver cells. The liver responds to its own falling internal cholesterol by manufacturing more LDL receptors on its surface, and those receptors pull LDL particles out of the bloodstream. That receptor upregulation, not the blocked synthesis itself, is what lowers your blood LDL — typically by 35–45% at 20 mg. Beyond the number, statins stabilise existing arterial plaque: the fibrous cap thickens and the inflamed lipid core shrinks, which is why heart attacks fall further than the cholesterol change alone would predict.",
+    "hi": "एटोरवास्टेटिन लिवर में उस एंज़ाइम को रोकता है जो कोलेस्ट्रॉल बनाता है। अपने अंदर कोलेस्ट्रॉल कम होते ही लिवर अपनी सतह पर ज़्यादा LDL रिसेप्टर बनाता है, और वही रिसेप्टर खून से LDL खींच लेते हैं। खून का LDL इसी वजह से गिरता है — 20 मि.ग्रा. पर आमतौर पर 35–45%। सिर्फ़ नंबर की बात नहीं है: स्टेटिन नसों में पहले से जमी चर्बी की परत को भी मज़बूत कर देता है — ऊपर की परत मोटी होती है और अंदर की सूजन कम — इसीलिए हार्ट अटैक उससे भी ज़्यादा घटते हैं जितना सिर्फ़ कोलेस्ट्रॉल के गिरने से उम्मीद होती।"
+  },
+  "indian_context": "South Asians develop coronary artery disease roughly a decade earlier than Europeans and often at a lower BMI, with a characteristic pattern of high triglycerides, low HDL, small dense LDL and elevated Lp(a) — which is why the Lipid Association of India recommends more aggressive LDL targets for Indians than Western guidelines do. Atorvastatin is generic, on the National List of Essential Medicines, and costs roughly ₹2–6 a day, so affordability is rarely the barrier. Adherence is. The two most common Indian patterns are stopping the tablet the moment the lipid report normalises — not understanding that the normal report is the drug working, not the problem being solved — and quitting after a WhatsApp forward about statins destroying the liver or causing dementia. A third pattern worth naming: a vegetarian diet high in refined carbohydrate, ghee and fried snacks produces exactly the high-triglyceride, low-HDL profile that a statin only partly fixes, so the tablet without the plate change under-delivers.",
+  "evidence": "strong",
+  "sources": [
+    "Cholesterol Treatment Trialists' (CTT) Collaboration. Efficacy and safety of more intensive lowering of LDL cholesterol: a meta-analysis of data from 170,000 participants in 26 randomised trials. Lancet. 2010",
+    "Collins R et al. Interpretation of the evidence for the efficacy and safety of statin therapy. Lancet. 2016",
+    "Howard JP et al. Side effect patterns in a crossover trial of statin, placebo, and no treatment (SAMSON). Journal of the American College of Cardiology. 2021",
+    "Sattar N et al. Statins and risk of incident diabetes: a collaborative meta-analysis of randomised statin trials. Lancet. 2010",
+    "ESC/EAS Guidelines for the management of dyslipidaemias. European Heart Journal. 2019",
+    "Atorvastatin calcium tablets — US FDA prescribing information"
+  ],
+  "caution": "Statins are contraindicated in pregnancy and while breastfeeding, and in active liver disease. Tell your doctor about every other medicine you take: clarithromycin, some antifungals, HIV protease inhibitors, ciclosporin and high-dose gemfibrozil all raise atorvastatin levels and with them the small risk of severe muscle injury. Grapefruit juice does the same, though the effect is modest at 20 mg. Muscle aches are common but usually not the drug — blinded trials show most symptoms occur equally on placebo; still, severe muscle pain with weakness or dark urine needs an urgent creatine kinase test, because true rhabdomyolysis, though rare at roughly one to three per 100,000 patient-years, is dangerous. Routine liver function monitoring is no longer required, but unexplained jaundice or right upper abdominal pain should be checked. Never stop a statin after a heart attack or stent without speaking to your cardiologist.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Cholesterol synthesis in the liver stops within hours; nothing is felt",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "Atorvastatin reaches the liver by active transport and competitively blocks HMG-CoA reductase, halting the mevalonate pathway. Cholesterol synthesis — which peaks overnight — is suppressed from the first dose.",
+          "metric": { "label": "Hepatic cholesterol synthesis", "value": "suppressed within hours" }
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Nothing is subjectively noticeable on day one. High cholesterol produces no symptoms and neither does treating it, which is exactly why long-term adherence is so hard."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "The same mevalonate pathway also makes coenzyme Q10 and prenylated proteins in muscle, the proposed mechanism for statin muscle symptoms. Nothing measurable happens this early."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "LDL receptors multiply on liver cells; blood LDL already falling",
+      "effects": [
+        {
+          "target": "liver",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Falling intracellular cholesterol activates SREBP-2, which upregulates LDL receptor genes. More receptors appear on the hepatocyte surface and start clearing LDL particles from circulation — the actual mechanism of benefit."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Circulating LDL has already dropped substantially by the end of week one; roughly 90% of the eventual reduction is achieved within two weeks.",
+          "metric": { "label": "LDL cholesterol at 1 week", "value": "already ~30–40% down" }
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "strain",
+          "intensity": 0.25,
+          "note": "Some people report aching thighs, shoulders or calves in the first weeks. Blinded n-of-1 trials found these symptoms occur almost as often on placebo, so the drug is far less often the culprit than assumed."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Full LDL effect reached — this is the number your report will show",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.7,
+          "note": "LDL has reached its new steady level, typically 35–45% below baseline at 20 mg. This is when the repeat lipid profile is usually done, at 4–6 weeks after starting.",
+          "metric": { "label": "LDL cholesterol", "value": "−35 to −45%" }
+        },
+        {
+          "target": "liver",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Transaminases rise mildly in roughly 1–3% of users, almost always without any liver injury and often settling on their own. Clinically significant statin liver damage is genuinely rare."
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Statins also have effects beyond LDL: less vascular inflammation, better endothelial nitric oxide production, and falling CRP. This partly explains why event reduction outpaces the lipid change."
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Triglycerides typically fall 15–25% and HDL rises slightly. This matters in the Indian lipid pattern, where triglycerides are often the more abnormal number."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Plaque chemistry starting to change, not just the blood test",
+      "effects": [
+        {
+          "target": "coronary-arteries",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "With LDL persistently low, plaques begin remodelling: the lipid core shrinks, inflammatory cell content falls and the fibrous cap thickens. A stable plaque is far less likely to rupture and cause a heart attack."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "The relationship is dose-dependent and linear: each 1 mmol/L (about 39 mg/dL) of LDL reduction is associated with roughly a fifth fewer major vascular events per year of continued treatment.",
+          "metric": { "label": "Major vascular events per 1 mmol/L LDL drop", "value": "~−22% per year of treatment" }
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "strain",
+          "intensity": 0.25,
+          "note": "If muscle symptoms have appeared and persist, the standard approach is a supervised break and rechallenge, or a switch to a different statin at a lower dose — not abandoning statin therapy altogether."
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.25,
+          "note": "Statins slightly increase the chance of crossing the diabetes diagnostic threshold, mostly in people already close to it. Absolute risk is small — roughly one extra case per 250 people treated per year — and is outweighed by cardiovascular benefit."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Six months of low LDL: measurable reduction in event risk begins",
+      "effects": [
+        {
+          "target": "coronary-arteries",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Clinical benefit in trials becomes statistically visible within the first year and grows with duration. Plaque stabilisation happens faster than plaque regression, and it is stabilisation that prevents most events."
+        },
+        {
+          "target": "carotid-arteries",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Carotid intima-media thickness progression slows and may reverse slightly. This translates to lower ischaemic stroke risk alongside the coronary benefit."
+        },
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Liver enzymes have usually settled. Notably, statins are safe and often beneficial in non-alcoholic fatty liver disease, a condition that coexists with high cholesterol in a large share of Indian patients."
+        },
+        {
+          "target": "aorta",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Arterial stiffness improves modestly and calcified plaque tends to become denser and more stable — dense calcification looks worse on a scan but behaves better."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "A year in: risk meaningfully lower, adherence is now the whole game",
+      "effects": [
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.65,
+          "note": "In secondary prevention — after a heart attack, stent or stroke — a year of statin therapy produces a clear reduction in repeat events. In primary prevention the absolute benefit is smaller and depends on your baseline risk."
+        },
+        {
+          "target": "cerebral-arteries",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Ischaemic stroke risk falls with LDL lowering. There is a small signal for slightly more haemorrhagic stroke in some analyses, but the net effect on total stroke remains clearly favourable."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Serious muscle injury remains rare at roughly one to three per 100,000 patient-years, and most of those cases involve an interacting drug rather than the statin alone."
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "New-onset diabetes risk is about 9% higher relative to placebo across trials, concentrated in people with prediabetes. Guidelines are unanimous that the cardiovascular benefit outweighs this, but it is a reason for periodic sugar checks — particularly in South Asians.",
+          "metric": { "label": "Relative risk of new diabetes", "value": "~+9%" }
+        },
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "Stopping the drug reverses everything within four to six weeks: LDL returns to baseline as receptor numbers fall back. The benefit lasts exactly as long as the treatment does."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years: the benefit compounds with every year of low LDL",
+      "effects": [
+        {
+          "target": "coronary-arteries",
+          "kind": "positive",
+          "intensity": 0.75,
+          "note": "Arterial benefit is cumulative — the relative risk reduction per year of treatment persists and adds up, so five years delivers substantially more protection than the first year did. Duration of low LDL matters as much as the depth of lowering.",
+          "metric": { "label": "Major vascular events over 5 years", "value": "roughly a quarter to a third fewer" }
+        },
+        {
+          "target": "heart",
+          "kind": "positive",
+          "intensity": 0.65,
+          "note": "In high-risk and secondary prevention groups, long-term statin use reduces cardiovascular mortality and, in the larger meta-analyses, all-cause mortality too. This is one of the best-documented drug benefits in medicine."
+        },
+        {
+          "target": "brain",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "The widely circulated claim that statins cause memory loss or dementia has not held up in randomised trials or large systematic reviews. If anything the vascular effect is mildly protective."
+        },
+        {
+          "target": "pancreas",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Over five years the small excess diabetes risk accumulates, which in the Indian population — where prediabetes is extremely common — is worth watching with an annual HbA1c rather than ignoring."
+        },
+        {
+          "target": "liver",
+          "kind": "neutral",
+          "intensity": 0.25,
+          "note": "No cumulative liver toxicity emerges over years of use. Routine enzyme monitoring beyond a baseline check is not recommended by current guidance."
+        }
+      ]
+    }
+  ]
+}

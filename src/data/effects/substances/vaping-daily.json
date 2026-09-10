@@ -1,0 +1,242 @@
+{
+  "id": "vaping-daily",
+  "name": { "en": "Vaping nicotine every day", "hi": "रोज़ निकोटीन वेप करना" },
+  "category": "substance",
+  "icon": "💨",
+  "dose": "Daily use of a nicotine e-cigarette or pod device, typically 20–50 mg/mL nicotine salt, delivering roughly the nicotine of half to one pack of cigarettes across a day of steady puffing.",
+  "molecule": "nicotine",
+  "summary": {
+    "en": "A vape heats propylene glycol and vegetable glycerine carrying nicotine and flavour chemicals into an aerosol. There is no combustion, so there is no tar and far less carbon monoxide — that is the genuine difference from a cigarette. But the nicotine dependence is identical or stronger with modern nicotine-salt pods, the aerosol still irritates and inflames the airway, and long-term human data beyond about 10 years does not exist yet.",
+    "hi": "वेप में प्रोपाइलीन ग्लाइकॉल और ग्लिसरीन को गरम करके निकोटीन और फ्लेवर वाली भाप बनती है। इसमें जलना नहीं होता, इसलिए टार नहीं बनता और कार्बन मोनोऑक्साइड बहुत कम — यही असली फ़र्क़ है सिगरेट से। लेकिन निकोटीन की लत बिलकुल उतनी ही, बल्कि नए सॉल्ट-निकोटीन पॉड्स से और तेज़ लगती है, भाप से साँस की नली में सूजन होती है, और 10 साल से आगे का असली डेटा अभी किसी के पास नहीं है।"
+  },
+  "indian_context": "E-cigarettes are banned in India — the Prohibition of Electronic Cigarettes Act, 2019 outlaws their production, import, sale and advertising, so anything you get is smuggled and completely unregulated in nicotine strength and ingredient purity. That means the 'lower harm than cigarettes' argument from UK regulated products does not transfer cleanly to the grey-market devices sold here. Vaping is also spreading fastest among Indian teenagers and college students who never smoked, creating fresh nicotine dependence rather than replacing an existing one.",
+  "evidence": "moderate",
+  "sources": [
+    "National Academies of Sciences, Engineering, and Medicine. Public Health Consequences of E-Cigarettes. 2018",
+    "Public Health England / OHID. Nicotine vaping in England: evidence update. 2022",
+    "Hartmann-Boyce J et al. Electronic cigarettes for smoking cessation. Cochrane Database of Systematic Reviews. 2022",
+    "Prohibition of Electronic Cigarettes Act, Government of India, 2019",
+    "US CDC. Outbreak of Lung Injury Associated with E-Cigarette Use (EVALI). 2020"
+  ],
+  "caution": "If you have never smoked, starting to vape only buys you a nicotine addiction with no upside. If you already smoke, switching completely is clearly less harmful than continuing to smoke — but dual use (both) gives you the worst of both. Never vape in pregnancy or under 18: nicotine directly harms adolescent brain development. Avoid unbranded or refilled liquids entirely — the 2019 EVALI deaths came from vitamin E acetate in illicit THC cartridges. Selling or importing e-cigarettes in India is a criminal offence.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Same nicotine hit, no smoke — throat and mouth react first",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Nicotine-salt e-liquids deliver blood nicotine curves close to a cigarette's, hitting nicotinic receptors and the dopamine reward circuit within a minute. Because a pod has no natural stopping point, total daily nicotine can quietly exceed a smoker's.",
+          "metric": { "label": "Nicotine in one pod", "value": "≈20 cigarettes' worth" }
+        },
+        {
+          "target": "mouth",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Propylene glycol is hygroscopic, so it pulls water from the oral and throat mucosa. Dry mouth and a scratchy throat on day one are the most common first complaints."
+        },
+        {
+          "target": "airways",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "The aerosol contains fine particles plus carbonyls (formaldehyde, acetaldehyde) formed when the coil heats the liquid — far less than smoke, but not nothing. Airways respond with mild irritation and cough."
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Nicotine's sympathetic effect is unchanged by the delivery method: heart rate rises 5–15 bpm and blood pressure a few mmHg after each session."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Dependence forms fast; no tar, so no cough to warn you",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Receptor upregulation is underway. Because vaping is odourless-ish and socially easier, people puff far more frequently than they would smoke, which strengthens the conditioned habit loop faster."
+        },
+        {
+          "target": "lungs",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "There is no tar deposition and no carbon monoxide load, so someone who fully switched from cigarettes will already notice better breath-holding and less morning phlegm. Someone who never smoked is only adding an irritant."
+        },
+        {
+          "target": "mouth",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Reduced saliva and sweet flavourings change the oral bacterial balance; early studies link vaping to more cavities and gum inflammation than non-users."
+        },
+        {
+          "target": "whole-body",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Nicotine mildly suppresses appetite and raises resting energy expenditure by roughly 5%, which is why appetite goes up when people stop."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Airway inflammation measurable; carbon monoxide near zero",
+      "effects": [
+        {
+          "target": "airways",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Bronchial biopsies in regular vapers show increased inflammatory markers and altered mucus properties, though nothing like the metaplasia smoke causes. Some flavour chemicals — especially cinnamaldehyde and diacetyl-type compounds — are directly toxic to airway cilia."
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Studies show impaired endothelial function and stiffer arteries after a month of vaping, driven by nicotine plus aerosol oxidants. Less than smoking, but measurably worse than not vaping."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Withdrawal is now real: skipping the device for half a day brings irritability, restlessness and poor focus. In under-25s this is happening in a brain whose prefrontal cortex is still maturing."
+        },
+        {
+          "target": "lungs",
+          "kind": "positive",
+          "intensity": 0.35,
+          "note": "For a complete switcher from cigarettes, exhaled carbon monoxide falls to non-smoker levels and cough and sputum improve within weeks. This benefit disappears if you keep smoking even a few cigarettes."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Habit locked in; hidden nicotine dose often higher than expected",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Two months in, most daily users vape within minutes of waking and cannot get through a workday without the device. Nicotine-salt formulations are smoother to inhale, so people absorb more nicotine while feeling less harshness."
+        },
+        {
+          "target": "airways",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Chronic cough, wheeze and increased asthma symptoms are consistently reported in daily vapers, especially with high-power sub-ohm devices that produce more aerosol per puff."
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "The constant low-level sympathetic drive keeps resting heart rate and blood pressure slightly elevated throughout the day."
+        },
+        {
+          "target": "immune-system",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Aerosol exposure impairs alveolar macrophage function in laboratory studies, which may explain the higher rate of respiratory infections reported by vapers."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Clearly better than smoking, clearly worse than nothing",
+      "effects": [
+        {
+          "target": "lungs",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Six months of vaping does not produce the emphysema or squamous metaplasia that smoke does; the honest position is chronic low-grade irritation of uncertain long-run consequence. Absence of proof of harm is not proof of safety."
+        },
+        {
+          "target": "blood-vessels",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Endothelial dysfunction persists. Nicotine itself, independent of smoke, raises blood pressure and promotes arterial stiffness over time."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "In adolescents, chronic nicotine alters the maturation of prefrontal circuits and is associated with poorer attention and impulse control, and with a higher likelihood of later starting cigarettes."
+        },
+        {
+          "target": "mouth",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Persistent dry mouth, gum inflammation and a shifted oral microbiome. Dentists can usually tell a daily vaper from the gum picture alone."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "A year of nicotine dependence with an unknown lung ledger",
+      "effects": [
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Nicotine dependence is fully established and, in surveys, vapers find quitting no easier than smokers do. Most people who intended to use vaping as a bridge off cigarettes are still using the device a year later."
+        },
+        {
+          "target": "airways",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Chronic bronchitis-like symptoms are more common in year-long vapers than never-users. Whether this progresses to fixed obstructive disease is exactly the question the evidence cannot yet answer."
+        },
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Cohort data suggest cardiovascular risk sits well below smoking but above never-use. Nicotine's chronic vasoconstriction and oxidative aerosol effects both contribute."
+        },
+        {
+          "target": "lungs",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "For an ex-smoker who switched fully and stayed switched, the tar and carbon monoxide exposure has been zero for a year — a genuine, large reduction in lung cancer and COPD trajectory versus continuing to smoke."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years: the honest answer is we do not fully know yet",
+      "effects": [
+        {
+          "target": "lungs",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Vaping products only became widespread around 2010, so nobody has 30-year lung cancer or COPD data. What is clear is that daily aerosol exposure keeps airway inflammation running for years; the size of the long-run price is genuinely unknown.",
+          "metric": { "label": "Long-term human data", "value": "≲10–15 years only" }
+        },
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Five years of nicotine-driven blood pressure elevation and endothelial stress contributes to atherosclerosis, particularly stacked on top of the Indian baseline of insulin resistance and dyslipidaemia."
+        },
+        {
+          "target": "brain",
+          "kind": "negative",
+          "intensity": 0.55,
+          "note": "Half a decade of unbroken nicotine dependence. Withdrawal on stopping is the same as a smoker's — irritability, insomnia and craving peaking in the first week and settling over 4–6 weeks."
+        },
+        {
+          "target": "mouth",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Cumulative gum recession and caries. Oral cancer risk appears far lower than for smoking or tobacco chewing, but flavour-chemical exposure over years has not been studied properly."
+        },
+        {
+          "target": "heart",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "Years of mild resting tachycardia and raised blood pressure add real cardiovascular load, even without a single puff of smoke."
+        }
+      ]
+    }
+  ]
+}

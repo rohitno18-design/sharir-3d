@@ -1,0 +1,251 @@
+{
+  "id": "ibuprofen-daily-1200mg",
+  "name": { "en": "Ibuprofen 400 mg three times a day", "hi": "रोज़ 400 mg ब्रूफ़ेन दिन में तीन बार" },
+  "category": "medicine",
+  "icon": "🩹",
+  "dose": "400 mg three times daily = 1,200 mg/day, the maximum over-the-counter dose. Prescription doses go to 2,400 mg/day, but 1,200 mg taken daily for weeks or months is already long-term NSAID exposure.",
+  "molecule": "ibuprofen",
+  "summary": {
+    "en": "Ibuprofen blocks cyclo-oxygenase, so it stops the production of prostaglandins. That is the whole story — both the good and the bad. Less prostaglandin at the injury site means less pain, swelling and fever. Less prostaglandin in the stomach means the mucus and bicarbonate barrier thins and acid starts eating the lining. Less prostaglandin in the kidney means the afferent arteriole cannot dilate to protect filtration. One drug, one mechanism, three organs affected — you cannot get the anti-inflammatory effect without the other two.",
+    "hi": "ब्रूफ़ेन COX एंज़ाइम को रोककर प्रोस्टाग्लैंडिन बनना बंद कर देता है — और यही एक बात इसके फ़ायदे और नुक़सान, दोनों की वजह है। चोट वाली जगह पर प्रोस्टाग्लैंडिन कम, तो दर्द और सूजन कम। लेकिन पेट में प्रोस्टाग्लैंडिन कम, तो अंदरूनी सुरक्षा परत पतली और एसिड से घाव। और किडनी में कम, तो ख़ून की नली सिकुड़ जाती है और छानने की ताक़त गिरती है। एक ही दवा, एक ही तरीक़ा, तीन अंगों पर असर — फ़ायदा लेना है तो बाक़ी दोनों भी साथ आएँगे।"
+  },
+  "indian_context": "NSAIDs are sold across Indian counters without a prescription and stacked in fixed-dose combinations — Combiflam (ibuprofen + paracetamol) is taken for everything from a headache to knee pain and is often chewed daily for months. This lands on a population where diabetes and hypertension are widespread, so kidneys are already under strain and NSAIDs push them over. Traditional 'pain balm plus tablet plus injection' clinic practice frequently stacks two NSAIDs together. Diclofenac, even more gastrotoxic and cardiotoxic, is prescribed far more freely in India than in most countries.",
+  "evidence": "strong",
+  "sources": [
+    "Coxib and traditional NSAID Trialists' (CNT) Collaboration. Vascular and upper gastrointestinal effects of NSAIDs: meta-analyses of individual participant data. Lancet. 2013",
+    "US FDA Drug Safety Communication: NSAIDs and increased risk of heart attack and stroke. 2015",
+    "NICE Clinical Knowledge Summaries: NSAIDs — prescribing issues",
+    "KDIGO Clinical Practice Guideline for Acute Kidney Injury. Kidney Int Suppl. 2012",
+    "Bhatt DL et al. (PRECISION trial). Cardiovascular safety of celecoxib, naproxen, or ibuprofen for arthritis. N Engl J Med. 2016"
+  ],
+  "caution": "Never take NSAIDs on an empty stomach, and never take two at once (Combiflam plus a diclofenac injection is two). Stop and seek help for black tarry stools, vomiting blood, sudden swelling of the feet, or a drop in urine output. Avoid entirely if you have a peptic ulcer, chronic kidney disease, heart failure, or are on warfarin, steroids or an SSRI — each combination multiplies bleeding or kidney risk. Ibuprofen also blunts aspirin's antiplatelet effect, which matters if you take aspirin for your heart. In dehydration, gastroenteritis or heat, NSAIDs are a leading cause of acute kidney injury in India. If you need it daily for more than a week or two, you need a diagnosis, a gastroprotective plan and a doctor.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Real anti-inflammatory relief in 30 minutes — and the stomach barrier thins",
+      "effects": [
+        {
+          "target": "joints",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "COX-2 inhibition at the site of injury cuts prostaglandin E2, so swelling, heat and pain drop within 30–60 minutes. Unlike paracetamol, this is genuine anti-inflammatory action, not just pain masking.",
+          "metric": { "label": "Onset / half-life", "value": "30 min / ~2 hours" }
+        },
+        {
+          "target": "stomach",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "COX-1 inhibition removes the prostaglandins that maintain gastric mucus, bicarbonate and blood flow. Endoscopy shows small mucosal erosions in many people within 24 hours of the first full dose — usually painless."
+        },
+        {
+          "target": "kidneys",
+          "kind": "strain",
+          "intensity": 0.35,
+          "note": "Prostaglandins keep the afferent arteriole dilated when the kidney is under stress. Block them while dehydrated or on a diuretic and filtration falls sharply — the classic mechanism of NSAID acute kidney injury."
+        },
+        {
+          "target": "hypothalamus",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "Central COX inhibition brings fever down and blunts the prostaglandin-driven malaise of an acute infection."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Inflammation controlled; erosions accumulating silently",
+      "effects": [
+        {
+          "target": "stomach",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "A week of three-times-daily dosing gives no window for the mucosa to repair. Most people have gastric erosions and never feel a thing — the first symptom in many is the bleed itself."
+        },
+        {
+          "target": "joints",
+          "kind": "positive",
+          "intensity": 0.55,
+          "note": "For inflammatory conditions — gout, tendinitis, acute back pain — a week of scheduled NSAID gives substantially better function than as-needed dosing. This is the use case it is genuinely good for."
+        },
+        {
+          "target": "arteries",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "NSAIDs cause sodium and water retention and raise blood pressure by roughly 3–5 mmHg. They also blunt the effect of ACE inhibitors, ARBs and diuretics — the commonest reason a stable BP suddenly stops being controlled.",
+          "metric": { "label": "Systolic BP", "value": "+3–5 mmHg" }
+        },
+        {
+          "target": "small-intestine",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "NSAID damage is not confined to the stomach. Capsule endoscopy shows small-bowel erosions in a majority of regular users, and these are not prevented by acid-suppressing drugs."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Ulcer risk real; kidney and blood pressure numbers drifting",
+      "effects": [
+        {
+          "target": "stomach",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "A month of daily NSAID use carries a several-fold increase in peptic ulcer risk versus non-users, higher again if you are over 60, on steroids, or Helicobacter pylori positive — which a large share of Indian adults are.",
+          "metric": { "label": "Peptic ulcer risk", "value": "~3–5× non-users" }
+        },
+        {
+          "target": "kidneys",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Creatinine typically drifts up a little and eGFR down. In anyone with pre-existing diabetes or hypertension, a month of daily NSAID can produce a clinically meaningful drop in filtration."
+        },
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "Sustained blood pressure elevation plus fluid retention. In borderline heart failure this is enough to cause ankle swelling and breathlessness."
+        },
+        {
+          "target": "joints",
+          "kind": "positive",
+          "intensity": 0.45,
+          "note": "Pain and stiffness stay controlled, which is what keeps people taking it. Nothing about the underlying arthritis has changed."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Two months daily: this needs gastroprotection and monitoring",
+      "effects": [
+        {
+          "target": "stomach",
+          "kind": "negative",
+          "intensity": 0.65,
+          "note": "Ulcers are now a substantial risk, and they can present as a sudden major bleed rather than as pain. Anyone on daily NSAIDs for this long should be on a proton pump inhibitor alongside."
+        },
+        {
+          "target": "kidneys",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Chronic prostaglandin suppression in the kidney reduces medullary blood flow. Two months in, a creatinine and potassium check is not optional — NSAIDs also cause hyperkalaemia by suppressing renin."
+        },
+        {
+          "target": "heart",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "The CNT meta-analysis found high-dose ibuprofen raises major vascular events by roughly a third versus placebo, an effect similar in size to the COX-2 inhibitors that were withdrawn.",
+          "metric": { "label": "Major vascular events", "value": "~+1/3 vs placebo (high dose)" }
+        },
+        {
+          "target": "large-intestine",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "NSAID enteropathy causes low-grade blood and protein loss along the small and large bowel, which shows up as unexplained iron deficiency anaemia."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Six months: anaemia, blood pressure and kidney decline compound",
+      "effects": [
+        {
+          "target": "kidneys",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Chronic NSAID use is an established cause of chronic interstitial nephritis and papillary necrosis. In India, where undiagnosed diabetic kidney disease is common, this is one of the most preventable causes of avoidable CKD progression."
+        },
+        {
+          "target": "stomach",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Cumulative erosion and ulceration. Roughly 1–2% of long-term NSAID users have a serious GI bleed or perforation each year, and mortality from those events is not trivial."
+        },
+        {
+          "target": "whole-body",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Iron-deficiency anaemia from slow gut blood loss is common: fatigue, breathlessness and pallor that get blamed on 'weakness' rather than on the painkiller causing it."
+        },
+        {
+          "target": "arteries",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Six months of a 3–5 mmHg blood pressure rise is not cosmetic — it meaningfully increases stroke and heart risk over time, and it makes existing antihypertensives look like they have stopped working."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "One year: the harm ledger clearly outweighs the pain relief",
+      "effects": [
+        {
+          "target": "kidneys",
+          "kind": "negative",
+          "intensity": 0.65,
+          "note": "A year of daily NSAID meaningfully accelerates loss of filtration in anyone with existing renal risk, and can leave permanent reduction even after stopping. In healthy young kidneys the loss is usually recoverable."
+        },
+        {
+          "target": "stomach",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Ulcer, bleeding and perforation risk persists as long as the drug is taken; it does not diminish with time or 'getting used to it'."
+        },
+        {
+          "target": "heart",
+          "kind": "negative",
+          "intensity": 0.45,
+          "note": "Sustained high-dose NSAID use raises heart attack, stroke and heart failure hospitalisation risk. The FDA strengthened this warning for all non-aspirin NSAIDs in 2015."
+        },
+        {
+          "target": "joints",
+          "kind": "negative",
+          "intensity": 0.35,
+          "note": "The joint has been silenced, not treated. A year on painkillers usually means a year without the strength work, weight loss or specific treatment that would actually change the disease."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Five years of daily NSAID: chronic kidney disease is the likeliest legacy",
+      "effects": [
+        {
+          "target": "kidneys",
+          "kind": "negative",
+          "intensity": 0.8,
+          "visual": { "opacity": 0.75 },
+          "note": "Chronic analgesic nephropathy: interstitial scarring, shrunken kidneys and permanently reduced filtration. This is the outcome Indian nephrologists see repeatedly in patients who took over-the-counter painkillers daily for years."
+        },
+        {
+          "target": "stomach",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Cumulative probability of a serious GI event over five years of daily use is substantial. Many of these present as emergency admissions with haematemesis or perforation."
+        },
+        {
+          "target": "heart",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Five years of raised blood pressure, sodium retention and prothrombotic COX-2 inhibition add real cardiovascular events, particularly in people who already have hypertension or diabetes."
+        },
+        {
+          "target": "small-intestine",
+          "kind": "negative",
+          "intensity": 0.4,
+          "note": "Chronic NSAID enteropathy with diaphragm-like strictures is a rare but genuine consequence of years of use, and it is often mistaken for other bowel disease."
+        },
+        {
+          "target": "bone-marrow",
+          "kind": "negative",
+          "intensity": 0.3,
+          "note": "Years of low-grade gut blood loss deplete iron stores faster than diet replaces them — a particular problem on Indian vegetarian diets, where iron absorption is already low."
+        },
+        {
+          "target": "joints",
+          "kind": "positive",
+          "intensity": 0.3,
+          "note": "To be fair to the drug: for genuine inflammatory arthritis, five years of controlled inflammation preserves function and quality of life. The question is always whether the diagnosis justified it."
+        }
+      ]
+    }
+  ]
+}

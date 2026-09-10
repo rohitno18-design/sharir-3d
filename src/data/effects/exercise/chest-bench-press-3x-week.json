@@ -1,0 +1,278 @@
+{
+  "id": "chest-bench-press-3x-week",
+  "name": { "en": "Bench press / chest training 3× a week", "hi": "हफ्ते में 3 बार बेंच प्रेस और चेस्ट ट्रेनिंग" },
+  "category": "exercise",
+  "icon": "🛋️",
+  "dose": "Three chest-focused sessions a week (flat/incline bench press, dumbbell press, dips, flyes), 12–20 hard sets per week, progressive loading. Assumes minimal pulling or leg work, which is how most people actually run this programme.",
+  "summary": {
+    "en": "Bench pressing builds the pectorals, front deltoids and triceps on the usual schedule: strength first (2–4 weeks, neural), visible chest by 6–8 weeks, most of the size gain within a year. The shoulder joint is the weak link: heavy horizontal pressing three times a week with little rowing pulls the shoulders forward, overloads the rotator cuff and the acromioclavicular joint, and is the most common source of gym shoulder pain. The health benefits are real but narrow: upper-body strength and bone, not fitness or metabolism.",
+    "hi": "बेंच प्रेस से छाती, कंधे का अगला हिस्सा और ट्राइसेप्स बढ़ते हैं — पहले ताकत (2–4 हफ्ते), फिर 6–8 हफ्तों में दिखने वाली छाती, और साल भर में ज़्यादातर साइज़। कमज़ोर कड़ी कंधे का जोड़ है: हफ्ते में तीन बार भारी प्रेसिंग और बहुत कम रोइंग कंधों को आगे खींचती है, रोटेटर कफ पर बोझ डालती है और जिम में कंधे के दर्द की सबसे आम वजह बनती है। फायदा असली है पर सीमित — ऊपरी शरीर की ताकत और हड्डी, न कि फिटनेस या शुगर कंट्रोल।"
+  },
+  "indian_context": "'Monday is chest day' is almost a law in Indian gyms; bench press is the lift most young men judge each other by, and the one most often done with a bounce off the chest, flared elbows and no spotter. Rows, face-pulls and rear-delt work that keep the shoulder healthy are rarely programmed by trainers, many of whom hold no recognised certification. On a typical Indian vegetarian protein intake, chest size stalls early; and because chest-only training barely touches the legs or heart rate, it does nothing for the visceral fat and insulin resistance that the South-Asian body accumulates even at a normal weight.",
+  "evidence": "strong",
+  "sources": [
+    "ACSM Position Stand. Progression models in resistance training for healthy adults. Med Sci Sports Exerc. 2009",
+    "Schoenfeld BJ, Ogborn D, Krieger JW. Effects of resistance training frequency on measures of muscle hypertrophy: a systematic review and meta-analysis. Sports Med. 2016",
+    "Kolber MJ, Beekhuizen KS, Cheng MS, Hellman MA. Shoulder injuries attributed to resistance training: a brief review. J Strength Cond Res. 2010",
+    "Magnusson SP, Kjaer M. The impact of loading, unloading, ageing and injury on the human tendon. J Physiol. 2019"
+  ],
+  "caution": "Always bench with a spotter or safety pins; a failed heavy rep across the neck is one of the few genuinely dangerous gym accidents. Pinching pain at the front or top of the shoulder that gets worse over weeks means impingement or AC-joint irritation: reduce pressing volume and add rowing. A sudden tearing feeling with bruising in the chest or armpit during a heavy bench is a pectoralis major tear and needs urgent orthopaedic review.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Chest, front delts and triceps loaded; shoulder joint feels it too",
+      "effects": [
+        {
+          "target": "pectorals",
+          "kind": "strain",
+          "intensity": 0.7,
+          "note": "Pectoralis major fibres suffer micro-damage under the eccentric (lowering) phase; muscle protein synthesis is switched on for 24–48 h. DOMS in the chest and armpit peaks around day 2."
+        },
+        {
+          "target": "triceps",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "The triceps lock out every rep and take roughly a third of the pressing load; they will be sore alongside the chest."
+        },
+        {
+          "target": "deltoids",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "The anterior deltoid works hard in every horizontal press, especially on incline; the posterior deltoid does nothing."
+        },
+        {
+          "target": "shoulder-joint",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "The humeral head is pushed forward and up in the socket at the bottom of each rep; the rotator cuff and biceps long-head tendon work to hold it centred."
+        },
+        {
+          "target": "wrist",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "A bent-back wrist under a loaded bar compresses the carpal bones; most beginners feel it before they feel their chest."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Bar path learned, soreness dropping, strength up",
+      "effects": [
+        {
+          "target": "spinal-cord",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Neural learning of the bar path and coordinated firing of chest, shoulders and triceps: bench numbers climb 5–10% in the first week with no muscle growth yet."
+        },
+        {
+          "target": "pectorals",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "The repeated-bout effect protects against the same damage; sessions two and three cause far less soreness."
+        },
+        {
+          "target": "rotator-cuff",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "Three pressing sessions in one week with no pulling means the small stabilisers of the shoulder are working every session and recovering in none."
+        },
+        {
+          "target": "elbow-joint",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Flared elbows and heavy lockouts irritate the triceps tendon at the back of the elbow; a common early complaint."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Bench up 10–15%, chest firmer, shoulders beginning to round",
+      "effects": [
+        {
+          "target": "pectorals",
+          "kind": "positive",
+          "intensity": 0.6,
+          "note": "Early hypertrophy is measurable by ultrasound (a few percent of cross-sectional area) though not obvious in the mirror. Strength is up 10–15%, mostly neural.",
+          "metric": { "label": "Bench press 1RM", "value": "+10–15%" }
+        },
+        {
+          "target": "triceps",
+          "kind": "positive",
+          "intensity": 0.5,
+          "note": "Triceps thickness is increasing alongside the chest; the back of the arm is the first visible change for many."
+        },
+        {
+          "target": "shoulder-joint",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "Tight pecs and anterior delts with weak rhomboids and rear delts start to pull the shoulders forward and inward (rounded-shoulder posture)."
+        },
+        {
+          "target": "bones",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Loading of the humerus, ribs, sternum and forearm bones has started the remodelling cycle; no density change is measurable yet."
+        },
+        {
+          "target": "heart",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Resting heart rate and VO₂max are unchanged. Bench sessions are short bursts of effort with long rests; they do not train the cardiovascular system."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Visible chest at 6–8 weeks; pressing muscles outpacing the shoulder",
+      "effects": [
+        {
+          "target": "pectorals",
+          "kind": "positive",
+          "intensity": 0.7,
+          "visual": { "scale": 1.04 },
+          "note": "Chest thickness is now visible in a T-shirt; fibre cross-sectional area is up ~5–8%. Bench press is typically 20–25% above the starting weight."
+        },
+        {
+          "target": "triceps",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.03 },
+          "note": "The triceps have grown with every press; arm circumference is up ~1 cm even without curls."
+        },
+        {
+          "target": "deltoids",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.03 },
+          "note": "Front deltoids are fuller. The rear deltoids are unchanged, which is the visible signature of a press-only programme."
+        },
+        {
+          "target": "rotator-cuff",
+          "kind": "strain",
+          "intensity": 0.5,
+          "note": "The four cuff muscles are now noticeably weaker relative to the pecs. This ratio, not the bench weight itself, is what predicts shoulder pain in lifters."
+        },
+        {
+          "target": "tendons",
+          "kind": "strain",
+          "intensity": 0.4,
+          "note": "The pectoralis and triceps tendons are adapting but lag the muscle; adding weight every session while they catch up is the usual path to tendinopathy."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Bench up 30–40%, thick chest, first real shoulder complaints",
+      "effects": [
+        {
+          "target": "pectorals",
+          "kind": "positive",
+          "intensity": 0.8,
+          "visual": { "scale": 1.06 },
+          "note": "Most of the chest size a natural lifter will get from this dose has arrived; bench press is typically 30–40% above baseline. Progress slows from here.",
+          "metric": { "label": "Bench press 1RM", "value": "+30–40%" }
+        },
+        {
+          "target": "shoulder-joint",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "Around a quarter to a third of regular bench pressers report shoulder pain by this stage: subacromial impingement, AC-joint irritation or biceps long-head tendinopathy, almost always with an unbalanced pull-to-push ratio."
+        },
+        {
+          "target": "triceps",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.05 },
+          "note": "Triceps and front delts are markedly bigger; the upper arm has grown 2–3 cm mostly from pressing."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Bone density in the arm, sternum and ribs is modestly higher. Spine and hip density, which matter most for fractures later, are unchanged because they are not loaded."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Body fat is roughly unchanged unless diet changed; chest training does not reduce chest fat ('gynaecomastia' in overweight men is fat and gland, not something the bench fixes)."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "A strong, developed chest; the shoulder decides how long it lasts",
+      "effects": [
+        {
+          "target": "pectorals",
+          "kind": "positive",
+          "intensity": 0.8,
+          "visual": { "scale": 1.08 },
+          "note": "A year of consistent pressing gives a chest that is clearly developed; 1.2–1.5× body weight on the bench is a typical natural one-year mark for men who train seriously."
+        },
+        {
+          "target": "rotator-cuff",
+          "kind": "negative",
+          "intensity": 0.5,
+          "note": "If pulling was never added, cuff tendinopathy and impingement are now chronic in a large minority: pain reaching overhead, sleeping on the shoulder, or at the bottom of every bench rep."
+        },
+        {
+          "target": "deltoids",
+          "kind": "positive",
+          "intensity": 0.5,
+          "visual": { "scale": 1.05 },
+          "note": "Front delts are large; the visible front-heavy, forward-rolled shoulder look is complete unless rear delts and rows were trained."
+        },
+        {
+          "target": "tendons",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Pectoral and triceps tendons are now thicker and stiffer, matching the muscle; the acute tendon-lag window has closed."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Legs, back and core are largely untrained. Whole-body muscle mass has risen only 1–2 kg despite the impressive chest."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Peak chest size maintained; cumulative shoulder wear if never balanced",
+      "effects": [
+        {
+          "target": "pectorals",
+          "kind": "positive",
+          "intensity": 0.7,
+          "visual": { "scale": 1.08 },
+          "note": "Size plateaued around year two; the chest is maintained but no longer growing. Muscle built this way is retained as long as pressing continues."
+        },
+        {
+          "target": "shoulder-joint",
+          "kind": "negative",
+          "intensity": 0.6,
+          "note": "Years of heavy horizontal pressing without balance leave many lifters with distal clavicle osteolysis (AC-joint wear), thickened cuff tendons and reduced overhead range. Balanced programmes largely avoid this."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.4,
+          "note": "Upper-limb and rib bone density stays above sedentary peers; a real but partial protection since hip and spine were never loaded."
+        },
+        {
+          "target": "heart",
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Cardiorespiratory fitness, blood pressure and glucose control are close to sedentary values. Chest-only lifting meets neither the aerobic nor the whole-body strength recommendation in the WHO guidelines."
+        },
+        {
+          "target": "pectorals",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Pectoralis major tendon tears are rare but cluster in long-term heavy bench pressers, most often on the lowering phase of a maximal lift; risk rises sharply with anabolic steroid use."
+        }
+      ]
+    }
+  ]
+}
