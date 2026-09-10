@@ -19,6 +19,7 @@ import { AgePanel, renderAgeDock } from './ui/agePanel.js';
 import { openMicroModal } from './ui/microModal.js';
 import { Nav } from './core/nav.js';
 import { openWelcome } from './ui/welcome.js';
+import { FEATURES } from './data/flags.js';
 
 const ATLAS_OFFSETS = {
   skeletal: -2.55, muscular: -1.7, joints: -0.85, nervous: 0, cardiovascular: 0.85, lymphoid: 1.7,
@@ -790,7 +791,7 @@ class App {
       }
       else if (part.pos) v = applyMorph(toGlVec(part.pos), new THREE.Vector3());
       else return;
-      items.push({ id: part.id, partId: part.id, anchor: v, text: state.lang === 'hi' && part.hi ? part.hi : part.n, sub: state.lang === 'hi' ? part.n : part.hi, color: part.c || this.registry.systemMeta(part.sys).color, hot });
+      items.push({ id: part.id, partId: part.id, anchor: v, text: labelText(part), sub: labelSub(part), color: part.c || this.registry.systemMeta(part.sys).color, hot });
     };
     if (state.labels === 'all') {
       const cands = [];
@@ -810,7 +811,7 @@ class App {
       if (state.showLandmarks) {
         for (const c of this.registry.childrenOf(sel.id)) if (c.k === 'landmark' && c.pos) {
           const v = applyMorph(toGlVec(c.pos), new THREE.Vector3());
-          items.push({ id: c.id, partId: c.id, anchor: v, text: state.lang === 'hi' && c.hi ? c.hi : c.n, sub: state.lang === 'hi' ? c.n : c.hi, color: '#e9c95c' });
+          items.push({ id: c.id, partId: c.id, anchor: v, text: labelText(c), sub: labelSub(c), color: '#e9c95c' });
         }
       }
       for (const s of this.registry.siblingsOf(sel)) if (s.id !== sel.id) push(s, true);
@@ -1143,6 +1144,14 @@ class App {
     a.href = url; a.download = name.toLowerCase() + '.png'; a.click();
     toast('Screenshot saved');
   }
+}
+
+// A 3D label carries one name, plus a second line only when there is a second language to
+// put there. With Hindi switched off the second line would just repeat the first, so it goes.
+function labelText(p) { return FEATURES.hindi && state.lang === 'hi' && p.hi ? p.hi : p.n; }
+function labelSub(p) {
+  if (!FEATURES.hindi) return null;
+  return state.lang === 'hi' ? p.n : p.hi;
 }
 
 function toGlVec(a) { return new THREE.Vector3(a[0], a[2], -a[1]); }

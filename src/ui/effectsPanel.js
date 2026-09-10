@@ -4,6 +4,7 @@ import { CATEGORY_META, stepOf, effectsAtStep, combineAtStep, stackTally } from 
 import { TIMELINE_STEPS, EFFECT_KINDS, TARGETS } from '../data/targets.js';
 import { MiniViewer } from '../core/mini.js';
 import { loadMolecules, buildMolecule, moleculeLabel } from '../core/molecules.js';
+import { FEATURES } from '../data/flags.js';
 
 export class EffectsPanel {
   constructor(root, app) { this.root = root; this.app = app; this.mini = null; this.render(); }
@@ -50,7 +51,7 @@ export class EffectsPanel {
       el('div', { class: 'btnrow' }, el('button', { class: 'btn sm ghost', onClick: () => this.app.closeEffect() }, '‹ ', lang === 'hi' ? 'सूची' : 'All interventions')),
       el('div', { class: 'ph' }, el('h2', {}, `${e.icon || ''} ${lang === 'hi' ? e.name.hi : e.name.en}`)),
     );
-    if (lang !== 'hi' && e.name.hi) this.root.append(el('div', { class: 'insp-hi' }, e.name.hi));
+    if (FEATURES.hindi && lang !== 'hi' && e.name.hi) this.root.append(el('div', { class: 'insp-hi' }, e.name.hi));
     this.root.append(el('div', { class: 'tagrow' },
       el('span', { class: 'tag' }, CATEGORY_META[e.category]?.label || e.category),
       el('span', { class: `ev ${e.evidence}` }, `${e.evidence} evidence`)));

@@ -9,7 +9,8 @@
     "build": "vite build",
     "preview": "vite preview --port 5181",
     "rebuild": "vite build",
-    "serve": "python launch/serve.py"
+    "serve": "python launch/serve.py",
+    "optimize-models": "node tools/optimize_models.mjs"
   },
   "keywords": [],
   "author": "",

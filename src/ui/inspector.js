@@ -1,6 +1,7 @@
 import { el, esc, fmtName, sideLabel } from '../core/util.js';
 import { state, set } from '../core/state.js';
 import { MICRO_MODELS } from '../core/micro.js';
+import { FEATURES } from '../data/flags.js';
 
 export class Inspector {
   constructor(root, app) { this.root = root; this.app = app; this.render(); }
@@ -15,7 +16,7 @@ export class Inspector {
         el('div', { class: 'ph' }, el('h2', {}, lang === 'hi' ? 'विवरण' : 'Inspector')),
         el('div', { class: 'insp-empty' }, lang === 'hi'
           ? el('div', { html: '<b>किसी भी हिस्से पर क्लिक करें</b> — उसका नाम (हिंदी + लैटिन), विवरण, वह किस तंत्र का है, और उसके अंदर क्या है, यहाँ दिखेगा।<br><br><b>डबल-क्लिक</b> — ज़ूम करें।<br><b>I</b> — सिर्फ़ वही हिस्सा दिखाएँ।<br><b>H</b> — हिस्सा छिपाएँ।<br><b>Esc</b> — चयन हटाएँ।' })
-          : el('div', { html: '<b>Click any structure</b> to see its name (English · Hindi · Latin), what it does, which system it belongs to, and what is inside it.<br><br><b>Double-click</b> to zoom in.<br><b>I</b> isolate · <b>H</b> hide · <b>F</b> focus · <b>Esc</b> clear.<br><b>/</b> jump to search.' })),
+          : el('div', { html: `<b>Click any structure</b> to see its name (English${FEATURES.hindi ? ' · Hindi' : ''} · Latin), what it does, which system it belongs to, and what is inside it.<br><br><b>Double-click</b> to zoom in.<br><b>I</b> isolate · <b>H</b> hide · <b>F</b> focus · <b>Esc</b> clear.<br><b>/</b> jump to search.` })),
       );
       return;
     }
@@ -27,7 +28,7 @@ export class Inspector {
     for (const a of anc) if (a.k !== 'landmark') crumb.append(el('span', { onClick: () => this.app.selectPart(a.id, { focus: true }) }, a.n));
     this.root.append(crumb);
     this.root.append(el('h1', { class: 'insp-title' }, fmtName(part, 'en')));
-    if (part.hi) this.root.append(el('div', { class: 'insp-hi' }, part.hi + (part.hc ? ` · ${part.hc}` : '') + (part.side ? ` (${part.side === 'l' ? 'बायाँ' : 'दायाँ'})` : '')));
+    if (FEATURES.hindi && part.hi) this.root.append(el('div', { class: 'insp-hi' }, part.hi + (part.hc ? ` · ${part.hc}` : '') + (part.side ? ` (${part.side === 'l' ? 'बायाँ' : 'दायाँ'})` : '')));
     if (part.la) this.root.append(el('div', { class: 'insp-la' }, part.la));
     const tags = el('div', { class: 'tagrow' }, el('span', { class: 'tag sys', style: `background:${meta.color}` }, meta.label));
     if (part.sub && part.sub !== meta.label.toLowerCase()) tags.append(el('span', { class: 'tag' }, part.sub));

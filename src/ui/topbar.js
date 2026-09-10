@@ -1,5 +1,6 @@
 import { el, esc, fmtName } from '../core/util.js';
 import { state } from '../core/state.js';
+import { FEATURES } from '../data/flags.js';
 
 export class Topbar {
   constructor(app) {
@@ -17,8 +18,17 @@ export class Topbar {
       if (e.key === 'Escape' && document.activeElement === this.input) { this.input.blur(); this.hide(); }
     });
     for (const b of document.querySelectorAll('.mode')) b.addEventListener('click', () => app.setMode(b.dataset.mode));
-    for (const b of document.querySelectorAll('#sex-toggle button')) b.addEventListener('click', () => app.setSex(b.dataset.sex));
-    for (const b of document.querySelectorAll('#lang-toggle button')) b.addEventListener('click', () => app.setLang(b.dataset.lang));
+    // A switched-off feature leaves no stub behind: the whole control goes, so the header
+    // is not carrying a dead one-option segment.
+    if (FEATURES.female) {
+      for (const b of document.querySelectorAll('#sex-toggle button')) b.addEventListener('click', () => app.setSex(b.dataset.sex));
+    } else document.getElementById('sex-toggle')?.remove();
+    if (FEATURES.hindi) {
+      for (const b of document.querySelectorAll('#lang-toggle button')) b.addEventListener('click', () => app.setLang(b.dataset.lang));
+    } else document.getElementById('lang-toggle')?.remove();
+    const tr = document.querySelector('.top-right');
+    if (tr && !tr.children.length) tr.remove();          // don't leave an empty grid cell
+    if (!FEATURES.hindi) this.input.placeholder = 'Search any bone, muscle, nerve, organ… (e.g. femur, heart, vagus)';
   }
 
   syncToggles() {
@@ -47,13 +57,15 @@ export class Topbar {
     this.items.forEach((it, i) => {
       let row;
       if (it.type === 'effect') {
-        row = el('div', { class: 'sr', html: `<i style="background:#e9c95c"></i><div><div class="n">${it.e.icon} ${hl(it.e.name.en)}</div><div class="m">${esc(it.e.name.hi || '')}</div></div><div class="s">what happens if…</div>` });
+        const sub = FEATURES.hindi ? (it.e.name.hi || '') : (it.e.summary?.en || '');
+        row = el('div', { class: 'sr', html: `<i style="background:#e9c95c"></i><div><div class="n">${it.e.icon} ${hl(it.e.name.en)}</div><div class="m">${esc(sub)}</div></div><div class="s">what happens if…</div>` });
         row.addEventListener('click', () => { this.hide(); this.app.openEffect(it.e.id); });
       } else {
         const p = it.part; const meta = registry.systemMeta(p.sys);
         const sibs = registry.siblingsOf(p);
         const sideTxt = sibs.length > 1 ? ' · L + R' : (p.side ? (p.side === 'l' ? ' · left' : ' · right') : '');
-        row = el('div', { class: 'sr', html: `<i style="background:${p.c || meta.color}"></i><div><div class="n">${hl(p.n)}${sideTxt}</div><div class="m">${p.hi ? esc(p.hi) + ' · ' : ''}${p.la ? '<i>' + esc(p.la) + '</i>' : ''}</div></div><div class="s">${esc(meta.label)}${p.k !== 'mesh' ? ' · ' + p.k : ''}</div>` });
+        const hiBit = FEATURES.hindi && p.hi ? esc(p.hi) + ' · ' : '';
+        row = el('div', { class: 'sr', html: `<i style="background:${p.c || meta.color}"></i><div><div class="n">${hl(p.n)}${sideTxt}</div><div class="m">${hiBit}${p.la ? '<i>' + esc(p.la) + '</i>' : ''}</div></div><div class="s">${esc(meta.label)}${p.k !== 'mesh' ? ' · ' + p.k : ''}</div>` });
         row.addEventListener('click', () => { this.hide(); this.app.selectPart(p.id, { focus: true, both: true }); });
         row.addEventListener('mouseenter', () => this.app.hoverPart(p.id));
         row.addEventListener('mouseleave', () => this.app.hoverPart(null));

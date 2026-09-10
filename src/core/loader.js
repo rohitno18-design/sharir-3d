@@ -66,7 +66,8 @@ export async function loadBody(viewer, registry, onProgress = () => {}) {
 
   const order = ['skeletal', 'muscular', 'cardiovascular', 'visceral', 'nervous', 'joints', 'lymphoid', 'regions', 'references', 'extra'];
   await Promise.all(order.map(async (glb) => {
-    const url = `/models/${glb}.glb`;
+    // __MODELS_ID__ changes whenever a .glb on disk changes — see vite.config.js.
+    const url = `/models/${glb}.glb?v=${__MODELS_ID__}`;
     let gltf;
     try {
       gltf = await new Promise((res, rej) => loader.load(url, res, (ev) => {

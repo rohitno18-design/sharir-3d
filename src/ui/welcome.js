@@ -1,5 +1,6 @@
 import { el } from '../core/util.js';
 import { state } from '../core/state.js';
+import { FEATURES } from '../data/flags.js';
 
 const SEEN_KEY = 'sharir.welcomed.v1';
 
@@ -32,7 +33,7 @@ export function openWelcome(app, { force = false } = {}) {
         el('h1', {}, 'SHARIR ', el('span', {}, '3D')),
         el('p', {}, lang === 'hi'
           ? 'पूरा मानव शरीर — 7,000 से ज़्यादा नामित संरचनाएँ, हिंदी नामों के साथ।'
-          : 'The whole human body — 7,000+ named structures, in English and Hindi.'))),
+          : `The whole human body — 7,000+ named structures${FEATURES.hindi ? ', in English and Hindi' : ''}.`))),
     el('p', { class: 'welcome-lead' }, lang === 'hi'
       ? 'नीचे से कुछ भी चुनकर शुरू करें। आप जब चाहें ऊपर बाईं ओर ‹ दबाकर पीछे जा सकते हैं।'
       : 'Pick anywhere to start. You can always come back with the ‹ button at the top left, or the ⌂ button to return to the whole body.'),

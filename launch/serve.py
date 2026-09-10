@@ -60,9 +60,12 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().do_GET()
 
     def end_headers(self):
-        # Big models: let the browser cache them so a reload is instant.
+        # Big models: let the browser keep them, but check first. 'no-cache' means
+        # revalidate, not "don't store" - an unchanged model still comes back as a 304 with
+        # no body, so reloads stay instant, while a rebuilt model is picked up immediately
+        # instead of being served stale from disk for a day.
         if self.path.endswith(('.glb', '.json')):
-            self.send_header('Cache-Control', 'public, max-age=86400')
+            self.send_header('Cache-Control', 'no-cache')
         super().end_headers()
 
     def log_message(self, fmt, *args):
