@@ -74,6 +74,7 @@ export class Viewer {
     this.frame = 0;
 
     this.width = 1; this.height = 1;
+    this._dirty = true;
     this._ro = new ResizeObserver(() => this.resize());
     this._ro.observe(canvas.parentElement);
     this.resize();
@@ -94,6 +95,7 @@ export class Viewer {
     this.controls.mouseButtons = { LEFT: THREE.MOUSE.ROTATE, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.PAN };
     this.controls.zoomSpeed = 1.1;
     this.controls.rotateSpeed = 0.85;
+    this.controls.addEventListener('change', () => { this._dirty = true; });
   }
 
   resize() {
@@ -104,9 +106,13 @@ export class Viewer {
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
     this.width = w; this.height = h;
+    this._dirty = true;
   }
 
   onFrame(cb) { this._frameCbs.push(cb); }
+
+  /** Ask for a frame. Cheap to call from anywhere; several calls coalesce into one. */
+  requestRender() { this._dirty = true; }
 
   _loop() {
     requestAnimationFrame(this._loop);
@@ -114,10 +120,13 @@ export class Viewer {
     const t = this.clock.elapsedTime;
     this.frame++;
     if (!finiteVec(this.camera.position) || !finiteVec(this.controls.target)) this._recoverCamera();
-    if (this._tween) this._stepTween(dt);
-    this.controls.update();
+    if (this._tween) { this._stepTween(dt); this._dirty = true; }
+    const controlsMoved = this.controls.update();
+    if (controlsMoved) this._dirty = true;
     for (const cb of this._frameCbs) cb(t, dt, this.frame);
-    this.renderer.render(this.scene, this.camera);
+    // Rendering only when the scene actually changed is what keeps the fan quiet and the
+    // interaction crisp: an idle atlas costs nothing.
+    if (this._dirty) { this.renderer.render(this.scene, this.camera); this._dirty = false; }
   }
 
   // ---------- clipping ----------
@@ -133,32 +142,41 @@ export class Viewer {
 
   // ---------- picking ----------
   /** pointer: {x,y} in canvas pixels. Returns { mesh, point(world, morphed), distance } or null */
+  /**
+   * Pick against the merged batches. three.js reports which triangle was hit, and the
+   * batch maps that triangle back to its part — so accurate picking needs no duplicate
+   * per-part meshes at all.
+   */
   pick(px, py) {
+    const body = this.body;
+    if (!body) return null;
     const ndc = new THREE.Vector2((px / this.width) * 2 - 1, -(py / this.height) * 2 + 1);
     this.raycaster.setFromCamera(ndc, this.camera);
     const wo = this.raycaster.ray.origin.clone();
     const wd = this.raycaster.ray.direction.clone();
+
+    // The batch geometry is un-morphed, so walk the ray back through the morph instead of
+    // deforming four million vertices on the CPU.
+    const inv = new THREE.Matrix4().copy(this.bodyRoot.matrixWorld).invert();
+    const lo = new THREE.Vector3().copy(wo).applyMatrix4(inv);
+    const lp = new THREE.Vector3().copy(wo).addScaledVector(wd, 1).applyMatrix4(inv);
+    invertMorph(lo, lo); invertMorph(lp, lp);
+    const ld = new THREE.Vector3().subVectors(lp, lo).normalize();
+
+    const local = new THREE.Raycaster(lo, ld, 0, 100);
+    local.firstHitOnly = false;               // we may have to skip hidden parts
     let best = null;
-    const inv = new THREE.Matrix4();
-    const lo = new THREE.Vector3(), lp = new THREE.Vector3(), ld = new THREE.Vector3();
-    const local = new THREE.Raycaster(); local.firstHitOnly = true;
-    for (const grp of Object.values(this.systemGroups)) {
-      if (!grp.visible || !grp.children.length) continue;
-      const list = this.pickables.filter(m => m.parent === grp);
-      if (!list.length) continue;
-      inv.copy(grp.matrixWorld).invert();
-      lo.copy(wo).applyMatrix4(inv);
-      lp.copy(wo).addScaledVector(wd, 1).applyMatrix4(inv);
-      invertMorph(lo, lo); invertMorph(lp, lp);
-      ld.subVectors(lp, lo).normalize();
-      local.set(lo, ld);
-      local.near = 0; local.far = 100;
-      const hits = local.intersectObjects(list, false);
-      if (hits.length) {
-        const h = hits[0];
-        const wp = applyMorph(h.point, new THREE.Vector3()).applyMatrix4(grp.matrixWorld);
+    for (const batch of body.batches) {
+      if (!batch.mesh.visible) continue;
+      const hits = local.intersectObject(batch.mesh, false);
+      for (const h of hits) {
+        if (h.faceIndex == null) continue;
+        const slot = body.partForTriangle(batch, h.faceIndex);
+        if (!body.isVisible(slot)) continue;  // ghosted or switched off: see through it
+        const wp = applyMorph(h.point, new THREE.Vector3(), { belly: 1, breast: 1 }).applyMatrix4(this.bodyRoot.matrixWorld);
         const dist = wp.distanceTo(wo);
-        if (!best || dist < best.distance) best = { mesh: h.object, point: wp, distance: dist };
+        if (!best || dist < best.distance) best = { slot, part: body.partAt(slot), point: wp, distance: dist };
+        break;                                // hits are sorted; first visible one wins
       }
     }
     return best;

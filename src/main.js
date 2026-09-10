@@ -62,8 +62,11 @@ class App {
     try { const a = await fetch('/data/age.json'); if (a.ok) this.ageData = await a.json(); } catch {}
 
     prog(0.08, 'Building the body…');
-    this.meshes = await loadBody(this.viewer, this.registry, (p, l) => prog(0.08 + p * 0.9, l));
-    this.hi = new Highlighter(this.viewer, this.registry, this.meshes);
+    this.body = await loadBody(this.viewer, this.registry, (p, l) => prog(0.08 + p * 0.9, l));
+    // Everything downstream only ever asked "does this part exist?" — keep that answer
+    // available without dragging 4,000 mesh objects around.
+    this.meshes = { has: (id) => this.body.slot(id) !== undefined, get size() { return 0; } };
+    this.hi = new Highlighter(this.viewer, this.registry, this.body);
 
     this.applySexParts();
     this.applyBodyMorph();
@@ -88,7 +91,7 @@ class App {
     setTimeout(() => { document.getElementById('stage-hint').classList.add('fade'); }, 9000);
     setTimeout(() => openWelcome(this), 700);
     window.app = this;
-    console.log(`[sharir] ${this.registry.parts.length} registry entries, ${this.meshes.size} meshes, ${this.effects.count} interventions`);
+    console.log(`[sharir] ${this.registry.parts.length} registry entries, ${this.body.count} drawable parts in ${this.body.batches.length} batches, ${this.effects.count} interventions`);
   }
 
   // ---------------- body morph ----------------
@@ -191,30 +194,11 @@ class App {
   }
 
   /**
-   * The morph happens in the vertex shader, so three.js still culls against the
-   * un-morphed bounds — which throws away the torso of a shrunk child. Recompute
-   * each mesh's bounding sphere from the morphed corners after every body change.
+   * Batched meshes have frustumCulled off, so the shader-side morph can never push a part
+   * outside stale bounds the way it did when every part was its own culled mesh. Nothing
+   * to recompute — kept as a no-op so callers don't need to care.
    */
-  updateBoundingSpheres() {
-    if (!this.meshes) return;
-    const v = new THREE.Vector3();
-    const box = new THREE.Box3();
-    for (const [id] of this.meshes) {
-      for (const m of this.hi ? this.hi.allMeshesOf(id) : [this.meshes.get(id)]) {
-        const bb = m.geometry.boundingBox;
-        if (!bb) continue;
-        box.makeEmpty();
-        for (let i = 0; i < 8; i++) {
-          v.set(i & 1 ? bb.max.x : bb.min.x, i & 2 ? bb.max.y : bb.min.y, i & 4 ? bb.max.z : bb.min.z);
-          applyMorph(v, v, { belly: 1, breast: 1 });
-          box.expandByPoint(v);
-        }
-        const sph = m.geometry.boundingSphere || (m.geometry.boundingSphere = new THREE.Sphere());
-        box.getBoundingSphere(sph);
-        sph.radius *= 1.08;   // padding for the belly/breast bulge and the neck blend
-      }
-    }
-  }
+  updateBoundingSpheres() {}
 
   // ---------------- modes ----------------
   setMode(mode, record = true) {
@@ -715,8 +699,10 @@ class App {
   showAttachment(id) {
     set({ showAttachments: true });
     this.refreshAttachments();
-    const m = this.meshes.get(id);
-    if (m) { m.visible = true; const box = this.hi.boxOf([id], applyMorph); this.viewer.focusBox(box, { pad: 2.2 }); }
+    if (this.body.slot(id) !== undefined) {
+      const box = this.hi.boxOf([id], applyMorph);
+      this.viewer.focusBox(box, { pad: 2.2 });
+    }
   }
 
   refreshAttachments() { this.hi.invalidate(); }
@@ -728,22 +714,21 @@ class App {
 
   applySkinTone() {
     const hex = (SKIN_TONES.find(t => t.key === state.skinTone) || SKIN_TONES[1]).hex;
-    for (const [id, m] of this.meshes) {
-      const p = m.userData.part;
-      if (p.sys !== 'integumentary' || /hair|eyelash|eyebrow/i.test(p.n)) continue;
-      for (const mm of this.hi.allMeshesOf(id)) { mm.material.userData.baseColor.set(hex); mm.material.color.set(hex); }
+    const col = new THREE.Color(hex);
+    const body = this.body;
+    for (const batch of body.batches) {
+      if (batch.system !== 'integumentary') continue;
+      const colors = batch.mesh.geometry.attributes.color;
+      const idx = batch.mesh.geometry.attributes.aPartIndex;
+      const r = Math.round(col.r * 255), g = Math.round(col.g * 255), b = Math.round(col.b * 255);
+      for (let v = 0; v < colors.count; v++) {
+        const part = body.partAt(idx.array[v]);
+        if (!part || /hair|eyelash|eyebrow/i.test(part.n)) continue;   // hair keeps its own colour
+        colors.array[v * 3] = r; colors.array[v * 3 + 1] = g; colors.array[v * 3 + 2] = b;
+      }
+      colors.needsUpdate = true;
     }
-  }
-
-  applyClip() { this.viewer.setClip(state.clip, this.registry.bbox ? glBBox(this.registry.bbox) : [[-1, 0, -1], [1, 2, 1]]); }
-
-  toggleXray() { set({ xray: !state.xray }); this.hi.invalidate(); document.getElementById('tb-xray').classList.toggle('active', state.xray); document.getElementById('btn-xray')?.classList.toggle('active', state.xray); }
-
-  toggleReveal() {
-    set({ reveal: !state.reveal });
-    this.hi.invalidate();
-    document.getElementById('tb-reveal').classList.toggle('active', state.reveal);
-    toast(state.reveal ? 'Reveal on — other structures fade around your selection' : 'Reveal off — all layers stay solid');
+    this.viewer.requestRender();
   }
 
   toggleAtlas() {
@@ -752,7 +737,9 @@ class App {
     document.getElementById('btn-atlas')?.classList.toggle('active', state.atlas);
     const h = this.currentHeightM();
     if (state.atlas) {
-      for (const g of ATLAS_GROUPS) for (const k of g.keys) { const grp = this.viewer.systemGroups[k]; if (grp) grp.position.x = g.x * (h / 1.7); }
+      const shift = {}; for (const g of ATLAS_GROUPS) for (const k of g.keys) shift[k] = g.x * (h / 1.7);
+      for (let slot = 0; slot < this.body.count; slot++) { const p = this.body.partAt(slot); this.body.setOffset(slot, shift[p.sys] || 0, 0, 0); }
+      this.body.flush();
       for (const s of SYSTEMS) if (s.key !== 'references') { state.systems[s.key].visible = true; state.systems[s.key].opacity = s.key === 'integumentary' ? 0.55 : 1; }
       this.refreshVisibility();
       const box = new THREE.Box3(new THREE.Vector3(-3.2 * (h / 1.7), 0, -0.4), new THREE.Vector3(4.1 * (h / 1.7), h, 0.4));
@@ -762,7 +749,8 @@ class App {
       this._atlasTitles();
       toast('Atlas view — every system side by side');
     } else {
-      for (const k of Object.keys(this.viewer.systemGroups)) this.viewer.systemGroups[k].position.x = 0;
+      for (let slot = 0; slot < this.body.count; slot++) this.body.setOffset(slot, 0, 0, 0);
+      this.body.flush();
       this.viewer.ground.visible = true; this.viewer.ring.visible = true;
       set({ labels: 'auto' });
       this.viewer.resetView(h);
@@ -792,16 +780,26 @@ class App {
     if (state.labels === 'off') { this.labels.setItems([]); this._labelItems = []; return; }
     const items = [];
     const push = (part, hot = false) => {
-      const m = this.meshes.get(part.id);
+      const bb = this.body.boundsOf(part.id);
       let v;
-      if (m && m.geometry.boundingBox) { v = applyMorph(m.geometry.boundingBox.getCenter(new THREE.Vector3()), new THREE.Vector3()); v.applyMatrix4(m.parent.matrixWorld); }
+      if (bb) {
+        v = applyMorph(bb.getCenter(new THREE.Vector3()), new THREE.Vector3(), { belly: 1, breast: 1 });
+        const slot = this.body.slot(part.id);
+        v.x += this.body.state[slot * 4]; v.y += this.body.state[slot * 4 + 1]; v.z += this.body.state[slot * 4 + 2];
+        v.applyMatrix4(this.viewer.bodyRoot.matrixWorld);
+      }
       else if (part.pos) v = applyMorph(toGlVec(part.pos), new THREE.Vector3());
       else return;
       items.push({ id: part.id, partId: part.id, anchor: v, text: state.lang === 'hi' && part.hi ? part.hi : part.n, sub: state.lang === 'hi' ? part.n : part.hi, color: part.c || this.registry.systemMeta(part.sys).color, hot });
     };
     if (state.labels === 'all') {
       const cands = [];
-      for (const [id, m] of this.meshes) { if (!m.visible) continue; const p = m.userData.part; if (p.k !== 'mesh') continue; if (p.side === 'r') continue; cands.push(p); }
+      for (let slot = 0; slot < this.body.count; slot++) {
+        if (!this.body.isVisible(slot)) continue;
+        const p = this.body.partAt(slot);
+        if (p.side === 'r') continue;          // one label per pair is enough
+        cands.push(p);
+      }
       cands.sort((a, b) => (b.v || 0) - (a.v || 0));
       for (const p of cands.slice(0, 90)) push(p);
     }
@@ -1036,9 +1034,8 @@ class App {
       const r = canvas.getBoundingClientRect();
       const hit = this.viewer.pick(e.clientX - r.left, e.clientY - r.top);
       if (hit) {
-        const p = hit.mesh.userData.part;
-        const id = hit.mesh.userData.primary ? hit.mesh.userData.primary.userData.partId : p.id;
-        this.hi.setHover(id);
+        const p = hit.part;
+        this.hi.setHover(p.id);
         canvas.style.cursor = 'pointer';
         const meta = this.registry.systemMeta(p.sys);
         this.hoverTip.innerHTML = `<span class="sys">${meta.label}</span>${fmtName(p, 'en')}${p.hi ? `<span class="hi">${p.hi}</span>` : ''}`;
@@ -1052,13 +1049,13 @@ class App {
       if (moved) return;
       const r = canvas.getBoundingClientRect();
       const hit = this.viewer.pick(e.clientX - r.left, e.clientY - r.top);
-      if (hit) { const m = hit.mesh.userData.primary || hit.mesh; this.selectPart(m.userData.partId, { focus: false }); }
+      if (hit) this.selectPart(hit.part.id, { focus: false });
       else this.clearSelection();
     });
     canvas.addEventListener('dblclick', (e) => {
       const r = canvas.getBoundingClientRect();
       const hit = this.viewer.pick(e.clientX - r.left, e.clientY - r.top);
-      if (hit) { const m = hit.mesh.userData.primary || hit.mesh; this.selectPart(m.userData.partId, { focus: true }); }
+      if (hit) this.selectPart(hit.part.id, { focus: true });
     });
 
     // toolbar

@@ -43,7 +43,7 @@ export const uniforms = {
 const GLSL_FUNCS = /* glsl */`
 uniform float uScale, uHeadF, uNeckY, uShW, uHipW, uBelly, uBreast, uLimbW;
 uniform float uWaist, uGlute, uThigh, uArm, uChestD;
-uniform float uMaskBelly, uMaskBreast;
+attribute float aMorphMask;   // 1 = belly bulge applies, 2 = breast bulge applies
 float mbump(float y, float a, float b) { float t = clamp((y - a) / (b - a), 0.0, 1.0); return sin(3.14159265 * t); }
 vec3 morphBody(vec3 p) {
   float s = uScale;
@@ -82,32 +82,36 @@ vec3 morphBody(vec3 p) {
 
   // Abdomen forward (visceral + subcutaneous fat)
   float belB = mbump(p.y, 0.86, 1.26) * front * mid;
-  q.z += uBelly * belB * s * uMaskBelly;
+  float maskBelly = mod(aMorphMask, 2.0) >= 1.0 ? 1.0 : 0.0;
+  q.z += uBelly * belB * s * maskBelly;
 
   // Buttocks backward — the single biggest cue for a female silhouette from the side
   float glB = gluteB * back * (1.0 - smoothstep(0.07, 0.17, lateral));
-  q.z -= uGlute * glB * s * uMaskBelly;
+  q.z -= uGlute * glB * s * maskBelly;
 
   // Breasts
   float brB = mbump(p.y, 1.19, 1.37) * mbump(lateral, 0.035, 0.175) * smoothstep(0.03, 0.10, p.z);
-  q.z += uBreast * brB * s * uMaskBreast;
-  q.y += uBreast * brB * s * uMaskBreast * -0.25;
+  float maskBreast = aMorphMask >= 2.0 ? 1.0 : 0.0;
+  q.z += uBreast * brB * s * maskBreast;
+  q.y += uBreast * brB * s * maskBreast * -0.25;
   return q;
 }
 `;
 
-/** Patch a material so its vertices run through the morph field. mask: { belly, breast } (0/1) */
-export function patchMaterial(mat, mask = {}) {
-  mat.userData.morphMask = { belly: mask.belly ? 1 : 0, breast: mask.breast ? 1 : 0 };
-  mat.onBeforeCompile = (shader) => {
+/**
+ * Patch a material so its vertices run through the morph field.
+ * Which bulges apply is now a per-vertex attribute (`aMorphMask`) rather than a uniform,
+ * because a merged batch contains parts from several systems in one draw call.
+ */
+export function patchMaterial(mat) {
+  const prev = mat.onBeforeCompile;
+  mat.onBeforeCompile = (shader, renderer) => {
+    if (prev) prev(shader, renderer);
     Object.assign(shader.uniforms, uniforms);
-    shader.uniforms.uMaskBelly = { value: mat.userData.morphMask.belly };
-    shader.uniforms.uMaskBreast = { value: mat.userData.morphMask.breast };
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', '#include <common>\n' + GLSL_FUNCS)
       .replace('#include <begin_vertex>', '#include <begin_vertex>\n transformed = morphBody(transformed);');
   };
-  mat.customProgramCacheKey = () => 'morph' + mat.userData.morphMask.belly + mat.userData.morphMask.breast;
   mat.needsUpdate = true;
 }
 

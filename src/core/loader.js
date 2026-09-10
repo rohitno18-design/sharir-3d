@@ -2,7 +2,8 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { patchMaterial } from './morph.js';
-import { GLB_FILES } from '../data/systems.js';
+import { BatchedBody } from './batched.js';
+import { SYSTEMS, GLB_FILES } from '../data/systems.js';
 
 const STYLE = {
   skeletal:       { roughness: 0.62, metalness: 0, clearcoat: 0.05 },
@@ -22,113 +23,102 @@ const STYLE = {
   references:     { roughness: 0.9,  metalness: 0 },
 };
 
-export function makeMaterial(part, colorHex, opts = {}) {
-  const st = STYLE[part.sys] || STYLE.digestive;
+/** Systems whose parts are routinely shown semi-transparent. */
+const TRANSPARENT = new Set(['integumentary', 'cavities']);
+
+/** One material per system — the batch it draws carries per-part colour as vertex colours. */
+export function systemMaterial(system) {
+  const st = STYLE[system] || STYLE.digestive;
   const mat = new THREE.MeshPhysicalMaterial({
-    color: new THREE.Color(colorHex),
+    color: 0xffffff,                       // vertex colours carry the real hue
     roughness: st.roughness, metalness: st.metalness,
     clearcoat: st.clearcoat || 0, clearcoatRoughness: st.clearcoatRoughness ?? 0.4,
     envMapIntensity: 0.55,
-    side: THREE.FrontSide,
+    side: THREE.DoubleSide,
+    transparent: true,                     // per-part opacity comes from the style texture
+    depthWrite: !TRANSPARENT.has(system),
+    // three.js draws a transparent DOUBLE-SIDED material in two passes (back faces, then
+    // front). Across the whole atlas that doubled the triangle count for no visible gain,
+    // so ask for the single pass explicitly.
+    forceSinglePass: true,
   });
-  mat.userData.baseColor = mat.color.clone();
-  mat.userData.baseOpacity = opts.opacity ?? 1;
-  if (part.sys === 'integumentary' || part.sys === 'cavities') {
-    mat.transparent = true; mat.depthWrite = false; mat.opacity = mat.userData.baseOpacity;
-  }
-  patchMaterial(mat, { belly: part.sys === 'integumentary', breast: part.sys === 'integumentary' || part.g === 'female' });
+  patchMaterial(mat);                      // body morph runs first, batching patches on top
   return mat;
 }
 
 /**
- * Load all GLBs, bake transforms, attach meshes to viewer.systemGroups.
- * Returns Map(partId → Mesh).
+ * Load every GLB, bake transforms, then merge each system into a single batch.
+ * Returns { body: BatchedBody, partCount }.
  */
 export async function loadBody(viewer, registry, onProgress = () => {}) {
   const loader = new GLTFLoader();
   loader.setMeshoptDecoder(MeshoptDecoder);
-  const meshes = new Map();
-  const sizes = { skeletal: 6.7, muscular: 6.5, nervous: 6.7, cardiovascular: 5.2, visceral: 3.3, joints: 1.4, lymphoid: 0.5, regions: 0.9, references: 0.1, extra: 0.4 };
+  const sizes = { skeletal: 6.7, muscular: 6.5, nervous: 6.7, cardiovascular: 5.2, visceral: 3.3, joints: 1.4, lymphoid: 0.5, regions: 0.9, references: 0.1, extra: 0.6 };
   const total = Object.values(sizes).reduce((a, b) => a + b, 0);
   const progress = Object.fromEntries(GLB_FILES.map(k => [k, 0]));
   const report = (label) => {
-    const done = GLB_FILES.reduce((a, k) => a + progress[k] * sizes[k], 0);
-    onProgress(done / total, label);
+    const done = GLB_FILES.reduce((a, k) => a + progress[k] * (sizes[k] || 0), 0);
+    onProgress(done / total * 0.86, label);
   };
 
+  // system -> [{ part, geometry }], in a stable order
+  const groups = new Map(SYSTEMS.map(s => [s.key, []]));
+
   const order = ['skeletal', 'muscular', 'cardiovascular', 'visceral', 'nervous', 'joints', 'lymphoid', 'regions', 'references', 'extra'];
-  const tasks = order.map(async (glb) => {
+  await Promise.all(order.map(async (glb) => {
     const url = `/models/${glb}.glb`;
     let gltf;
     try {
-      const head = await fetch(url, { method: 'GET', headers: { Range: 'bytes=0-3' } });
-      const magic = new Uint8Array(await head.arrayBuffer());
-      if (!(magic[0] === 0x67 && magic[1] === 0x6c && magic[2] === 0x54 && magic[3] === 0x46)) throw new Error('not a glb');
       gltf = await new Promise((res, rej) => loader.load(url, res, (ev) => {
         if (ev.total) { progress[glb] = Math.min(0.95, ev.loaded / ev.total); report(`Loading ${glb}…`); }
       }, rej));
     } catch (e) {
-      console.error('failed', url, e); progress[glb] = 1; report(''); return;
+      console.error('[loader] failed', url, e); progress[glb] = 1; report(''); return;
     }
-    integrate(glb, gltf.scene, viewer, registry, meshes);
+    collect(glb, gltf.scene, registry, groups);
     progress[glb] = 1; report(`Built ${glb}`);
-  });
-  await Promise.all(tasks);
-  viewer.pickables = [...meshes.values()].filter(m => m.userData.part.k === 'mesh');
-  const n = buildBVHs(viewer, (c) => console.log(`[sharir] BVH built for ${c} meshes`));
-  onProgress(1, `Indexing ${n} meshes…`);
-  return meshes;
+  }));
+
+  onProgress(0.9, 'Merging geometry…');
+  const body = new BatchedBody(viewer.bodyRoot).build(groups, systemMaterial);
+  onProgress(0.96, `Indexing ${body.count} structures…`);
+  body.buildBVH((n) => console.log(`[sharir] BVH ready for ${n} batches`));
+  viewer.body = body;
+  return body;
 }
 
-function integrate(glb, root, viewer, registry, meshes) {
+function collect(glb, root, registry, groups) {
   root.updateMatrixWorld(true);
   const list = [];
   root.traverse(o => { if (o.isMesh) list.push(o); });
-  // Count how many nodes share each geometry: shared ones must be cloned from the
-  // pristine original before baking, or the second bake stacks on the first.
+  // Shared geometry must be cloned from the pristine original before baking, or the
+  // second bake stacks on top of the first.
   const useCount = new Map();
   for (const m of list) useCount.set(m.geometry, (useCount.get(m.geometry) || 0) + 1);
+
   for (const m of list) {
-    // find registry part: this node or nearest named ancestor
     let node = m, part = null;
     while (node && node !== root) {
       part = registry.bySanitized.get(glb + '/' + node.name);
       if (part) break;
       node = node.parent;
     }
-    if (!part) { continue; }
-    if (part.k === 'marker') continue; // tiny anchor cubes — positions already in registry
-    // meshopt files store positions as normalized 16-bit ints inside one shared
-    // interleaved buffer. Baking world coordinates into that would overflow the
-    // integer range and corrupt every other mesh in the buffer, so every geometry
-    // gets its own plain float attributes first.
+    if (!part) continue;
+    if (part.k !== 'mesh') continue;            // markers, landmarks and attachment maps are data, not geometry
+
+    // meshopt stores positions as normalised 16-bit ints inside one shared interleaved
+    // buffer; baking world coordinates into that would overflow the range and corrupt
+    // every other mesh in the buffer, so each geometry gets plain float attributes first.
     let geom = m.geometry;
     if (useCount.get(geom) > 1) geom = geom.clone();
     toFloatAttributes(geom);
     geom.applyMatrix4(m.matrixWorld);
-    // Mirrored objects (negative scale) come out with reversed winding, so their
-    // front faces get culled. Flip the triangle order back.
-    if (m.matrixWorld.determinant() < 0) flipWinding(geom);
+    if (m.matrixWorld.determinant() < 0) flipWinding(geom);   // mirrored parts come out inside-out
     if (!geom.attributes.normal) geom.computeVertexNormals();
     geom.computeBoundingBox();
-    geom.computeBoundingSphere();
-    const mesh = new THREE.Mesh(geom, makeMaterial(part, part.c || '#cccccc'));
-    mesh.name = part.n;
-    mesh.userData.part = part;
-    mesh.userData.partId = part.id;
-    mesh.frustumCulled = true;
-    mesh.matrixAutoUpdate = true;
-    if (part.k !== 'mesh') mesh.visible = false; // origin/insertion maps hidden until requested
-    const grp = viewer.systemGroups[part.sys] || viewer.systemGroups.cavities;
-    grp.add(mesh);
-    if (meshes.has(part.id)) {
-      // multi-primitive: keep a list
-      const prev = meshes.get(part.id);
-      (prev.userData.extra ||= []).push(mesh);
-      mesh.userData.primary = prev;
-    } else {
-      meshes.set(part.id, mesh);
-    }
+
+    const bucket = groups.get(part.sys) || groups.get('cavities');
+    bucket.push({ part, geometry: geom });
   }
 }
 
@@ -138,8 +128,7 @@ function flipWinding(geom) {
     for (let i = 0; i < a.length; i += 3) { const t = a[i]; a[i] = a[i + 2]; a[i + 2] = t; }
     geom.index.needsUpdate = true;
   } else {
-    const p = geom.attributes.position, n = geom.attributes.normal;
-    for (const attr of [p, n]) {
+    for (const attr of [geom.attributes.position, geom.attributes.normal]) {
       if (!attr) continue;
       const a = attr.array, s = attr.itemSize;
       for (let i = 0; i < attr.count; i += 3) {
@@ -152,7 +141,8 @@ function flipWinding(geom) {
 
 const KEEP_ATTRS = ['position', 'normal'];
 
-/** De-interleave + de-normalize into standalone Float32 attributes; drop the rest. */
+/** De-interleave + de-normalise into standalone Float32 attributes; drop everything else
+ *  so that merging across files never hits mismatched attribute sets. */
 function toFloatAttributes(geom) {
   for (const name of Object.keys(geom.attributes)) {
     if (!KEEP_ATTRS.includes(name)) { geom.deleteAttribute(name); continue; }
@@ -163,28 +153,7 @@ function toFloatAttributes(geom) {
       arr[i * n] = a.getX(i);
       if (n > 1) arr[i * n + 1] = a.getY(i);
       if (n > 2) arr[i * n + 2] = a.getZ(i);
-      if (n > 3) arr[i * n + 3] = a.getW(i);
     }
-    geom.setAttribute(name, new THREE.BufferAttribute(arr, n, false));
+    geom.setAttribute(name, new THREE.BufferAttribute(arr, n));
   }
-  if (geom.index && geom.index.isInterleavedBufferAttribute) {
-    const idx = new Uint32Array(geom.index.count);
-    for (let i = 0; i < geom.index.count; i++) idx[i] = geom.index.getX(i);
-    geom.setIndex(new THREE.BufferAttribute(idx, 1));
-  }
-}
-
-/** Build BVH acceleration structures for every mesh, in idle slices so the UI stays responsive. */
-export function buildBVHs(viewer, onDone = () => {}) {
-  const all = [];
-  for (const grp of Object.values(viewer.systemGroups)) for (const c of grp.children) if (!c.geometry.boundsTree) all.push(c);
-  let i = 0;
-  const idle = window.requestIdleCallback ? (fn) => window.requestIdleCallback(fn, { timeout: 200 }) : (fn) => setTimeout(fn, 1);
-  const step = () => {
-    const t0 = performance.now();
-    while (i < all.length && performance.now() - t0 < 14) { try { all[i].geometry.computeBoundsTree({ targetLeafSize: 8 }); } catch (e) { /* skip degenerate */ } i++; }
-    if (i < all.length) idle(step); else onDone(all.length);
-  };
-  idle(step);
-  return all.length;
 }
