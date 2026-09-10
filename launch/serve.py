@@ -12,13 +12,15 @@ import os
 import socket
 import socketserver
 import subprocess
+import urllib.request
 import sys
 import threading
 import webbrowser
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'dist')
 ROOT = os.path.normpath(ROOT)
-PREFERRED = [5180, 5181, 5190, 8123, 8124, 0]
+PREFERRED = [5199, 5198, 5197, 8123, 8124, 0]
+MARKER = 'sharir-3d-launcher'
 
 CHROME_PATHS = [
     r'C:\Program Files\Google\Chrome\Application\chrome.exe',
@@ -44,6 +46,19 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         '.wasm': 'application/wasm',
     }
 
+    def do_GET(self):
+        # A second double-click must be able to tell OUR server apart from anything else
+        # that happens to be listening (a dev server, another app) before reusing it.
+        if self.path == '/__sharir':
+            body = MARKER.encode()
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/plain')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+        super().do_GET()
+
     def end_headers(self):
         # Big models: let the browser cache them so a reload is instant.
         if self.path.endswith(('.glb', '.json')):
@@ -68,11 +83,11 @@ def open_browser(url):
 
 
 def already_serving(port):
-    """A second double-click should reuse the running server, not fight it for the port."""
+    """True only when OUR launcher is on that port — never hijack somebody else's server."""
     try:
-        with socket.create_connection(('127.0.0.1', port), timeout=0.4):
-            return True
-    except OSError:
+        with urllib.request.urlopen(f'http://127.0.0.1:{port}/__sharir', timeout=0.6) as r:
+            return r.read().decode(errors='ignore').strip() == MARKER
+    except Exception:
         return False
 
 

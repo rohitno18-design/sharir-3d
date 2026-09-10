@@ -78,9 +78,6 @@ export class BatchedBody {
     // 2. merge each system into one geometry
     for (const [system, items] of groups) {
       const geoms = [];
-      const slots = [];
-      const triStarts = [];
-      let tri = 0;
       for (const it of items) {
         const g = it.geometry;
         const slot = this.indexOf.get(it.part.id);
@@ -104,13 +101,6 @@ export class BatchedBody {
           for (let v = 0; v < n; v++) idx[v] = v;
           g.setIndex(new THREE.BufferAttribute(idx, 1));
         }
-        // One range per primitive; consecutive primitives of the same part collapse,
-        // since the triangle -> part lookup only needs the boundaries.
-        if (slots.length === 0 || slots[slots.length - 1] !== slot) {
-          triStarts.push(tri);
-          slots.push(slot);
-        }
-        tri += g.index.count / 3;
         geoms.push(g);
       }
       if (!geoms.length) continue;
@@ -129,12 +119,7 @@ export class BatchedBody {
       mesh.userData.system = system;
       this.scene.add(mesh);
 
-      this.batches.push({
-        system, mesh,
-        triStarts: Int32Array.from(triStarts),
-        slots: Int32Array.from(slots),
-        triTotal: tri,
-      });
+      this.batches.push({ system, mesh });
     }
     return this;
   }
@@ -194,15 +179,19 @@ export class BatchedBody {
     for (const b of this.batches) if (b.system === system) b.mesh.visible = on;
   }
 
-  /** Which part does a triangle in this batch belong to? */
+  /**
+   * Which part does a triangle in this batch belong to?
+   *
+   * Read it off the same vertex attribute the shader uses, rather than from a table of
+   * triangle ranges: three-mesh-bvh reorders the index buffer in place while building the
+   * tree, so after buildBVH() a triangle's position in that buffer says nothing about
+   * which geometry it was merged from. The attribute travels with the vertex and stays
+   * true, and the lookup is O(1) instead of a binary search.
+   */
   partForTriangle(batch, faceIndex) {
-    const starts = batch.triStarts;
-    let lo = 0, hi = starts.length - 1, ans = 0;
-    while (lo <= hi) {
-      const mid = (lo + hi) >> 1;
-      if (starts[mid] <= faceIndex) { ans = mid; lo = mid + 1; } else hi = mid - 1;
-    }
-    return batch.slots[ans];
+    const g = batch.mesh.geometry;
+    const vi = g.index ? g.index.getX(faceIndex * 3) : faceIndex * 3;
+    return g.attributes.aPartIndex.getX(vi);
   }
 
   dispose() {
