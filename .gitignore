@@ -2,3 +2,7 @@ node_modules/
 dist/
 build/
 assets-src/
+
+# scratch renders of reference books — not ours to redistribute
+.tmp_book/
+.tmp_opt/

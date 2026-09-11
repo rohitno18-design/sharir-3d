@@ -178,7 +178,9 @@ export class ExercisePlayer {
   _placeBar() {
     const rig = this.app.body.rig;
     if (!this.bar || !rig?.ok) return;
-    const l = rig.jointAt('hd', 'l'), r = rig.jointAt('hd', 'r');
+    // The bar lies across the metacarpal heads — the palm, not the fingertips — which is
+    // the same point the arm IK solves to, so the grip can never drift off it.
+    const l = rig.jointAt('mcp', 'l'), r = rig.jointAt('mcp', 'r');
     this.bar.position.set(0, (l.y + r.y) / 2, (l.z + r.z) / 2);
   }
 
