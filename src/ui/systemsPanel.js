@@ -39,10 +39,13 @@ export class SystemsPanel {
       const nm = el('div', { class: 'nm' }, lang === 'hi' ? s.hi : s.label, el('small', {}, lang === 'hi' ? s.label : s.hi));
       const range = el('input', { type: 'range', min: 0, max: 100, value: Math.round(st.opacity * 100), title: 'Opacity' });
       const solo = el('button', { class: 'solo', title: 'Solo this system' }, 'SOLO');
-      const toggle = () => { st.visible = !st.visible; r.classList.toggle('off', !st.visible); sw.style.background = st.visible ? s.color : 'transparent'; this.app.refreshVisibility(); };
+      // Touching a switch here means the user is taking direct control of what is on, so
+      // any temporary view laid over the top (from Movement, or an effect) gives way —
+      // otherwise the switch moves and nothing on screen changes.
+      const toggle = () => { this.app.clearSysOverride(); st.visible = !st.visible; r.classList.toggle('off', !st.visible); sw.style.background = st.visible ? s.color : 'transparent'; this.app.refreshVisibility(); };
       sw.addEventListener('click', toggle);
       nm.addEventListener('click', toggle);
-      range.addEventListener('input', () => { st.opacity = range.value / 100; if (!st.visible && st.opacity > 0) { st.visible = true; r.classList.remove('off'); sw.style.background = s.color; } this.app.refreshVisibility(); });
+      range.addEventListener('input', () => { this.app.clearSysOverride(); st.opacity = range.value / 100; if (!st.visible && st.opacity > 0) { st.visible = true; r.classList.remove('off'); sw.style.background = s.color; } this.app.refreshVisibility(); });
       solo.addEventListener('click', () => this.applyPreset({ on: [s.key] }));
       nm.addEventListener('mouseenter', () => this.app.hoverSystem(s.key));
       nm.addEventListener('mouseleave', () => this.app.hoverSystem(null));
@@ -50,6 +53,14 @@ export class SystemsPanel {
       list.append(r);
     }
     this.root.append(list);
+
+    // Fascia, bursae and retinacula are filed with the muscles but sheathe them, so they
+    // are off by default. Offered here rather than removed, because they are real anatomy.
+    const ct = el('div', { class: 'chips' },
+      el('button', { class: 'chip' + (state.connective ? ' active' : ''),
+        onClick: () => { set({ connective: !state.connective }); this.app.refreshVisibility(); this.render(); } },
+        (state.connective ? '✓ ' : '') + (lang === 'hi' ? 'प्रावरणी और बर्सा' : 'Fascia, bursae & sheaths')));
+    this.root.append(ct);
 
     // skin tone
     const tones = el('div', { class: 'chips' });
@@ -89,6 +100,7 @@ export class SystemsPanel {
   }
 
   applyPreset(p) {
+    this.app.clearSysOverride();
     for (const s of SYSTEMS) { state.systems[s.key].visible = p.on.includes(s.key); if (state.systems[s.key].visible && state.systems[s.key].opacity < 0.05) state.systems[s.key].opacity = 1; }
     if (p.key === 'all') { state.systems.integumentary.opacity = 0.16; state.systems.cavities.visible = false; state.systems.joints.visible = false; state.systems.lymphoid.visible = false; }
     if (p.key === 'skin') state.systems.integumentary.opacity = 1;

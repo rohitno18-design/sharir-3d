@@ -7,6 +7,13 @@ import { effectKindIndex } from './batched.js';
  * textures. Nothing here touches the scene graph — a full restyle of 4,000 structures is
  * a couple of typed-array writes and one texture upload.
  */
+/**
+ * Sheets and sacs of connective tissue that the atlas files under the muscular system.
+ * Plain tendons are deliberately NOT here: a tendon is part of the muscle's own shape, and
+ * hiding it would leave muscles ending in mid-air.
+ */
+const CONNECTIVE = /fascia|aponeuros|retinacul|intermuscular septum|\bsheath|\bbursa/i;
+
 export class Highlighter {
   constructor(viewer, registry, body) {
     this.viewer = viewer; this.registry = registry; this.body = body;
@@ -51,6 +58,12 @@ export class Highlighter {
   isPartVisible(part) {
     // Sex is a hard filter: a male organ must never appear in the female body.
     if (part.sx && part.sx !== (state.sex === 'female' ? 'f' : 'm')) return false;
+    // Connective tissue is filed under "muscles" in this atlas, but it is not muscle and
+    // it WRAPS muscle: fascia lata sheathes the whole thigh, brachial and antebrachial
+    // fascia sheathe the arm, and the clavipectoral fascia stretches across the armpit.
+    // Left on, they render as smooth opaque shells and the limbs read as hollow, with a
+    // membrane hanging in the axilla. Off by default; the Systems panel switches them on.
+    if (!state.connective && CONNECTIVE.test(part.n)) return false;
     const sys = this.sysState(part.sys);
     if (!sys || !sys.visible) return false;
     if (this.solo && part.sys !== this.solo) return false;

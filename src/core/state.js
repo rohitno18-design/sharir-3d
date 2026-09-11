@@ -33,6 +33,9 @@ export const state = {
   effectStep: '1d',
   playing: false,
   showLandmarks: true,
+  // Fascia, bursae and retinacula. Off by default — they sheathe the muscles they are
+  // filed with, so leaving them on hides the anatomy underneath.
+  connective: false,
   showAttachments: false,
 };
 

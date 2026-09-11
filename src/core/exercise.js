@@ -50,6 +50,10 @@ export class ExercisePlayer {
     const { app } = this;
     app.body.rig?.reset();
     app.hi.clearEffects();
+    // "Look through" sets a temporary system override. Leaving it behind outvotes every
+    // switch in the Systems panel — the user flips a system and nothing happens, because
+    // a view they left behind in Movement is still deciding what is visible.
+    app.clearSysOverride();
     if (this.props) { this.app.viewer.scene.remove(this.props); disposeTree(this.props); this.props = null; }
     app.viewer.ground.visible = true;
     app.viewer.ring.visible = true;

@@ -110,7 +110,13 @@ for (const file of fs.readdirSync(SRC).filter(f => f.endsWith('.glb'))) {
     // cannot cross a split, so without this the simplifier has almost nothing to work with.
     await doc.transform(
       weld(),
-      simplify({ simplifier: MeshoptSimplifier, ratio: plan.ratio, error: plan.error, lockBorder: false }),
+      // lockBorder is not optional here. This atlas is thousands of separate meshes that
+      // TILE — skin regions meet edge to edge over the whole body, muscle bellies abut
+      // their neighbours. Simplify each one freely and both sides of every shared seam
+      // shrink independently, so the body opens up along the region boundaries and thin
+      // sheets lose their rim and read as hollow. Locking the borders keeps the seams
+      // welded; it costs some reduction, which is the right trade.
+      simplify({ simplifier: MeshoptSimplifier, ratio: plan.ratio, error: plan.error, lockBorder: true }),
       dedup(),
     );
   }

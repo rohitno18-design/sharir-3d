@@ -1,4 +1,5 @@
 import { el } from '../core/util.js';
+import { state, set } from '../core/state.js';
 import { EXERCISES } from '../data/exercises.js';
 
 /** Which moment of the rep the current phase falls in. */
@@ -9,24 +10,47 @@ function phaseName(t) {
   return { name: 'Lockout', hint: 'Elbows straight — triceps and serratus finish the rep' };
 }
 
+/**
+ * A lift is a muscle story, so Movement opens on the muscles rather than on whatever the
+ * Systems panel happened to be left showing. Each of these lays a temporary view over the
+ * user's own system settings; leaving Movement puts their settings back untouched.
+ */
 const VIEWS = [
-  { key: 'skin', label: 'Skin', sys: ['integumentary'] },
   { key: 'muscle', label: 'Muscles', sys: ['muscular'] },
+  { key: 'skin', label: 'Skin', sys: ['integumentary'] },
   { key: 'bone', label: 'Skeleton', sys: ['skeletal', 'joints'] },
   { key: 'nerve', label: 'Nerves', sys: ['nervous'] },
   { key: 'vessel', label: 'Vessels', sys: ['cardiovascular'] },
+  { key: 'deep', label: 'Muscle + bone', sys: ['muscular', 'skeletal'] },
+  { key: 'all', label: 'My systems', sys: null },
 ];
+export const DEFAULT_VIEW = 'muscle';
 
 export class ExercisePanel {
   constructor(root, app) {
     this.root = root; this.app = app;
+    this.view = DEFAULT_VIEW;
     this.render();
+    this.setView(DEFAULT_VIEW);
     if (this.player) this.player.onSeek = () => this.liveUpdate();
   }
 
   dispose() {
     if (this.player) this.player.onSeek = null;
     this.app.exercise?.stop();
+  }
+
+  /** Lay one layer over the body, and show which one is on. */
+  setView(key) {
+    const v = VIEWS.find(x => x.key === key) || VIEWS[0];
+    this.view = v.key;
+    this.app.showOnlySystems(v.sys);
+    this.markView();
+  }
+
+  markView() {
+    if (!this.viewChips) return;
+    for (const [k, chip] of this.viewChips) chip.classList.toggle('active', k === this.view);
   }
 
   get player() { return this.app.exercise; }
@@ -67,11 +91,20 @@ export class ExercisePanel {
     // ---- layer switch ----
     this.root.append(el('h3', { class: 'sec' }, 'Look through'));
     const views = el('div', { class: 'chips' });
+    this.viewChips = new Map();
     for (const v of VIEWS) {
-      views.append(el('button', { class: 'chip', onClick: () => this.app.showOnlySystems(v.sys) }, v.label));
+      const chip = el('button', { class: 'chip', onClick: () => this.setView(v.key) }, v.label);
+      this.viewChips.set(v.key, chip);
+      views.append(chip);
     }
-    views.append(el('button', { class: 'chip', onClick: () => this.app.showOnlySystems(null) }, 'All'));
     this.root.append(views);
+    // Same switch as in the Systems panel: the sheets of fascia that wrap every muscle are
+    // hidden by default, because with them on the limbs read as smooth empty shells.
+    this.root.append(el('div', { class: 'chips' },
+      el('button', { class: 'chip' + (state.connective ? ' active' : ''),
+        onClick: () => { set({ connective: !state.connective }); this.app.refreshVisibility(); this.render(); } },
+        (state.connective ? '✓ ' : '') + 'Fascia & bursae')));
+    this.markView();
 
     // ---- muscle readout ----
     this.root.append(el('h3', { class: 'sec' }, 'Working right now'));
