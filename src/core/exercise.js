@@ -149,7 +149,8 @@ export class ExercisePlayer {
 
     // Barbell: positioned at the hands every frame by _placeBar().
     const bar = new THREE.Group();
-    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.0145, 0.0145, 2.15, 18), steel);
+    const R = this.ex?.bar?.radius ?? 0.0145;
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(R, R, 2.15, 18), steel);
     shaft.rotation.z = Math.PI / 2;
     bar.add(shaft);
     for (const s of [-1, 1]) {
@@ -178,9 +179,9 @@ export class ExercisePlayer {
   _placeBar() {
     const rig = this.app.body.rig;
     if (!this.bar || !rig?.ok) return;
-    // The bar lies across the metacarpal heads — the palm, not the fingertips — which is
-    // the same point the arm IK solves to, so the grip can never drift off it.
-    const l = rig.jointAt('mcp', 'l'), r = rig.jointAt('mcp', 'r');
+    // The bar lies in the channel of the palm, which is the same point the arm IK solves
+    // to, so the grip can never drift off it at any phase or any body size.
+    const l = rig.jointAt('grip', 'l'), r = rig.jointAt('grip', 'r');
     this.bar.position.set(0, (l.y + r.y) / 2, (l.z + r.z) / 2);
   }
 

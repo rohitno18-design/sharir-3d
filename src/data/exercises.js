@@ -54,9 +54,12 @@ export const BENCH_PRESS = {
   setup: {
     footSpread: 0.205,              // half-distance between the feet, wider than the hips
     footReach: 0.30,                // how far the ankle sits towards the feet end of the hip
-    fingerMcp: d(-72),              // knuckles closed round the bar
-    fingerPip: d(-82),
-    thumb: [d(-46), d(38), d(30)],  // thumb brought across to oppose the fingers
+  },
+
+  /** The bar is a real object with a real thickness, and the grip is solved against it. */
+  bar: {
+    radius: 0.0145,                 // standard 29 mm barbell shaft
+    flesh: 0.028,                   // from the bar surface out to a phalanx's own axis
   },
 
   /**
@@ -107,16 +110,29 @@ export const BENCH_PRESS = {
       // solved target, since the IK ends at the palm — and under a loaded bar a stacked,
       // neutral wrist is what you want anyway.
       p[`hand.${side}`] = { rot: [0, 0, 0] };
-      // Closed round the bar. Delavier's warning panel is that a thumbless grip lets the
-      // bar roll out of the hand onto the neck, so the thumb comes across to oppose.
-      p[`fingers1.${side}`] = { rot: [s.fingerMcp, 0, 0] };
-      p[`fingers2.${side}`] = { rot: [s.fingerPip, 0, 0] };
-      p[`thumb.${side}`] = { rot: [s.thumb[0], m * s.thumb[1], m * s.thumb[2]] };
-
       // Anatomical position already has the palms half-turned, so a barbell grip is about
       // a quarter turn from here, not a half. Overstating it only buys twist artefacts:
       // blending two rotations far apart pinches the forearm along its length.
-      if (rig) Object.assign(p, rig.solveArm(side, this.gripPath(u, side), this.elbowPole(u, side), d(95), p[`girdle.${side}`]));
+      if (rig) {
+        const arm = rig.solveArm(side, this.gripPath(u, side), this.elbowPole(u, side), d(95), p[`girdle.${side}`]);
+        Object.assign(p, arm);
+
+        // Closed round the bar, solved against its actual radius so the fingers stop on the
+        // steel instead of closing through it. The arm has to be solved first: the fingers
+        // wrap in the plane at right angles to the bar, and where that plane lies depends
+        // on how the hand is currently turned, which changes through the whole rep.
+        const girdleQ = new THREE.Quaternion().setFromEuler(
+          new THREE.Euler(...(p[`girdle.${side}`].rot), 'XYZ'));
+        const handQ = ROOT_Q.clone().multiply(girdleQ)
+          .multiply(arm[`upperarm.${side}`].quat)
+          .multiply(arm[`forearm1.${side}`].quat)
+          .multiply(arm[`forearm2.${side}`].quat);
+        // The bar lies along world x; this is that direction as the hand sees it.
+        const barAxis = new THREE.Vector3(1, 0, 0).applyQuaternion(handQ.invert());
+        // Delavier's warning panel is that a thumbless grip lets the bar roll out of the
+        // hand onto the neck, so the thumb comes round to oppose the fingers.
+        Object.assign(p, rig.gripAround(side, this.bar.radius + this.bar.flesh, barAxis));
+      }
 
       // Feet planted. The ankle is driven to a fixed point on the floor, so the knee angle
       // falls out of the lifter's own leg length rather than being a number I picked.

@@ -57,10 +57,13 @@ const SEGMENTS = [
   { name: 'upperarm', parent: 'girdle',   from: 'gh',       to: 'el',       radius: 0.100, group: 'arm' },
   { name: 'forearm1', parent: 'upperarm', from: 'el',       to: 'fm',       radius: 0.080, group: 'arm' },
   { name: 'forearm2', parent: 'forearm1', from: 'fm',       to: 'wr',       radius: 0.068, group: 'arm' },
-  { name: 'hand',     parent: 'forearm2', from: 'wr',       to: 'mcp',      radius: 0.072, group: 'arm' },
-  { name: 'fingers1', parent: 'hand',     from: 'mcp',      to: 'pip',      radius: 0.044, group: 'arm' },
-  { name: 'fingers2', parent: 'fingers1', from: 'pip',      to: 'tip',      radius: 0.038, group: 'arm' },
-  { name: 'thumb',    parent: 'hand',     from: 'thumbCmc', to: 'thumbTip', radius: 0.032, group: 'arm' },
+  // The finger envelopes have to clear the digital nerves and vessels that run along the
+  // sides of every finger, not just the bone: anything they miss falls back to the root and
+  // is left behind beside the thigh when the arm lifts.
+  { name: 'hand',     parent: 'forearm2', from: 'wr',       to: 'mcp',      radius: 0.085, group: 'arm' },
+  { name: 'fingers1', parent: 'hand',     from: 'mcp',      to: 'pip',      radius: 0.060, group: 'arm' },
+  { name: 'fingers2', parent: 'fingers1', from: 'pip',      to: 'tip',      radius: 0.055, group: 'arm' },
+  { name: 'thumb',    parent: 'hand',     from: 'thumbCmc', to: 'thumbTip', radius: 0.042, group: 'arm' },
   { name: 'thigh',    parent: null,       from: 'hip',      to: 'knee',     radius: 0.140, group: 'leg' },
   { name: 'shin',     parent: 'thigh',    from: 'knee',     to: 'ankle',    radius: 0.100, group: 'leg' },
   { name: 'foot',     parent: 'shin',     from: 'ankle',    to: 'toe',      radius: 0.090, group: 'leg' },
@@ -92,6 +95,28 @@ const AXIAL = /\brib\b|ribs|sternum|vertebra|sacrum|coccyx|skull|mandible|hyoid|
 const AXIAL_SYS = new Set(['digestive', 'respiratory', 'urinary', 'reproductive', 'endocrine', 'cavities', 'senses']);
 /** Height band each limb occupies in the source model, in metres up from the soles. */
 const BAND = { arm: [0.60, 1.48], leg: [0.0, 0.95] };
+/** Systems whose parts are named after their trunk origin rather than where they run. */
+const TUBULAR = new Set(['cardiovascular', 'nervous', 'lymphoid']);
+/**
+ * Does this bounding box reach out of the trunk along that limb? Heights are source-space
+ * metres up from the soles: 1.05 is below the elbow, 0.70 is clear of the pelvic floor.
+ * Being merely lateral is enough for the arm, since the arm hangs outside the ribcage.
+ */
+const REACHES_INTO = {
+  arm: (bb) => bb[0][2] < 1.05 || Math.min(Math.abs(bb[0][0]), Math.abs(bb[1][0])) > 0.135,
+  leg: (bb) => bb[0][2] < 0.70,
+};
+/**
+ * How far palmar of the knuckle joints a held bar's axis sits, in metres. In anatomical
+ * position the palm faces forward, so palmar is +z. Tuned against a penetration test: the
+ * nearest hand vertex to the bar axis must sit at or outside the bar's own radius.
+ */
+const GRIP_DEPTH = 0.048;
+/**
+ * The held bar's own axis, in the model's rest space. The root only ever turns the body
+ * about x, so a bar lying across the body stays parallel to x whatever the pose.
+ */
+const BAR_AXIS = new THREE.Vector3(1, 0, 0);
 
 export class Rig {
   constructor(registry) {
@@ -125,6 +150,10 @@ export class Rig {
         q[k] = c;
       }
       q.fm = q.el.clone().lerp(q.wr, 0.5);                       // forearm twist split
+      // Where a bar actually lies when this hand holds one: in the channel of the palm,
+      // clear of the knuckles, not at the knuckle joint centres — which are inside the
+      // bone, so a bar placed there passes straight through the hand.
+      q.grip = q.mcp.clone().add(new THREE.Vector3(0, 0, GRIP_DEPTH));
       this.p[side] = q;
     }
     for (const side of SIDES) {
@@ -206,13 +235,15 @@ export class Rig {
    * Bind one vertex: returns [boneA, boneB, weightA]. Everything outside a limb envelope
    * binds rigidly to the root, which is most of the body.
    */
-  bindVertex(x, y, z, out, mode, group) {
-    const side = x >= 0 ? 'l' : 'r';
+  /**
+   * Nearest segment of a group, measured in units of that segment's own envelope: a vertex
+   * 6 cm from the hand is outside it, the same 6 cm from the girdle is well inside.
+   */
+  _nearest(x, y, z, side, group) {
     const q = this.p[side];
     const list = this.byGroup[group];
-    if (!q || !list) { out[0] = 0; out[1] = 0; out[2] = 1; return out; }
-
     let best = -1, bestD = Infinity, bestT = 0;
+    if (!q || !list) return { best, d: bestD, t: bestT };
     for (const si of list) {
       const seg = SEGMENTS[si];
       const a = q[seg.from], b = q[seg.to];
@@ -222,10 +253,14 @@ export class Rig {
       t = t < 0 ? 0 : t > 1 ? 1 : t;
       const dx = x - (a.x + abx * t), dy = y - (a.y + aby * t), dz = z - (a.z + abz * t);
       const d = Math.sqrt(dx * dx + dy * dy + dz * dz) / seg.radius;
-      // Compare against each segment's own envelope, not raw distance: a vertex 6 cm from
-      // the hand is outside it, the same 6 cm from the girdle is well inside.
       if (d < bestD) { bestD = d; best = si; bestT = t; }
     }
+    return { best, d: bestD, t: bestT };
+  }
+
+  bindVertex(x, y, z, out, mode, group) {
+    const side = x >= 0 ? 'l' : 'r';
+    const { best, d: bestD, t: bestT } = this._nearest(x, y, z, side, group);
     // Only a spanning structure can fall out of the limb; a limb structure binds to its
     // nearest bone however far from the axis it sits.
     if (best < 0 || (mode === 'span' && bestD > 1)) { out[0] = 0; out[1] = 0; out[2] = 1; return out; }
@@ -240,7 +275,7 @@ export class Rig {
       other = seg.parent ? boneIndex(seg.parent, side) : 0;
       w = 0.5 + 0.5 * (bestT / BLEND);
     } else if (bestT > 1 - BLEND) {
-      const childIdx = list.find(i => SEGMENTS[i].parent === seg.name && SEGMENTS[i].from === seg.to);
+      const childIdx = this.byGroup[group].find(i => SEGMENTS[i].parent === seg.name && SEGMENTS[i].from === seg.to);
       other = childIdx === undefined ? bone : boneIndex(SEGMENTS[childIdx].name, side);
       w = 0.5 + 0.5 * ((1 - bestT) / BLEND);
     }
@@ -260,11 +295,59 @@ export class Rig {
     return out;
   }
 
+  /** What share of this geometry sits inside a limb group's envelope. */
+  insideFraction(geom, group, step = 11) {
+    const pos = geom.attributes.position;
+    let in_ = 0, n = 0;
+    for (let i = 0; i < pos.count; i += step) {
+      const x = pos.getX(i);
+      const { best, d } = this._nearest(x, pos.getY(i), pos.getZ(i), x >= 0 ? 'l' : 'r', group);
+      if (best >= 0 && d <= 1) in_++;
+      n++;
+    }
+    return n ? in_ / n : 0;
+  }
+
+  /**
+   * The hierarchy says what a structure belongs to; its own geometry says where it lies.
+   * Both are needed, because every artery and nerve in the arm traces its ancestry back to
+   * the subclavian artery or the brachial plexus — including the ones that live entirely
+   * inside a finger. Trusting ancestry alone made those 'span', which let any vertex
+   * outside a finger's envelope fall back to the root: it stayed beside the thigh while the
+   * rest of the same nerve flew up to the bar, drawing a line across the whole body.
+   *
+   * So: a spanning structure that turns out to lie wholly inside the limb is promoted to
+   * move with it in full, and a structure the hierarchy could not place at all is given to
+   * whichever limb its geometry actually reaches into.
+   */
+  resolveBinding(geom, part) {
+    const cls = this.classify(part);
+    if (cls.mode === 'span') {
+      return this.insideFraction(geom, cls.group) > 0.9 ? { group: cls.group, mode: 'limb' } : cls;
+    }
+    if (cls.mode !== 'none' || !TUBULAR.has(part.sys) || !part.bb) return cls;
+    // Vessels, nerves and lymphatics are named after where they come from, not where they
+    // run, so the hierarchy rarely places them in a limb. Let the geometry decide — but it
+    // needs a gate first. In anatomical position the arm lies flat against the ribcage and
+    // the thigh sits right under the pelvic floor, so a limb envelope reaches well inside
+    // the trunk: the lung's own arteries score as "mostly inside the shoulder" and the
+    // pelvic veins as "mostly inside the thigh". A structure only counts as belonging to a
+    // limb if it actually reaches out of the trunk along it.
+    let bestGroup = null, bestShare = 0.5;
+    for (const g of ['arm', 'leg']) {
+      if (!REACHES_INTO[g](part.bb)) continue;
+      const share = this.insideFraction(geom, g);
+      if (share > bestShare) { bestShare = share; bestGroup = g; }
+    }
+    if (!bestGroup) return cls;
+    return { group: bestGroup, mode: bestShare > 0.9 ? 'limb' : 'span' };
+  }
+
   /** Per-vertex (boneA, boneB, weightA) for one geometry. */
   skinGeometry(geom, part) {
     const n = geom.attributes.position.count;
     const arr = new Float32Array(n * 3);
-    const cls = this.ok ? this.classify(part) : { mode: 'none' };
+    const cls = this.ok ? this.resolveBinding(geom, part) : { mode: 'none' };
     if (cls.mode === 'none') {
       for (let i = 0; i < n; i++) arr[i * 3 + 2] = 1;          // root, weight 1
       return new THREE.BufferAttribute(arr, 3);
@@ -387,8 +470,8 @@ export class Rig {
     // any body that is not the source model's size.
     const S = this._morphed(side, 'gh');
     const E = this._morphed(side, 'el');
-    // The grip is the palm, not the fingertips: the bar sits across the metacarpal heads.
-    const G = this._morphed(side, 'mcp');
+    // Solve to the point where the bar lies in the palm, so the hand arrives holding it.
+    const G = this._morphed(side, 'grip');
     const T = applyMorph(target, new THREE.Vector3());
     // The shoulder blade moves before the arm does, so by the time this solves, the arm's
     // whole frame has already shifted. Bring the target and the elbow hint back through
@@ -416,6 +499,77 @@ export class Rig {
       [`forearm1.${side}`]: { quat: swing2.clone().multiply(twist1) },
       [`forearm2.${side}`]: { quat: twist2 },
     };
+  }
+
+  /**
+   * Close the hand round a bar of the given radius.
+   *
+   * The angles are not picked, they are solved: the bar is a real cylinder lying at the
+   * grip point, and each finger link is swung about its own joint until its far end sits
+   * exactly `clear` from the bar's axis. That is the law of cosines on the triangle
+   * joint-bar-joint, and it is why the fingers stop ON the bar instead of closing through
+   * it — and why the same call would work for a thicker bar or a dumbbell handle.
+   *
+   * `clear` is the distance from the bar's axis to a phalanx's own axis: the bar's radius
+   * plus the flesh between the two.
+   */
+  gripAround(side, clear, barAxis = BAR_AXIS) {
+    if (!this.p[side]) return {};
+    const C = this._morphed(side, 'grip');
+    const out = {};
+    // The bar's direction as the HAND sees it. The hand turns through the rep, so a fixed
+    // axis here would be right at one phase and wrong at every other — the fingers would
+    // close correctly on the chest and cut through the steel at lockout.
+    const N = barAxis.clone().normalize();
+    const perp = (v, o) => o.copy(v).addScaledVector(N, -v.dot(N));
+
+    // `origin` is where this joint actually sits once its parent has turned, which is not
+    // its rest position for anything past the first link.
+    const wrap = (origin, fromKey, toKey, radius, parentQ) => {
+      const P0 = origin;
+      const rest = this._morphed(side, toKey).sub(this._morphed(side, fromKey));  // parent frame
+      const dir = rest.clone().applyQuaternion(parentQ).normalize();    // where it points now
+      const L = rest.length();
+      const idq = new THREE.Quaternion();
+      const fallback = { quat: idq, end: P0.clone().addScaledVector(dir, L) };
+      if (L < 1e-6) return fallback;
+
+      // A bar is a cylinder, not a point. Fingers close round it in the plane at right
+      // angles to its axis, so both the distance to it and the direction of the curl are
+      // measured with the along-the-bar component taken out. Treating it as a point tilts
+      // the curl out of that plane and lets the fingers close past the steel instead of
+      // onto it.
+      const hinge = perp(C.clone().sub(P0), new THREE.Vector3());   // to the bar's axis
+      const dperp = perp(dir, new THREE.Vector3());
+      const a = hinge.length();
+      if (a < 1e-6 || dperp.lengthSq() < 1e-12) return fallback;
+      // Signed angle from the link to the bar, measured about the bar's own axis.
+      const cross = new THREE.Vector3().crossVectors(dperp, hinge);
+      const signed = Math.atan2(cross.dot(N), dperp.dot(hinge));
+      // Tangency: put both ends of a straight bone on the circle and the bone between them
+      // is a chord, which cuts through the steel. What "lying on the bar" actually means is
+      // that the perpendicular distance equals the radius — the angle whose sine is
+      // radius over the distance from this joint to the axis.
+      const want = Math.asin(Math.min(1, radius / Math.max(radius, a)));
+      const turn = Math.sign(signed) * (Math.abs(signed) - want);
+      const world = new THREE.Quaternion().setFromAxisAngle(N, turn);
+      const end = P0.clone().addScaledVector(dir.clone().applyQuaternion(world), L);
+      // The pose wants this link's rotation in its PARENT's frame, not the world's.
+      const target = dir.clone().applyQuaternion(world).applyQuaternion(parentQ.clone().invert()).normalize();
+      return { quat: new THREE.Quaternion().setFromUnitVectors(rest.clone().normalize(), target), end };
+    };
+
+    const id = new THREE.Quaternion();
+    const f1 = wrap(this._morphed(side, 'mcp'), 'mcp', 'pip', clear, id);
+    out[`fingers1.${side}`] = { quat: f1.quat };
+    // The middle joint has moved, so the second link is solved from where it now is.
+    const f2 = wrap(f1.end, 'pip', 'tip', clear, f1.quat);
+    out[`fingers2.${side}`] = { quat: f2.quat };
+    // The thumb comes round the other face of the bar — the side it already starts on — so
+    // the same solve locks it opposite the fingers, which is the grip Delavier insists on.
+    const th = wrap(this._morphed(side, 'thumbCmc'), 'thumbCmc', 'thumbTip', clear, id);
+    out[`thumb.${side}`] = { quat: th.quat };
+    return out;
   }
 
   /**
@@ -458,7 +612,9 @@ export class Rig {
  */
 const JOINT_OWNER = {
   sc: 'girdle', gh: 'upperarm', el: 'forearm1', fm: 'forearm2', wr: 'hand',
-  mcp: 'fingers1', pip: 'fingers2', tip: 'fingers2',
+  // The grip rides on the hand, not on the fingers: curling the fingers must close them
+  // round the bar without dragging the bar along with them.
+  grip: 'hand', mcp: 'fingers1', pip: 'fingers2', tip: 'fingers2',
   thumbCmc: 'thumb', thumbTip: 'thumb',
   hip: 'thigh', knee: 'shin', ankle: 'foot', toe: 'foot',
 };
