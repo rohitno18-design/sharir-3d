@@ -127,7 +127,50 @@ export class BatchedBody {
 
       this.batches.push({ system, mesh });
     }
+    this._findDominantBones();
     return this;
+  }
+
+  /**
+   * Which bone carries most of each part.
+   *
+   * Everything that asks "where is this part?" — framing the camera on it, anchoring its
+   * label, drawing its box — used to answer from the rest pose, so in Movement mode the
+   * camera flew to where the structure sits on a STANDING body while the body on screen was
+   * lying on a bench. One bone per part is enough to answer that properly: parts are small
+   * next to the limb segments that move them, and the few that straddle a joint are off by
+   * millimetres, not by the length of the body.
+   */
+  _findDominantBones() {
+    this.dominant = new Int32Array(this.count);
+    const tally = new Map();
+    for (const b of this.batches) {
+      const g = b.mesh.geometry;
+      const ap = g.attributes.aPartIndex, sk = g.attributes.aSkin;
+      if (!ap || !sk) continue;
+      for (let i = 0; i < ap.count; i += 3) {
+        const slot = ap.getX(i);
+        let h = tally.get(slot);
+        if (!h) { h = new Map(); tally.set(slot, h); }
+        const bone = sk.getZ(i) >= 0.5 ? sk.getX(i) : sk.getY(i);
+        h.set(bone, (h.get(bone) || 0) + 1);
+      }
+    }
+    for (const [slot, h] of tally) {
+      let best = 0, bestN = -1;
+      for (const [bone, n] of h) if (n > bestN) { bestN = n; best = bone; }
+      this.dominant[slot] = best;
+    }
+  }
+
+  /**
+   * Move an already-morphed point into the current pose. A no-op when nothing is posed, so
+   * Explore, Systems and Age keep behaving exactly as before.
+   */
+  posedPoint(slot, v) {
+    const rig = this.rig;
+    if (!rig || !rig.ok || !rig.enabled.value || !this.dominant) return v;
+    return rig.applyBone(this.dominant[slot], v);
   }
 
   /** Build BVHs in idle slices so a big body never blocks the first paint. */

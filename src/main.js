@@ -814,6 +814,9 @@ class App {
         v = applyMorph(bb.getCenter(new THREE.Vector3()), new THREE.Vector3(), { belly: 1, breast: 1 });
         const slot = this.body.slot(part.id);
         v.x += this.body.state[slot * 4]; v.y += this.body.state[slot * 4 + 1]; v.z += this.body.state[slot * 4 + 2];
+        // A label has to point at the structure where it IS, not where it would be if this
+        // body were standing up.
+        this.body.posedPoint(slot, v);
         v.applyMatrix4(this.viewer.bodyRoot.matrixWorld);
       }
       else if (part.pos) v = applyMorph(toGlVec(part.pos), new THREE.Vector3());

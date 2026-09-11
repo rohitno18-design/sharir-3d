@@ -85,9 +85,17 @@ const PELVIC = /pelvic girdle|hip bone|ilium|ischium|\bpubis\b|acetabul/i;
 // Structures that run from the trunk out into the limb: nerves and vessels that must stay
 // joined to their trunk origin while their far end travels with the arm.
 const REACHING_ARM = /brachial plexus|axillary (artery|vein)|subclavian/i;
-// Muscles that span from the trunk onto the arm. Their trunk end stays put and their
-// humeral end follows, which is what the per-vertex blend produces for free.
-const SPANNING_ARM = /pectoralis (major|minor)|latissimus dorsi|trapezius|rhomboid|serratus anterior|levator scapulae|subclavius|omohyoid/i;
+// Muscles that span from the trunk onto the arm. Their trunk end stays put and their far
+// end follows, which is what the per-vertex blend produces for free. Which bones they may
+// follow is an anatomical fact, not a guess: a muscle can only be moved by a bone it
+// actually attaches to.
+//   ...ONTO THE HUMERUS — these cross the shoulder and reach the upper arm.
+const SPANNING_TO_ARM = /pectoralis major|latissimus dorsi|teres major/i;
+//   ...ONTO THE SHOULDER BLADE — these stop at the scapula and never touch the humerus.
+//   Letting them reach the upper arm is what tore serratus anterior's rib attachments off
+//   the ribcage: its digitations sit close enough to the humerus that the envelope claimed
+//   them, and the arm then swung them out through the chest wall.
+const SPANNING_TO_GIRDLE = /pectoralis minor|trapezius|rhomboid|serratus anterior|levator scapulae|subclavius|omohyoid/i;
 // The same across the hip: these run from pelvis or spine onto the femur.
 const SPANNING_LEG = /glute(us|al)|iliopsoas|iliacus|psoas|piriformis|obturator (internus|externus)|gemellus|quadratus femoris|tensor fasciae latae|sartorius|rectus femoris|adductor (longus|brevis|magnus|minimus)|pectineus|gracilis|semitendinosus|semimembranosus|biceps femoris/i;
 // Never movable, whatever the geometry says: the axial skeleton and everything inside it.
@@ -117,6 +125,8 @@ const GRIP_DEPTH = 0.048;
  * about x, so a bar lying across the body stays parallel to x whatever the pose.
  */
 const BAR_AXIS = new THREE.Vector3(1, 0, 0);
+/** Segments a scapular muscle is allowed to follow. */
+const GIRDLE_ONLY = new Set(['girdle']);
 
 export class Rig {
   constructor(registry) {
@@ -206,7 +216,8 @@ export class Rig {
     if (LOWER_LIMB.test(chain) || LOWER_LIMB.test(part.n)) return this._limbOrSpan(part, 'leg');
     if (UPPER_LIMB.test(chain)) return { group: 'arm', mode: 'limb' };
     if (REACHING_ARM.test(chain)) return { group: 'arm', mode: 'span' };
-    if (SPANNING_ARM.test(part.n)) return { group: 'arm', mode: 'span' };
+    if (SPANNING_TO_GIRDLE.test(part.n)) return { group: 'arm', mode: 'span', only: GIRDLE_ONLY };
+    if (SPANNING_TO_ARM.test(part.n)) return { group: 'arm', mode: 'span' };
     if (SPANNING_LEG.test(part.n)) return { group: 'leg', mode: 'span' };
 
     // Last resort for structures the hierarchy does not label: anything living entirely
@@ -239,13 +250,14 @@ export class Rig {
    * Nearest segment of a group, measured in units of that segment's own envelope: a vertex
    * 6 cm from the hand is outside it, the same 6 cm from the girdle is well inside.
    */
-  _nearest(x, y, z, side, group) {
+  _nearest(x, y, z, side, group, only = null) {
     const q = this.p[side];
     const list = this.byGroup[group];
     let best = -1, bestD = Infinity, bestT = 0;
     if (!q || !list) return { best, d: bestD, t: bestT };
     for (const si of list) {
       const seg = SEGMENTS[si];
+      if (only && !only.has(seg.name)) continue;
       const a = q[seg.from], b = q[seg.to];
       const abx = b.x - a.x, aby = b.y - a.y, abz = b.z - a.z;
       const len2 = abx * abx + aby * aby + abz * abz;
@@ -258,9 +270,9 @@ export class Rig {
     return { best, d: bestD, t: bestT };
   }
 
-  bindVertex(x, y, z, out, mode, group) {
+  bindVertex(x, y, z, out, mode, group, only = null) {
     const side = x >= 0 ? 'l' : 'r';
-    const { best, d: bestD, t: bestT } = this._nearest(x, y, z, side, group);
+    const { best, d: bestD, t: bestT } = this._nearest(x, y, z, side, group, only);
     // Only a spanning structure can fall out of the limb; a limb structure binds to its
     // nearest bone however far from the axis it sits.
     if (best < 0 || (mode === 'span' && bestD > 1)) { out[0] = 0; out[1] = 0; out[2] = 1; return out; }
@@ -272,10 +284,11 @@ export class Rig {
     const BLEND = 0.26;                        // as a fraction of the segment's length
     let other = bone, w = 1;
     if (bestT < BLEND) {
-      other = seg.parent ? boneIndex(seg.parent, side) : 0;
+      other = seg.parent && (!only || only.has(seg.parent)) ? boneIndex(seg.parent, side) : 0;
       w = 0.5 + 0.5 * (bestT / BLEND);
     } else if (bestT > 1 - BLEND) {
-      const childIdx = this.byGroup[group].find(i => SEGMENTS[i].parent === seg.name && SEGMENTS[i].from === seg.to);
+      const childIdx = this.byGroup[group].find(i => SEGMENTS[i].parent === seg.name && SEGMENTS[i].from === seg.to
+        && (!only || only.has(SEGMENTS[i].name)));
       other = childIdx === undefined ? bone : boneIndex(SEGMENTS[childIdx].name, side);
       w = 0.5 + 0.5 * ((1 - bestT) / BLEND);
     }
@@ -296,12 +309,12 @@ export class Rig {
   }
 
   /** What share of this geometry sits inside a limb group's envelope. */
-  insideFraction(geom, group, step = 11) {
+  insideFraction(geom, group, step = 11, only = null) {
     const pos = geom.attributes.position;
     let in_ = 0, n = 0;
     for (let i = 0; i < pos.count; i += step) {
       const x = pos.getX(i);
-      const { best, d } = this._nearest(x, pos.getY(i), pos.getZ(i), x >= 0 ? 'l' : 'r', group);
+      const { best, d } = this._nearest(x, pos.getY(i), pos.getZ(i), x >= 0 ? 'l' : 'r', group, only);
       if (best >= 0 && d <= 1) in_++;
       n++;
     }
@@ -323,7 +336,8 @@ export class Rig {
   resolveBinding(geom, part) {
     const cls = this.classify(part);
     if (cls.mode === 'span') {
-      return this.insideFraction(geom, cls.group) > 0.9 ? { group: cls.group, mode: 'limb' } : cls;
+      return this.insideFraction(geom, cls.group, 11, cls.only) > 0.9
+        ? { group: cls.group, mode: 'limb', only: cls.only } : cls;
     }
     if (cls.mode !== 'none' || !TUBULAR.has(part.sys) || !part.bb) return cls;
     // Vessels, nerves and lymphatics are named after where they come from, not where they
@@ -355,7 +369,7 @@ export class Rig {
     const pos = geom.attributes.position;
     const out = [0, 0, 1];
     for (let i = 0; i < n; i++) {
-      this.bindVertex(pos.getX(i), pos.getY(i), pos.getZ(i), out, cls.mode, cls.group);
+      this.bindVertex(pos.getX(i), pos.getY(i), pos.getZ(i), out, cls.mode, cls.group, cls.only);
       arr[i * 3] = out[0]; arr[i * 3 + 1] = out[1]; arr[i * 3 + 2] = out[2];
     }
     return new THREE.BufferAttribute(arr, 3);
@@ -591,6 +605,18 @@ export class Rig {
       [`thigh.${side}`]: { quat: q1 },
       [`shin.${side}`]: { quat: swing2 },
     };
+  }
+
+  /** Move a point by one bone's current transform, in place. */
+  applyBone(index, v) {
+    const m = this.matrices, i = index * 16;
+    const x = v.x, y = v.y, z = v.z;
+    v.set(
+      m[i] * x + m[i + 4] * y + m[i + 8] * z + m[i + 12],
+      m[i + 1] * x + m[i + 5] * y + m[i + 9] * z + m[i + 13],
+      m[i + 2] * x + m[i + 6] * y + m[i + 10] * z + m[i + 14],
+    );
+    return v;
   }
 
   /** World-space position of a joint under the current pose (for props and labels). */

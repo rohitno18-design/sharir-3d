@@ -111,6 +111,9 @@ export class ExercisePlayer {
       for (const id of g.ids) this._fx.get(id).intensity = g.effort;
     }
     this._placeBar();
+    // Label anchors are computed from where a part is, and that has just changed, so they
+    // have to be rebuilt or they stay pinned to where the body was.
+    if (this.app._labelItems?.length) this.app.refreshLabels();
     // Scrubbing, stepping and playing all land here, so the readout is refreshed from one
     // place rather than from whichever caller happened to remember.
     this.onSeek?.();

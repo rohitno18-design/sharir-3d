@@ -129,7 +129,12 @@ export class Highlighter {
     this.viewer.requestRender();
   }
 
-  /** Morphed world-space box for a set of parts. */
+  /**
+   * World-space box for a set of parts, as they are RIGHT NOW — morphed to this body's
+   * size, nudged by any atlas offset, and moved into the current pose. Framing the camera
+   * on the rest pose is what sent it to where a structure sits on a standing body while the
+   * body on screen was lying on a bench.
+   */
   boxOf(ids, applyMorphFn) {
     const box = new THREE.Box3();
     const v = new THREE.Vector3();
@@ -142,6 +147,7 @@ export class Highlighter {
         v.set(i & 1 ? bb.max.x : bb.min.x, i & 2 ? bb.max.y : bb.min.y, i & 4 ? bb.max.z : bb.min.z);
         applyMorphFn(v, v, { belly: 1, breast: 1 });
         v.x += ox; v.y += oy; v.z += oz;
+        this.body.posedPoint(slot, v);
         box.expandByPoint(v);
       }
     }
