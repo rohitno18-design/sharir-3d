@@ -47,8 +47,9 @@ export class BatchedBody {
    * @param groups Map(systemKey -> [{ part, geometry }]) — geometry already baked into
    *               world space by the loader. Consumed and disposed here.
    * @param materialFor (systemKey) => THREE.Material  (will be patched for batching)
+   * @param rig optional Rig — supplies each vertex's two bone bindings for posing
    */
-  build(groups, materialFor) {
+  build(groups, materialFor, rig = null) {
     // 1. Assign every part a slot. A part can arrive as several primitives from the GLB,
     //    and they must share ONE slot — giving each its own would leave the earlier slots
     //    orphaned, so those pieces could never be hidden or styled again.
@@ -95,6 +96,11 @@ export class BatchedBody {
         if (it.part.sys === 'integumentary') mask |= 1;
         if (it.part.sys === 'integumentary' || it.part.sub === 'female surface' || it.part.g === 'female') mask |= 2;
         g.setAttribute('aMorphMask', new THREE.BufferAttribute(new Float32Array(n).fill(mask), 1));
+        // Which two bones move this vertex, and how much of the first. Without a rig every
+        // vertex binds to the root, which is the identity — so the attribute always exists
+        // and the shader never needs to know whether posing is available.
+        g.setAttribute('aSkin', rig ? rig.skinGeometry(g, it.part)
+                                    : new THREE.BufferAttribute(rootOnlySkin(n), 3));
 
         if (!g.index) {
           const idx = new Uint32Array(n);
@@ -206,13 +212,29 @@ export class BatchedBody {
   }
 }
 
-const KIND_INDEX = { positive: 1, negative: 2, strain: 3, neutral: 4 };
+function rootOnlySkin(n) {
+  const a = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) a[i * 3 + 2] = 1;
+  return a;
+}
+
+const KIND_INDEX = { positive: 1, negative: 2, strain: 3, neutral: 4, activation: 5 };
 export function effectKindIndex(kind) { return KIND_INDEX[kind] || 0; }
 
 /** GLSL constants for the four effect colours, so the shader needs no extra uniforms. */
 function kindColorGLSL() {
   const c = (k) => { const col = new THREE.Color(EFFECT_KINDS[k].color); return `vec3(${col.r.toFixed(3)},${col.g.toFixed(3)},${col.b.toFixed(3)})`; };
   return `
+// Muscle effort reads as heat: idle stays cool and recedes, working goes amber, near-
+// maximal goes white-hot. A single hue with rising intensity would just look like a
+// brighter muscle; the hue shift is what makes "how hard" legible at a glance.
+vec3 activationColor(float a){
+  vec3 cool = vec3(0.10, 0.22, 0.45);
+  vec3 warm = vec3(0.95, 0.55, 0.10);
+  vec3 hot  = vec3(1.00, 0.93, 0.80);
+  return a < 0.55 ? mix(cool, warm, a / 0.55)
+                  : mix(warm, hot, (a - 0.55) / 0.45);
+}
 vec3 effectColor(float k){
   if (k < 0.5) return vec3(0.0);
   if (k < 1.5) return ${c('positive')};
@@ -268,8 +290,12 @@ diffuseColor.a *= vStyle.x;
 `)
       .replace('#include <dithering_fragment>', `
 #include <dithering_fragment>
-vec3 fx = effectColor(vStyle.z);
-gl_FragColor.rgb += fx * vStyle.w * 0.55;
+if (vStyle.z > 4.5) {
+  gl_FragColor.rgb = mix(gl_FragColor.rgb, activationColor(vStyle.w), 0.25 + 0.6 * vStyle.w);
+  gl_FragColor.rgb += activationColor(vStyle.w) * vStyle.w * 0.35;
+} else {
+  gl_FragColor.rgb += effectColor(vStyle.z) * vStyle.w * 0.55;
+}
 `);
   };
   const key = material.customProgramCacheKey;

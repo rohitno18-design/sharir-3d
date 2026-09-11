@@ -3,6 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { patchMaterial } from './morph.js';
 import { BatchedBody } from './batched.js';
+import { Rig, patchForRig } from './rig.js';
 import { SYSTEMS, GLB_FILES } from '../data/systems.js';
 
 const STYLE = {
@@ -27,7 +28,7 @@ const STYLE = {
 const TRANSPARENT = new Set(['integumentary', 'cavities']);
 
 /** One material per system — the batch it draws carries per-part colour as vertex colours. */
-export function systemMaterial(system) {
+export function systemMaterial(system, rig) {
   const st = STYLE[system] || STYLE.digestive;
   const mat = new THREE.MeshPhysicalMaterial({
     color: 0xffffff,                       // vertex colours carry the real hue
@@ -42,8 +43,9 @@ export function systemMaterial(system) {
     // so ask for the single pass explicitly.
     forceSinglePass: true,
   });
-  patchMaterial(mat);                      // body morph runs first, batching patches on top
-  return mat;
+  patchMaterial(mat);                      // body morph runs first…
+  if (rig) patchForRig(mat, rig);          // …then the pose…
+  return mat;                              // …and batching patches on top of both
 }
 
 /**
@@ -80,11 +82,16 @@ export async function loadBody(viewer, registry, onProgress = () => {}) {
     progress[glb] = 1; report(`Built ${glb}`);
   }));
 
+  onProgress(0.89, 'Building the skeleton rig…');
+  const rig = new Rig(registry);
+
   onProgress(0.9, 'Merging geometry…');
-  const body = new BatchedBody(viewer.bodyRoot).build(groups, systemMaterial);
+  const body = new BatchedBody(viewer.bodyRoot).build(groups, (sys) => systemMaterial(sys, rig), rig);
+  body.rig = rig;
   onProgress(0.96, `Indexing ${body.count} structures…`);
   body.buildBVH((n) => console.log(`[sharir] BVH ready for ${n} batches`));
   viewer.body = body;
+  viewer.rig = rig;
   return body;
 }
 

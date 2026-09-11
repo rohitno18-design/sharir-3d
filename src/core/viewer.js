@@ -150,6 +150,11 @@ export class Viewer {
   pick(px, py) {
     const body = this.body;
     if (!body) return null;
+    // The BVH is built on the rest pose, and skinning happens in the vertex shader, so
+    // while the body is posed the geometry being raycast is not the geometry on screen.
+    // Returning nothing is better than confidently naming the wrong muscle; in Movement
+    // mode the panel's muscle list is what selects.
+    if (this.rig?.enabled.value) return null;
     const ndc = new THREE.Vector2((px / this.width) * 2 - 1, -(py / this.height) * 2 + 1);
     this.raycaster.setFromCamera(ndc, this.camera);
     const wo = this.raycaster.ray.origin.clone();
@@ -198,6 +203,10 @@ export class Viewer {
 
   /** Shift the look-at point so the subject lands in the free area, not behind the panels. */
   _safeOffset(dist, out = new THREE.Vector3()) {
+    // A canvas that has not been laid out yet reports a near-zero size, which turns
+    // world-per-pixel into a huge number and throws the camera kilometres away. Treat that
+    // as "no offset" rather than trusting it.
+    if (!(this.width > 50) || !(this.height > 50)) return out.set(0, 0, 0);
     const r = this._safeRect();
     const cx = (r.x0 + r.x1) / 2, cy = (r.y0 + r.y1) / 2;
     const fov = THREE.MathUtils.degToRad(this.camera.fov);

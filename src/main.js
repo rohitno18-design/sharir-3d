@@ -16,6 +16,9 @@ import { SystemsPanel } from './ui/systemsPanel.js';
 import { Inspector } from './ui/inspector.js';
 import { EffectsPanel, renderEffectDock } from './ui/effectsPanel.js';
 import { AgePanel, renderAgeDock } from './ui/agePanel.js';
+import { ExercisePanel } from './ui/exercisePanel.js';
+import { ExercisePlayer } from './core/exercise.js';
+import { EXERCISES } from './data/exercises.js';
 import { openMicroModal } from './ui/microModal.js';
 import { Nav } from './core/nav.js';
 import { openWelcome } from './ui/welcome.js';
@@ -68,6 +71,13 @@ class App {
     // available without dragging 4,000 mesh objects around.
     this.meshes = { has: (id) => this.body.slot(id) !== undefined, get size() { return 0; } };
     this.hi = new Highlighter(this.viewer, this.registry, this.body);
+    this.exercise = new ExercisePlayer(this);
+    // The player owns the clock but not the loop: it advances on the frames the viewer is
+    // already producing, and asks for more only while something is actually moving.
+    this.viewer.onFrame(() => {
+      if (!this.exercise.ex) return;
+      this.exercise.tick();
+    });
 
     this.applySexParts();
     this.applyBodyMorph();
@@ -188,9 +198,13 @@ class App {
     // stay correct across a single drag step, so settle them after the drag instead.
     if (live) this._deferBounds(); else this.updateBoundingSpheres();
     // age-driven visual effects (scale/opacity per system)
-    // Don't wipe a running simulation: the stack can be active with no single effect open.
+    // Don't wipe a running simulation: the stack can be active with no single effect open,
+    // and Movement mode keeps its muscle-effort map in the same channel.
     if (state.mode === 'age') this.applyAgeEffects();
-    else if (!state.effect && !state.stack.length) this.hi.clearEffects();
+    else if (!state.effect && !state.stack.length && !this.exercise?.ex) this.hi.clearEffects();
+    // A resized body has its joints in new places, so the pose has to be solved again or
+    // the hands come off the bar and the back lifts off the bench.
+    if (this.exercise?.ex) this.exercise.seek(this.exercise.t);
     this.labels.update();
   }
 
@@ -213,11 +227,15 @@ class App {
     else if (mode === 'systems') this.panel = new SystemsPanel(this.leftRoot, this);
     else if (mode === 'age') this.panel = new AgePanel(this.leftRoot, this);
     else if (mode === 'effects') this.panel = new EffectsPanel(this.leftRoot, this);
+    else if (mode === 'move') { this.exercise.start(EXERCISES[0]); this.panel = new ExercisePanel(this.leftRoot, this); }
+    if (mode !== 'move') this.exercise?.stop();
     if (mode !== 'effects') { set({ effect: null, playing: false }); clearTimeout(this._playT); }
     // dock
     if (mode === 'age') { renderAgeDock(this.dock, this); this.applyAgeEffects(); }
     else if (mode === 'effects' && state.effect) { renderEffectDock(this.dock, this); this.applyEffect(); }
-    else { this.dock.hidden = true; this.hi.clearEffects(); }
+    // Movement mode has no dock, but its muscle-effort map lives in the same effect
+    // channel — clearing it here would wipe the activation the player just set up.
+    else { this.dock.hidden = true; if (mode !== 'move') this.hi.clearEffects(); }
     document.documentElement.style.setProperty('--dock-h', this.dock.hidden ? '0px' : (state.mode === 'age' ? '196px' : '112px'));
     requestAnimationFrame(() => this.updateSafeInsets());
     this.refreshLabels();
@@ -293,6 +311,15 @@ class App {
   }
 
   clearSysOverride() { this.setSysOverride(null); }
+
+  /** Show only these systems, without disturbing what the user has set in the Systems panel. */
+  showOnlySystems(keys) {
+    if (!keys) { this.clearSysOverride(); return; }
+    const want = new Set(keys);
+    const ov = {};
+    for (const s of SYSTEMS) ov[s.key] = { visible: want.has(s.key), opacity: want.has(s.key) ? 1 : 0 };
+    this.setSysOverride(ov);
+  }
 
   /** Build an override that shows every system the given part ids belong to. */
   overrideFor(ids, extra = {}) {

@@ -117,9 +117,12 @@ export class Highlighter {
       const fx = this.effects.get(id); if (!fx) continue;
       const slot = body.slot(id); if (slot === undefined) continue;
       if (this.selected.has(id) || this.hover === id) continue;
+      const i = slot * 4;
+      // Muscle activation is a measurement, not an alert: it must read as the exact value
+      // the timeline is at, so it does not breathe like an effect glow does.
+      if (fx.steady) { body.style[i + 3] = fx.intensity; continue; }
       const pulse = 0.5 + 0.5 * Math.sin(t * (2.2 + fx.intensity * 2.5) + (fx.phase || 0));
       const base = 0.25 + 0.75 * fx.intensity;
-      const i = slot * 4;
       body.style[i + 3] = base * (0.5 + 0.5 * pulse);
     }
     body.styleTex.needsUpdate = true;
