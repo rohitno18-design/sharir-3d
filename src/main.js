@@ -227,6 +227,7 @@ class App {
   setMode(mode, record = true) {
     if (record && mode !== state.mode) this.nav.push('mode');
     set({ mode });
+    document.body.classList.toggle('mode-move', mode === 'move');
     this.topbar.syncToggles();
     this.leftRoot.innerHTML = '';
     if (this.panel?.dispose) this.panel.dispose();
@@ -627,7 +628,7 @@ class App {
     if (state.age < 18) return { label: 'Growing', hi: 'बढ़ रहा शरीर', color: '#38bdf8', why: 'BMI is read against child growth charts, not adult cut-offs.' };
     const c = this.bodyComposition();
     const male = state.sex === 'male';
-    if (c.bfPct < (male ? 6 : 14)) return { label: 'Very lean', hi: 'बहुत दुबला', color: '#f59e0b', why: 'Body fat is below the athletic range — hard to hold long term.' };
+    if (c.bfPct < (male ? 6 : 14)) return { label: 'Very lean', hi: 'बहुत दुबला', color: '#f59e0b', why: 'Body fat is below the athletic range. That is hard to hold for long.' };
     if (c.isAthletic) return { label: 'Athletic', hi: 'एथलेटिक', color: '#22c55e',
       why: `BMI ${c.bmi} looks high, but the weight is muscle: FFMI ${c.ffmi} with ${c.bfPct}% fat.` };
     if (c.bfPct <= c.healthy[1]) return { label: 'Healthy', hi: 'स्वस्थ', color: '#22c55e',
@@ -635,7 +636,7 @@ class App {
     if (c.bfPct <= c.healthy[1] + 5) return { label: 'Above healthy fat', hi: 'चर्बी ज़्यादा', color: '#f59e0b',
       why: `Body fat ${c.bfPct}% is above the healthy ${c.healthy[0]}–${c.healthy[1]}% range.` };
     if (c.bfPct <= c.healthy[1] + 12) return { label: 'High body fat', hi: 'अधिक चर्बी', color: '#ef4444',
-      why: `Body fat ${c.bfPct}% — well above the healthy range, with South-Asian risk starting earlier.` };
+      why: `Body fat is ${c.bfPct}%. That is well above the healthy range, and for South Asians the health risk starts at a lower level.` };
     return { label: 'Very high body fat', hi: 'बहुत अधिक चर्बी', color: '#ef4444',
       why: `Body fat ${c.bfPct}% carries substantial metabolic risk.` };
   }
@@ -710,7 +711,7 @@ class App {
     this.hi.invalidate();
     this.focusSelected();
     this.refreshLabels();
-    toast('Isolated — press I or Esc to exit');
+    toast('Showing this part alone. Press I or Esc to go back.');
   }
 
   toggleIsolate(id) {
@@ -794,7 +795,7 @@ class App {
       this.viewer.ground.visible = false; this.viewer.ring.visible = false;
       set({ labels: 'off' });
       this._atlasTitles();
-      toast('Atlas view — every system side by side');
+      toast('Atlas view: every system side by side');
     } else {
       for (let slot = 0; slot < this.body.count; slot++) this.body.setOffset(slot, 0, 0, 0);
       this.body.flush();
@@ -971,7 +972,7 @@ class App {
     const i = state.stack.indexOf(id);
     if (i >= 0) state.stack.splice(i, 1);
     else {
-      if (state.stack.length >= 5) { toast('Five at a time is the limit — remove one first'); return; }
+      if (state.stack.length >= 5) { toast('You can combine five at most. Remove one first.'); return; }
       state.stack.push(id);
     }
     this.applyEffect();
@@ -979,7 +980,7 @@ class App {
     renderEffectDock(this.dock, this);
     this.updateNavUI();
     const e = this.effects.get(id);
-    toast(i >= 0 ? `Removed ${e.name.en}` : `Added ${e.name.en} — showing the combined effect`);
+    toast(i >= 0 ? `Removed ${e.name.en}` : `Added ${e.name.en}. Showing the combined effect.`);
   }
 
   clearStack() {
@@ -1019,15 +1020,15 @@ class App {
       if (over > 0.3) { add('heart', 'strain', 0.3 + over * 0.4); add('pancreas', 'strain', 0.3 + over * 0.4); }
       this.ensurePanel('left');
       toast(over > 0.15
-        ? `Fat stores — ${comp.fatKg} kg, above the healthy range`
-        : `Fat stores — ${comp.fatKg} kg, within the healthy range`);
+        ? `Fat stores: ${comp.fatKg} kg, above the healthy range`
+        : `Fat stores: ${comp.fatKg} kg, within the healthy range`);
     } else {
       const lean = Math.max(0.3, 1 - under);
       for (const t of ['quadriceps', 'hamstrings', 'glutes', 'calves', 'pectorals', 'lats',
                        'deltoids', 'biceps', 'triceps', 'abs', 'erector-spinae', 'trapezius']) {
         add(t, under > 0.2 ? 'strain' : 'positive', lean * 0.75);
       }
-      toast(`Lean mass — ${comp.leanKg} kg (muscle, bone, organs and water)`);
+      toast(`Lean mass: ${comp.leanKg} kg of muscle, bone, organs and water`);
     }
     // Skin would hide all of this; fade it back as a temporary override.
     this.setSysOverride(this.overrideFor([...map.keys()], {
@@ -1071,7 +1072,7 @@ class App {
     this.hi.setSelected(ids);
     if (ids.length === 1) this.selectPart(ids[0]);
     else { set({ selected: ids[0] }); this.selectedIds = ids; this.inspector.render(); }
-    toast(`${TARGETS[target]?.label || target} — ${ids.length} structure${ids.length > 1 ? 's' : ''}`);
+    toast(`${TARGETS[target]?.label || target}: ${ids.length} structure${ids.length > 1 ? 's' : ''}`);
   }
 
   // ---------------- input ----------------
@@ -1186,12 +1187,16 @@ class App {
     const D = rect(document.getElementById('dock'));
     const T = document.getElementById('topbar').getBoundingClientRect();
     const narrow = window.innerWidth <= 900;
+    // On a phone, Movement's panel is a sheet across the bottom rather than a column down
+    // the side, so what it covers is the bottom of the stage.
+    const sheet = L && L.top > stage.top + stage.height * 0.3 ? Math.max(0, stage.bottom - L.top) + 8 : 0;
     this.viewer.setSafeInsets({
       top: Math.max(0, T.bottom - stage.top) + 8,
-      bottom: (D ? Math.max(0, stage.bottom - D.top) : 0) + 56,
+      bottom: Math.max((D ? Math.max(0, stage.bottom - D.top) : 0) + 56, sheet),
       left: narrow ? 0 : (L ? Math.max(0, L.right - stage.left) : 0) + 12,
       right: narrow ? 0 : (R ? Math.max(0, stage.right - R.left) : 0) + 12,
     });
+    if (state.mode === 'move') this.exercise?.scheduleFrame();
   }
 
   saveShot() {

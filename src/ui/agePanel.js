@@ -48,7 +48,7 @@ export class AgePanel {
       el('div', { class: 'ph' }, el('h2', {}, lang === 'hi' ? 'उम्र के साथ शरीर' : 'The body across a lifetime'), el('span', { class: 'cnt' }, `0–90 yr`)),
       el('p', { class: 'pd' }, lang === 'hi'
         ? 'नीचे उम्र, ऊँचाई, वज़न और मांसपेशी बदलें — शरीर उसी के अनुसार बदलेगा। भारतीय औसत आँकड़ों पर आधारित।'
-        : 'Change age, height, weight and muscle below — the body reshapes to match. Built on Indian reference medians (IAP growth charts, ICMR-NIN, NFHS-5).'));
+        : 'Change the age, height, weight and muscle below. The body changes shape to match. The averages come from Indian reference data: the IAP growth charts, ICMR-NIN and NFHS-5.'));
     if (!data) { this.root.append(el('div', { class: 'note warn' }, 'Age data file not loaded.')); return; }
     const stage = this.app.currentStage();
     if (!stage) return;
@@ -87,7 +87,7 @@ export class AgePanel {
       this.root.append(el('div', { class: 'muted small' }, comp.estimated
         ? (lang === 'hi'
           ? 'चर्बी % Deurenberg समीकरण से अनुमानित (दक्षिण-एशियाई सुधार + ट्रेनिंग सुधार सहित)। असली आँकड़ा पता हो तो नीचे भरें।'
-          : 'Body fat estimated with Deurenberg + a South-Asian correction + a training correction. If you know your real figure, type it in below — the estimate always loses to a real number.')
+          : 'Body fat is estimated with the Deurenberg formula, corrected for South Asian bodies and for training. If you know your real number, type it in below. A real number always beats an estimate.')
         : (lang === 'hi' ? 'आपका दिया हुआ चर्बी % इस्तेमाल हो रहा है।' : 'Using the body fat figure you entered.')));
     }
 

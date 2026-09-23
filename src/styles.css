@@ -313,7 +313,9 @@ hr.sep { border: 0; border-top: 1px solid var(--line); margin: 14px 0; }
 }
 @media (max-width: 900px) {
   :root { --left-w: min(340px, 86vw); --right-w: min(340px, 86vw); --topbar-h: 108px; }
-  #topbar { grid-template-columns: 44px 1fr auto; grid-template-rows: auto auto; height: auto; padding: 8px 10px; gap: 8px; background: rgba(10,12,15,.94); align-items: center; }
+  /* First column is the back/forward/home/help group, four buttons wide. At 44px it held
+     one, and the other three sat on top of the search box. */
+  #topbar { grid-template-columns: auto 1fr auto; grid-template-rows: auto auto; height: auto; padding: 8px 10px; gap: 8px; background: rgba(10,12,15,.94); align-items: center; }
   .modes { grid-column: 1 / -1; grid-row: 2; overflow-x: auto; scrollbar-width: none; }
   .modes::-webkit-scrollbar { display: none; }
   .search-wrap { grid-column: 2; grid-row: 1; max-width: none; }
@@ -343,6 +345,16 @@ hr.sep { border: 0; border-top: 1px solid var(--line); margin: 14px 0; }
   :root { --left-w: calc(100vw - 20px); --right-w: calc(100vw - 20px); }
   .insp-title { font-size: 19px; }
   .molwrap { height: 150px; }
+  /* On a phone the lift is the picture. It takes the top of the screen and the controls
+     sit in a sheet under it. As a full-width column the panel hid the lifter completely,
+     and its close handle ended up past the edge of the screen. */
+  body.mode-move #left { top: 54vh; bottom: 8px; }
+  body.mode-move #left-collapse, body.mode-move #right-collapse { display: none; }
+  body.mode-move .stage-toolbar { bottom: calc(46vh + 4px); }
+  /* Thirteen buttons do not fit across a phone; let the row scroll instead of running off
+     the left edge. */
+  .stage-toolbar { max-width: calc(100vw - 20px); overflow-x: auto; scrollbar-width: none; }
+  .stage-toolbar::-webkit-scrollbar { display: none; }
 }
 
 /* ---------- navigation: back / forward / home + "you are here" bar ---------- */
@@ -416,6 +428,13 @@ h4.fx-group.strain { color: var(--strain); }
 .wt-ico { font-size: 22px; margin-bottom: 7px; }
 .wt-title { font: 700 14px/1.25 var(--display); color: #fff; margin-bottom: 5px; }
 .wt-text { font-size: 12px; line-height: 1.5; color: var(--text-3); }
+/* The featured tile runs the full width, icon beside the text, so a fifth card does not
+   sit alone on a row of its own. */
+.welcome-tile.wide { grid-column: 1 / -1; display: flex; align-items: center; gap: 14px;
+  background: linear-gradient(90deg, rgba(233,201,92,.10), rgba(255,255,255,.03)); border-color: rgba(233,201,92,.35); }
+.welcome-tile.wide .wt-ico { font-size: 28px; margin: 0; }
+.wt-badge { margin-left: 8px; padding: 2px 7px; border-radius: 10px; background: var(--accent); color: #14120a;
+  font: 800 9.5px/1.4 var(--display); letter-spacing: .08em; text-transform: uppercase; vertical-align: 2px; }
 .welcome-controls { display: flex; flex-wrap: wrap; gap: 14px; margin: 18px 0 16px; padding: 11px 14px; background: rgba(255,255,255,.03); border: 1px solid var(--line); border-radius: 11px; font-size: 12px; color: var(--text-3); }
 .welcome-controls b { color: var(--text); font-weight: 600; }
 .welcome-foot { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }

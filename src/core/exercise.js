@@ -39,15 +39,28 @@ export class ExercisePlayer {
     this.app.viewer.ring.visible = false;
     this.seek(0);
     // The panels change how much canvas is free as Movement opens (the inspector folds
-    // away), and the free area is only measured once their slide has finished. Framing
-    // before then fits the shot to the old layout, so wait for the measurement to land.
+    // away, and on a phone the controls become a sheet), and that is measured a moment
+    // later. So the shot keeps re-fitting to the free area whenever it changes, until the
+    // user takes the camera themselves. Resizing the window re-fits it too.
+    this.autoFrame = true;
+    this._grab = () => { this.autoFrame = false; };
+    this.app.viewer.controls.addEventListener('start', this._grab);
+    this.scheduleFrame(320);
+  }
+
+  /** Fit the shot again shortly, if the user has not moved the camera since Movement opened. */
+  scheduleFrame(ms = 60) {
+    if (!this.ex || !this.autoFrame) return;
     clearTimeout(this._frameT);
-    this._frameT = setTimeout(() => { if (this.ex) this.frameCamera(); }, 320);
+    this._frameT = setTimeout(() => { if (this.ex && this.autoFrame) this.frameCamera(); }, ms);
   }
 
   stop() {
     this.ex = null;
     this.playing = false;
+    this.autoFrame = false;
+    clearTimeout(this._frameT);
+    if (this._grab) { this.app.viewer.controls.removeEventListener('start', this._grab); this._grab = null; }
     const { app } = this;
     app.body.rig?.reset();
     app.hi.clearEffects();

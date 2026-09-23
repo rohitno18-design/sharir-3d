@@ -95,10 +95,10 @@ export class EffectsPanel {
     const cur = [...cum.values()].filter(f => f.current);
     const carried = [...cum.values()].filter(f => !f.current);
     const GROUPS = [
-      ['positive', lang === 'hi' ? '✅ फ़ायदा — शरीर में क्या अच्छा होता है' : '✅ Benefits — what improves'],
-      ['negative', lang === 'hi' ? '❌ नुक़सान — क्या बिगड़ता है' : '❌ Harm — what gets damaged'],
-      ['strain',   lang === 'hi' ? '⚠️ दबाव — किस पर ज़ोर पड़ता है' : '⚠️ Strain — what is under load'],
-      ['neutral',  lang === 'hi' ? '◇ बदलाव — न अच्छा न बुरा' : '◇ Changes — neither good nor bad'],
+      ['positive', lang === 'hi' ? '✅ फ़ायदा — शरीर में क्या अच्छा होता है' : '✅ Benefits: what gets better'],
+      ['negative', lang === 'hi' ? '❌ नुक़सान — क्या बिगड़ता है' : '❌ Harm: what gets damaged'],
+      ['strain',   lang === 'hi' ? '⚠️ दबाव — किस पर ज़ोर पड़ता है' : '⚠️ Strain: what is under load'],
+      ['neutral',  lang === 'hi' ? '◇ बदलाव — न अच्छा न बुरा' : '◇ Changes: neither good nor bad'],
     ];
     const list = el('div');
     let shown = 0;
@@ -138,7 +138,7 @@ export class EffectsPanel {
         el('b', {}, lang === 'hi' ? '＋ कई चीज़ें एक साथ जोड़ें' : '＋ Combine several at once'),
         el('span', {}, lang === 'hi'
           ? 'किसी भी चीज़ के आगे ＋ दबाएँ — जैसे क्रिएटिन + जिम + अच्छी नींद — और देखें कि सब मिलकर शरीर पर क्या असर डालते हैं।'
-          : 'Press ＋ on any item — creatine + training + good sleep, say — and see what they do to the body together, not one at a time.')));
+          : 'Press ＋ on any item to add it. Try creatine, training and good sleep together, and see what they do to the body as a group.')));
       return wrap;
     }
 
@@ -164,7 +164,7 @@ export class EffectsPanel {
 
     wrap.append(
       el('div', { class: 'stack-head' },
-        el('b', {}, `${lang === 'hi' ? 'सब मिलाकर' : 'All together'} — ${active.length} ${lang === 'hi' ? 'चीज़ें' : 'habits'}`),
+        el('b', {}, `${lang === 'hi' ? 'सब मिलाकर' : 'All together'}: ${active.length} ${lang === 'hi' ? 'चीज़ें' : 'habits'}`),
         el('button', { class: 'btn sm ghost', onClick: () => app.clearStack() }, lang === 'hi' ? 'सब हटाएँ' : 'Clear')),
       chips);
 
@@ -217,7 +217,7 @@ export class EffectsPanel {
 
     wrap.append(el('div', { class: 'muted small' }, lang === 'hi'
       ? 'जहाँ दो आदतें एक ही अंग पर असर डालती हैं, यह बताता है कि वे साथ काम कर रही हैं या एक-दूसरे को काट रही हैं। सटीक संयुक्त संख्या नहीं दी गई — उसके लिए भरोसेमंद शोध नहीं है।'
-      : 'Where two habits hit the same organ, this shows whether they add up or cancel out. It deliberately does not invent a precise combined number — the interaction is real, the exact arithmetic is not something the evidence supports.'));
+      : 'When two habits affect the same organ, this shows whether they add up or cancel out. It does not give an exact combined number. The effect of the two together is real, but the research does not support a precise figure.'));
     return wrap;
   }
 

@@ -24,7 +24,7 @@ export class SystemsPanel {
 
     // atlas + xray
     const row = el('div', { class: 'btnrow' },
-      el('button', { class: 'btn' + (state.atlas ? ' active' : ''), id: 'btn-atlas', onClick: () => this.app.toggleAtlas() }, '▥ ', lang === 'hi' ? 'एटलस: सब एक फ़्रेम में' : 'Atlas — all systems in one frame'),
+      el('button', { class: 'btn' + (state.atlas ? ' active' : ''), id: 'btn-atlas', onClick: () => this.app.toggleAtlas() }, '▥ ', lang === 'hi' ? 'एटलस: सब एक फ़्रेम में' : 'Atlas: all systems in one frame'),
       el('button', { class: 'btn' + (state.xray ? ' active' : ''), id: 'btn-xray', onClick: () => this.app.toggleXray() }, '◐ ', lang === 'hi' ? 'एक्स-रे' : 'X-ray'),
     );
     this.root.append(row);
@@ -108,6 +108,6 @@ export class SystemsPanel {
     this.app.ensurePanel('left');
     this.render();
     emit('preset', p);
-    if (p.label) toast((state.lang === 'hi' ? p.hi : p.label) + ' — ' + (state.lang === 'hi' ? 'दिखाया जा रहा है' : 'now showing'));
+    if (p.label) toast(state.lang === 'hi' ? p.hi + ' दिखाया जा रहा है' : 'Now showing: ' + p.label);
   }
 }

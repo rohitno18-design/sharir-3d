@@ -8,11 +8,13 @@ const MODES = [
   { mode: 'explore', icon: '🔍', title: 'Explore the body', hi: 'शरीर देखें',
     text: 'Click any bone, muscle, nerve, vessel or organ and read what it is and what it does. Go deeper into any part.' },
   { mode: 'systems', icon: '▥', title: 'Show one system', hi: 'एक तंत्र चुनें',
-    text: 'Turn systems on and off — skeleton only, nerves only, blood supply only — or lay them side by side.' },
+    text: 'Turn body systems on and off. See only the skeleton, only the nerves or only the blood vessels, or lay them side by side.' },
   { mode: 'age', icon: '⏳', title: 'Change age & weight', hi: 'उम्र और वज़न',
     text: 'Slide from newborn to 90, and change body weight, to see how the body itself changes shape.' },
   { mode: 'effects', icon: '🧪', title: 'What happens if…', hi: 'क्या होगा अगर…',
     text: 'Pick a food, workout, supplement, medicine or habit and watch what it does inside, from 1 day to 5 years.' },
+  { mode: 'move', icon: '🏋️', title: 'Watch a lift', hi: 'व्यायाम देखें', wide: true, badge: 'New',
+    text: 'Play a bench press and watch each muscle light up as it works. The hands, arms and bar all move the way a real lift does.' },
 ];
 
 export function shouldShowWelcome() {
@@ -33,18 +35,19 @@ export function openWelcome(app, { force = false } = {}) {
         el('h1', {}, 'SHARIR ', el('span', {}, '3D')),
         el('p', {}, lang === 'hi'
           ? 'पूरा मानव शरीर — 7,000 से ज़्यादा नामित संरचनाएँ, हिंदी नामों के साथ।'
-          : `The whole human body — 7,000+ named structures${FEATURES.hindi ? ', in English and Hindi' : ''}.`))),
+          : `The whole human body, with more than 7,000 named structures${FEATURES.hindi ? ', in English and Hindi' : ''}.`))),
     el('p', { class: 'welcome-lead' }, lang === 'hi'
       ? 'नीचे से कुछ भी चुनकर शुरू करें। आप जब चाहें ऊपर बाईं ओर ‹ दबाकर पीछे जा सकते हैं।'
-      : 'Pick anywhere to start. You can always come back with the ‹ button at the top left, or the ⌂ button to return to the whole body.'),
+      : 'Pick any card to start. The ‹ button at the top left takes you back one step. The ⌂ button takes you back to the whole body.'),
   );
 
   const grid = el('div', { class: 'welcome-grid' });
   for (const m of MODES) {
-    grid.append(el('button', { class: 'welcome-tile', onClick: () => { markSeen(); close(); app.setMode(m.mode); } },
+    grid.append(el('button', { class: 'welcome-tile' + (m.wide ? ' wide' : ''), onClick: () => { markSeen(); close(); app.setMode(m.mode); } },
       el('div', { class: 'wt-ico' }, m.icon),
-      el('div', { class: 'wt-title' }, lang === 'hi' ? m.hi : m.title),
-      el('div', { class: 'wt-text' }, m.text)));
+      el('div', {},
+        el('div', { class: 'wt-title' }, lang === 'hi' ? m.hi : m.title, m.badge ? el('span', { class: 'wt-badge' }, m.badge) : null),
+        el('div', { class: 'wt-text' }, m.text))));
   }
   card.append(grid);
 
@@ -61,7 +64,7 @@ export function openWelcome(app, { force = false } = {}) {
       lang === 'hi' ? 'शुरू करें' : 'Start exploring'),
     el('span', { class: 'muted small' }, lang === 'hi'
       ? 'शिक्षा के लिए — चिकित्सा सलाह नहीं।'
-      : 'For education — not medical advice.')));
+      : 'This is for learning. It is not medical advice.')));
 
   overlay.append(card);
   overlay.addEventListener('click', (e) => { if (e.target === overlay) { markSeen(); close(); } });
