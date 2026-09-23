@@ -64,6 +64,7 @@ export class BatchedBody {
       }
     }
     this.count = this.parts.length;
+    this.batchOf = new Int16Array(this.count);
     this.width = Math.max(1, THREE.MathUtils.ceilPowerOfTwo(this.count));
 
     this.state = new Float32Array(this.width * 4);
@@ -126,9 +127,22 @@ export class BatchedBody {
       this.scene.add(mesh);
 
       this.batches.push({ system, mesh });
+      for (const it of items) this.batchOf[this.indexOf.get(it.part.id)] = this.batches.length - 1;
     }
     this._findDominantBones();
     return this;
+  }
+
+  /**
+   * Switch whole batches on and off from which parts are showing. A part hidden through
+   * the state texture is only discarded per pixel, so its vertices still run the full
+   * morph-and-pose shader. With only the muscles on, that was the entire body's worth of
+   * vertex work for a third of the picture.
+   */
+  setBatchesFromParts() {
+    const any = new Uint8Array(this.batches.length);
+    for (let s = 0; s < this.count; s++) if (this.state[s * 4 + 3] > 0.5) any[this.batchOf[s]] = 1;
+    for (let i = 0; i < this.batches.length; i++) this.batches[i].mesh.visible = !!any[i];
   }
 
   /**

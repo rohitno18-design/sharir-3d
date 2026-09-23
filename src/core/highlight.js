@@ -117,6 +117,7 @@ export class Highlighter {
       const intensity = fx ? fx.intensity : 0;
       body.setStyle(slot, opacity, selectedAmt, kind, intensity);
     }
+    body.setBatchesFromParts();
     body.flush();
     this.viewer.requestRender();
   }

@@ -128,6 +128,47 @@ const BAR_AXIS = new THREE.Vector3(1, 0, 0);
 /** Segments a scapular muscle is allowed to follow. */
 const GIRDLE_ONLY = new Set(['girdle']);
 
+/**
+ * Muscles that cross the shoulder or the hip, bound by where they actually insert.
+ *
+ * Binding these by closeness to a bone is wrong in anatomical position. The arm hangs flat
+ * against the side of the trunk, so the whole length of latissimus dorsi, from the armpit
+ * down to the waist, lies right next to the arm bones. Bind by proximity and all of it goes
+ * up with the arm, which drew a long triangular sail from the waist to the elbow. In a real
+ * body only the tendon travels with the humerus. So each of these is weighted by distance
+ * from its insertion: fully with the limb at the tendon, fading to the trunk by `far`.
+ *
+ * Insertion points come from the atlas's own landmarks. Where the atlas records the
+ * insertion directly, that record is used instead.
+ */
+//
+// Two kinds of motion, because muscles move in two different ways:
+//
+//   'wrap'  — short muscles that cup the joint (the rotator cuff). They swing round it
+//             with the bone, so they are blended as a rotation about the joint.
+//   'fibre' — long muscles whose belly lies far from the joint (lat, pectoral, psoas).
+//             Swinging those round the shoulder would throw a belly that lies on the back
+//             30 cm away clean off the body. What a long muscle really does is stretch:
+//             every fibre runs from a fixed origin to the moving insertion, so each point
+//             shifts towards the insertion's new position in proportion to how far along
+//             the fibre it sits. The whole muscle lengthens evenly, like the real thing.
+const ANCHORED = [
+  // The lat's tendon runs into the floor of the bicipital groove. Its record in this atlas
+  // lists only the slip on the scapula, so the landmark is the source here.
+  { re: /^latissimus dorsi/i, limb: 'upperarm', trunk: 'root', at: 'Intertubercular sulcus', mode: 'fibre' },
+  { re: /^teres major/i, limb: 'upperarm', trunk: 'girdle', at: 'Crest of lesser tubercle', mode: 'fibre' },
+  { re: /pectoralis major/i, limb: 'upperarm', trunk: 'root', at: 'Crest of greater tubercle',
+    record: { muscle: 'Pectoralis major muscle', bone: 'Humerus' }, mode: 'fibre' },
+  // The rotator cuff: from the shoulder blade onto the ball of the humerus.
+  { re: /^(supraspinatus|infraspinatus|teres minor)/i, limb: 'upperarm', trunk: 'girdle', at: 'Greater tubercle', mode: 'wrap', near: 0.02, far: 0.10 },
+  { re: /^subscapularis/i, limb: 'upperarm', trunk: 'girdle', at: 'Lesser tubercle', mode: 'wrap', near: 0.02, far: 0.10 },
+  // Psoas and iliacus: from the lumbar spine and pelvis onto the lesser trochanter.
+  { re: /^(psoas|iliacus|iliopsoas)/i, limb: 'thigh', trunk: 'root', at: 'Lesser trochanter', mode: 'fibre' },
+];
+/** One slot per anchored muscle per side, for the insertion displacements the shader reads. */
+const ANCHOR_SLOTS = ANCHORED.length * 2;
+const anchorSlot = (def, side) => ANCHORED.indexOf(def) + (side === 'r' ? ANCHORED.length : 0);
+
 export class Rig {
   constructor(registry) {
     this.ok = false;
@@ -135,9 +176,19 @@ export class Rig {
     this.p = {};                 // side -> { sc, gh, el, ... } rest-space GL points
     this.bones = [];             // { name, side, index, parent, pivot, radius, group }
     this.byGroup = { arm: [], leg: [] };     // side -> group -> [segment index into SEGMENTS]
+    // Each bone's world transform, kept as a matrix for the CPU (props, labels, framing)…
     this.matrices = new Float32Array(BONE_COUNT * 16);
-    this.uniform = { value: this.matrices };
+    // …and as a unit dual quaternion for the GPU, which is what the skinning blends.
+    this.dqReal = new Float32Array(BONE_COUNT * 4);
+    this.dqDual = new Float32Array(BONE_COUNT * 4);
+    this.uReal = { value: this.dqReal };
+    this.uDual = { value: this.dqDual };
+    // How far each anchored muscle's insertion has moved, relative to where its trunk end
+    // would carry it. A 'fibre' vertex adds its share of this.
+    this.anchorDisp = new Float32Array(ANCHOR_SLOTS * 3);
+    this.uAnchor = { value: this.anchorDisp };
     this.enabled = { value: 0 };
+    this.anchors = { l: [], r: [] };
     this._m = Array.from({ length: BONE_COUNT }, () => new THREE.Matrix4());
     this._clsCache = new Map();
     this.reset();
@@ -179,8 +230,35 @@ export class Rig {
     this.bones[0] = { name: 'root', side: null, index: 0, parent: -1, pivot: new THREE.Vector3(0, 0, 0) };
     // Segment order within a group, for the joint blends.
     for (const g of ['arm', 'leg']) this.byGroup[g] = SEGMENTS.map((s, i) => (s.group === g ? i : -1)).filter(i => i >= 0);
+    for (const side of SIDES) {
+      for (const def of ANCHORED) {
+        const point = this._insertion(def, side);
+        if (point) this.anchors[side].push({ def, point });
+        else console.warn('[rig] no insertion found for', def.at, side);
+      }
+    }
     this.ok = true;
     this.hipZ = this.p.l.hip.y;      // source height of the hip, used when classifying
+  }
+
+  /** Where a muscle meets its limb bone, in rest-space GL coordinates. */
+  _insertion(def, side) {
+    if (def.record) {
+      const rec = this.registry.parts.find(p => (p.k === 'insertion' || p.k === 'origin') && p.side === side
+        && p.muscle === def.record.muscle && p.bone === def.record.bone && p.bb);
+      if (rec) return toGl([(rec.bb[0][0] + rec.bb[1][0]) / 2, (rec.bb[0][1] + rec.bb[1][1]) / 2, (rec.bb[0][2] + rec.bb[1][2]) / 2]);
+    }
+    // Landmarks carry no side label in this atlas, so the side is read off the coordinate:
+    // the body's left is +x.
+    const want = side === 'l' ? 1 : -1;
+    const lm = this.registry.parts.find(p => p.k === 'landmark' && p.n === def.at && p.pos && Math.sign(p.pos[0]) === want);
+    return lm ? toGl(lm.pos) : null;
+  }
+
+  /** The insertion-anchored binding that applies to this part, if any. */
+  _anchorDef(part) {
+    if (part.sys !== 'muscular') return null;             // not the painted attachment patches
+    return ANCHORED.find(d => d.re.test(part.n)) || null;
   }
 
   // ---------- skinning ----------
@@ -361,6 +439,8 @@ export class Rig {
   skinGeometry(geom, part) {
     const n = geom.attributes.position.count;
     const arr = new Float32Array(n * 3);
+    const anchor = this.ok ? this._anchorDef(part) : null;
+    if (anchor) return this._skinAnchored(geom, anchor, arr);
     const cls = this.ok ? this.resolveBinding(geom, part) : { mode: 'none' };
     if (cls.mode === 'none') {
       for (let i = 0; i < n; i++) arr[i * 3 + 2] = 1;          // root, weight 1
@@ -375,10 +455,157 @@ export class Rig {
     return new THREE.BufferAttribute(arr, 3);
   }
 
+  /**
+   * Weight every vertex by its distance from the muscle's insertion: fully with the limb
+   * within `near` of the tendon, fully with the trunk beyond `far`, smooth in between.
+   */
+  _skinAnchored(geom, def, arr) {
+    const pos = geom.attributes.position;
+    const pt = new THREE.Vector3();
+    const anchorOf = { l: this.anchors.l.find(e => e.def === def), r: this.anchors.r.find(e => e.def === def) };
+    // The landmark sits on the bone's surface, and the muscle mesh often stops a few
+    // centimetres short of it: the tendon's last stretch is not modelled. Measured from the
+    // landmark alone, no vertex would ever reach full weight, and the muscle's end would
+    // trail behind the arm. So the ramp starts from this muscle's own closest point.
+    const closest = { l: Infinity, r: Infinity };
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i), side = x >= 0 ? 'l' : 'r', a = anchorOf[side];
+      if (!a) continue;
+      pt.set(x, pos.getY(i), pos.getZ(i));
+      closest[side] = Math.min(closest[side], pt.distanceTo(a.point));
+    }
+    if (def.mode === 'fibre') return this._skinFibre(geom, def, arr, anchorOf, closest);
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i);
+      const side = x >= 0 ? 'l' : 'r';
+      const a = anchorOf[side];
+      if (!a) { arr[i * 3] = 0; arr[i * 3 + 1] = 0; arr[i * 3 + 2] = 1; continue; }
+      pt.set(x, pos.getY(i), pos.getZ(i));
+      const near = Math.max(def.near, closest[side] + 0.01);
+      const far = Math.max(def.far, near + 0.08);
+      const w = smoothstep(far, near, pt.distanceTo(a.point));
+      arr[i * 3] = boneIndex(def.limb, side);
+      arr[i * 3 + 1] = def.trunk === 'root' ? 0 : boneIndex(def.trunk, side);
+      arr[i * 3 + 2] = w;
+    }
+    return new THREE.BufferAttribute(arr, 3);
+  }
+
+  /**
+   * Fibre binding. Each vertex records its trunk bone, which insertion it belongs to, and
+   * how far along the muscle it sits: 1 at the tendon, falling in a straight line to 0 at
+   * the far edge of the muscle. Linear, not eased, because a stretched muscle lengthens by
+   * the same fraction all the way along; easing would bunch the stretch into the middle.
+   *
+   * Encoded as (trunkBone, anchorSlot, 2 + fraction), so a weight of 2 or more tells the
+   * shader this vertex stretches rather than swings.
+   */
+  _skinFibre(geom, def, arr, anchorOf, closest) {
+    const pos = geom.attributes.position;
+    const pt = new THREE.Vector3();
+    const farthest = { l: 0, r: 0 };
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i), side = x >= 0 ? 'l' : 'r', a = anchorOf[side];
+      if (!a) continue;
+      pt.set(x, pos.getY(i), pos.getZ(i));
+      farthest[side] = Math.max(farthest[side], pt.distanceTo(a.point));
+    }
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i), side = x >= 0 ? 'l' : 'r', a = anchorOf[side];
+      const trunk = def.trunk === 'root' ? 0 : boneIndex(def.trunk, side);
+      if (!a) { arr[i * 3] = trunk; arr[i * 3 + 1] = 0; arr[i * 3 + 2] = 1; continue; }
+      pt.set(x, pos.getY(i), pos.getZ(i));
+      const span = Math.max(0.02, farthest[side] - closest[side]);
+      const f = Math.min(1, Math.max(0, 1 - (pt.distanceTo(a.point) - closest[side]) / span));
+      arr[i * 3] = trunk;
+      arr[i * 3 + 1] = anchorSlot(def, side);
+      arr[i * 3 + 2] = 2 + f;
+    }
+    return new THREE.BufferAttribute(arr, 3);
+  }
+
+  /**
+   * Where each fibre-bound insertion has gone. Measured against the trunk bone, because a
+   * fibre vertex is first carried by its trunk and then shifted by its share of this.
+   */
+  _writeAnchors() {
+    const I = new THREE.Vector3(), A = new THREE.Vector3(), B = new THREE.Vector3();
+    for (const side of SIDES) {
+      for (const e of this.anchors[side]) {
+        if (e.def.mode !== 'fibre') continue;
+        const s = anchorSlot(e.def, side) * 3;
+        applyMorph(e.point, I);
+        const limb = this._m[boneIndex(e.def.limb, side)];
+        const trunk = this._m[e.def.trunk === 'root' ? 0 : boneIndex(e.def.trunk, side)];
+        A.copy(I).applyMatrix4(limb);
+        B.copy(I).applyMatrix4(trunk);
+        this.anchorDisp[s] = A.x - B.x; this.anchorDisp[s + 1] = A.y - B.y; this.anchorDisp[s + 2] = A.z - B.z;
+      }
+    }
+  }
+
   // ---------- posing ----------
   reset() {
-    for (let i = 0; i < BONE_COUNT; i++) this._m[i].identity().toArray(this.matrices, i * 16);
+    for (let i = 0; i < BONE_COUNT; i++) {
+      this._m[i].identity().toArray(this.matrices, i * 16);
+      this.dqReal.set([0, 0, 0, 1], i * 4);
+      this.dqDual.set([0, 0, 0, 0], i * 4);
+    }
+    this.anchorDisp.fill(0);
     this.enabled.value = 0;
+  }
+
+  /**
+   * Store one bone's rigid transform as a unit dual quaternion. Every bone transform here is
+   * rotation plus translation with no scale (the body morph runs before the pose), which is
+   * exactly the case a dual quaternion represents.
+   */
+  _writeDual(i, m) {
+    _q.setFromRotationMatrix(m);
+    const qx = _q.x, qy = _q.y, qz = _q.z, qw = _q.w;
+    const e = m.elements, tx = e[12], ty = e[13], tz = e[14];
+    this.dqReal.set([qx, qy, qz, qw], i * 4);
+    // dual = 0.5 * t * q, with t as a pure quaternion
+    this.dqDual.set([
+      0.5 * (tx * qw + ty * qz - tz * qy),
+      0.5 * (ty * qw + tz * qx - tx * qz),
+      0.5 * (tz * qw + tx * qy - ty * qx),
+      -0.5 * (tx * qx + ty * qy + tz * qz),
+    ], i * 4);
+  }
+
+  /**
+   * CPU mirror of the shader's skinning, for measurement and anything that needs to know
+   * exactly where a vertex ends up. Takes a point already in morphed rest space.
+   */
+  skinPoint(a, b, w, v) {
+    if (w >= 1.5) {
+      // Fibre vertex: carried by its trunk bone, then shifted by its share of the stretch.
+      const f = w - 2, s = b * 3;
+      this.skinPoint(a, a, 1, v);
+      return v.set(v.x + f * this.anchorDisp[s], v.y + f * this.anchorDisp[s + 1], v.z + f * this.anchorDisp[s + 2]);
+    }
+    const R = this.dqReal, D = this.dqDual;
+    let qa0 = R[a * 4], qa1 = R[a * 4 + 1], qa2 = R[a * 4 + 2], qa3 = R[a * 4 + 3];
+    let qb0 = R[b * 4], qb1 = R[b * 4 + 1], qb2 = R[b * 4 + 2], qb3 = R[b * 4 + 3];
+    let db0 = D[b * 4], db1 = D[b * 4 + 1], db2 = D[b * 4 + 2], db3 = D[b * 4 + 3];
+    if (qa0 * qb0 + qa1 * qb1 + qa2 * qb2 + qa3 * qb3 < 0) {
+      qb0 = -qb0; qb1 = -qb1; qb2 = -qb2; qb3 = -qb3; db0 = -db0; db1 = -db1; db2 = -db2; db3 = -db3;
+    }
+    const u = 1 - w;
+    let q0 = qa0 * w + qb0 * u, q1 = qa1 * w + qb1 * u, q2 = qa2 * w + qb2 * u, q3 = qa3 * w + qb3 * u;
+    let d0 = D[a * 4] * w + db0 * u, d1 = D[a * 4 + 1] * w + db1 * u, d2 = D[a * 4 + 2] * w + db2 * u, d3 = D[a * 4 + 3] * w + db3 * u;
+    const len = Math.hypot(q0, q1, q2, q3) || 1;
+    q0 /= len; q1 /= len; q2 /= len; q3 /= len; d0 /= len; d1 /= len; d2 /= len; d3 /= len;
+    const x = v.x, y = v.y, z = v.z;
+    // rotate: v + 2 r x (r x v + w v)
+    const cx = q1 * z - q2 * y + q3 * x, cy = q2 * x - q0 * z + q3 * y, cz = q0 * y - q1 * x + q3 * z;
+    const rx = x + 2 * (q1 * cz - q2 * cy), ry = y + 2 * (q2 * cx - q0 * cz), rz = z + 2 * (q0 * cy - q1 * cx);
+    // translate: 2 (w d - d.w r + r x d)
+    const tx = 2 * (q3 * d0 - d3 * q0 + (q1 * d2 - q2 * d1));
+    const ty = 2 * (q3 * d1 - d3 * q1 + (q2 * d0 - q0 * d2));
+    const tz = 2 * (q3 * d2 - d3 * q2 + (q0 * d1 - q1 * d0));
+    return v.set(rx + tx, ry + ty, rz + tz);
   }
 
   /**
@@ -395,7 +622,9 @@ export class Rig {
       if (bone.parent >= 0) this._m[i].multiplyMatrices(this._m[bone.parent], local);
       else this._m[i].copy(local);
       this._m[i].toArray(this.matrices, i * 16);
+      this._writeDual(i, this._m[i]);
     }
+    this._writeAnchors();
     this.enabled.value = 1;
   }
 
@@ -607,6 +836,9 @@ export class Rig {
     };
   }
 
+  /** Put a rest-space point through the body morph, so it matches what the shader poses. */
+  morphPoint(v, out = new THREE.Vector3()) { return applyMorph(v, out); }
+
   /** Move a point by one bone's current transform, in place. */
   applyBone(index, v) {
     const m = this.matrices, i = index * 16;
@@ -652,19 +884,68 @@ const _e = new THREE.Euler();
 const _r = new THREE.Matrix4();
 const _back = new THREE.Matrix4();
 const _v = new THREE.Vector3();
+const _q = new THREE.Quaternion();
 
 // ---------------- shader ----------------
 
+/**
+ * Dual-quaternion skinning.
+ *
+ * Linear blending averages the two positions a vertex would have under each bone, and the
+ * average of two points on an arc lies inside the arc. So tissue between two bones that
+ * turn a long way apart, like the pectoral and the lat when the arm goes from hanging to
+ * overhead, is pulled straight across the corner into a thin flat sheet. Blending the two
+ * transforms as dual quaternions rotates the vertex part of the way round the joint
+ * instead, so it keeps its distance from the joint and the muscle fans round the shoulder
+ * the way a real axillary fold does.
+ *
+ * The surface normal is turned by the same rotation. Before this, only positions were
+ * posed, so the raised arms were lit as if they still hung by the sides.
+ */
 export const RIG_GLSL = /* glsl */`
-attribute vec3 aSkin;                 // boneA, boneB, weightA
-uniform mat4 uBones[${BONE_COUNT}];
+attribute vec3 aSkin;   // boneA, boneB, weightA — or trunkBone, anchorSlot, 2 + fraction
+uniform vec4 uBoneReal[${BONE_COUNT}];
+uniform vec4 uBoneDual[${BONE_COUNT}];
+uniform vec3 uAnchorDisp[${ANCHOR_SLOTS}];
 uniform float uPosed;
+vec4 sharirQ; vec4 sharirD;
+bool sharirReady = false;
+void sharirBlend() {
+  // The normal is posed before the position, and both need the same blend: work it out
+  // once per vertex, not twice.
+  if (sharirReady) return;
+  sharirReady = true;
+  int ia = int(aSkin.x + 0.5), ib = int(aSkin.y + 0.5);
+  // Most of the body follows the trunk alone. Reading bone 0 by a constant index and
+  // skipping the blend keeps those vertices as cheap as they were before posing existed.
+  if (ia == 0 && ib == 0 && aSkin.z < 1.5) { sharirQ = uBoneReal[0]; sharirD = uBoneDual[0]; return; }
+  if (aSkin.z > 1.5) {                              // fibre vertex: its trunk bone only
+    sharirQ = uBoneReal[ia]; sharirD = uBoneDual[ia];
+    return;
+  }
+  float w = clamp(aSkin.z, 0.0, 1.0);
+  vec4 qa = uBoneReal[ia], da = uBoneDual[ia];
+  vec4 qb = uBoneReal[ib], db = uBoneDual[ib];
+  if (dot(qa, qb) < 0.0) { qb = -qb; db = -db; }   // same hemisphere: the short way round
+  vec4 q = qa * w + qb * (1.0 - w);
+  vec4 d = da * w + db * (1.0 - w);
+  float len = length(q);
+  sharirQ = q / len; sharirD = d / len;
+}
+vec3 sharirRotate(vec3 v) { return v + 2.0 * cross(sharirQ.xyz, cross(sharirQ.xyz, v) + sharirQ.w * v); }
+vec3 sharirPoseNormal(vec3 n) {
+  if (uPosed < 0.5) return n;
+  sharirBlend();
+  return sharirRotate(n);
+}
 vec3 sharirPose(vec3 p) {
   if (uPosed < 0.5) return p;
-  vec4 h = vec4(p, 1.0);
-  vec3 a = (uBones[int(aSkin.x)] * h).xyz;
-  vec3 b = (uBones[int(aSkin.y)] * h).xyz;
-  return mix(b, a, clamp(aSkin.z, 0.0, 1.0));
+  sharirBlend();
+  vec3 r = sharirQ.xyz;
+  vec3 t = 2.0 * (sharirQ.w * sharirD.xyz - sharirD.w * r + cross(r, sharirD.xyz));
+  vec3 q = sharirRotate(p) + t;
+  if (aSkin.z > 1.5) q += (aSkin.z - 2.0) * uAnchorDisp[int(aSkin.y + 0.5)];
+  return q;
 }
 `;
 
@@ -676,13 +957,19 @@ export function patchForRig(material, rig) {
   const prev = material.onBeforeCompile;
   material.onBeforeCompile = (shader, renderer) => {
     if (prev) prev(shader, renderer);
-    shader.uniforms.uBones = rig.uniform;
+    shader.uniforms.uBoneReal = rig.uReal;
+    shader.uniforms.uBoneDual = rig.uDual;
+    shader.uniforms.uAnchorDisp = rig.uAnchor;
     shader.uniforms.uPosed = rig.enabled;
     const marker = 'transformed = morphBody(transformed);';
     if (!shader.vertexShader.includes(marker)) { console.warn('[rig] morph hook not found — pose disabled'); return; }
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', '#include <common>\n' + RIG_GLSL)
       .replace(marker, 'transformed = sharirPose(morphBody(transformed));');
+    if (shader.vertexShader.includes('#include <beginnormal_vertex>')) {
+      shader.vertexShader = shader.vertexShader.replace('#include <beginnormal_vertex>',
+        '#include <beginnormal_vertex>\n objectNormal = sharirPoseNormal(objectNormal);');
+    }
   };
   material.needsUpdate = true;
 }

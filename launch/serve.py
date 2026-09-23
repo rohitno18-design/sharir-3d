@@ -15,6 +15,7 @@ import subprocess
 import urllib.request
 import sys
 import threading
+import time
 import webbrowser
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'dist')
@@ -60,11 +61,17 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().do_GET()
 
     def end_headers(self):
-        # Big models: let the browser keep them, but check first. 'no-cache' means
-        # revalidate, not "don't store" - an unchanged model still comes back as a 304 with
-        # no body, so reloads stay instant, while a rebuilt model is picked up immediately
-        # instead of being served stale from disk for a day.
-        if self.path.endswith(('.glb', '.json')):
+        path = self.path.split('?', 1)[0]
+        if path.startswith('/assets/'):
+            # Vite names every file in /assets/ after a hash of its contents, so a changed
+            # file always gets a new name. Those can be cached for good.
+            self.send_header('Cache-Control', 'public, max-age=31536000, immutable')
+        else:
+            # Everything else keeps the same name from one build to the next: index.html,
+            # the models, the data. The browser must check before reusing any of them.
+            # 'no-cache' means "revalidate", not "never store", so an unchanged file still
+            # comes back as a tiny 304. Without this, index.html had no cache rule at all,
+            # the browser kept an old copy, and a rebuilt app kept opening as the old one.
             self.send_header('Cache-Control', 'no-cache')
         super().end_headers()
 
@@ -74,6 +81,9 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
 def open_browser(url):
     """Chrome first (this is where the app is developed and tested), default browser otherwise."""
+    # A fresh query string makes this a URL the browser has never cached, so a copy of the
+    # page saved before the cache headers were fixed can never be what opens.
+    url = url.rstrip('/') + '/?v=' + str(int(time.time()))
     for exe in CHROME_PATHS:
         if os.path.isfile(exe):
             try:
