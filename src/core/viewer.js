@@ -70,7 +70,8 @@ export class Viewer {
     this.pickables = [];
     this._frameCbs = [];
     this._tween = null;
-    this.clock = new THREE.Clock();
+    this.clock = new THREE.Timer();
+    this.clock.connect(document);            // pauses the clock while the tab is hidden
     this.frame = 0;
 
     this.width = 1; this.height = 1;
@@ -116,8 +117,9 @@ export class Viewer {
 
   _loop() {
     requestAnimationFrame(this._loop);
+    this.clock.update();
     const dt = Math.min(this.clock.getDelta(), 0.1);
-    const t = this.clock.elapsedTime;
+    const t = this.clock.getElapsed();
     this.frame++;
     if (!finiteVec(this.camera.position) || !finiteVec(this.controls.target)) this._recoverCamera();
     if (this._tween) { this._stepTween(dt); this._dirty = true; }

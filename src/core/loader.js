@@ -83,10 +83,13 @@ export async function loadBody(viewer, registry, onProgress = () => {}) {
   }));
 
   onProgress(0.89, 'Building the skeleton rig…');
-  const rig = new Rig(registry);
+  // The rig reads finger joints off the bones' own geometry, so it needs to see it before
+  // the geometry is merged away into batches.
+  const rig = new Rig(registry, groups);
 
   onProgress(0.9, 'Merging geometry…');
   const body = new BatchedBody(viewer.bodyRoot).build(groups, (sys) => systemMaterial(sys, rig), rig);
+  rig.releaseGeometry();
   body.rig = rig;
   onProgress(0.96, `Indexing ${body.count} structures…`);
   body.buildBVH((n) => console.log(`[sharir] BVH ready for ${n} batches`));

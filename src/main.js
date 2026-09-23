@@ -98,7 +98,15 @@ class App {
     window.addEventListener('resize', () => this.syncNarrow());
 
     prog(1, 'Ready');
-    setTimeout(() => { document.getElementById('loader').classList.add('done'); }, 260);
+    // Fade the loading card out, then take it off the page. Left in place at zero opacity,
+    // its pulsing logo kept the compositor busy every frame for the whole session, and it
+    // showed through faintly whenever the body was drawn see-through.
+    setTimeout(() => {
+      const loader = document.getElementById('loader');
+      loader.addEventListener('transitionend', () => loader.remove(), { once: true });
+      loader.classList.add('done');
+      setTimeout(() => loader.remove(), 1200);          // in case the transition never fires
+    }, 260);
     setTimeout(() => { document.getElementById('stage-hint').classList.add('fade'); }, 9000);
     setTimeout(() => openWelcome(this), 700);
     window.app = this;

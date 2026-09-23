@@ -193,7 +193,7 @@ export class BatchedBody {
     const step = () => {
       const t0 = performance.now();
       while (i < this.batches.length && performance.now() - t0 < 14) {
-        this.batches[i].mesh.geometry.computeBoundsTree({ maxLeafTris: 12 });
+        this.batches[i].mesh.geometry.computeBoundsTree({ targetLeafSize: 12 });
         i++;
       }
       // requestIdleCallback takes an options object, setTimeout takes a number — they

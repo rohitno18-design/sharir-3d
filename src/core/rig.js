@@ -36,15 +36,22 @@ const PIVOTS = {
   el:       'joints:Articular capsule of elbow joint',
   wr:       'joints:Articular capsule of radiocarpal joint',
   mcp:      'joints:Articular capsules of metacarpophalangeal joints',
-  pip:      'joints:Articular capsules of proximal interphalangeal joints',
-  tip:      'skeletal:Distal phalanx of third finger of hand',
-  thumbCmc: 'skeletal:First metacarpal bone',
-  thumbTip: 'skeletal:Distal phalanx of first finger of hand',
   hip:      'joints:Articular capsule of hip joint',
   knee:     'joints:Articular capsule of knee joint',
   ankle:    'skeletal:Talus',
   toe:      'skeletal:Distal phalanx of first finger of foot',
 };
+
+/**
+ * The hand's own joints, one set per finger. There is one capsule mesh covering all four
+ * knuckles, so a single pivot there was a crude average: every finger bent about the same
+ * point, and the hand closed like a mitten. These are read instead from where each pair
+ * of bones actually meets.
+ */
+const DIGITS = [
+  { n: 2, word: 'second' }, { n: 3, word: 'third' }, { n: 4, word: 'fourth' }, { n: 5, word: 'fifth' },
+];
+const ORD = { 1: 'First', 2: 'Second', 3: 'Third', 4: 'Fourth', 5: 'Fifth' };
 
 /**
  * One tree per side. `radius` is how far from the bone's axis a vertex may sit and still be
@@ -57,13 +64,20 @@ const SEGMENTS = [
   { name: 'upperarm', parent: 'girdle',   from: 'gh',       to: 'el',       radius: 0.100, group: 'arm' },
   { name: 'forearm1', parent: 'upperarm', from: 'el',       to: 'fm',       radius: 0.080, group: 'arm' },
   { name: 'forearm2', parent: 'forearm1', from: 'fm',       to: 'wr',       radius: 0.068, group: 'arm' },
-  // The finger envelopes have to clear the digital nerves and vessels that run along the
-  // sides of every finger, not just the bone: anything they miss falls back to the root and
-  // is left behind beside the thigh when the arm lifts.
-  { name: 'hand',     parent: 'forearm2', from: 'wr',       to: 'mcp',      radius: 0.085, group: 'arm' },
-  { name: 'fingers1', parent: 'hand',     from: 'mcp',      to: 'pip',      radius: 0.060, group: 'arm' },
-  { name: 'fingers2', parent: 'fingers1', from: 'pip',      to: 'tip',      radius: 0.055, group: 'arm' },
-  { name: 'thumb',    parent: 'hand',     from: 'thumbCmc', to: 'thumbTip', radius: 0.042, group: 'arm' },
+  { name: 'hand',     parent: 'forearm2', from: 'wr',       to: 'mcp',      radius: 0.070, group: 'arm' },
+  // Three links per finger, from the knuckle out to the tip. Each envelope has to clear the
+  // digital nerves and vessels running along the sides of its finger: anything a finger
+  // misses falls back to the palm and gets left behind when the finger curls.
+  ...DIGITS.flatMap(({ n }) => [
+    { name: `f${n}a`, parent: 'hand',    from: `mcp${n}`, to: `pip${n}`, radius: 0.021, group: 'arm' },
+    { name: `f${n}b`, parent: `f${n}a`,  from: `pip${n}`, to: `dip${n}`, radius: 0.019, group: 'arm' },
+    { name: `f${n}c`, parent: `f${n}b`,  from: `dip${n}`, to: `tip${n}`, radius: 0.017, group: 'arm' },
+  ]),
+  // The thumb has no middle phalanx; its first link is the thumb metacarpal, which swings
+  // across the palm to oppose the fingers.
+  { name: 't1',       parent: 'hand',     from: 'cmc1',     to: 'mcp1',     radius: 0.026, group: 'arm' },
+  { name: 't2',       parent: 't1',       from: 'mcp1',     to: 'ip1',      radius: 0.021, group: 'arm' },
+  { name: 't3',       parent: 't2',       from: 'ip1',      to: 'tip1',     radius: 0.019, group: 'arm' },
   { name: 'thigh',    parent: null,       from: 'hip',      to: 'knee',     radius: 0.140, group: 'leg' },
   { name: 'shin',     parent: 'thigh',    from: 'knee',     to: 'ankle',    radius: 0.100, group: 'leg' },
   { name: 'foot',     parent: 'shin',     from: 'ankle',    to: 'toe',      radius: 0.090, group: 'leg' },
@@ -75,6 +89,7 @@ const SIDES = ['l', 'r'];
 /** Bone index for a named segment. root = 0, then the left tree, then the right. */
 export const boneIndex = (name, side) =>
   name === 'root' ? 0 : 1 + SIDES.indexOf(side) * PER_SIDE + SEGMENTS.findIndex(s => s.name === name);
+const SEG_INDEX = Object.fromEntries(SEGMENTS.map((s, i) => [s.name, i]));
 
 // Structures that belong to a limb outright — they move with it in full.
 const UPPER_LIMB = /upper limb|pectoral girdle/i;
@@ -115,11 +130,52 @@ const REACHES_INTO = {
   leg: (bb) => bb[0][2] < 0.70,
 };
 /**
- * How far palmar of the knuckle joints a held bar's axis sits, in metres. In anatomical
- * position the palm faces forward, so palmar is +z. Tuned against a penetration test: the
- * nearest hand vertex to the bar axis must sit at or outside the bar's own radius.
+ * Where along the palm the bar sits, from the wrist (0) to the knuckles (1). A pressing
+ * grip holds the bar low, over the heel of the hand, so the load stacks down the forearm.
+ * Up by the knuckles it would be a hammer grip with the weight hanging off the fingers.
+ * Not right on the wrist crease either: the skin there is shared with the forearm, and it
+ * stays behind when the wrist bends back.
  */
-const GRIP_DEPTH = 0.048;
+const GRIP_ALONG = 0.55;
+/** A standard 29 mm barbell shaft. */
+const BAR_RADIUS = 0.0145;
+/** How far the skin of the palm gives under a loaded bar. */
+const PALM_SQUASH = 0.002;
+/** Flesh between the thumb's metacarpal and a bar: the thenar pad, the hand's thickest. */
+const THENAR_PAD = 0.016;
+/** The palm's binding envelope, a slab: half its width across the knuckles, half its depth. */
+const PALM_HALF_WIDTH = 0.050;
+const PALM_HALF_THICK = 0.028;
+/** Segments whose borders are blended rather than switched, and how wide the band is. */
+const SHARED_WITH = { hand: 't1', t1: 'hand' };
+const SHARED_BAND = 0.35;
+/**
+ * The wrist bends back a little under a loaded bar. That tilts the palm up under the bar so
+ * it rests on the heel of the hand, over the forearm bones. Kept small, because Delavier's
+ * point is that a tight grip is what stops the wrist folding back any further.
+ */
+const WRIST_EXTENSION = 16 * Math.PI / 180;
+/**
+ * A closed hand does not hold a bar at right angles to the forearm. The bar lies obliquely
+ * across the palm, from the heel under the little finger up to the base of the index
+ * finger, which is the line of the palm's own creases (Napier's power grip). The knuckle
+ * line slants the same way. This is how far the bar leans from square, towards it.
+ *
+ * 6 degrees centres the wrist's work on a straight wrist: it bends about 16 degrees
+ * towards the thumb at lockout, where a wide grip leaves the hands outside the elbows, and
+ * about as far the other way halfway down.
+ */
+const GRIP_OBLIQUE = 6 * Math.PI / 180;
+/** How far the wrist may bend to the little-finger side, and to the thumb side, under load. */
+const WRIST_ULNAR_MAX = 25 * Math.PI / 180;
+const WRIST_RADIAL_MAX = 20 * Math.PI / 180;
+/**
+ * How far the arm straightens at lockout, as a fraction of its full length from shoulder
+ * to palm. 0.996 is an elbow at about 172 degrees: locked, but not hyperextended.
+ */
+const LOCKOUT_REACH = 0.996;
+/** How much more a forearm leaning across the body counts than one leaning along it. */
+const ACROSS_WEIGHT = 3;
 /**
  * The held bar's own axis, in the model's rest space. The root only ever turns the body
  * about x, so a bar lying across the body stays parallel to x whatever the pose.
@@ -170,9 +226,15 @@ const ANCHOR_SLOTS = ANCHORED.length * 2;
 const anchorSlot = (def, side) => ANCHORED.indexOf(def) + (side === 'r' ? ANCHORED.length : 0);
 
 export class Rig {
-  constructor(registry) {
+  constructor(registry, groups = null) {
     this.ok = false;
     this.registry = registry;
+    // partId -> geometries, for reading joints straight off the bones.
+    this._geoms = new Map();
+    if (groups) for (const [, items] of groups) for (const it of items) {
+      if (!this._geoms.has(it.part.id)) this._geoms.set(it.part.id, []);
+      this._geoms.get(it.part.id).push(it.geometry);
+    }
     this.p = {};                 // side -> { sc, gh, el, ... } rest-space GL points
     this.bones = [];             // { name, side, index, parent, pivot, radius, group }
     this.byGroup = { arm: [], leg: [] };     // side -> group -> [segment index into SEGMENTS]
@@ -193,6 +255,72 @@ export class Rig {
     this._clsCache = new Map();
     this.reset();
     this._resolve();
+    this._chest = this._collectChest();
+  }
+
+  /**
+   * The source geometry is only needed while the rig reads joints off the bones. Holding on
+   * to it afterwards keeps a second full copy of the atlas in memory for nothing.
+   */
+  releaseGeometry() { this._geoms = null; }
+
+  /**
+   * The skin over the front of the chest, kept as a small point set so a bar can be laid
+   * on it. Anything a bar is pressed to has to be measured, not guessed: a height tuned by
+   * eye puts the bar a centimetre and more into the chest of any body it was not tuned on.
+   */
+  _collectChest() {
+    const pts = [];
+    for (const [id, gs] of this._geoms) {
+      const part = this.registry.byId.get(id);
+      if (!part || part.sys !== 'integumentary') continue;
+      // The atlas carries a female chest surface as well, standing up to 5 cm proud of the
+      // pectorals. It is never drawn on the male body, and laying the bar on it would leave
+      // the bar hovering over his chest. The male skin is the region patches.
+      if (part.sx && part.sx !== 'm') continue;
+      for (const g of gs) {
+        const p = g.attributes.position;
+        for (let i = 0; i < p.count; i++) {
+          const x = p.getX(i), y = p.getY(i), z = p.getZ(i);
+          if (Math.abs(x) < 0.17 && y > 1.10 && y < 1.46 && z > 0.04) pts.push(x, y, z);
+        }
+      }
+    }
+    return new Float32Array(pts);
+  }
+
+  /**
+   * The rest-space height for a bar lying across the chest at `target`'s level, so that
+   * the bar's surface sits exactly `clear` from the skin at its closest point. Found by
+   * bisection on the bar's height, against the chest as it is morphed right now.
+   */
+  chestTouch(target, radius, clear = 0.002) {
+    const pts = this._chest;
+    if (!pts || !pts.length) return target.z;
+    const probe = applyMorph(new THREE.Vector3(0.1, 1.3, 0.15), new THREE.Vector3());
+    const key = `${probe.x.toFixed(5)},${probe.y.toFixed(5)},${probe.z.toFixed(5)}|${target.x.toFixed(4)},${target.y.toFixed(4)}|${radius}|${clear}`;
+    if (this._touch?.key === key) return this._touch.z;
+    // The chest as this body has it, once.
+    const m = new Float32Array(pts.length), v = new THREE.Vector3();
+    for (let i = 0; i < pts.length; i += 3) {
+      applyMorph(v.set(pts[i], pts[i + 1], pts[i + 2]), v);
+      m[i] = v.x; m[i + 1] = v.y; m[i + 2] = v.z;
+    }
+    const need = radius + clear;
+    const gap = (z) => {
+      const B = applyMorph(new THREE.Vector3(target.x, target.y, z), new THREE.Vector3());
+      let best = Infinity;
+      for (let i = 0; i < m.length; i += 3) {
+        const dy = m[i + 1] - B.y;
+        if (dy > need || dy < -need) continue;
+        best = Math.min(best, Math.hypot(dy, m[i + 2] - B.z));
+      }
+      return best;
+    };
+    let lo = target.z - 0.10, hi = target.z + 0.10;
+    for (let i = 0; i < 22; i++) { const mid = (lo + hi) / 2; if (gap(mid) < need) lo = mid; else hi = mid; }
+    this._touch = { key, z: hi };
+    return hi;
   }
 
   // ---------- rest skeleton ----------
@@ -211,10 +339,7 @@ export class Rig {
         q[k] = c;
       }
       q.fm = q.el.clone().lerp(q.wr, 0.5);                       // forearm twist split
-      // Where a bar actually lies when this hand holds one: in the channel of the palm,
-      // clear of the knuckles, not at the knuckle joint centres — which are inside the
-      // bone, so a bar placed there passes straight through the hand.
-      q.grip = q.mcp.clone().add(new THREE.Vector3(0, 0, GRIP_DEPTH));
+      if (!this._resolveHand(side, q)) { console.warn('[rig] hand joints missing', side); return; }
       this.p[side] = q;
     }
     for (const side of SIDES) {
@@ -239,6 +364,118 @@ export class Rig {
     }
     this.ok = true;
     this.hipZ = this.p.l.hip.y;      // source height of the hip, used when classifying
+  }
+
+  // ---------- the hand, read off its bones ----------
+  _points(id) {
+    const gs = this._geoms.get(id);
+    if (!gs) return null;
+    const pts = [];
+    for (const g of gs) {
+      const p = g.attributes.position;
+      for (let i = 0; i < p.count; i++) pts.push(new THREE.Vector3(p.getX(i), p.getY(i), p.getZ(i)));
+    }
+    return pts.length ? pts : null;
+  }
+
+  /** Where two neighbouring bones meet: halfway between each one's end nearest the other. */
+  _joint(a, b) {
+    const pa = this._points(a), pb = this._points(b);
+    if (!pa || !pb) return null;
+    const ca = pa.reduce((s, v) => s.add(v), new THREE.Vector3()).divideScalar(pa.length);
+    const cb = pb.reduce((s, v) => s.add(v), new THREE.Vector3()).divideScalar(pb.length);
+    let na = pa[0], nb = pb[0];
+    for (const v of pa) if (v.distanceToSquared(cb) < na.distanceToSquared(cb)) na = v;
+    for (const v of pb) if (v.distanceToSquared(ca) < nb.distanceToSquared(ca)) nb = v;
+    return na.clone().add(nb).multiplyScalar(0.5);
+  }
+
+  /** The tip of a bone: its point farthest from the joint it hangs from. */
+  _tip(id, from) {
+    const pts = this._points(id);
+    if (!pts) return null;
+    let far = pts[0];
+    for (const v of pts) if (v.distanceToSquared(from) > far.distanceToSquared(from)) far = v;
+    return far.clone();
+  }
+
+  _resolveHand(side, q) {
+    const bone = (name) => `skeletal:${name}.${side}`;
+    for (const { n, word } of DIGITS) {
+      const mc = bone(`${ORD[n]} metacarpal bone`);
+      const p1 = bone(`Proximal phalanx of ${word} finger of hand`);
+      const p2 = bone(`Middle phalanx of ${word} finger of hand`);
+      const p3 = bone(`Distal phalanx of ${word} finger of hand`);
+      q[`mcp${n}`] = this._joint(mc, p1);
+      q[`pip${n}`] = this._joint(p1, p2);
+      q[`dip${n}`] = this._joint(p2, p3);
+      if (!q[`mcp${n}`] || !q[`pip${n}`] || !q[`dip${n}`]) return false;
+      q[`tip${n}`] = this._tip(p3, q[`dip${n}`]);
+    }
+    q.cmc1 = this._joint(bone('Trapezium bone'), bone('First metacarpal bone'));
+    q.mcp1 = this._joint(bone('First metacarpal bone'), bone('Proximal phalanx of first finger of hand'));
+    q.ip1 = this._joint(bone('Proximal phalanx of first finger of hand'), bone('Distal phalanx of first finger of hand'));
+    if (!q.cmc1 || !q.mcp1 || !q.ip1) return false;
+    q.tip1 = this._tip(bone('Distal phalanx of first finger of hand'), q.ip1);
+
+    // Where a bar lies when this hand presses one: low in the palm, over the heel of the
+    // hand, so the load runs down the forearm instead of hanging off the fingers.
+    //
+    // Its height is fitted to the hand itself. The bar is a line across the palm, not a
+    // point on it, and the palm is not flat: it rises into the pads at the base of the
+    // thumb and of the little finger. Measured at one spot, the bar sat right on the palm
+    // there and a centimetre into the skin either side. So the bar is lifted until nothing
+    // along the whole strip it crosses is inside it, less a little for the skin to squash.
+    // The palm's own frame, for binding: across the knuckles, and out of its face.
+    const h = q.mcp.clone().sub(q.wr).normalize();
+    const k = q.mcp5.clone().sub(q.mcp2);
+    q.palmAcross = k.addScaledVector(h, -k.dot(h)).normalize();
+    q.palmNormal = new THREE.Vector3().crossVectors(h, q.palmAcross).normalize();
+    if (q.palmNormal.z < 0) q.palmNormal.negate();
+
+    const heel = q.wr.clone().lerp(q.mcp, GRIP_ALONG);
+    const e1 = barLine(q.wr, q.mcp, q.mcp2, q.mcp5);
+    const nrm = new THREE.Vector3(0, 0, 1).addScaledVector(e1, -e1.z).normalize();   // out of the palm
+    const e2 = new THREE.Vector3().crossVectors(e1, nrm);
+    const halfWidth = q.mcp2.distanceTo(q.mcp5) / 2 + 0.008;
+    const need = BAR_RADIUS - PALM_SQUASH;
+    // The thumb lifts away round the bar on its own, so the tissue that goes with it is not
+    // what the bar lies on. "Goes with it" is decided exactly as the skinning decides it.
+    const handSeg = SEGMENTS[SEG_INDEX.hand], thumbSeg = SEGMENTS[SEG_INDEX.t1];
+    const thumbOwns = (p) => this._segDist(p.x, p.y, p.z, q, thumbSeg).d < this._segDist(p.x, p.y, p.z, q, handSeg).d;
+    const ownSide = new RegExp(`\\.${side}(\\.\\d+)?$`);
+    const P = new THREE.Vector3(), rel = new THREE.Vector3();
+    let lift = -Infinity;
+    for (const [id, gs] of this._geoms) {
+      const part = this.registry.byId.get(id);
+      if (!part || !part.bb) continue;
+      // Only this hand's own tissue. The atlas's direction markers are geometry too, and
+      // one ("Palmar") floats just in front of the right palm: reading it as the palm put
+      // the right hand's grip 6.7 cm out in the air.
+      if (part.sys === 'references' || !ownSide.test(id)) continue;
+      if (part.sx && part.sx !== 'm') continue;
+      // Only parts near this hand: a coarse bounding-box test before looking at vertices.
+      const gl0 = toGl(part.bb[0]), gl1 = toGl(part.bb[1]);
+      const minX = Math.min(gl0.x, gl1.x), maxX = Math.max(gl0.x, gl1.x);
+      const minY = Math.min(gl0.y, gl1.y), maxY = Math.max(gl0.y, gl1.y);
+      if (heel.x < minX - 0.05 || heel.x > maxX + 0.05 || heel.y < minY - 0.05 || heel.y > maxY + 0.05) continue;
+      for (const g of gs) {
+        const p = g.attributes.position;
+        for (let i = 0; i < p.count; i++) {
+          P.set(p.getX(i), p.getY(i), p.getZ(i));
+          rel.subVectors(P, heel);
+          if (Math.abs(rel.dot(e1)) > halfWidth) continue;
+          const across = rel.dot(e2);
+          if (Math.abs(across) >= need) continue;
+          if (thumbOwns(P)) continue;
+          lift = Math.max(lift, rel.dot(nrm) + Math.sqrt(need * need - across * across));
+        }
+      }
+    }
+    if (!Number.isFinite(lift)) lift = 0.02 + BAR_RADIUS;
+    q.grip = heel.clone().addScaledVector(nrm, lift);
+    q.palm = q.grip.clone().addScaledVector(nrm, -BAR_RADIUS);
+    return true;
   }
 
   /** Where a muscle meets its limb bone, in rest-space GL coordinates. */
@@ -336,16 +573,36 @@ export class Rig {
     for (const si of list) {
       const seg = SEGMENTS[si];
       if (only && !only.has(seg.name)) continue;
-      const a = q[seg.from], b = q[seg.to];
-      const abx = b.x - a.x, aby = b.y - a.y, abz = b.z - a.z;
-      const len2 = abx * abx + aby * aby + abz * abz;
-      let t = len2 > 0 ? ((x - a.x) * abx + (y - a.y) * aby + (z - a.z) * abz) / len2 : 0;
-      t = t < 0 ? 0 : t > 1 ? 1 : t;
-      const dx = x - (a.x + abx * t), dy = y - (a.y + aby * t), dz = z - (a.z + abz * t);
-      const d = Math.sqrt(dx * dx + dy * dy + dz * dz) / seg.radius;
+      const { d, t } = this._segDist(x, y, z, q, seg);
       if (d < bestD) { bestD = d; best = si; bestT = t; }
     }
     return { best, d: bestD, t: bestT };
+  }
+
+  /**
+   * Distance from a point to one segment, in units of that segment's envelope, and how
+   * far along it the nearest point is.
+   *
+   * The palm is the one segment that is not round. It is a slab: about ten centimetres
+   * across and three thick. Measured as a cylinder wide enough to hold its edges, it also
+   * swallowed the pad at the base of the thumb, which stands up off the palm's face, so
+   * that pad stayed on the palm while the thumb moved. Measured as a slab, the pad goes to
+   * the thumb it belongs to.
+   */
+  _segDist(x, y, z, q, seg) {
+    const a = q[seg.from], b = q[seg.to];
+    const abx = b.x - a.x, aby = b.y - a.y, abz = b.z - a.z;
+    const len2 = abx * abx + aby * aby + abz * abz;
+    let t = len2 > 0 ? ((x - a.x) * abx + (y - a.y) * aby + (z - a.z) * abz) / len2 : 0;
+    t = t < 0 ? 0 : t > 1 ? 1 : t;
+    const dx = x - (a.x + abx * t), dy = y - (a.y + aby * t), dz = z - (a.z + abz * t);
+    if (seg.name === 'hand' && q.palmAcross) {
+      const w = dx * q.palmAcross.x + dy * q.palmAcross.y + dz * q.palmAcross.z;
+      const n = dx * q.palmNormal.x + dy * q.palmNormal.y + dz * q.palmNormal.z;
+      const rest = Math.sqrt(Math.max(0, dx * dx + dy * dy + dz * dz - w * w - n * n));
+      return { d: Math.hypot(w / PALM_HALF_WIDTH, n / PALM_HALF_THICK, rest / PALM_HALF_WIDTH), t };
+    }
+    return { d: Math.sqrt(dx * dx + dy * dy + dz * dz) / seg.radius, t };
   }
 
   bindVertex(x, y, z, out, mode, group, only = null) {
@@ -369,6 +626,17 @@ export class Rig {
         && (!only || only.has(SEGMENTS[i].name)));
       other = childIdx === undefined ? bone : boneIndex(SEGMENTS[childIdx].name, side);
       w = 0.5 + 0.5 * ((1 - bestT) / BLEND);
+    }
+
+    // The thumb's base sits inside the palm, and the pad over it is shared: it is carried
+    // by the thumb when the thumb lifts, but it is also the edge of the palm. A hard switch
+    // from one to the other tears the skin there once the thumb moves, so the band where
+    // the two are about equally close is blended between them.
+    const pair = SHARED_WITH[seg.name];
+    if (pair && group === 'arm' && (!only || only.has(pair))) {
+      const gap = this._segDist(x, y, z, this.p[side], SEGMENTS[SEG_INDEX[pair]]).d - bestD;
+      const wp = gap < SHARED_BAND ? 0.5 + 0.5 * (gap / SHARED_BAND) : 1;
+      if (wp < w) { other = boneIndex(pair, side); w = wp; }
     }
 
     // Soften the outer edge of the envelope so a muscle belly fades onto the trunk rather
@@ -705,7 +973,141 @@ export class Rig {
    * three Euler rotations compounds small errors into the bar floating past the head. So
    * the lift is authored as a bar path and the angles are solved from it.
    */
-  solveArm(side, target, pole, pronation = 0, girdle = null) {
+  /**
+   * The hand's own rotation for a pressing grip: the wrist bent back by WRIST_EXTENSION
+   * about its side-to-side axis. Returned in the forearm's frame.
+   */
+  /**
+   * The wrist's rotation, in the forearm's frame: bent back by WRIST_EXTENSION, and bent
+   * `dev` radians sideways — positive towards the little finger. Side-bend turns about the
+   * axis through the back of the hand and the palm, which in the rest pose is z.
+   */
+  wristQuat(side = 'l', dev = 0) {
+    const ext = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), WRIST_EXTENSION);
+    if (!dev) return ext;
+    const sideways = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), dev * this._ulnarSign(side));
+    return ext.multiply(sideways);
+  }
+
+  /** Which way round z turns this hand towards its little finger. Read off the hand. */
+  _ulnarSign(side) {
+    const h = this._morphed(side, 'mcp').sub(this._morphed(side, 'wr'));
+    const k = this._morphed(side, 'mcp5').sub(this._morphed(side, 'mcp2'));
+    return Math.sign(new THREE.Vector3(0, 0, 1).cross(h).dot(k)) || 1;
+  }
+
+  /**
+   * The line the bar lies along in this hand, in the hand's own rest frame. It runs from
+   * the index finger's side to the little finger's, square to the hand's long axis and then
+   * leaned by GRIP_OBLIQUE towards the wrist on the little-finger side.
+   *
+   * This is fixed for the whole lift. A bar does not roll about in a closed hand: once it
+   * is gripped, its place in the palm stays put and the wrist and forearm do the moving.
+   */
+  barInHand(side) {
+    const j = (k) => this._morphed(side, k);
+    return barLine(j('wr'), j('mcp'), j('mcp2'), j('mcp5'));
+  }
+
+  /** Where the grip point sits once the wrist is set, in the forearm's rest frame. */
+  _gripAfterWrist(side, wq = this.wristQuat(side)) {
+    const W = this._morphed(side, 'wr');
+    return this._morphed(side, 'grip').sub(W).applyQuaternion(wq).add(W);
+  }
+
+  /** `target` (rest space) brought into the arm's own frame: morphed, then undone through the girdle. */
+  _armTarget(side, target, girdle) {
+    const T = applyMorph(target, new THREE.Vector3());
+    if (!girdle) return { T, inv: null };
+    const inv = this.localMatrix(this.bones[boneIndex('girdle', side)], girdle, new THREE.Matrix4()).invert();
+    return { T: T.applyMatrix4(inv), inv };
+  }
+
+  /**
+   * How far `target` is from the shoulder, as a fraction of the whole arm. Over 1 cannot be
+   * reached at all; LOCKOUT_REACH is as straight as an elbow should go.
+   */
+  reachRatio(side, target, girdle = null) {
+    if (!this.p[side]) return 0;
+    const S = this._morphed(side, 'gh'), E = this._morphed(side, 'el');
+    const G = this._gripAfterWrist(side);
+    const { T } = this._armTarget(side, target, girdle);
+    return S.distanceTo(T) / (S.distanceTo(E) + E.distanceTo(G));
+  }
+
+  get lockoutReach() { return LOCKOUT_REACH; }
+
+  /**
+   * An elbow hint that puts the forearm as nearly upright under the bar as the arm allows.
+   *
+   * With the shoulder and the grip fixed, the elbow can only sit somewhere on one circle.
+   * The coaching rule is "wrist over elbow": the forearm vertical, so the bar is pushed
+   * straight up and not sideways. This searches the circle for the elbow that leaves the
+   * forearm leaning least, counting a lean across the body ACROSS_WEIGHT times as much as
+   * a lean towards the head.
+   *
+   * On a lifter's real proportions the forearm cannot be exactly upright at the chest.
+   * Forcing it upright seen from the feet alone tucks the elbows into the ribs and throws
+   * the forearm back towards the head. Taking the least lean overall flares the elbows
+   * wider than the hands, and then the wrist has to bend nearly 40 degrees over one rep to
+   * keep hold of the bar. The weighting sits between the two.
+   *
+   * `up` is the world's up in rest space: the body lies on its back, so it is rest +z.
+   * Returned in rest space, ready to hand to solveArm as its pole.
+   */
+  uprightPole(side, target, girdle, hint, up = new THREE.Vector3(0, 0, 1)) {
+    if (!this.p[side]) return hint;
+    const S = this._morphed(side, 'gh'), E0 = this._morphed(side, 'el');
+    const G = this._gripAfterWrist(side);
+    const { T, inv } = this._armTarget(side, target, girdle);
+    const L1 = S.distanceTo(E0), L2 = E0.distanceTo(G);
+    const toT = T.clone().sub(S);
+    const dist = Math.min(toT.length(), (L1 + L2) * 0.999);
+    const n = toT.normalize();
+    const cosA = Math.min(1, Math.max(-1, (L1 * L1 + dist * dist - L2 * L2) / (2 * L1 * dist)));
+    const C = S.clone().addScaledVector(n, L1 * cosA);
+    const r = L1 * Math.sqrt(Math.max(0, 1 - cosA * cosA));
+    // A straight arm has no circle left to choose on, and the hint is as good as anything.
+    if (r < 1e-4) return hint;
+    const fwd = inv ? inv.clone().invert() : new THREE.Matrix4();
+    // The circle, and the forearm each point on it gives, in rest space where "up" and
+    // "across the body" are plain axes.
+    const u = new THREE.Vector3(0, 0, 1).cross(n);
+    if (u.lengthSq() < 1e-6) u.set(1, 0, 0).cross(n);
+    u.normalize();
+    const v = n.clone().cross(u).normalize();
+    const Tr = T.clone().applyMatrix4(fwd);
+    const across = up.clone().cross(new THREE.Vector3(0, 1, 0)).normalize();   // body's side-to-side
+    const along = up.clone().cross(across).normalize();                        // head to feet
+    // Leaning across the body counts for more than leaning along it. Seen from the feet,
+    // a tilted forearm pushes the bar sideways, which is the fault a coach calls first; a
+    // forearm leaning towards the head is the ordinary tucked-elbow press.
+    const cost = (th) => {
+      const E = C.clone().addScaledVector(u, r * Math.cos(th)).addScaledVector(v, r * Math.sin(th)).applyMatrix4(fwd);
+      const f = Tr.clone().sub(E);
+      const fu = f.dot(up);
+      if (fu <= 0) return Infinity;                                            // elbow above the bar
+      const a = f.dot(across) / fu, b = f.dot(along) / fu;
+      return ACROSS_WEIGHT * a * a + b * b;
+    };
+    let best = 0, bestC = Infinity;
+    for (let i = 0; i < 72; i++) { const th = i * Math.PI / 36, c = cost(th); if (c < bestC) { bestC = c; best = th; } }
+    for (let step = Math.PI / 72; step > 1e-4; step /= 2) {
+      for (const th of [best - step, best + step]) { const c = cost(th); if (c < bestC) { bestC = c; best = th; } }
+    }
+    if (!Number.isFinite(bestC)) return hint;
+    return u.multiplyScalar(Math.cos(best)).addScaledVector(v, Math.sin(best)).transformDirection(fwd);
+  }
+
+  /**
+   * @param opts.pronation  fallback forearm twist, radians, if no alignment is asked for
+   * @param opts.girdle     this side's girdle pose entry, so the arm solves in its frame
+   * @param opts.rootQ      the root's rotation, needed to know which way the hand faces
+   * @param opts.align      world direction the bar runs, from this hand's index finger side
+   *                        to its little finger side
+   */
+  solveArm(side, target, pole, opts = {}) {
+    const { pronation = 0, girdle = null, rootQ = null, align = null } = opts;
     if (!this.p[side]) return {};
     // Solve in morphed space, not rest space. The bone matrices rotate vertices that have
     // already been through the height/weight field, so the arm they actually swing is the
@@ -713,105 +1115,232 @@ export class Rig {
     // any body that is not the source model's size.
     const S = this._morphed(side, 'gh');
     const E = this._morphed(side, 'el');
-    // Solve to the point where the bar lies in the palm, so the hand arrives holding it.
-    const G = this._morphed(side, 'grip');
-    const T = applyMorph(target, new THREE.Vector3());
     // The shoulder blade moves before the arm does, so by the time this solves, the arm's
     // whole frame has already shifted. Bring the target and the elbow hint back through
     // that rotation — otherwise a few degrees at the collarbone slides the grip several
     // centimetres along the bar, and the hands change width mid-rep.
-    if (girdle) {
-      const gm = this.localMatrix(this.bones[boneIndex('girdle', side)], girdle, new THREE.Matrix4());
-      const inv = gm.invert();
-      T.applyMatrix4(inv);
-      pole = pole.clone().transformDirection(inv);
+    const { T, inv } = this._armTarget(side, target, girdle);
+    if (inv) pole = pole.clone().transformDirection(inv);
+    const girdleQ = girdle?.rot ? new THREE.Quaternion().setFromEuler(new THREE.Euler(...girdle.rot, 'XYZ')) : new THREE.Quaternion();
+    const outer = (rootQ ? rootQ.clone() : new THREE.Quaternion()).multiply(girdleQ);
+
+    // The hand has to hold the bar the same way all through the rep, and that takes two
+    // turns: the forearm twisting about its own axis, and the wrist bending sideways. The
+    // twist can only line the bar up if the bar already makes the right angle with the
+    // forearm, and setting that angle is the wrist's job. The wrist also moves the grip,
+    // which moves the arm, so the three are settled together over a few passes.
+    const bh = this.barInHand(side);
+    let dev = 0, sol = null, G = null, wq = null;
+    const passes = align ? 3 : 1;
+    for (let pass = 0; pass < passes; pass++) {
+      wq = this.wristQuat(side, dev);
+      G = this._gripAfterWrist(side, wq);
+      sol = this._solve2(S, E, G, T, pole);
+      if (!align) break;
+      const base = outer.clone().multiply(sol.q1).multiply(sol.swing2);
+      const a = sol.restD2;
+      // The bar's direction as the forearm sees it, before any twist.
+      const want = align.clone().normalize().applyQuaternion(base.clone().invert()).dot(a);
+      const along = (x) => bh.clone().applyQuaternion(this.wristQuat(side, x)).dot(a);
+      // Bisect for the side-bend that gives the bar that angle to the forearm. Out of the
+      // wrist's range, it stops at the limit and the forearm twist does what it can.
+      let lo = -WRIST_RADIAL_MAX, hi = WRIST_ULNAR_MAX;
+      const rising = along(hi) > along(lo);
+      if ((want - along(lo)) * (rising ? 1 : -1) <= 0) dev = lo;
+      else if ((want - along(hi)) * (rising ? 1 : -1) >= 0) dev = hi;
+      else {
+        for (let i = 0; i < 24; i++) {
+          const mid = (lo + hi) / 2;
+          if ((along(mid) < want) === rising) lo = mid; else hi = mid;
+        }
+        dev = (lo + hi) / 2;
+      }
     }
-    const { q1, swing2, restD2 } = this._solve2(S, E, G, T, pole);
+    const { q1, swing2, restD2 } = sol;
+
+    // How far to turn the forearm. A fixed guess is right at one moment of the rep and off
+    // at the others, and the bar then lies diagonally across the fingers. So it is solved:
+    // turn the forearm about its own axis until the bar line in the palm runs along the
+    // real bar. That turn keeps the grip point where it is, because the grip lies on the
+    // forearm's axis.
+    const m = side === 'l' ? 1 : -1;
+    let phi = m * pronation;
+    if (align) {
+      const base = outer.clone().multiply(q1).multiply(swing2);
+      const f = restD2.clone().applyQuaternion(base).normalize();
+      const k = bh.clone().applyQuaternion(wq).applyQuaternion(base);
+      const w = align.clone().normalize();
+      k.addScaledVector(f, -k.dot(f)).normalize();
+      w.addScaledVector(f, -w.dot(f)).normalize();
+      phi = Math.atan2(new THREE.Vector3().crossVectors(k, w).dot(f), k.dot(w));
+    }
 
     // A twist only leaves the grip alone if the grip lies ON the twist axis, and each
     // segment spins about its OWN pivot. Elbow, wrist and palm are near-collinear in the
     // source model, but the morph field is non-linear and bends that line, so each axis is
     // aimed from its own pivot at the grip rather than reusing the forearm's direction.
+    // The turn is shared out along the forearm so it spirals instead of wringing the wrist.
     const Fm = this._morphed(side, 'fm');
-    const m = side === 'l' ? 1 : -1;
-    const twist1 = new THREE.Quaternion().setFromAxisAngle(restD2, m * pronation * 0.32);
-    const twist2 = new THREE.Quaternion().setFromAxisAngle(G.clone().sub(Fm).normalize(), m * pronation * 0.68);
+    const twist1 = new THREE.Quaternion().setFromAxisAngle(restD2, phi * 0.32);
+    const twist2 = new THREE.Quaternion().setFromAxisAngle(G.clone().sub(Fm).normalize(), phi * 0.68);
+    (this.wristDev ||= {})[side] = dev;
 
     return {
       [`upperarm.${side}`]: { quat: q1 },
       [`forearm1.${side}`]: { quat: swing2.clone().multiply(twist1) },
       [`forearm2.${side}`]: { quat: twist2 },
+      [`hand.${side}`]: { quat: wq },
     };
   }
 
   /**
-   * Close the hand round a bar of the given radius.
+   * Close the hand round a bar, the way a hand actually closes.
    *
-   * The angles are not picked, they are solved: the bar is a real cylinder lying at the
-   * grip point, and each finger link is swung about its own joint until its far end sits
-   * exactly `clear` from the bar's axis. That is the law of cosines on the triangle
-   * joint-bar-joint, and it is why the fingers stop ON the bar instead of closing through
-   * it — and why the same call would work for a thicker bar or a dumbbell handle.
+   * Every joint of a finger bends at once, the middle joint fastest, which is how a fist
+   * forms. The moment a bone meets the bar, it and every joint behind it stop, because
+   * bending them further would push that bone into the steel. The joints past it carry on
+   * curling until their own bones land on the bar too, or reach how far a real finger can
+   * bend. This is the closing rule robot grasp planners use. It is also why the grip looks
+   * like a grip: the fingers wrap round the bar instead of hooking over it as straight
+   * sticks.
    *
-   * `clear` is the distance from the bar's axis to a phalanx's own axis: the bar's radius
-   * plus the flesh between the two.
+   * An earlier version swung each bone until it was tangent to the bar. Once the first
+   * bone touched, the next one started on the bar already, "tangent" meant carrying on in
+   * a straight line, and the middle joint of every finger stayed at two degrees.
+   *
+   * `radius` is the bar's. `flesh` is the tissue between a phalanx's bone and the bar,
+   * thickest under the first bone and thinnest under the fingertip pad.
    */
-  gripAround(side, clear, barAxis = BAR_AXIS) {
+  gripAround(side, radius, flesh, barAxis = BAR_AXIS) {
     if (!this.p[side]) return {};
     const C = this._morphed(side, 'grip');
     const out = {};
     // The bar's direction as the HAND sees it. The hand turns through the rep, so a fixed
-    // axis here would be right at one phase and wrong at every other — the fingers would
-    // close correctly on the chest and cut through the steel at lockout.
+    // axis here would be right at one phase and wrong at every other.
     const N = barAxis.clone().normalize();
-    const perp = (v, o) => o.copy(v).addScaledVector(N, -v.dot(N));
+    const deg = Math.PI / 180;
+    const clear = [radius + flesh, radius + flesh * 0.88, radius + flesh * 0.8];
 
-    // `origin` is where this joint actually sits once its parent has turned, which is not
-    // its rest position for anything past the first link.
-    const wrap = (origin, fromKey, toKey, radius, parentQ) => {
-      const P0 = origin;
-      const rest = this._morphed(side, toKey).sub(this._morphed(side, fromKey));  // parent frame
-      const dir = rest.clone().applyQuaternion(parentQ).normalize();    // where it points now
-      const L = rest.length();
-      const idq = new THREE.Quaternion();
-      const fallback = { quat: idq, end: P0.clone().addScaledVector(dir, L) };
-      if (L < 1e-6) return fallback;
-
-      // A bar is a cylinder, not a point. Fingers close round it in the plane at right
-      // angles to its axis, so both the distance to it and the direction of the curl are
-      // measured with the along-the-bar component taken out. Treating it as a point tilts
-      // the curl out of that plane and lets the fingers close past the steel instead of
-      // onto it.
-      const hinge = perp(C.clone().sub(P0), new THREE.Vector3());   // to the bar's axis
-      const dperp = perp(dir, new THREE.Vector3());
-      const a = hinge.length();
-      if (a < 1e-6 || dperp.lengthSq() < 1e-12) return fallback;
-      // Signed angle from the link to the bar, measured about the bar's own axis.
-      const cross = new THREE.Vector3().crossVectors(dperp, hinge);
-      const signed = Math.atan2(cross.dot(N), dperp.dot(hinge));
-      // Tangency: put both ends of a straight bone on the circle and the bone between them
-      // is a chord, which cuts through the steel. What "lying on the bar" actually means is
-      // that the perpendicular distance equals the radius — the angle whose sine is
-      // radius over the distance from this joint to the axis.
-      const want = Math.asin(Math.min(1, radius / Math.max(radius, a)));
-      const turn = Math.sign(signed) * (Math.abs(signed) - want);
-      const world = new THREE.Quaternion().setFromAxisAngle(N, turn);
-      const end = P0.clone().addScaledVector(dir.clone().applyQuaternion(world), L);
-      // The pose wants this link's rotation in its PARENT's frame, not the world's.
-      const target = dir.clone().applyQuaternion(world).applyQuaternion(parentQ.clone().invert()).normalize();
-      return { quat: new THREE.Quaternion().setFromUnitVectors(rest.clone().normalize(), target), end };
+    // How close a stretch of bone comes to the bar's axis, measured across the bar: the
+    // bar is a cylinder, so distance along it does not count.
+    const across = (P, o) => o.subVectors(P, C).addScaledVector(N, -o.dot(N));
+    const a2 = new THREE.Vector3(), b2 = new THREE.Vector3(), ab = new THREE.Vector3();
+    const reach = (A, B) => {
+      across(A, a2); across(B, b2); ab.subVectors(b2, a2);
+      const len2 = ab.lengthSq();
+      const t = len2 > 0 ? Math.max(0, Math.min(1, -a2.dot(ab) / len2)) : 0;
+      return a2.addScaledVector(ab, t).length();
     };
 
-    const id = new THREE.Quaternion();
-    const f1 = wrap(this._morphed(side, 'mcp'), 'mcp', 'pip', clear, id);
-    out[`fingers1.${side}`] = { quat: f1.quat };
-    // The middle joint has moved, so the second link is solved from where it now is.
-    const f2 = wrap(f1.end, 'pip', 'tip', clear, f1.quat);
-    out[`fingers2.${side}`] = { quat: f2.quat };
-    // The thumb comes round the other face of the bar — the side it already starts on — so
-    // the same solve locks it opposite the fingers, which is the grip Delavier insists on.
-    const th = wrap(this._morphed(side, 'thumbCmc'), 'thumbCmc', 'thumbTip', clear, id);
-    out[`thumb.${side}`] = { quat: th.quat };
+    // Closest approach of two bones, for the thumb coming down on top of the fingers.
+    const segSeg = (p1, q1, p2, q2) => {
+      const d1 = q1.clone().sub(p1), d2 = q2.clone().sub(p2), r = p1.clone().sub(p2);
+      const a = d1.dot(d1), e = d2.dot(d2), f = d2.dot(r), c = d1.dot(r), b = d1.dot(d2);
+      const den = a * e - b * b;
+      let s1 = den > 1e-12 ? Math.max(0, Math.min(1, (b * f - c * e) / den)) : 0;
+      let t1 = e > 1e-12 ? (b * s1 + f) / e : 0;
+      if (t1 < 0) { t1 = 0; s1 = a > 1e-12 ? Math.max(0, Math.min(1, -c / a)) : 0; }
+      else if (t1 > 1) { t1 = 1; s1 = a > 1e-12 ? Math.max(0, Math.min(1, (b - c) / a)) : 0; }
+      return p1.clone().addScaledVector(d1, s1).distanceTo(p2.clone().addScaledVector(d2, t1));
+    };
+
+    /**
+     * One digit. `keys` are its four joint names, base to tip. `rate` is how fast each
+     * joint bends relative to the others and `limit` how far it can go, both base first.
+     * `turn` says which way round the bar each joint bends. `start` holds joints already
+     * set, and `solid` lists other bones this digit must not pass through.
+     */
+    const close = (keys, rate, limit, names, { turn = null, start = [0, 0, 0], solid = [] } = {}) => {
+      const J = keys.map(k => this._morphed(side, k));
+      const d = [0, 1, 2].map(i => J[i + 1].clone().sub(J[i]));
+      // Bend towards the bar, whichever way round the axis that is for this digit.
+      const toward = Math.sign(new THREE.Vector3().crossVectors(d[0], C.clone().sub(J[0])).dot(N)) || 1;
+      const sg = turn || [toward, toward, toward];
+      const th = start.slice(), done = start.map(v => v !== 0);
+      const q = new THREE.Quaternion(), P = [J[0].clone(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
+      const place = (ang) => {
+        let sum = 0;
+        for (let i = 0; i < 3; i++) {
+          sum += sg[i] * ang[i];
+          q.setFromAxisAngle(N, sum);
+          P[i + 1].copy(P[i]).add(d[i].clone().applyQuaternion(q));
+        }
+      };
+      // A joint is a hinge sitting on its neighbour's bone, so the first quarter of each
+      // bone is left out of the contact test: that stretch is the joint itself, and it is
+      // guarded by the bone before it.
+      // A joint set beforehand has already been placed clear, and is not re-tested.
+      const preset = start.map(v => v !== 0);
+      const touching = () => {
+        for (let i = 0; i < 3; i++) {
+          if (preset[i]) continue;
+          const A = P[i].clone().lerp(P[i + 1], 0.25);
+          if (reach(A, P[i + 1]) < clear[i]) return i;
+          for (const [S0, S1, gap] of solid) if (segSeg(A, P[i + 1], S0, S1) < gap) return i;
+        }
+        return -1;
+      };
+      const STEP = 1 * deg;
+      for (let n = 0; n < 240 && done.includes(false); n++) {
+        const next = th.map((t, i) => (done[i] ? t : Math.min(limit[i], t + rate[i] * STEP)));
+        place(next);
+        const hit = touching();
+        if (hit >= 0) {
+          // That bone is on the bar: it and every joint behind it hold where they were.
+          for (let i = 0; i <= hit; i++) done[i] = true;
+          continue;
+        }
+        for (let i = 0; i < 3; i++) { th[i] = next[i]; if (th[i] >= limit[i]) done[i] = true; }
+      }
+      place(th);
+      // All three bend about the bar's axis, so each bone's turn in its parent's frame is
+      // just its own share of the angle.
+      names.forEach((name, i) => { out[`${name}.${side}`] = { quat: new THREE.Quaternion().setFromAxisAngle(N, sg[i] * th[i]) }; });
+      return { th, P: P.map(v => v.clone()), sg };
+    };
+
+    // Flexion limits from a real hand: knuckle about 90°, middle joint about 110°, end joint
+    // about 80°. The middle joint leads and the end joint follows at two-thirds of its rate,
+    // which is the coupling the tendons impose.
+    (this.gripAngles ||= {})[side] = {};
+    const fingers = {};
+    for (const { n } of DIGITS) {
+      fingers[n] = close([`mcp${n}`, `pip${n}`, `dip${n}`, `tip${n}`],
+        [0.8, 1.0, 0.67], [90 * deg, 110 * deg, 80 * deg], [`f${n}a`, `f${n}b`, `f${n}c`]);
+      this.gripAngles[side][n] = fingers[n].th;
+    }
+
+    // The thumb comes round the other face of the bar and locks it in, opposite the fingers.
+    // That is the grip Delavier insists on: without it the bar can roll out onto the neck.
+    //
+    // It takes two movements. At rest the thumb lies along the palm, straight under the
+    // bar, so first it lifts away from the palm (palmar abduction at its base joint) until
+    // its metacarpal clears the near face of the bar. Then its two outer joints bend the
+    // other way round from the fingers, over the top of the bar, and come to rest on the
+    // index and middle fingers that are already there.
+    //
+    // Seen down the bar, the metacarpal points just below the bar's centre, so lifting it
+    // away from the palm swings it towards the bar, past its centre line and up the near
+    // face until it is clear. The outer joints then curl back the other way, over the top.
+    const tJ = ['cmc1', 'mcp1', 'ip1', 'tip1'].map(k => this._morphed(side, k));
+    const lift = Math.sign(new THREE.Vector3().crossVectors(tJ[1].clone().sub(tJ[0]), C.clone().sub(tJ[0])).dot(N)) || 1;
+    const meta = tJ[1].clone().sub(tJ[0]);
+    // The pad of muscle on the thumb's metacarpal is the thickest flesh in the hand, so it
+    // needs more room from the bar than a finger does.
+    const padClear = radius + THENAR_PAD;
+    let abd = 0;
+    for (; abd < 75 * deg; abd += 1 * deg) {
+      const end = tJ[0].clone().add(meta.clone().applyAxisAngle(N, lift * abd));
+      if (reach(tJ[0].clone().lerp(end, 0.25), end) >= padClear) break;
+    }
+    const solid = [];
+    for (const n of [2, 3]) {
+      const Pf = fingers[n].P;
+      for (let i = 1; i < 3; i++) solid.push([Pf[i], Pf[i + 1], 0.017]);
+    }
+    const thumb = close(['cmc1', 'mcp1', 'ip1', 'tip1'], [0, 0.8, 1.0], [abd, 55 * deg, 80 * deg], ['t1', 't2', 't3'],
+      { turn: [lift, -lift, -lift], start: [abd || 1e-6, 0, 0], solid });
+    this.gripAngles[side][1] = thumb.th;
     return out;
   }
 
@@ -872,12 +1401,27 @@ const JOINT_OWNER = {
   sc: 'girdle', gh: 'upperarm', el: 'forearm1', fm: 'forearm2', wr: 'hand',
   // The grip rides on the hand, not on the fingers: curling the fingers must close them
   // round the bar without dragging the bar along with them.
-  grip: 'hand', mcp: 'fingers1', pip: 'fingers2', tip: 'fingers2',
-  thumbCmc: 'thumb', thumbTip: 'thumb',
+  grip: 'hand', palm: 'hand', mcp: 'hand',
+  ...Object.fromEntries(DIGITS.flatMap(({ n }) => [
+    [`mcp${n}`, `f${n}a`], [`pip${n}`, `f${n}b`], [`dip${n}`, `f${n}c`], [`tip${n}`, `f${n}c`],
+  ])),
+  cmc1: 't1', mcp1: 't2', ip1: 't3', tip1: 't3',
   hip: 'thigh', knee: 'shin', ankle: 'foot', toe: 'foot',
 };
 
 function smoothstep(a, b, x) { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); }
+
+/**
+ * The line a held bar lies along across a palm, from the index finger's side to the little
+ * finger's: square to the hand's long axis (wrist to knuckles), then leaned by GRIP_OBLIQUE
+ * towards the wrist on the little-finger side.
+ */
+function barLine(wr, mcp, mcp2, mcp5) {
+  const h = new THREE.Vector3().subVectors(mcp, wr).normalize();
+  const k = new THREE.Vector3().subVectors(mcp5, mcp2);
+  const across = k.addScaledVector(h, -k.dot(h)).normalize();
+  return across.multiplyScalar(Math.cos(GRIP_OBLIQUE)).addScaledVector(h, -Math.sin(GRIP_OBLIQUE)).normalize();
+}
 
 // Scratch, so posing every frame allocates nothing.
 const _e = new THREE.Euler();

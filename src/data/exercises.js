@@ -59,7 +59,7 @@ export const BENCH_PRESS = {
   /** The bar is a real object with a real thickness, and the grip is solved against it. */
   bar: {
     radius: 0.0145,                 // standard 29 mm barbell shaft
-    flesh: 0.028,                   // from the bar surface out to a phalanx's own axis
+    flesh: 0.011,                   // from the bar surface out to a phalanx's own axis
   },
 
   /**
@@ -68,23 +68,59 @@ export const BENCH_PRESS = {
    * standing body, +z out of its chest). The rig solves the shoulder and elbow from them,
    * so the hands stay on the bar at any body size.
    */
-  gripPath(u, side) {
+  gripPath(u, side, chest = 0.170) {
     const m = side === 'l' ? 1 : -1;
     // The hands cannot move along a rigid bar, so the half-grip is constant and only the
-    // bar's height and position along the torso change. The bar tracks back towards the
-    // shoulders as it rises, which is the J-path a real press follows rather than a
-    // straight vertical line.
+    // bar's height and position along the torso change. The bar touches the chest at the
+    // nipple line, which is where Delavier brings it down, and tracks back towards the
+    // shoulders as it rises: the J-path a real press follows, not a straight vertical line.
+    // `chest` is the bar's height on the chest, measured off this body's skin by the rig.
     return new THREE.Vector3(
       m * (this.grip / 2),
       lerp(1.272, 1.352, u),
-      lerp(0.170, 0.605, u),
+      lerp(chest, 0.605, u),
     );
   },
 
-  /** Where the elbow is pulled towards — out to the side and down towards the feet. */
+  /** Where the bar rests on this lifter's chest: its surface just touching the skin. */
+  chest(rig) {
+    return rig ? rig.chestTouch(this.gripPath(0, 'l'), this.bar.radius) : 0.170;
+  },
+
+  /**
+   * How far along the bar path this lifter can actually press, from 0 to 1. The path above
+   * is drawn for an average arm, and a shorter one runs out of reach before the end of it.
+   * The IK then stops the hand short while the bar carries on, so one hand hangs below the
+   * bar and the other pushes up into it. Lockout is where the shorter of the two arms is
+   * straight, so it is found by searching along the path, not picked.
+   */
+  pressTop(rig, chest = this.chest(rig)) {
+    if (!rig) return 1;
+    const lock = rig.lockoutReach;
+    const fits = (k) => ['l', 'r'].every(side =>
+      rig.reachRatio(side, this.gripPath(k, side, chest), this.girdle(1, side)) <= lock);
+    if (fits(1)) return 1;
+    let lo = 0, hi = 1;
+    for (let i = 0; i < 20; i++) { const mid = (lo + hi) / 2; if (fits(mid)) lo = mid; else hi = mid; }
+    return lo;
+  },
+
+  /**
+   * The shoulder blades stay pinned back on the chest and only give a little at lockout,
+   * which is the serratus at work at the top of the rep.
+   */
+  girdle(u, side) {
+    const m = side === 'l' ? 1 : -1;
+    return { rot: [0, -m * d(lerp(-3, 6, u)), 0] };
+  },
+
+  /**
+   * Where the elbow falls if the arm is too straight for the upright solve to choose:
+   * down towards the floor, out, and a little towards the feet.
+   */
   elbowPole(u, side) {
     const m = side === 'l' ? 1 : -1;
-    return new THREE.Vector3(m * 1, lerp(-0.62, -0.30, u), lerp(-0.20, -0.05, u)).normalize();
+    return new THREE.Vector3(m * 0.3, lerp(-0.62, -0.30, u), -1).normalize();
   },
 
   pose(u, ctx = {}) {
@@ -101,20 +137,23 @@ export const BENCH_PRESS = {
     // meet the world — the floor, in this case — comes back through that.
     const restFromWorld = (wx, wy, wz) => new THREE.Vector3(wx, pz - wz, wy - py);
 
+    const chest = this.chest(rig);
+    const top = this.pressTop(rig, chest);
     for (const side of ['l', 'r']) {
       const m = side === 'l' ? 1 : -1;
-      // The shoulder blades stay pinned back on the chest and only give a little at
-      // lockout — which is what the serratus is doing at the top of the rep.
-      p[`girdle.${side}`] = { rot: [0, -m * d(lerp(-3, 6, u)), 0] };
-      // The wrist stays straight. Any wrist angle here would swing the grip point off the
-      // solved target, since the IK ends at the palm — and under a loaded bar a stacked,
-      // neutral wrist is what you want anyway.
-      p[`hand.${side}`] = { rot: [0, 0, 0] };
-      // Anatomical position already has the palms half-turned, so a barbell grip is about
-      // a quarter turn from here, not a half. Overstating it only buys twist artefacts:
-      // blending two rotations far apart pinches the forearm along its length.
+      p[`girdle.${side}`] = this.girdle(u, side);
       if (rig) {
-        const arm = rig.solveArm(side, this.gripPath(u, side), this.elbowPole(u, side), d(95), p[`girdle.${side}`]);
+        // An overhand grip: palms towards the feet, thumbs pointing in along the bar, so the
+        // bar runs across the palm from the index finger out to the little finger, away
+        // from the middle. The forearm's twist and the wrist's side-bend are solved to keep
+        // it there at every moment of the rep.
+        const grip = this.gripPath(u * top, side, chest);
+        // Wrist over elbow: the elbow is solved to sit as nearly straight under the bar as
+        // this arm allows, rather than aimed by hand.
+        const pole = rig.uprightPole(side, grip, p[`girdle.${side}`], this.elbowPole(u, side));
+        const arm = rig.solveArm(side, grip, pole, {
+          girdle: p[`girdle.${side}`], rootQ: ROOT_Q, align: new THREE.Vector3(m, 0, 0), pronation: d(95),
+        });
         Object.assign(p, arm);
 
         // Closed round the bar, solved against its actual radius so the fingers stop on the
@@ -126,12 +165,13 @@ export const BENCH_PRESS = {
         const handQ = ROOT_Q.clone().multiply(girdleQ)
           .multiply(arm[`upperarm.${side}`].quat)
           .multiply(arm[`forearm1.${side}`].quat)
-          .multiply(arm[`forearm2.${side}`].quat);
+          .multiply(arm[`forearm2.${side}`].quat)
+          .multiply(arm[`hand.${side}`].quat);
         // The bar lies along world x; this is that direction as the hand sees it.
         const barAxis = new THREE.Vector3(1, 0, 0).applyQuaternion(handQ.invert());
         // Delavier's warning panel is that a thumbless grip lets the bar roll out of the
         // hand onto the neck, so the thumb comes round to oppose the fingers.
-        Object.assign(p, rig.gripAround(side, this.bar.radius + this.bar.flesh, barAxis));
+        Object.assign(p, rig.gripAround(side, this.bar.radius, this.bar.flesh, barAxis));
       }
 
       // Feet planted. The ankle is driven to a fixed point on the floor, so the knee angle
