@@ -39,6 +39,7 @@ export class BatchedBody {
     this.style = null;
     this.stateTex = null;
     this.styleTex = null;
+    this.uPick = { value: 0 };  // shared by every batch material: 1 during a picking pass
     this._dirtyState = false;
     this._dirtyStyle = false;
   }
@@ -282,15 +283,19 @@ export function effectKindIndex(kind) { return KIND_INDEX[kind] || 0; }
 function kindColorGLSL() {
   const c = (k) => { const col = new THREE.Color(EFFECT_KINDS[k].color); return `vec3(${col.r.toFixed(3)},${col.g.toFixed(3)},${col.b.toFixed(3)})`; };
   return `
-// Muscle effort reads as heat: idle stays cool and recedes, working goes amber, near-
-// maximal goes white-hot. A single hue with rising intensity would just look like a
-// brighter muscle; the hue shift is what makes "how hard" legible at a glance.
+// Muscle effort reads as heat: idle stays cool and recedes, working goes orange, near-
+// maximal goes bright gold. A single hue with rising intensity would just look like a
+// brighter muscle; the hue shift is what makes "how hard" legible at a glance. The top
+// stop is gold, not white: white washed the hardest-working muscle out into a flat blank
+// shape, which is the one muscle the viewer most needs to see the form of.
 vec3 activationColor(float a){
-  vec3 cool = vec3(0.10, 0.22, 0.45);
-  vec3 warm = vec3(0.95, 0.55, 0.10);
-  vec3 hot  = vec3(1.00, 0.93, 0.80);
-  return a < 0.55 ? mix(cool, warm, a / 0.55)
-                  : mix(warm, hot, (a - 0.55) / 0.45);
+  vec3 cool = vec3(0.16, 0.27, 0.46);
+  vec3 warm = vec3(0.96, 0.46, 0.10);
+  vec3 gold = vec3(1.00, 0.74, 0.18);
+  vec3 hot  = vec3(1.00, 0.90, 0.52);
+  if (a < 0.50) return mix(cool, warm, a / 0.50);
+  if (a < 0.80) return mix(warm, gold, (a - 0.50) / 0.30);
+  return mix(gold, hot, (a - 0.80) / 0.20);
 }
 vec3 effectColor(float k){
   if (k < 0.5) return vec3(0.0);
@@ -313,6 +318,7 @@ export function patchForBatching(material, body) {
     shader.uniforms.uPartState = { value: body.stateTex };
     shader.uniforms.uPartStyle = { value: body.styleTex };
     shader.uniforms.uStateWidth = { value: body.width };
+    shader.uniforms.uPick = body.uPick;
 
     shader.vertexShader = `
 attribute float aPartIndex;
@@ -321,18 +327,22 @@ uniform sampler2D uPartStyle;
 uniform float uStateWidth;
 varying float vVisible;
 varying vec4 vStyle;
+varying float vPartIdx;
 ` + shader.vertexShader.replace('#include <begin_vertex>', `
 #include <begin_vertex>
 vec2 stateUv = vec2((aPartIndex + 0.5) / uStateWidth, 0.5);
 vec4 partState = texture2D(uPartState, stateUv);
 vStyle = texture2D(uPartStyle, stateUv);
 vVisible = partState.w;
+vPartIdx = aPartIndex;
 transformed += partState.xyz;
 `);
 
     shader.fragmentShader = `
 varying float vVisible;
 varying vec4 vStyle;
+varying float vPartIdx;
+uniform float uPick;
 ${kindColorGLSL()}
 ` + shader.fragmentShader
       .replace('#include <clipping_planes_fragment>', `
@@ -348,10 +358,26 @@ diffuseColor.a *= vStyle.x;
       .replace('#include <dithering_fragment>', `
 #include <dithering_fragment>
 if (vStyle.z > 4.5) {
-  gl_FragColor.rgb = mix(gl_FragColor.rgb, activationColor(vStyle.w), 0.25 + 0.6 * vStyle.w);
-  gl_FragColor.rgb += activationColor(vStyle.w) * vStyle.w * 0.35;
+  // Tint the lit surface rather than paint over it. The light and dark of the shading is
+  // what shows a muscle's shape and fibre direction, and a flat fill threw it away.
+  vec3 ac = activationColor(vStyle.w);
+  float lum = dot(gl_FragColor.rgb, vec3(0.299, 0.587, 0.114));
+  // Scaled so a fully lit face lands at the colour itself and a face in shadow stays dark:
+  // the output here is already tone-mapped, so anything brighter just clips to a flat fill.
+  vec3 tinted = ac * (0.12 + 1.05 * lum);
+  gl_FragColor.rgb = mix(gl_FragColor.rgb, tinted, 0.35 + 0.45 * vStyle.w);
+  // A glow only the hardest-working muscles get, so the leader stands out from a distance.
+  gl_FragColor.rgb += ac * vStyle.w * vStyle.w * 0.08;
 } else {
   gl_FragColor.rgb += effectColor(vStyle.z) * vStyle.w * 0.55;
+}
+// Picking pass: write which part this is instead of its colour. It runs through the same
+// morph and skinning as the picture, so it finds whatever is on screen in any pose.
+// Faint ghosts are see-through here as they are to the eye.
+if (uPick > 0.5) {
+  if (vStyle.x < 0.12) discard;
+  float id = floor(vPartIdx + 0.5) + 1.0;
+  gl_FragColor = vec4(mod(id, 256.0), mod(floor(id / 256.0), 256.0), floor(id / 65536.0), 255.0) / 255.0;
 }
 `);
   };

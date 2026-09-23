@@ -154,9 +154,9 @@ export class Viewer {
     if (!body) return null;
     // The BVH is built on the rest pose, and skinning happens in the vertex shader, so
     // while the body is posed the geometry being raycast is not the geometry on screen.
-    // Returning nothing is better than confidently naming the wrong muscle; in Movement
-    // mode the panel's muscle list is what selects.
-    if (this.rig?.enabled.value) return null;
+    // Posed, the GPU is asked instead: it draws the body again, one pixel big, with every
+    // part's number in place of its colour.
+    if (this.rig?.enabled.value) return this._gpuPick(px, py);
     const ndc = new THREE.Vector2((px / this.width) * 2 - 1, -(py / this.height) * 2 + 1);
     this.raycaster.setFromCamera(ndc, this.camera);
     const wo = this.raycaster.ray.origin.clone();
@@ -187,6 +187,48 @@ export class Viewer {
       }
     }
     return best;
+  }
+
+  /**
+   * Which part is under a pixel, read back from the GPU. It goes through exactly the same
+   * morph, skinning and visibility as the picture on screen, so it is right in any pose
+   * and at any body size. Only the body is drawn: the bar and the bench are not parts.
+   */
+  _gpuPick(px, py) {
+    const body = this.body, r = this.renderer;
+    if (!this._pickRT) {
+      this._pickRT = new THREE.WebGLRenderTarget(1, 1);
+      this._pickBuf = new Uint8Array(4);
+    }
+    const hidden = [];
+    for (const o of this.scene.children) {
+      if (o === this.bodyRoot || o.isLight || !o.visible) continue;
+      o.visible = false; hidden.push(o);
+    }
+    // Opaque and depth-tested, so the nearest visible surface wins whatever order the
+    // batches draw in. Blending would mix two part numbers into a third.
+    const saved = body.batches.map(b => [b.mesh.material.blending, b.mesh.material.depthWrite]);
+    for (const b of body.batches) { b.mesh.material.blending = THREE.NoBlending; b.mesh.material.depthWrite = true; }
+    const clear = r.getClearColor(new THREE.Color()), alpha = r.getClearAlpha();
+    body.uPick.value = 1;
+    this.camera.setViewOffset(this.width, this.height, Math.floor(px), Math.floor(py), 1, 1);
+    r.setRenderTarget(this._pickRT);
+    r.setClearColor(0x000000, 0);
+    r.clear();
+    r.render(this.scene, this.camera);
+    r.readRenderTargetPixels(this._pickRT, 0, 0, 1, 1, this._pickBuf);
+    r.setRenderTarget(null);
+    this.camera.clearViewOffset();
+    body.uPick.value = 0;
+    r.setClearColor(clear, alpha);
+    body.batches.forEach((b, i) => { b.mesh.material.blending = saved[i][0]; b.mesh.material.depthWrite = saved[i][1]; });
+    for (const o of hidden) o.visible = true;
+    this._dirty = true;
+
+    const [cr, cg, cb] = this._pickBuf;
+    const id = cr + cg * 256 + cb * 65536 - 1;
+    if (id < 0 || id >= body.count || !body.isVisible(id)) return null;
+    return { slot: id, part: body.partAt(id), point: null, distance: 0 };
   }
 
   // ---------- camera ----------

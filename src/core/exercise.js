@@ -38,10 +38,11 @@ export class ExercisePlayer {
     this.app.viewer.ground.visible = false;
     this.app.viewer.ring.visible = false;
     this.seek(0);
-    // The panel that is about to appear changes how much canvas is free, and setMode only
-    // measures that on the next frame. Framing before then fits the shot to the old
-    // layout, so wait for the measurement to land.
-    requestAnimationFrame(() => requestAnimationFrame(() => { if (this.ex) this.frameCamera(); }));
+    // The panels change how much canvas is free as Movement opens (the inspector folds
+    // away), and the free area is only measured once their slide has finished. Framing
+    // before then fits the shot to the old layout, so wait for the measurement to land.
+    clearTimeout(this._frameT);
+    this._frameT = setTimeout(() => { if (this.ex) this.frameCamera(); }, 320);
   }
 
   stop() {
@@ -194,25 +195,25 @@ export class ExercisePlayer {
 
   // ---------- camera ----------
   /**
-   * Three-quarter view from the athlete's side, level with the bar — the angle a lifting
-   * video is shot from. The body lies head-to-feet along z, so the camera has to stand out
-   * along x; putting it down the z axis would look straight up the soles of the feet.
+   * A raised three-quarter view from the foot end, on the athlete's left. The body lies
+   * head-to-feet along z. Seen from straight beside it, the near plate sits between the
+   * camera and the lifter and hides the head and one arm. From the foot end the plates
+   * fall away to either side, and the chest, both arms and both hands on the bar all face
+   * the camera, which is the part of the lift this is explaining.
    */
   frameCamera() {
     const v = this.app.viewer;
-    const target = new THREE.Vector3(0, BENCH_TOP + 0.40, -0.32);
-    // Aim from the side first, then let focusBox work out the distance. Fitting a box
-    // rather than hard-coding a distance is what keeps the whole rig — bench, body and
-    // both ends of the bar — clear of the side panels, at whatever width they are.
+    const target = new THREE.Vector3(0, BENCH_TOP + 0.34, -0.36);
+    // Aim first, then let focusBox work out the distance. Fitting a box rather than
+    // hard-coding a distance keeps the lifter clear of the side panels at any width.
     v._tween = null;
     v.controls.target.copy(target);
-    v.camera.position.copy(target).add(new THREE.Vector3(2.0, 0.55, -1.05));
+    v.camera.position.copy(target).add(new THREE.Vector3(1.25, 0.95, 1.35));
     v.camera.lookAt(target);
-    // Frame the athlete, not the plate tips. Fitting the bar's full 2.2 m span pushes the
-    // camera so far back that the body — the thing being explained — reads small, and
-    // cropping the ends of a barbell is what lifting footage does anyway.
-    const box = new THREE.Box3(new THREE.Vector3(-0.90, 0.25, -1.10), new THREE.Vector3(0.90, 1.30, 0.50));
-    v.focusBox(box, { pad: 1.06, keepDir: true, duration: 0.7 });
+    // Frame the lifter's trunk and arms, from the head to the knees, and the bar at its
+    // highest. Not the plates: cropping the ends of a barbell is what lifting footage does.
+    const box = new THREE.Box3(new THREE.Vector3(-0.48, BENCH_TOP - 0.10, -1.02), new THREE.Vector3(0.48, BENCH_TOP + 0.80, 0.30));
+    v.focusBox(box, { pad: 1.04, keepDir: true, duration: 0.7 });
   }
 }
 

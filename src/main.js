@@ -237,6 +237,17 @@ class App {
     else if (mode === 'effects') this.panel = new EffectsPanel(this.leftRoot, this);
     else if (mode === 'move') { this.exercise.start(EXERCISES[0]); this.panel = new ExercisePanel(this.leftRoot, this); }
     if (mode !== 'move') this.exercise?.stop();
+    // Movement is a picture of a lift, and an empty inspector beside it only takes room
+    // from the lifter. It folds away on the way in unless something is already selected
+    // (picking a muscle opens it again), and comes back on the way out if it was open.
+    const right = document.getElementById('right');
+    if (mode === 'move' && !state.selected && !right.classList.contains('collapsed')) {
+      this._rightFolded = true;
+      this.togglePanel('right', false);
+    } else if (mode !== 'move' && this._rightFolded) {
+      this._rightFolded = false;
+      if (right.classList.contains('collapsed')) this.togglePanel('right', true);
+    }
     if (mode !== 'effects') { set({ effect: null, playing: false }); clearTimeout(this._playT); }
     // dock
     if (mode === 'age') { renderAgeDock(this.dock, this); this.applyAgeEffects(); }
@@ -373,7 +384,7 @@ class App {
     const bar = document.getElementById('context-bar');
     if (!bar) return;
     const chips = [];
-    const MODE_LABEL = { explore: 'Explore', systems: 'Systems', age: 'Age', effects: 'What happens if…' };
+    const MODE_LABEL = { explore: 'Explore', systems: 'Systems', age: 'Age', effects: 'What happens if…', move: 'Movement' };
     chips.push({ text: MODE_LABEL[state.mode] || state.mode, kind: 'mode' });
 
     if (state.effect) {
@@ -1068,8 +1079,16 @@ class App {
     const canvas = this.viewer.canvas;
     let downX = 0, downY = 0, moved = false;
     canvas.addEventListener('pointerdown', (e) => { downX = e.clientX; downY = e.clientY; moved = false; });
+    let lastPosedPick = 0;
     canvas.addEventListener('pointermove', (e) => {
       if (e.buttons) { if (Math.abs(e.clientX - downX) + Math.abs(e.clientY - downY) > 5) moved = true; this.hoverTip.hidden = true; return; }
+      // A posed pick draws the whole body once more, so hovering asks at most about
+      // fifteen times a second instead of on every pointer event.
+      if (this.viewer.rig?.enabled.value) {
+        const now = performance.now();
+        if (now - lastPosedPick < 66) return;
+        lastPosedPick = now;
+      }
       const r = canvas.getBoundingClientRect();
       const hit = this.viewer.pick(e.clientX - r.left, e.clientY - r.top);
       if (hit) {

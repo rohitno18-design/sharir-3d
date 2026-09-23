@@ -4,10 +4,10 @@ import { EXERCISES } from '../data/exercises.js';
 
 /** Which moment of the rep the current phase falls in. */
 function phaseName(t) {
-  if (t < 0.42) return { name: 'Lowering', hint: 'Eccentric — the lats and cuff are steering the bar down' };
-  if (t < 0.52) return { name: 'On the chest', hint: 'Paused — the shoulder is at its most open' };
-  if (t < 0.92) return { name: 'Pressing', hint: 'Concentric — chest and front delt drive, triceps take over' };
-  return { name: 'Lockout', hint: 'Elbows straight — triceps and serratus finish the rep' };
+  if (t < 0.42) return { name: 'Lowering', hint: 'The bar comes down slowly. The lats and the rotator cuff keep it on track.' };
+  if (t < 0.52) return { name: 'On the chest', hint: 'The bar touches the chest and pauses. The chest muscle is stretched the most here.' };
+  if (t < 0.92) return { name: 'Pressing', hint: 'The chest and the front of the shoulder drive the bar up. The triceps take over near the top.' };
+  return { name: 'Lockout', hint: 'The elbows are straight. The triceps and the serratus hold the bar steady.' };
 }
 
 /**
@@ -61,8 +61,15 @@ export class ExercisePanel {
     this.root.innerHTML = '';
 
     this.root.append(
-      el('div', { class: 'ph' }, el('h2', {}, 'Movement'), el('span', { class: 'cnt' }, ex.sub)),
-      el('p', { class: 'pd' }, 'Scrub the rep and watch the load move between muscles. Colour is effort: cool is idle, amber is working, white is near its hardest.'),
+      el('div', { class: 'exo-head' },
+        el('div', { class: 'exo-kicker' }, 'Movement'),
+        el('h2', { class: 'exo-title' }, ex.name),
+        el('div', { class: 'exo-sub' }, ex.sub)),
+      el('p', { class: 'pd' }, 'Press play or drag the slider. Watch the work move from one muscle to the next.'),
+      // The colour key, drawn with the same ramp the body uses, so it needs no words.
+      el('div', { class: 'exo-legend' },
+        el('i', { class: 'exo-grad', style: `background: linear-gradient(90deg, ${[0, 0.25, 0.5, 0.65, 0.8, 1].map(a => effortColor(a)).join(', ')})` }),
+        el('div', { class: 'exo-legend-labels' }, el('span', {}, 'Resting'), el('span', {}, 'Working'), el('span', {}, 'Hardest'))),
     );
 
     // ---- transport ----
@@ -85,11 +92,15 @@ export class ExercisePanel {
         el('b', { 'data-live': 'phase' }, phaseName(p?.t || 0).name),
         el('span', { class: 'muted small', 'data-live': 'press' }, '')),
       el('p', { class: 'nt muted small', 'data-live': 'hint' }, phaseName(p?.t || 0).hint),
+      el('div', { class: 'exo-lead' },
+        el('span', { class: 'exo-lead-k' }, 'Doing the most work'),
+        el('b', { 'data-live': 'lead' }, ''),
+        el('span', { class: 'muted small', 'data-live': 'lead-note' }, '')),
       el('div', { class: 'btnrow' }, speed),
     );
 
     // ---- layer switch ----
-    this.root.append(el('h3', { class: 'sec' }, 'Look through'));
+    this.root.append(el('h3', { class: 'sec' }, 'Show'));
     const views = el('div', { class: 'chips' });
     this.viewChips = new Map();
     for (const v of VIEWS) {
@@ -126,9 +137,9 @@ export class ExercisePanel {
     }
     this.root.append(list);
     this.root.append(el('p', { class: 'nt muted small' },
-      'Click a muscle above to select it — while the body is posed, clicking in 3D is off, because the click test still sees the standing pose.'));
+      'Tap a muscle in this list, or on the body, to see what it is.'));
     this.root.append(el('p', { class: 'nt muted small' },
-      'Effort is shaped from published EMG work on the flat barbell bench press, scaled to each muscle’s own peak in this lift. It is a teaching aid, not a measurement of you.'));
+      'The effort levels come from published EMG studies of the flat barbell bench press. Each muscle is shown against its own peak in this lift. This is a teaching aid. It does not measure your body.'));
 
     this.liveUpdate();
   }
@@ -143,8 +154,9 @@ export class ExercisePanel {
     const set1 = (sel, txt) => { const n = this.root.querySelector(sel); if (n) n.textContent = txt; };
     set1('[data-live=phase]', ph.name);
     set1('[data-live=hint]', ph.hint);
-    set1('[data-live=press]', `${Math.round(p.press * 100)}% extended`);
+    set1('[data-live=press]', `Bar ${Math.round(p.press * 100)}% of the way up`);
     const ranked = p.ranked();
+    if (ranked[0]) { set1('[data-live=lead]', ranked[0].def.label); set1('[data-live=lead-note]', ranked[0].def.note); }
     for (const g of p.groups) {
       const r = this.rows.get(g.def.key);
       if (!r) continue;
@@ -157,9 +169,9 @@ export class ExercisePanel {
 }
 
 /** Same ramp the shader uses, so the bar and the body agree. */
-function effortColor(a) {
+export function effortColor(a) {
   const mix = (x, y, k) => x.map((v, i) => Math.round(v + (y[i] - v) * k));
-  const cool = [40, 70, 130], warm = [242, 140, 26], hot = [255, 237, 204];
-  const c = a < 0.55 ? mix(cool, warm, a / 0.55) : mix(warm, hot, (a - 0.55) / 0.45);
+  const cool = [41, 69, 117], warm = [245, 117, 26], gold = [255, 189, 46], hot = [255, 230, 133];
+  const c = a < 0.5 ? mix(cool, warm, a / 0.5) : a < 0.8 ? mix(warm, gold, (a - 0.5) / 0.3) : mix(gold, hot, (a - 0.8) / 0.2);
   return `rgb(${c[0]},${c[1]},${c[2]})`;
 }

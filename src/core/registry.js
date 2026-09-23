@@ -6,6 +6,21 @@ import { state } from './state.js';
 /** True when a part belongs to the body currently being shown. */
 export const sexOk = p => !p.sx || p.sx === (state.sex === 'female' ? 'f' : 'm');
 
+/**
+ * How far out from the trunk a bone sits: 0 for the skull, spine, ribs and sternum, 1 for
+ * the shoulder and hip girdles, then out along the limb to 6 for a phalanx.
+ */
+function boneRank(bone) {
+  const b = (bone || '').toLowerCase();
+  if (/phalanx|sesamoid/.test(b)) return 6;
+  if (/metacarpal|metatarsal/.test(b)) return 5;
+  if (/scaphoid|lunate|triquetrum|pisiform|trapezium|trapezoid|capitate|hamate|talus|calcaneus|navicular|cuboid|cuneiform/.test(b)) return 4;
+  if (/radius|ulna|tibia|fibula/.test(b)) return 3;
+  if (/humerus|femur|patella/.test(b)) return 2;
+  if (/clavicle|scapula|hip bone/.test(b)) return 1;
+  return 0;
+}
+
 /** Same sanitisation three.js GLTFLoader applies to node names (PropertyBinding.sanitizeNodeName). */
 export function sanitizeNodeName(name) {
   return name.replace(/\s/g, '_').replace(/[\[\]\.:\/]/g, '');
@@ -44,7 +59,46 @@ export class Registry {
         (this.rootsBySystem[p.sys] ||= []).push(p.id);
       }
     }
+    this._fixAttachmentKinds();
     this._buildSearch();
+  }
+
+  /**
+   * The atlas tags a muscle's attachments ".o" for origin and ".e" for its end, and the
+   * import reads every ".e" as an insertion. That is right almost everywhere, but a few
+   * muscle heads carry only ".e" tags, and then their origins read as insertions: the
+   * sternocostal head of pectoralis major "inserting" on the sternum and the sixth rib,
+   * which is backwards.
+   *
+   * A limb muscle arises nearer the trunk and inserts further out along the limb, so an
+   * end on the trunk or the shoulder girdle, when this muscle or the muscle it is a head of
+   * also ends out on a limb bone, is its origin. The rule only moves attachments on that
+   * evidence. Trunk-to-trunk muscles, with nothing to compare, are left as the atlas has
+   * them.
+   */
+  _fixAttachmentKinds() {
+    const att = this.parts.filter(p => p.k === 'origin' || p.k === 'insertion');
+    const byMuscle = new Map();
+    for (const a of att) {
+      const k = a.muscle + '|' + a.side;
+      if (!byMuscle.has(k)) byMuscle.set(k, []);
+      byMuscle.get(k).push(a);
+    }
+    const parentName = (name, side) => {
+      const mesh = (this.byName.get(name.toLowerCase()) || []).find(p => p.k === 'mesh' && (!p.side || p.side === side));
+      const g = mesh && this.byId.get(mesh.p);
+      return g ? g.n.replace(/\s*\(.*?\)\s*$/, '') : null;
+    };
+    for (const [key, list] of byMuscle) {
+      const [name, side] = key.split('|');
+      const parent = parentName(name, side);
+      const context = list.concat(parent ? (byMuscle.get(parent + '|' + side) || []) : []);
+      const far = Math.max(...context.filter(a => a.k === 'insertion').map(a => boneRank(a.bone)));
+      if (far < 2) continue;
+      for (const a of list) {
+        if (a.k === 'insertion' && boneRank(a.bone) <= 1 && boneRank(a.bone) < far) a.k = 'origin';
+      }
+    }
   }
 
   setHindi(map) {

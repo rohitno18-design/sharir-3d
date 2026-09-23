@@ -47,7 +47,10 @@ export class Labels {
     const v = this.viewer;
     if (!this.visible || !this.items.length) { this.svg.innerHTML = ''; for (const el of this._els.values()) el.style.display = 'none'; return; }
     const W = v.width, H = v.height;
-    const cx = W / 2;
+    // Labels stack in two columns inside the part of the canvas no panel covers. Measured
+    // from the window's edges instead, they ran under the side panels and were cut off.
+    const safe = v._safeRect ? v._safeRect() : { x0: 0, y0: 0, x1: W, y1: H };
+    const cx = (safe.x0 + safe.x1) / 2;
     const proj = [];
     const camPos = v.camera.position;
     for (const it of this.items) {
@@ -62,20 +65,26 @@ export class Labels {
     for (const id of hiddenIds) { const el = this._els.get(id); if (el) el.style.display = 'none'; }
 
     const lines = [];
-    const marginL = Math.min(380, W * 0.26), marginR = W - Math.min(380, W * 0.26);
+    // A label is at most LABEL_W wide (see .lbl in the stylesheet). The left column ends
+    // that far in from the free area's left edge, and the right column starts that far in
+    // from its right edge, so neither can spill under a panel.
+    const LABEL_W = 240, PAD = 14;
+    const span = safe.x1 - safe.x0;
+    const inset = Math.min(LABEL_W + PAD, span * 0.32);
+    const marginL = safe.x0 + inset, marginR = safe.x1 - inset;
     const left = shown.filter(p => p.it.kind !== 'title' && p.it.kind !== 'pin' && p.x < cx).sort((a, b) => a.y - b.y);
     const right = shown.filter(p => p.it.kind !== 'title' && p.it.kind !== 'pin' && p.x >= cx).sort((a, b) => a.y - b.y);
     const gap = 26;
+    const top = safe.y0 + 30, bottom = safe.y1 - 24;
     const place = (col, side) => {
-      let lastY = 40;
       const n = col.length;
       // pre-compress if overflow
       const needed = n * gap;
-      let start = Math.max(40, Math.min(col[0]?.y ?? 40, H - needed - 20));
-      lastY = start - gap;
+      const start = Math.max(top, Math.min(col[0]?.y ?? top, bottom - needed));
+      let lastY = start - gap;
       for (const p of col) {
         let y = Math.max(p.y, lastY + gap);
-        if (y > H - 24) y = H - 24;
+        if (y > bottom) y = bottom;
         p.ly = y; lastY = y;
         p.lx = side === 'left' ? marginL : marginR;
       }

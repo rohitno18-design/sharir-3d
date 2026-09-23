@@ -59,10 +59,18 @@ export class Inspector {
 
     // origin / insertion for muscles
     if (part.sys === 'muscular' || part.sys === 'skeletal') {
-      const att = registry.parts.filter(p => (p.k === 'origin' || p.k === 'insertion') && (part.sys === 'muscular' ? p.muscle === part.n && (!part.side || p.side === part.side) : p.p === id));
+      const isAtt = p => p.k === 'origin' || p.k === 'insertion';
+      const att = registry.parts.filter(p => isAtt(p) && (part.sys === 'muscular' ? p.muscle === part.n && (!part.side || p.side === part.side) : p.p === id));
+      // A head of a larger muscle often has only its own origins recorded, because all the
+      // heads share one tendon. Show that shared insertion too, or the head looks as if it
+      // attached to nothing at its far end.
+      if (part.sys === 'muscular' && att.length && !att.some(a => a.k === 'insertion') && part.p) {
+        const whole = registry.byId.get(part.p)?.n.replace(/\s*\(.*?\)\s*$/, '');
+        if (whole) for (const p of registry.parts) if (p.k === 'insertion' && p.muscle === whole && (!part.side || p.side === part.side)) att.push({ ...p, shared: whole });
+      }
       if (att.length) {
         const list = el('div', { class: 'list' });
-        for (const a of att.slice(0, 40)) list.append(el('div', { class: 'li', onMouseenter: () => this.app.hoverPart(a.id, true), onMouseleave: () => this.app.hoverPart(null), onClick: () => this.app.showAttachment(a.id) }, el('i', { style: `background:${a.k === 'origin' ? '#ef4444' : '#38bdf8'}` }), part.sys === 'muscular' ? `${a.k === 'origin' ? 'Origin' : 'Insertion'} → ${a.bone}` : `${a.muscle} (${a.k})`, el('span', { class: 'k' }, a.side || '')));
+        for (const a of att.slice(0, 40)) list.append(el('div', { class: 'li', onMouseenter: () => this.app.hoverPart(a.id, true), onMouseleave: () => this.app.hoverPart(null), onClick: () => this.app.showAttachment(a.id) }, el('i', { style: `background:${a.k === 'origin' ? '#ef4444' : '#38bdf8'}` }), part.sys === 'muscular' ? `${a.k === 'origin' ? 'Origin' : 'Insertion'} → ${a.bone}${a.shared ? ' (shared tendon)' : ''}` : `${a.muscle} (${a.k})`, el('span', { class: 'k' }, a.side || '')));
         this.root.append(el('h3', { class: 'sec' }, part.sys === 'muscular' ? (lang === 'hi' ? 'उद्गम और निवेशन' : 'Origin & insertion') : (lang === 'hi' ? 'इस हड्डी पर पेशियाँ' : 'Muscles attaching here')), list);
       }
     }
