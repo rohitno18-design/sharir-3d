@@ -3,7 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { acceleratedRaycast, computeBoundsTree, disposeBoundsTree } from 'three-mesh-bvh';
 import { SYSTEMS } from '../data/systems.js';
-import { applyMorph, invertMorph } from './morph.js';
+import { applyMorph, invertMorph, isPlainScale } from './morph.js';
 
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
@@ -164,7 +164,9 @@ export class Viewer {
     // while the body is posed the geometry being raycast is not the geometry on screen.
     // Posed, the GPU is asked instead: it draws the body again, one pixel big, with every
     // part's number in place of its colour.
-    if (this.rig?.enabled.value) return this._gpuPick(px, py);
+    // The same goes for a reshaped body: its limbs thicken round their own bones, which a
+    // ray walked back through the trunk's shape cannot follow.
+    if (this.rig?.enabled.value || !isPlainScale()) return this._gpuPick(px, py);
     const ndc = new THREE.Vector2((px / this.width) * 2 - 1, -(py / this.height) * 2 + 1);
     this.raycaster.setFromCamera(ndc, this.camera);
     const wo = this.raycaster.ray.origin.clone();

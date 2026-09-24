@@ -83,6 +83,22 @@ export class Highlighter {
     let selSys = null;
     if (reveal) { const first = body.parts[body.slot(sel.values().next().value)]; selSys = first?.sys || null; }
     const anyEffect = this.effects.size > 0;
+    // Which systems an effect covers almost entirely. Dimming the few parts of such a
+    // system that it happens to skip does not focus anything: on the skin it only left a
+    // patchwork of dark and light panels.
+    const covered = new Set();
+    if (anyEffect) {
+      const all = new Map(), hit = new Map();
+      for (let slot = 0; slot < body.count; slot++) {
+        const part = body.parts[slot];
+        if (!this.isPartVisible(part)) continue;
+        all.set(part.sys, (all.get(part.sys) || 0) + 1);
+        if (this.effects.has(part.id)) hit.set(part.sys, (hit.get(part.sys) || 0) + 1);
+      }
+      for (const [sys, n] of all) if ((hit.get(sys) || 0) >= n * 0.6) covered.add(sys);
+    }
+    // How much of each batch is showing opaque, for the depth switch below.
+    const shownN = new Uint32Array(body.batches.length), opaqueN = new Uint32Array(body.batches.length);
 
     for (let slot = 0; slot < body.count; slot++) {
       const part = body.parts[slot];
@@ -94,7 +110,7 @@ export class Highlighter {
 
       let opacity = sys.opacity * (fx && fx.opacity != null ? fx.opacity : 1);
       if (xray && !isSel && !isHover && !fx) opacity *= 0.16;
-      if (anyEffect && !fx && !isSel && !isHover) opacity *= 0.35;
+      if (anyEffect && !fx && !isSel && !isHover && !covered.has(part.sys)) opacity *= 0.35;
 
       // Reveal keeps a thin frame of reference (own system + skeleton) and drops the rest:
       // ghosting everything does not work, because thousands of low-alpha surfaces stack
@@ -112,12 +128,23 @@ export class Highlighter {
       body.setVisible(slot, shown);
       if (!shown) continue;
 
+      shownN[body.batchOf[slot]]++;
+      if (opacity >= 0.95) opaqueN[body.batchOf[slot]]++;
       const selectedAmt = isSel ? 1 : (isHover ? 0.45 : 0);
       const kind = fx ? effectKindIndex(fx.kind) : 0;
       const intensity = fx ? fx.intensity : 0;
       body.setStyle(slot, opacity, selectedAmt, kind, intensity);
     }
     body.setBatchesFromParts();
+    // The skin is one mesh drawn in one call. With depth writing off, its far side lands
+    // on top of its near side wherever those triangles happen to draw later, and the front
+    // of the body showed through the back. Skin that is mostly opaque writes depth; skin
+    // that is mostly a see-through ghost does not, so it layers evenly. A few dimmed
+    // patches among opaque ones must not switch it off for the whole skin.
+    body.batches.forEach((b, i) => {
+      const m = b.mesh.material;
+      if (m.userData.ghostable) m.depthWrite = shownN[i] > 0 && opaqueN[i] >= shownN[i] * 0.85;
+    });
     body.flush();
     this.viewer.requestRender();
   }

@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { computeBoundsTree, disposeBoundsTree } from 'three-mesh-bvh';
 import { EFFECT_KINDS } from '../data/targets.js';
+import { closeSkinGaps, blendSkinBindings, orientSkin } from './skinweld.js';
 
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
 THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
@@ -81,6 +82,14 @@ export class BatchedBody {
     // 2. merge each system into one geometry
     for (const [system, items] of groups) {
       const geoms = [];
+      // The skin is a patchwork of region meshes. Make them one surface: close the small
+      // gaps between neighbouring patches here, and blend their bone weights across the
+      // seams once every patch has them (below). Only the skin this body shows: the
+      // female chest surface lies over the male one and must not be stitched to it.
+      const skin = system === 'integumentary'
+        ? items.filter(it => !(it.part.sx && it.part.sx !== 'm') && !/hair/i.test(it.part.n) && it.geometry.index)
+        : null;
+      if (skin?.length) { this.skinFlipped = orientSkin(skin); closeSkinGaps(skin); }
       for (const it of items) {
         const g = it.geometry;
         const slot = this.indexOf.get(it.part.id);
@@ -93,10 +102,13 @@ export class BatchedBody {
         const r = Math.round(col.r * 255), gg = Math.round(col.g * 255), b = Math.round(col.b * 255);
         for (let v = 0; v < n; v++) { cols[v * 3] = r; cols[v * 3 + 1] = gg; cols[v * 3 + 2] = b; }
         g.setAttribute('color', new THREE.BufferAttribute(cols, 3, true));
-        // 1 = belly bulge applies, 2 = breast bulge applies
+        // What tissue this is, for the body morph: 1 skin (carries the fat), 2 breast bulge
+        // applies, 4 bone and cartilage (never grows with weight), 8 muscle.
         let mask = 0;
         if (it.part.sys === 'integumentary') mask |= 1;
         if (it.part.sys === 'integumentary' || it.part.sub === 'female surface' || it.part.g === 'female') mask |= 2;
+        if (it.part.sys === 'skeletal' || it.part.sys === 'joints') mask |= 4;
+        if (it.part.sys === 'muscular') mask |= 8;
         g.setAttribute('aMorphMask', new THREE.BufferAttribute(new Float32Array(n).fill(mask), 1));
         // Which two bones move this vertex, and how much of the first. Without a rig every
         // vertex binds to the root, which is the identity — so the attribute always exists
@@ -112,6 +124,7 @@ export class BatchedBody {
         geoms.push(g);
       }
       if (!geoms.length) continue;
+      if (skin?.length && rig) blendSkinBindings(skin);
 
       const merged = mergeGeometries(geoms, false);
       for (const g of geoms) g.dispose();          // originals are no longer needed

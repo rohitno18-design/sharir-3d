@@ -35,7 +35,11 @@ export function systemMaterial(system, rig) {
     roughness: st.roughness, metalness: st.metalness,
     clearcoat: st.clearcoat || 0, clearcoatRoughness: st.clearcoatRoughness ?? 0.4,
     envMapIntensity: 0.55,
-    side: THREE.DoubleSide,
+    // Skin is the body's outer surface and only its outside should ever show. Drawn
+    // double-sided, its inside faces came through as flat planes across the face and dark
+    // cracks over the body. Everything else stays double-sided: many inner structures are
+    // open sheets that have to read from both sides.
+    side: system === 'integumentary' ? THREE.FrontSide : THREE.DoubleSide,
     transparent: true,                     // per-part opacity comes from the style texture
     depthWrite: !TRANSPARENT.has(system),
     // three.js draws a transparent DOUBLE-SIDED material in two passes (back faces, then
@@ -43,6 +47,10 @@ export function systemMaterial(system, rig) {
     // so ask for the single pass explicitly.
     forceSinglePass: true,
   });
+  // A see-through system must not write depth while it is see-through, or its far side
+  // hides behind its near side in patches. Opaque, it must: the highlighter switches this
+  // per frame from what is actually showing.
+  mat.userData.ghostable = TRANSPARENT.has(system);
   patchMaterial(mat);                      // body morph runs first…
   if (rig) patchForRig(mat, rig);          // …then the pose…
   return mat;                              // …and batching patches on top of both

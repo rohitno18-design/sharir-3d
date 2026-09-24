@@ -62,7 +62,8 @@ export class ExercisePlayer {
     clearTimeout(this._frameT);
     if (this._grab) { this.app.viewer.controls.removeEventListener('start', this._grab); this._grab = null; }
     const { app } = this;
-    app.body.rig?.reset();
+    // Back to standing: the stance that goes with this body, or no pose at all.
+    if (app.applyStance) app.applyStance(); else app.body.rig?.reset();
     app.hi.clearEffects();
     // "Look through" sets a temporary system override. Leaving it behind outvotes every
     // switch in the Systems panel — the user flips a system and nothing happens, because

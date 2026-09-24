@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { applyMorph } from './morph.js';
+import { applyMorph, setSkeleton, segmentGirth, trunkWidth, morphKey, uniforms as morphU } from './morph.js';
 
 /**
  * Skeleton rig — what lets the atlas move.
@@ -256,6 +256,145 @@ export class Rig {
     this.reset();
     this._resolve();
     this._chest = this._collectChest();
+    if (this.ok) {
+      this.stanceRef = this._collectStanceRef();
+      this._shareSkeleton();
+    }
+  }
+
+  /**
+   * A joint through the body morph, as the bone it belongs to. Joints sit on their bone's
+   * axis, so a limb's girth never moves them: they go where the limb's hanging joint goes.
+   * The grip and the palm are the exception, being on the hand's skin rather than its bone.
+   */
+  _morphJoint(side, key, point, out) {
+    const seg = JOINT_OWNER[key];
+    const bone = seg ? boneIndex(seg, side) : 0;
+    return applyMorph(point, out, { tissue: key === 'grip' || key === 'palm' ? 'skin' : 'bone', bone });
+  }
+
+  /** Tell the morph where each bone lies, so limbs can thicken round their own bones. */
+  _shareSkeleton() {
+    const chainOf = (b) => {
+      if (!b || b.name === 'root' || b.name === 'girdle') return -1;
+      const leg = b.group === 'leg';
+      return (leg ? 2 : 0) + (b.side === 'r' ? 1 : 0);
+    };
+    const segs = this.bones.map(b => ({
+      name: b.name, chain: chainOf(b),
+      a: (b.pivot || new THREE.Vector3()).clone(),
+      b: (b.tail || b.pivot || new THREE.Vector3()).clone(),
+    }));
+    const anchorLimb = new Array(ANCHOR_SLOTS).fill(0);
+    for (const side of SIDES) for (const def of ANCHORED) anchorLimb[anchorSlot(def, side)] = boneIndex(def.limb, side);
+    setSkeleton({ segs, roots: [this.p.l.gh, this.p.r.gh, this.p.l.hip, this.p.r.hip], anchorLimb });
+  }
+
+  /**
+   * How much room there is, in the source body, between the trunk and each arm and between
+   * the thighs, read off the skin. A bigger body closes these gaps, and the stance opens
+   * them again.
+   */
+  _collectStanceRef() {
+    const ref = {};
+    for (const side of SIDES) {
+      const m = side === 'l' ? 1 : -1, q = this.p[side];
+      const yEl = q.el.y, yWr = q.wr.y, yTh = (q.hip.y + q.knee.y) / 2;
+      const r = { flankEl: 0, innerEl: Infinity, hipWr: 0, hipWrLeg: false, innerWr: Infinity, innerTh: Infinity };
+      for (const [id, gs] of this._geoms) {
+        const part = this.registry.byId.get(id);
+        if (!part || part.sys !== 'integumentary' || (part.sx && part.sx !== 'm')) continue;
+        const group = this.classify(part).group;
+        for (const g of gs) {
+          const pos = g.attributes.position;
+          for (let i = 0; i < pos.count; i++) {
+            const x = pos.getX(i) * m, y = pos.getY(i);
+            if (x <= 0) continue;
+            if (Math.abs(y - yEl) < 0.012) {
+              if (group === 'arm') r.innerEl = Math.min(r.innerEl, x);
+              else if (!group) r.flankEl = Math.max(r.flankEl, x);
+            }
+            if (Math.abs(y - yWr) < 0.012) {
+              if (group === 'arm') r.innerWr = Math.min(r.innerWr, x);
+              else if (x > r.hipWr) { r.hipWr = x; r.hipWrLeg = group === 'leg'; }
+            }
+            if (Math.abs(y - yTh) < 0.012 && group === 'leg') r.innerTh = Math.min(r.innerTh, x);
+          }
+        }
+      }
+      ref[side] = r;
+    }
+    return ref;
+  }
+
+  /**
+   * The standing pose that goes with this body. A thicker trunk and thicker arms close the
+   * gap under the arms, so the shoulders turn the arms out until the old gap is back; wider
+   * hips against thicker forearms turn the forearms out at the elbow. Thicker thighs press
+   * together and the legs part to take half of that, the rest being soft tissue giving.
+   * The shins turn back so the feet stay flat, a little wider apart. Heavier and more
+   * muscular people stand exactly like this, which is why a body made bigger without it
+   * looked pasted on.
+   *
+   * Returns null when there is nothing to turn.
+   */
+  stance() {
+    if (!this.ok || !this.stanceRef) return null;
+    const s = morphU.uScale.value || 1;
+    const rotZ = (a) => new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), a);
+    const pose = {};
+    let biggest = 0, drop = 0;
+    for (const side of SIDES) {
+      const m = side === 'l' ? 1 : -1, q = this.p[side], r = this.stanceRef[side];
+      const chain = side === 'l' ? 0 : 1;
+      const armShift = (morphU.uRootD.value[chain].x / s) * m;
+      const legShift = (morphU.uRootD.value[chain + 2].x / s) * m;
+      const g = (name, tissue = 'skin') => segmentGirth(boneIndex(name, side), tissue);
+      const L1 = q.gh.distanceTo(q.el), L2 = q.el.distanceTo(q.wr);
+
+      // Elbow against the waist.
+      let a1 = 0;
+      if (Number.isFinite(r.innerEl) && r.flankEl > 0) {
+        const axis = q.el.x * m;
+        const flank = r.flankEl * trunkWidth(q.el.y, 'skin');
+        const inner = axis + armShift - (axis - r.innerEl) * (g('upperarm') + g('forearm1')) / 2;
+        const need = Math.max(0, (r.innerEl - r.flankEl) - (inner - flank));
+        a1 = Math.asin(Math.min(0.45, need / L1));
+      }
+      // Wrist against the hip, after the shoulder has already carried it out.
+      let a2 = 0;
+      if (Number.isFinite(r.innerWr) && r.hipWr > 0) {
+        const axis = q.wr.x * m;
+        const thighAxis = ((q.hip.x + q.knee.x) / 2) * m;
+        const hip = r.hipWrLeg
+          ? thighAxis + legShift + (r.hipWr - thighAxis) * g('thigh')
+          : r.hipWr * trunkWidth(q.wr.y, 'skin');
+        const carried = (q.gh.y - q.wr.y) * Math.sin(a1);
+        const inner = axis + armShift + carried - (axis - r.innerWr) * g('forearm2');
+        const need = Math.max(0, (r.innerWr - r.hipWr) - (inner - hip));
+        a2 = Math.asin(Math.min(0.45, need / L2));
+      }
+      // Thighs against each other.
+      let a3 = 0;
+      if (Number.isFinite(r.innerTh)) {
+        const mid = q.hip.clone().lerp(q.knee, 0.5);
+        const offset = mid.x * m - r.innerTh;
+        const grow = offset * (g('thigh') - 1) - legShift;
+        a3 = Math.asin(Math.min(0.2, Math.max(0, grow) * 0.5 / q.hip.distanceTo(mid)));
+        drop = Math.max(drop, q.hip.distanceTo(q.knee) * (1 - Math.cos(a3)));
+      }
+      biggest = Math.max(biggest, a1, a2, a3);
+      pose[`upperarm.${side}`] = { quat: rotZ(m * a1) };
+      pose[`forearm1.${side}`] = { quat: rotZ(m * a2) };
+      pose[`thigh.${side}`] = { quat: rotZ(m * a3) };
+      pose[`shin.${side}`] = { quat: rotZ(-m * a3) };
+    }
+    if (biggest < 0.004) return null;
+    // Parting the legs shortens them a little; lower the body by as much, so the soles
+    // stay on the floor instead of lifting off it.
+    pose.root = { pos: [0, -drop * s, 0] };
+    this.stanceAngles = pose;
+    return pose;
   }
 
   /**
@@ -297,18 +436,19 @@ export class Rig {
   chestTouch(target, radius, clear = 0.002) {
     const pts = this._chest;
     if (!pts || !pts.length) return target.z;
-    const probe = applyMorph(new THREE.Vector3(0.1, 1.3, 0.15), new THREE.Vector3());
-    const key = `${probe.x.toFixed(5)},${probe.y.toFixed(5)},${probe.z.toFixed(5)}|${target.x.toFixed(4)},${target.y.toFixed(4)}|${radius}|${clear}`;
+    // Any change to the body's shape changes the chest, so the cache is keyed on the
+    // morph's own numbers rather than on one probe point that most of them do not reach.
+    const key = `${morphKey()}|${target.x.toFixed(4)},${target.y.toFixed(4)}|${radius}|${clear}`;
     if (this._touch?.key === key) return this._touch.z;
     // The chest as this body has it, once.
     const m = new Float32Array(pts.length), v = new THREE.Vector3();
     for (let i = 0; i < pts.length; i += 3) {
-      applyMorph(v.set(pts[i], pts[i + 1], pts[i + 2]), v);
+      applyMorph(v.set(pts[i], pts[i + 1], pts[i + 2]), v, { tissue: 'skin' });
       m[i] = v.x; m[i + 1] = v.y; m[i + 2] = v.z;
     }
     const need = radius + clear;
     const gap = (z) => {
-      const B = applyMorph(new THREE.Vector3(target.x, target.y, z), new THREE.Vector3());
+      const B = applyMorph(new THREE.Vector3(target.x, target.y, z), new THREE.Vector3(), { tissue: 'bone' });
       let best = Infinity;
       for (let i = 0; i < m.length; i += 3) {
         const dy = m[i + 1] - B.y;
@@ -802,7 +942,7 @@ export class Rig {
       for (const e of this.anchors[side]) {
         if (e.def.mode !== 'fibre') continue;
         const s = anchorSlot(e.def, side) * 3;
-        applyMorph(e.point, I);
+        applyMorph(e.point, I, { tissue: 'muscle', bone: boneIndex(e.def.limb, side) });
         const limb = this._m[boneIndex(e.def.limb, side)];
         const trunk = this._m[e.def.trunk === 'root' ? 0 : boneIndex(e.def.trunk, side)];
         A.copy(I).applyMatrix4(limb);
@@ -910,7 +1050,7 @@ export class Rig {
     // The pivot has to be morphed too: the vertices reaching this matrix have already been
     // through the height/weight field, so a rest-space pivot would sit off-joint on any
     // body that is not the source model's size.
-    applyMorph(bone.pivot, _v);
+    applyMorph(bone.pivot, _v, { tissue: 'bone', bone: bone.index });
     return out.makeTranslation(_v.x, _v.y, _v.z)
       .multiply(r)
       .multiply(_back.makeTranslation(-_v.x, -_v.y, -_v.z));
@@ -961,7 +1101,7 @@ export class Rig {
    * ankle sits above a flat sole, which is what a foot needs to be planted on the floor.
    */
   morphedJoint(side, key, out = new THREE.Vector3()) {
-    return this.p[side] && this.p[side][key] ? applyMorph(this.p[side][key], out) : out.set(0, 0, 0);
+    return this.p[side] && this.p[side][key] ? this._morphJoint(side, key, this.p[side][key], out) : out.set(0, 0, 0);
   }
   _morphed(side, key) { return this.morphedJoint(side, key, new THREE.Vector3()); }
 
@@ -1017,7 +1157,7 @@ export class Rig {
 
   /** `target` (rest space) brought into the arm's own frame: morphed, then undone through the girdle. */
   _armTarget(side, target, girdle) {
-    const T = applyMorph(target, new THREE.Vector3());
+    const T = applyMorph(target, new THREE.Vector3(), { tissue: 'bone' });
     if (!girdle) return { T, inv: null };
     const inv = this.localMatrix(this.bones[boneIndex('girdle', side)], girdle, new THREE.Matrix4()).invert();
     return { T: T.applyMatrix4(inv), inv };
@@ -1357,7 +1497,7 @@ export class Rig {
     const S = this._morphed(side, 'hip');
     const E = this._morphed(side, 'knee');
     const G = this._morphed(side, 'ankle');
-    const T = targetIsMorphed ? target.clone() : applyMorph(target, new THREE.Vector3());
+    const T = targetIsMorphed ? target.clone() : applyMorph(target, new THREE.Vector3(), { tissue: 'bone' });
     const { q1, swing2 } = this._solve2(S, E, G, T, pole);
     return {
       [`thigh.${side}`]: { quat: q1 },
@@ -1367,6 +1507,15 @@ export class Rig {
 
   /** Put a rest-space point through the body morph, so it matches what the shader poses. */
   morphPoint(v, out = new THREE.Vector3()) { return applyMorph(v, out); }
+
+  /**
+   * One vertex through the morph exactly as the shader sees it: its bones (a, b, w) and
+   * its tissue bits (1 skin, 2 breast, 4 bone, 8 muscle).
+   */
+  morphVertex(v, out, a, b, w, mask = 0) {
+    const tissue = mask & 4 ? 'bone' : mask & 1 ? 'skin' : mask & 8 ? 'muscle' : 'other';
+    return applyMorph(v, out, { tissue, skin: [a, b, w], breast: !!(mask & 2) });
+  }
 
   /** Move a point by one bone's current transform, in place. */
   applyBone(index, v) {
@@ -1384,7 +1533,7 @@ export class Rig {
   jointAt(name, side, out = new THREE.Vector3()) {
     const q = this.p[side];
     if (!q || !q[name]) return out.set(0, 0, 0);
-    applyMorph(q[name], out);
+    this._morphJoint(side, name, q[name], out);
     const segName = JOINT_OWNER[name];
     const b = segName ? this.bones[boneIndex(segName, side)] : null;
     out.applyMatrix4(b ? this._m[b.index] : this._m[0]);
@@ -1447,7 +1596,7 @@ const _q = new THREE.Quaternion();
  * posed, so the raised arms were lit as if they still hung by the sides.
  */
 export const RIG_GLSL = /* glsl */`
-attribute vec3 aSkin;   // boneA, boneB, weightA — or trunkBone, anchorSlot, 2 + fraction
+// aSkin (boneA, boneB, weightA, or trunkBone, anchorSlot, 2 + fraction) is declared by the morph patch.
 uniform vec4 uBoneReal[${BONE_COUNT}];
 uniform vec4 uBoneDual[${BONE_COUNT}];
 uniform vec3 uAnchorDisp[${ANCHOR_SLOTS}];

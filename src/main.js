@@ -188,19 +188,21 @@ class App {
     setBody({
       scale,
       headF,
-      // Sex silhouette, then: muscle widens the shoulders/chest/arms/thighs,
-      // fat widens the waist and pushes the belly forward.
-      shW:    (female ? 1 - 0.105 * adultness : 1 + 0.045 * adultness) + mUp * 0.105 - mDown * 0.05 + fUp * 0.030,
-      hipW:   (female ? 1 + 0.165 * adultness : 1 + 0.010 * adultness) + fUp * 0.080 + mUp * 0.020,
-      waist:  (female ? 1 - 0.115 * adultness : 1.0) + fUp * 0.170 - fDown * 0.060 + mUp * 0.030,
-      chestD: (female ? 1 - 0.045 * adultness : 1 + 0.030 * adultness) + mUp * 0.100 - mDown * 0.045 + fUp * 0.060,
-      thigh:  (female ? 1 + 0.060 * adultness : 1.0) + mUp * 0.105 - mDown * 0.050 + fUp * 0.080,
-      arm:    1 + mUp * 0.165 - mDown * 0.070 + fUp * 0.055,
+      // Each trunk band splits into the skeleton's frame (sex and age), muscle and fat, so
+      // that bone keeps its size while the soft tissue over it changes. Limb girth, the
+      // neck and the face are driven by the same four composition numbers.
+      sh:     { frame: female ? -0.105 * adultness : 0.045 * adultness, muscle: mUp * 0.105 - mDown * 0.05, fat: fUp * 0.030 },
+      hip:    { frame: female ? 0.165 * adultness : 0.010 * adultness, muscle: mUp * 0.020, fat: fUp * 0.080 },
+      waist:  { frame: female ? -0.115 * adultness : 0, muscle: mUp * 0.030, fat: fUp * 0.170 - fDown * 0.060 },
+      chestD: { frame: female ? -0.045 * adultness : 0.030 * adultness, muscle: mUp * 0.100 - mDown * 0.045, fat: fUp * 0.060 },
       glute:  (female ? 0.042 * adultness : 0.012 * adultness) + fUp * 0.020 + mUp * 0.016,
       limbW:  state.age < 3 ? 1.12 : state.age < 10 ? 1.05 : 1,
       belly:  Math.max(0, fUp * 0.062 - fDown * 0.014 - mUp * 0.006),
       breast: female ? (0.052 + fUp * 0.020) * adultness : fUp * 0.008,
+      face:   fUp * 0.035,
+      mUp: mUp * adultness, mDown: mDown * adultness, fUp: fUp * adultness, fDown: fDown * adultness,
     });
+    this.applyStance();
     this.viewer.ring.scale.setScalar(Math.max(0.55, scale));
     this.viewer.ground.scale.setScalar(Math.max(0.55, scale));
     // Recomputing 4,066 bounding spheres costs ~48 ms — far too slow to run on every
@@ -216,6 +218,18 @@ class App {
     // the hands come off the bar and the back lifts off the bench.
     if (this.exercise?.ex) this.exercise.seek(this.exercise.t);
     this.labels.update();
+  }
+
+  /**
+   * Stand the body the way a body of this build stands: arms and legs carried out as far
+   * as its own girth pushes them. Movement poses the body itself, so it is left alone there.
+   */
+  applyStance() {
+    const rig = this.body?.rig;
+    if (!rig?.ok || this.exercise?.ex) return;
+    const pose = rig.stance();
+    if (pose) rig.setPose(pose); else rig.reset();
+    this.viewer.requestRender();
   }
 
   /**
