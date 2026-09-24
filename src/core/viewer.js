@@ -112,6 +112,12 @@ export class Viewer {
 
   onFrame(cb) { this._frameCbs.push(cb); }
 
+  /** Called after every loop turn, once the frame (if any) has been drawn. Returns an off switch. */
+  onAfterRender(cb) {
+    (this._afterCbs ||= []).push(cb);
+    return () => { this._afterCbs = this._afterCbs.filter(f => f !== cb); };
+  }
+
   /** Ask for a frame. Cheap to call from anywhere; several calls coalesce into one. */
   requestRender() { this._dirty = true; }
 
@@ -128,7 +134,9 @@ export class Viewer {
     for (const cb of this._frameCbs) cb(t, dt, this.frame);
     // Rendering only when the scene actually changed is what keeps the fan quiet and the
     // interaction crisp: an idle atlas costs nothing.
-    if (this._dirty) { this.renderer.render(this.scene, this.camera); this._dirty = false; }
+    let drew = false;
+    if (this._dirty) { this.renderer.render(this.scene, this.camera); this._dirty = false; drew = true; }
+    if (this._afterCbs) for (const cb of this._afterCbs) cb(drew, t);
   }
 
   // ---------- clipping ----------

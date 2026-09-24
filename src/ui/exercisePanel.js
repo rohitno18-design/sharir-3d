@@ -2,8 +2,8 @@ import { el } from '../core/util.js';
 import { state, set } from '../core/state.js';
 import { EXERCISES } from '../data/exercises.js';
 
-/** Which moment of the rep the current phase falls in. */
-function phaseName(t) {
+/** Which moment of the rep the current phase falls in. Film mode captions use the same words. */
+export function phaseName(t) {
   if (t < 0.42) return { name: 'Lowering', hint: 'The bar comes down slowly. The lats and the rotator cuff keep it on track.' };
   if (t < 0.52) return { name: 'On the chest', hint: 'The bar touches the chest and pauses. The chest muscle is stretched the most here.' };
   if (t < 0.92) return { name: 'Pressing', hint: 'The chest and the front of the shoulder drive the bar up. The triceps take over near the top.' };
@@ -116,6 +116,12 @@ export class ExercisePanel {
         onClick: () => { set({ connective: !state.connective }); this.app.refreshVisibility(); this.render(); } },
         (state.connective ? '✓ ' : '') + 'Fascia & bursae')));
     this.markView();
+
+    // ---- film ----
+    this.root.append(el('h3', { class: 'sec' }, 'Make a video'));
+    this.root.append(el('p', { class: 'nt muted small' }, 'Record this lift as a reel, a square post or a wide clip, with captions that name each muscle as it works.'));
+    this.root.append(el('div', { class: 'btnrow' },
+      el('button', { class: 'btn sm primary', onClick: () => this.app.film.enter() }, '🎬 Film mode')));
 
     // ---- muscle readout ----
     this.root.append(el('h3', { class: 'sec' }, 'Working right now'));

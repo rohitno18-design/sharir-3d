@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { Viewer } from './core/viewer.js';
 import { loadRegistry } from './core/registry.js';
 import { loadBody } from './core/loader.js';
+import { Film } from './ui/film.js';
 import { Highlighter } from './core/highlight.js';
 import { Labels } from './core/labels.js';
 import { EffectsLibrary, effectsAtStep, stepOf, combineAtStep, stackTally } from './core/effects.js';
@@ -72,6 +73,7 @@ class App {
     this.meshes = { has: (id) => this.body.slot(id) !== undefined, get size() { return 0; } };
     this.hi = new Highlighter(this.viewer, this.registry, this.body);
     this.exercise = new ExercisePlayer(this);
+    this.film = new Film(this);
     // The player owns the clock but not the loop: it advances on the frames the viewer is
     // already producing, and asks for more only while something is actually moving.
     this.viewer.onFrame(() => {
@@ -237,7 +239,7 @@ class App {
     else if (mode === 'age') this.panel = new AgePanel(this.leftRoot, this);
     else if (mode === 'effects') this.panel = new EffectsPanel(this.leftRoot, this);
     else if (mode === 'move') { this.exercise.start(EXERCISES[0]); this.panel = new ExercisePanel(this.leftRoot, this); }
-    if (mode !== 'move') this.exercise?.stop();
+    if (mode !== 'move') { this.film?.exit(); this.exercise?.stop(); }
     // Movement is a picture of a lift, and an empty inspector beside it only takes room
     // from the lifter. It folds away on the way in unless something is already selected
     // (picking a muscle opens it again), and comes back on the way out if it was open.
@@ -873,7 +875,7 @@ class App {
     }
     this._labelItems = items;
     this.labels.setItems(items);
-    this.labels.visible = true;
+    this.labels.visible = !this.film?.active;   // DOM labels never belong in a filmed shot
   }
 
   // ---------------- effects mode ----------------
@@ -1083,6 +1085,7 @@ class App {
     let lastPosedPick = 0;
     canvas.addEventListener('pointermove', (e) => {
       if (e.buttons) { if (Math.abs(e.clientX - downX) + Math.abs(e.clientY - downY) > 5) moved = true; this.hoverTip.hidden = true; return; }
+      if (this.film?.active) return;             // a hover glow would end up in the video
       // A posed pick draws the whole body once more, so hovering asks at most about
       // fifteen times a second instead of on every pointer event.
       if (this.viewer.rig?.enabled.value) {
@@ -1105,7 +1108,7 @@ class App {
     });
     canvas.addEventListener('pointerleave', () => { this.hi.setHover(null); this.hoverTip.hidden = true; });
     canvas.addEventListener('click', (e) => {
-      if (moved) return;
+      if (moved || this.film?.active) return;
       const r = canvas.getBoundingClientRect();
       const hit = this.viewer.pick(e.clientX - r.left, e.clientY - r.top);
       if (hit) this.selectPart(hit.part.id, { focus: false });
@@ -1180,6 +1183,8 @@ class App {
 
   /** Tell the camera how much of the canvas the panels and dock are covering. */
   updateSafeInsets() {
+    // In Film mode the only thing covering the picture is its own captions.
+    if (this.film?.active) { this.viewer.setSafeInsets(this.film.safeInsets()); this.exercise?.scheduleFrame(); return; }
     const rect = (el) => (el && !el.hidden && !el.classList.contains('collapsed') && getComputedStyle(el).opacity !== '0') ? el.getBoundingClientRect() : null;
     const stage = document.getElementById('stage').getBoundingClientRect();
     const L = rect(document.getElementById('left'));
