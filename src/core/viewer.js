@@ -189,7 +189,8 @@ export class Viewer {
       for (const h of hits) {
         if (h.faceIndex == null) continue;
         const slot = body.partForTriangle(batch, h.faceIndex);
-        if (!body.isVisible(slot)) continue;  // ghosted or switched off: see through it
+        // Switched off, or a faint ghost: see through it, and click through it too.
+        if (!body.isVisible(slot) || body.style[slot * 4] < 0.35) continue;
         const wp = applyMorph(h.point, new THREE.Vector3(), { belly: 1, breast: 1 }).applyMatrix4(this.bodyRoot.matrixWorld);
         const dist = wp.distanceTo(wo);
         if (!best || dist < best.distance) best = { slot, part: body.partAt(slot), point: wp, distance: dist };

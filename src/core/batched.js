@@ -386,9 +386,10 @@ if (vStyle.z > 4.5) {
 }
 // Picking pass: write which part this is instead of its colour. It runs through the same
 // morph and skinning as the picture, so it finds whatever is on screen in any pose.
-// Faint ghosts are see-through here as they are to the eye.
+// Ghosted layers are click-through as they are see-through: a click on a muscle seen
+// through faint skin should land on the muscle.
 if (uPick > 0.5) {
-  if (vStyle.x < 0.12) discard;
+  if (vStyle.x < 0.35) discard;
   float id = floor(vPartIdx + 0.5) + 1.0;
   gl_FragColor = vec4(mod(id, 256.0), mod(floor(id / 256.0), 256.0), floor(id / 65536.0), 255.0) / 255.0;
 }

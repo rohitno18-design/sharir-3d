@@ -242,6 +242,11 @@ class App {
   // ---------------- modes ----------------
   setMode(mode, record = true) {
     if (record && mode !== state.mode) this.nav.push('mode');
+    // A temporary view belongs to the tab that laid it (an effect, a Movement look, a
+    // focused target). Carried into another tab, the body shows one set of systems while
+    // the Systems switches show another, and the first switch touched makes several
+    // systems appear or vanish at once. Each tab lays its own again below if it wants one.
+    if (mode !== state.mode) this.clearSysOverride();
     set({ mode });
     document.body.classList.toggle('mode-move', mode === 'move');
     this.topbar.syncToggles();
@@ -341,7 +346,11 @@ class App {
    * de-sync that made the menus feel unreliable. Overrides live in their own layer instead.
    */
   setSysOverride(map) {
-    state.sysOverride = map && Object.keys(map).length ? map : null;
+    const next = map && Object.keys(map).length ? map : null;
+    // Nothing to clear is nothing to redraw. Redrawing the Systems panel on every switch
+    // click also threw away the row being clicked, halfway through the click.
+    if (!next && !state.sysOverride) return;
+    state.sysOverride = next;
     this.hi.invalidate();
     if (state.mode === 'systems') this.panel?.render?.();
   }
@@ -696,9 +705,21 @@ class App {
     if (focus) this.focusSelected();
     this.refreshLabels();
     this.updateNavUI();
-    // make sure it's visible: turn its system on
+    // Make sure it can be seen. On the Systems tab that means switching its system on,
+    // where the switch shows it. Anywhere else it is a temporary view laid over the user's
+    // own switches, so picking a nerve from search no longer quietly leaves the nervous
+    // system switched on for good.
     const sys = state.systems[part.sys];
-    if (sys && !sys.visible) { sys.visible = true; this.refreshVisibility(); if (state.mode === 'systems') this.panel?.render?.(); toast(`${this.registry.systemMeta(part.sys).label} turned on`); }
+    if (sys && !sys.visible) {
+      if (state.mode === 'systems') {
+        sys.visible = true;
+        this.refreshVisibility();
+        this.panel?.render?.();
+        toast(`${this.registry.systemMeta(part.sys).label} turned on`);
+      } else if (!this.hi.sysState(part.sys)?.visible) {
+        this.setSysOverride({ ...(state.sysOverride || {}), [part.sys]: { visible: true } });
+      }
+    }
   }
 
   clearSelection() {
@@ -801,6 +822,9 @@ class App {
     document.getElementById('btn-atlas')?.classList.toggle('active', state.atlas);
     const h = this.currentHeightM();
     if (state.atlas) {
+      // The atlas shows every system, but that is the atlas's choice, not the user's:
+      // keep their switches and give them back on the way out.
+      this._atlasSaved = Object.fromEntries(SYSTEMS.map(s => [s.key, { ...state.systems[s.key] }]));
       const shift = {}; for (const g of ATLAS_GROUPS) for (const k of g.keys) shift[k] = g.x * (h / 1.7);
       for (let slot = 0; slot < this.body.count; slot++) { const p = this.body.partAt(slot); this.body.setOffset(slot, shift[p.sys] || 0, 0, 0); }
       this.body.flush();
@@ -815,6 +839,11 @@ class App {
     } else {
       for (let slot = 0; slot < this.body.count; slot++) this.body.setOffset(slot, 0, 0, 0);
       this.body.flush();
+      if (this._atlasSaved) {
+        for (const [k, v] of Object.entries(this._atlasSaved)) Object.assign(state.systems[k], v);
+        this._atlasSaved = null;
+      }
+      if (state.mode === 'systems') this.panel?.render?.();
       this.viewer.ground.visible = true; this.viewer.ring.visible = true;
       set({ labels: 'auto' });
       this.viewer.resetView(h);

@@ -60,7 +60,33 @@ export class Registry {
       }
     }
     this._fixAttachmentKinds();
+    this._fixSexTags();
     this._buildSearch();
+  }
+
+  /**
+   * Which body a part belongs to. The atlas tags most sex-specific parts, but not all:
+   * the vagina, its fornix, orifice and lumen, and the labial commissures came through
+   * untagged, so they showed on the male body. The testicular vessels came through the same
+   * way on the female side. The anatomy tree is the reliable source, so anything filed
+   * under a sex's genital system takes that sex, and the few vessels named for one sex's
+   * gonads follow their names.
+   *
+   * "Lumen of vagina" is also dropped outright. It is an empty space, not tissue, and the
+   * source file places it at knee height, where it hung between the shins.
+   */
+  _fixSexTags() {
+    const FEMALE_TREE = /\bfemale (genital|internal genitalia|external genitalia|reproductive)/i;
+    const MALE_TREE = /(^|[^e])\bmale (genital|internal genitalia|external genitalia|reproductive)/i;
+    const FEMALE_NAME = /\b(ovarian|uterine) (artery|vein|venous plexus|branch)|\bvaginal (artery|vein|venous plexus|branch)/i;
+    const MALE_NAME = /\b(testicular|cremasteric|deferential) (artery|vein|veins|plexus)|pampiniform/i;
+    for (const p of this.parts) {
+      if (p.sx) continue;
+      const chain = this.ancestors(p.id).map(a => a.n).join(' | ');
+      if (FEMALE_TREE.test(chain) || FEMALE_NAME.test(p.n)) p.sx = 'f';
+      else if (MALE_TREE.test(chain) || MALE_NAME.test(p.n)) p.sx = 'm';
+    }
+    for (const p of this.parts) if (/^lumen of vagina$/i.test(p.n)) p.hide = 1;
   }
 
   /**

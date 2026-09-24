@@ -1,6 +1,7 @@
 import { el, toast } from '../core/util.js';
 import { state, set, emit } from '../core/state.js';
 import { SYSTEMS, PRESETS, SKIN_TONES } from '../data/systems.js';
+import { FEATURES } from '../data/flags.js';
 
 export class SystemsPanel {
   constructor(root, app) { this.root = root; this.app = app; this.render(); }
@@ -16,10 +17,13 @@ export class SystemsPanel {
     );
     // presets — the fastest visible payoff, so they go first and look like the main action
     const chips = el('div', { class: 'chips big-chips' });
+    this.presetChips = [];
     for (const p of PRESETS) {
-      const on = SYSTEMS.every(s => (p.on.includes(s.key)) === state.systems[s.key].visible);
-      chips.append(el('button', { class: 'chip' + (on ? ' active' : ''), onClick: () => this.applyPreset(p) }, lang === 'hi' ? p.hi : p.label));
+      const chip = el('button', { class: 'chip', onClick: () => this.applyPreset(p) }, lang === 'hi' ? p.hi : p.label);
+      this.presetChips.push([p, chip]);
+      chips.append(chip);
     }
+    this.markPresets();
     this.root.append(el('h3', { class: 'sec' }, lang === 'hi' ? 'एक क्लिक में देखें' : 'See it in one click'), chips);
 
     // atlas + xray
@@ -36,16 +40,32 @@ export class SystemsPanel {
       const st = state.systems[s.key];
       const r = el('div', { class: 'sysrow' + (st.visible ? '' : ' off') });
       const sw = el('button', { class: 'sw', style: `background:${st.visible ? s.color : 'transparent'}`, title: 'Toggle' });
-      const nm = el('div', { class: 'nm' }, lang === 'hi' ? s.hi : s.label, el('small', {}, lang === 'hi' ? s.label : s.hi));
+      const nm = el('div', { class: 'nm' }, lang === 'hi' ? s.hi : s.label, FEATURES.hindi ? el('small', {}, lang === 'hi' ? s.label : s.hi) : null);
       const range = el('input', { type: 'range', min: 0, max: 100, value: Math.round(st.opacity * 100), title: 'Opacity' });
       const solo = el('button', { class: 'solo', title: 'Solo this system' }, 'SOLO');
       // Touching a switch here means the user is taking direct control of what is on, so
       // any temporary view laid over the top (from Movement, or an effect) gives way —
       // otherwise the switch moves and nothing on screen changes.
-      const toggle = () => { this.app.clearSysOverride(); st.visible = !st.visible; r.classList.toggle('off', !st.visible); sw.style.background = st.visible ? s.color : 'transparent'; this.app.refreshVisibility(); };
+      // Change the setting FIRST. Clearing a temporary view redraws this panel from the
+      // settings, and when that ran before the flip, the redrawn panel showed every switch
+      // the user touched the wrong way round.
+      const toggle = () => {
+        st.visible = !st.visible;
+        this.syncRow(r, sw, s, st);
+        this.app.clearSysOverride();
+        this.app.refreshVisibility();
+        this.markPresets();
+      };
       sw.addEventListener('click', toggle);
       nm.addEventListener('click', toggle);
-      range.addEventListener('input', () => { this.app.clearSysOverride(); st.opacity = range.value / 100; if (!st.visible && st.opacity > 0) { st.visible = true; r.classList.remove('off'); sw.style.background = s.color; } this.app.refreshVisibility(); });
+      range.addEventListener('input', () => {
+        st.opacity = range.value / 100;
+        if (!st.visible && st.opacity > 0) st.visible = true;
+        this.syncRow(r, sw, s, st);
+        this.app.clearSysOverride();
+        this.app.refreshVisibility();
+        this.markPresets();
+      });
       solo.addEventListener('click', () => this.applyPreset({ on: [s.key] }));
       nm.addEventListener('mouseenter', () => this.app.hoverSystem(s.key));
       nm.addEventListener('mouseleave', () => this.app.hoverSystem(null));
@@ -97,6 +117,22 @@ export class SystemsPanel {
     const at = el('label', { class: 'row' }, el('input', { type: 'checkbox', ...(state.showAttachments ? { checked: '' } : {}) }), el('span', {}, lang === 'hi' ? 'पेशी के उद्गम/निवेशन (origin/insertion) दिखाएँ' : 'Show muscle origin / insertion on bones'));
     at.querySelector('input').addEventListener('change', (e) => { set({ showAttachments: e.target.checked }); this.app.refreshAttachments(); });
     this.root.append(at);
+  }
+
+  /** One row's look from its setting. */
+  syncRow(r, sw, s, st) {
+    r.classList.toggle('off', !st.visible);
+    sw.style.background = st.visible ? s.color : 'transparent';
+  }
+
+  /**
+   * Light the one-click view that matches what is switched on, if any. Worked out afresh
+   * after every switch, so a chip never stays lit for a view that is no longer showing.
+   */
+  markPresets() {
+    for (const [p, chip] of this.presetChips || []) {
+      chip.classList.toggle('active', SYSTEMS.every(s => p.on.includes(s.key) === state.systems[s.key].visible));
+    }
   }
 
   applyPreset(p) {

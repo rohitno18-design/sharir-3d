@@ -58,6 +58,7 @@ export class Highlighter {
   isPartVisible(part) {
     // Sex is a hard filter: a male organ must never appear in the female body.
     if (part.sx && part.sx !== (state.sex === 'female' ? 'f' : 'm')) return false;
+    if (part.hide) return false;              // placed wrongly in the source file; never drawn
     // Connective tissue is filed under "muscles" in this atlas, but it is not muscle and
     // it WRAPS muscle: fascia lata sheathes the whole thigh, brachial and antebrachial
     // fascia sheathe the arm, and the clavipectoral fascia stretches across the armpit.
