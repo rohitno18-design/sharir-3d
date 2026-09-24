@@ -119,7 +119,7 @@ export class ExercisePanel {
 
     // ---- film ----
     this.root.append(el('h3', { class: 'sec' }, 'Make a video'));
-    this.root.append(el('p', { class: 'nt muted small' }, 'Record this lift as a reel, a square post or a wide clip, with captions that name each muscle as it works.'));
+    this.root.append(el('p', { class: 'nt muted small' }, 'Record this lift as a reel, a square post or a wide clip. Choose from 1 to 20 reps, how long each phase stays on screen, and how the camera moves. The captions show which muscles are working and how tired they get.'));
     this.root.append(el('div', { class: 'btnrow' },
       el('button', { class: 'btn sm primary', onClick: () => this.app.film.enter() }, '🎬 Film mode')));
 

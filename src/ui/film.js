@@ -1,6 +1,6 @@
-import * as THREE from 'three';
 import { el } from '../core/util.js';
 import { effortColor, phaseName } from './exercisePanel.js';
+import { buildTake, sampleTake, fatigueAt, workShares, cameraOffset, PACES, REP_CHOICES, CAMERAS } from './filmTake.js';
 
 /**
  * Film mode: turn the Movement view into a clean shot and record it as a video.
@@ -9,6 +9,10 @@ import { effortColor, phaseName } from './exercisePanel.js';
  * a 9:16 reel, a square post or a 16:9 clip. What is on screen is drawn onto one canvas
  * together with the captions, and that same canvas is what the recorder films, so the
  * preview and the file cannot disagree.
+ *
+ * A take is a whole set: one rep or twenty, each phase held long enough to read, the
+ * muscles working harder and tiring as the set goes on, and the camera moving round the
+ * lift if asked to. The preview plays the same take the recorder films.
  *
  * Nothing is saved on its own. When a take finishes, a Save button appears and the user
  * decides whether to keep it.
@@ -19,7 +23,7 @@ const FORMATS = {
   wide:   { label: 'Wide 16:9',  w: 1920, h: 1080 },
 };
 
-/** Recording formats in order of preference. MP4 plays everywhere, including Instagram. */
+/** Recording formats for the real-time fallback, in order of preference. */
 const MIME = [
   'video/mp4;codecs=avc1.640028',
   'video/mp4;codecs=avc1.42E01E',
@@ -29,8 +33,7 @@ const MIME = [
   'video/webm',
 ];
 
-/** How far the camera swings across a take when "Slow turn" is on, either side of centre. */
-const TURN = THREE.MathUtils.degToRad(11);
+const FPS = 30;
 
 export class Film {
   constructor(app) {
@@ -38,16 +41,21 @@ export class Film {
     this.active = false;
     this.format = 'reel';
     this.captions = true;
-    this.turn = true;
-    this.reps = 2;
-    this.slow = false;
+    this.reps = 1;
+    this.pace = 'teach:3';
+    this.camera = 'orbit';
     this.recorder = null;
+    this.rendering = null;
+    this.previewing = null;
     this.result = null;
-    this._onKey = (e) => { if (e.key === 'Escape') { if (this.recorder || this.rendering) this.stop(); else this.exit(); } };
+    this.sample = null;           // the moment of the take on screen, while one is playing
+    this._onKey = (e) => { if (e.key === 'Escape') { if (this.busy) this.stop(); else this.exit(); } };
     this._onResize = () => { if (this.active) this.layout(); };
   }
 
   get player() { return this.app.exercise; }
+  get busy() { return !!(this.recorder || this.rendering || this.previewing); }
+  get take() { return buildTake({ reps: this.reps, pace: this.pace, repSecs: this.player?.ex?.duration || 3.4 }); }
 
   enter() {
     if (this.active || !this.player?.ex) return;
@@ -67,7 +75,7 @@ export class Film {
     this.layout();
     this.player.pause();
     this.player.seek(0.62);
-    this._offDraw = v.onAfterRender((drew, t) => this.draw(t));
+    this._offDraw = v.onAfterRender(() => this.draw());
     document.addEventListener('keydown', this._onKey);
     window.addEventListener('resize', this._onResize);
     document.fonts?.load('800 64px Manrope').then(() => v.requestRender());
@@ -75,7 +83,7 @@ export class Film {
 
   exit() {
     if (!this.active) return;
-    if (this.recorder || this.rendering) this.stop(true);
+    if (this.busy) this.stop(true);
     this.active = false;
     const v = this.app.viewer;
     this._offDraw?.();
@@ -84,12 +92,12 @@ export class Film {
     this.discard();
     this.canvas?.remove(); this.bar?.remove();
     this.canvas = this.bar = null;
-    const stage = document.getElementById('stage');
-    stage.style.cssText = '';
+    document.getElementById('stage').style.cssText = '';
     document.body.classList.remove('film');
     this.app.labels.visible = this._labelsWere;
     v.renderer.setPixelRatio(this._saved.pixelRatio);
     this.player.speed = this._saved.speed;
+    this.restoreEffort();
     v.resize();
     this.app.updateSafeInsets();
     this.player.autoFrame = true;
@@ -107,8 +115,7 @@ export class Film {
     const maxW = Math.max(120, window.innerWidth - 32);
     if (w > maxW) { w = maxW; h = w / aspect; }
     w = Math.floor(w); h = Math.floor(h);
-    const stage = document.getElementById('stage');
-    Object.assign(stage.style, {
+    Object.assign(document.getElementById('stage').style, {
       inset: 'auto', left: `${Math.round((window.innerWidth - w) / 2)}px`, top: `${top}px`,
       width: `${w}px`, height: `${h}px`,
     });
@@ -125,8 +132,80 @@ export class Film {
     v.requestRender();
   }
 
+  // ---------- playing a take ----------
+  /**
+   * Put everything at `ts` seconds into the take: the body at that moment of the rep, the
+   * muscles' effort and tiredness for that point in the set, and the camera.
+   */
+  frameAt(take, ts, base) {
+    const p = this.player, v = this.app.viewer;
+    const s = sampleTake(take, ts);
+    p.seek(s.t);
+    this._shares ||= workShares(p.groups);
+    for (const g of p.groups) {
+      const f = fatigueAt(take, s, this._shares.get(g) || 0);
+      g.effort = Math.max(0, Math.min(1, g.def.effort(s.t) * f.lift));
+      g.tired = f.tired;
+      for (const id of g.ids) { const e = p._fx.get(id); if (e) e.intensity = g.effort; }
+    }
+    // Say the video is slowed down only while it is: with just the first and last rep slow,
+    // the reps in between run at real speed.
+    this.sample = { ...s, reps: take.reps, teach: s.taught || (s.intro && take.pace.teach !== 'none') };
+    if (base) {
+      v.camera.position.copy(v.controls.target).add(cameraOffset(this.camera, base, ts, take.total));
+      v.camera.lookAt(v.controls.target);
+    }
+    // Muscle colour normally reaches the GPU on the next screen frame. A rendered frame
+    // does not wait for one, so push this moment's effort now.
+    this.app.hi.tick(ts);
+    v.requestRender();
+  }
+
+  /** Back to the plain Movement readout once a take is over. */
+  restoreEffort() {
+    this.sample = null;
+    const p = this.player;
+    if (!p?.ex) return;
+    for (const g of p.groups) g.tired = 0;
+    p.seek(p.t);
+  }
+
+  /** The camera as framed now, before any take moves it. */
+  startCamera() {
+    const v = this.app.viewer;
+    settleCamera(v);
+    v.controls.enabled = false;
+    return v.camera.position.clone().sub(v.controls.target);
+  }
+
+  endCamera(base) {
+    const v = this.app.viewer;
+    if (base) { v.camera.position.copy(v.controls.target).add(base); v.camera.lookAt(v.controls.target); }
+    v.controls.enabled = true;
+    v.requestRender();
+  }
+
+  /** Play the take on screen in real time, without recording, to check its timing. */
+  preview() {
+    if (this.busy || !this.canvas) return;
+    const take = this.take, base = this.startCamera();
+    const start = performance.now();
+    this.previewing = { take, base, raf: 0, ts: 0 };
+    const step = () => {
+      if (!this.previewing) return;
+      const ts = (performance.now() - start) / 1000;
+      if (ts >= take.total) { this.stop(); return; }
+      this.frameAt(take, ts, base);
+      this.previewing.ts = ts;
+      if (Math.floor(ts * 4) !== this._lastBarTick) { this._lastBarTick = Math.floor(ts * 4); this.renderBar(); }
+      this.previewing.raf = requestAnimationFrame(step);
+    };
+    this.renderBar();
+    step();
+  }
+
   // ---------- the picture ----------
-  draw(t) {
+  draw() {
     if (!this.canvas) return;
     const ctx = this.ctx, W = this.canvas.width, H = this.canvas.height;
     const g = ctx.createRadialGradient(W / 2, H * 0.4, 0, W / 2, H * 0.4, Math.max(W, H) * 0.75);
@@ -134,12 +213,13 @@ export class Film {
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
     ctx.drawImage(this.app.viewer.canvas, 0, 0, W, H);
     if (this.captions) this.drawCaptions(ctx, W, H);
-    if (this.recorder) this.stepTurn();
   }
 
   drawCaptions(ctx, W, H) {
     const p = this.player;
     if (!p?.ex) return;
+    const s = this.sample;
+    const reps = s ? s.reps : this.reps;
     // A tall frame stacks everything down the left. A square or wide frame puts the moment
     // of the rep bottom left and the muscles bottom right, or the text would cover half
     // of a square picture.
@@ -148,19 +228,21 @@ export class Film {
     // around the lift, so its text runs a little smaller.
     const u = ((cols ? H : W) / 1080) * (W === H ? 0.86 : 1);
     const pad = 64 * u;
-    const phase = phaseName(p.t);
+    const phase = captionFor(p.t, s);
     const colW = cols ? W * 0.5 - pad * 1.5 : W - pad * 2;
     const hintFont = `500 ${32 * u}px Inter, sans-serif`;
     const hintLines = wrap(ctx, phase.hint, colW, hintFont);
     const top3 = p.ranked().slice(0, 3);
+    const showTired = reps > 1;
 
     // Lay the bottom block out from the bottom edge up, then paint it.
     const hintY = H - pad - (hintLines.length - 1) * 44 * u;
     const phaseY = hintY - 58 * u;
     const barW = cols ? Math.min(560 * u, W * 0.42) : W - pad * 2;
     const barX = cols ? W - pad - barW : pad;
-    const rowH = 92 * u;
-    const firstBarY = cols ? H - pad - 30 * u - (top3.length - 1) * rowH : phaseY - 96 * u - (top3.length - 1) * rowH;
+    const rowH = (showTired ? 108 : 92) * u;
+    const tail = showTired ? 34 * u : 0;
+    const firstBarY = cols ? H - pad - 30 * u - tail - (top3.length - 1) * rowH : phaseY - 96 * u - tail - (top3.length - 1) * rowH;
     const blockTop = Math.min(phaseY - 60 * u, firstBarY - 40 * u);
     const titleBottom = pad + 180 * u;
     this._reserve = { top: titleBottom / H, bottom: (H - blockTop) / H };
@@ -183,7 +265,29 @@ export class Film {
     ctx.fillText(p.ex.name, pad, pad + 108 * u);
     ctx.fillStyle = 'rgba(255,255,255,0.62)';
     ctx.font = `500 ${30 * u}px Inter, sans-serif`;
-    ctx.fillText('What every muscle does in one rep', pad, pad + 156 * u);
+    const sub = reps > 1 ? `A set of ${reps} reps, taken close to failure.` : 'What every muscle does in one rep.';
+    const subW = W - pad * 2 - (reps > 1 ? 260 * u : 0);
+    wrap(ctx, sub + (s?.teach ? ' Slowed down to show each phase.' : ''), subW, ctx.font)
+      .slice(0, 2).forEach((line, i) => ctx.fillText(line, pad, pad + 156 * u + i * 38 * u));
+
+    // Rep counter, top right, for a set.
+    if (reps > 1) {
+      const n = `${s ? (s.intro ? 1 : s.rep + 1) : 1}`, of = ` / ${reps}`;
+      ctx.font = `800 ${92 * u}px Manrope, sans-serif`;
+      const nw = ctx.measureText(n).width;
+      ctx.font = `700 ${40 * u}px Manrope, sans-serif`;
+      const ow = ctx.measureText(of).width;
+      const x = W - pad - nw - ow;
+      ctx.fillStyle = '#e9c95c';
+      ctx.font = `800 ${24 * u}px Manrope, sans-serif`;
+      spaced(ctx, 'REP', x, pad + 24 * u, 4 * u);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `800 ${92 * u}px Manrope, sans-serif`;
+      ctx.fillText(n, x, pad + 112 * u);
+      ctx.fillStyle = 'rgba(255,255,255,0.6)';
+      ctx.font = `700 ${40 * u}px Manrope, sans-serif`;
+      ctx.fillText(of, x + nw, pad + 112 * u);
+    }
 
     ctx.fillStyle = '#ffffff';
     ctx.font = `800 ${60 * u}px Manrope, sans-serif`;
@@ -206,12 +310,19 @@ export class Film {
       round(ctx, barX, ty, barW, th, th / 2); ctx.fill();
       ctx.fillStyle = effortColor(gr.effort);
       round(ctx, barX, ty, Math.max(th, barW * gr.effort), th, th / 2); ctx.fill();
+      // How tired this muscle is by now in the set.
+      if (showTired) {
+        const tired = Math.round((gr.tired || 0) * 100);
+        ctx.fillStyle = tired > 3 ? '#ff8a7a' : 'rgba(255,255,255,0.35)';
+        ctx.font = `600 ${24 * u}px Inter, sans-serif`;
+        ctx.fillText(tired > 3 ? `Tired ${tired}%` : 'Fresh', barX, ty + th + 30 * u);
+      }
       by += rowH;
     }
     // The first frame is the first time the real caption sizes are known; frame the lift
     // again between them if they differ from the estimate.
     const key = `${this.format}|${this._reserve.top.toFixed(2)}|${this._reserve.bottom.toFixed(2)}`;
-    if (key !== this._reserveKey) { this._reserveKey = key; if (!this.recorder) this.app.updateSafeInsets(); }
+    if (key !== this._reserveKey) { this._reserveKey = key; if (!this.busy) this.app.updateSafeInsets(); }
   }
 
   /**
@@ -220,33 +331,22 @@ export class Film {
    */
   safeInsets() {
     const stage = document.getElementById('stage').getBoundingClientRect();
-    const est = this.format === 'reel' ? { top: 0.13, bottom: 0.33 } : { top: 0.24, bottom: 0.33 };
+    const est = this.format === 'reel' ? { top: 0.13, bottom: 0.36 } : { top: 0.24, bottom: 0.36 };
     const r = this.captions ? (this._reserve || est) : { top: 0.04, bottom: 0.04 };
     return { top: r.top * stage.height, bottom: r.bottom * stage.height, left: stage.width * 0.04, right: stage.width * 0.04 };
-  }
-
-  /** Sweep the camera slowly round the lift across the take, for a little life in the shot. */
-  stepTurn() {
-    if (!this.turn || !this._orbit) return;
-    const v = this.app.viewer;
-    const k = Math.min(1, (performance.now() - this._orbit.start) / this._orbit.ms);
-    const a = (k - 0.5) * 2 * TURN;
-    const off = this._orbit.offset.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), a);
-    v.camera.position.copy(v.controls.target).add(off);
-    v.camera.lookAt(v.controls.target);
-    v.requestRender();
   }
 
   // ---------- recording ----------
   /**
    * Record a take. The first choice renders the video one frame at a time and encodes
    * each frame as it goes (WebCodecs H.264 into an MP4). Every frame is placed at an exact
-   * moment of the rep, so the file plays at a smooth 30 frames a second however fast or
-   * slow this computer draws, and even if the tab is left in the background. A browser
+   * moment of the set, so the file plays at a smooth 30 frames a second however fast or
+   * slow this computer draws. The browser slows the encoder right down while the tab is
+   * in the background, though, so the bar asks for the tab to stay in front. A browser
    * without WebCodecs films the screen in real time instead.
    */
   async record() {
-    if (this.recorder || this.rendering || !this.canvas) return;
+    if (this.busy || !this.canvas) return;
     const f = FORMATS[this.format];
     let mb = null;
     try {
@@ -259,116 +359,99 @@ export class Film {
 
   async renderFrames(mb) {
     this.discard();
-    const p = this.player, v = this.app.viewer;
-    p.pause();
-    p.speed = this.slow ? 0.5 : 1;
-    const fps = 30, hold = 0.6, tail = 0.35;
-    const repSecs = (p.ex.duration / p.speed) * this.reps;
-    const frames = Math.round((hold + repSecs + tail) * fps);
+    const v = this.app.viewer, take = this.take;
+    const frames = Math.round(take.total * FPS);
     const output = new mb.Output({ format: new mb.Mp4OutputFormat({ fastStart: 'in-memory' }), target: new mb.BufferTarget() });
     const source = new mb.CanvasSource(this.canvas, { codec: 'avc', bitrate: mb.QUALITY_HIGH, keyFrameInterval: 1 });
-    output.addVideoTrack(source, { frameRate: fps });
+    output.addVideoTrack(source, { frameRate: FPS });
     await output.start();
 
-    this.rendering = { done: 0, frames, cancel: false };
-    v.controls.enabled = false;
-    settleCamera(v);
-    const offset = v.camera.position.clone().sub(v.controls.target);
-    const up = new THREE.Vector3(0, 1, 0);
+    this.player.pause();
+    const base = this.startCamera();
+    this.rendering = { done: 0, frames, cancel: false, started: performance.now() };
     this.renderBar();
     try {
       for (let i = 0; i < frames && !this.rendering.cancel; i++) {
-        const ts = i / fps;
-        // Rep time: hold at lockout, then the reps, then hold again at the top.
-        const reps = (Math.max(0, Math.min(repSecs, ts - hold)) * p.speed) / p.ex.duration;
-        p.seek(reps >= this.reps ? 0 : reps % 1);
-        if (this.turn) {
-          const a = (i / Math.max(1, frames - 1) - 0.5) * 2 * TURN;
-          v.camera.position.copy(v.controls.target).add(offset.clone().applyAxisAngle(up, a));
-          v.camera.lookAt(v.controls.target);
-        }
-        // Muscle colour normally reaches the GPU on the next screen frame. A rendered
-        // frame does not wait for one, so push this frame's effort values now.
-        this.app.hi.tick(ts);
+        const ts = i / FPS;
+        this.frameAt(take, ts, base);
         v.renderer.render(v.scene, v.camera);
         this.draw();
-        await source.add(ts, 1 / fps);
+        await source.add(ts, 1 / FPS);
         if (i % 4 === 0) { this.rendering.done = i; this.renderBar(); await yieldToPage(); }
       }
       if (this.rendering.cancel) { await output.cancel(); return; }
       await output.finalize();
       const blob = new Blob([output.target.buffer], { type: 'video/mp4' });
-      this.result = { blob, url: URL.createObjectURL(blob), ext: 'mp4', secs: frames / fps };
+      this.result = { blob, url: URL.createObjectURL(blob), ext: 'mp4', secs: frames / FPS };
     } catch (err) {
       console.error('[film] render failed', err);
-      this._msg = 'The video could not be made on this computer. Try the real-time recorder in Chrome.';
+      this._msg = 'The video could not be made on this computer. Try Chrome or Edge.';
     } finally {
-      v.camera.position.copy(v.controls.target).add(offset);
-      v.camera.lookAt(v.controls.target);
-      v.controls.enabled = true;
+      this.endCamera(base);
       this.rendering = null;
-      p.seek(0.62);
+      this.restoreEffort();
+      this.player.seek(0.62);
       this.renderBar();
     }
   }
 
   recordRealtime() {
-    if (this.recorder || !this.canvas) return;
+    if (this.busy || !this.canvas) return;
     if (typeof MediaRecorder === 'undefined' || !this.canvas.captureStream) {
       this.message('This browser cannot record video. Chrome or Edge on a computer can.');
       return;
     }
     this.discard();
     const mime = MIME.find(m => MediaRecorder.isTypeSupported(m)) || '';
-    const stream = this.canvas.captureStream(30);
+    const stream = this.canvas.captureStream(FPS);
     const rec = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: 12_000_000 } : undefined);
     const chunks = [];
     rec.ondataavailable = (e) => { if (e.data && e.data.size) chunks.push(e.data); };
+    const take = this.take;
     rec.onstop = () => {
       stream.getTracks().forEach(tr => tr.stop());
       if (this._cancelled) { this._cancelled = false; return; }
       const type = rec.mimeType || mime || 'video/webm';
       const blob = new Blob(chunks, { type });
-      this.result = { blob, url: URL.createObjectURL(blob), ext: type.includes('mp4') ? 'mp4' : 'webm', secs: this._takeSecs };
+      this.result = { blob, url: URL.createObjectURL(blob), ext: type.includes('mp4') ? 'mp4' : 'webm', secs: take.total };
       this.renderBar();
     };
-
-    const p = this.player, v = this.app.viewer;
-    p.pause();
-    p.speed = this.slow ? 0.5 : 1;
-    p.seek(0);                                    // the bar starts locked out, at the top
-    const hold = 600, tail = 350;
-    const repMs = (p.ex.duration / p.speed) * 1000 * this.reps;
-    this._takeSecs = (hold + repMs + tail) / 1000;
-    v.controls.enabled = false;
-    settleCamera(v);
-    this._orbit = { start: performance.now(), ms: hold + repMs + tail, offset: v.camera.position.clone().sub(v.controls.target) };
+    this.player.pause();
+    const base = this.startCamera();
+    const start = performance.now();
     this.recorder = rec;
+    this._rt = { take, base, start, raf: 0 };
     rec.start(250);
-    this._startedAt = performance.now();
-    this._playT = setTimeout(() => p.play(), hold);
-    this._stopT = setTimeout(() => this.stop(), hold + repMs + tail);
-    this._clockT = setInterval(() => this.renderBar(), 250);
-    this.renderBar();
+    const step = () => {
+      if (this.recorder !== rec) return;
+      const ts = (performance.now() - start) / 1000;
+      if (ts >= take.total) { this.stop(); return; }
+      this.frameAt(take, ts, base);
+      if (Math.floor(ts * 4) !== this._lastBarTick) { this._lastBarTick = Math.floor(ts * 4); this.renderBar(); }
+      this._rt.raf = requestAnimationFrame(step);
+    };
+    step();
   }
 
-  /** Finish the take. `cancel` throws it away instead of offering it. */
+  /** Stop whatever is running. `cancel` throws a recording away instead of offering it. */
   stop(cancel = false) {
     if (this.rendering) { this.rendering.cancel = true; return; }
+    if (this.previewing) {
+      cancelAnimationFrame(this.previewing.raf);
+      const base = this.previewing.base;
+      this.previewing = null;
+      this.endCamera(base);
+      this.restoreEffort();
+      this.renderBar();
+      return;
+    }
     const rec = this.recorder;
     if (!rec) return;
-    clearTimeout(this._playT); clearTimeout(this._stopT); clearInterval(this._clockT);
+    cancelAnimationFrame(this._rt?.raf);
     this.recorder = null;
     this._cancelled = cancel;
-    this.player.pause();
-    if (this._orbit) {
-      // Leave the camera where the take started, not wherever the sweep ended.
-      const v = this.app.viewer;
-      v.camera.position.copy(v.controls.target).add(this._orbit.offset);
-      v.camera.lookAt(v.controls.target);
-      this._orbit = null;
-    }
-    this.app.viewer.controls.enabled = true;
+    this.endCamera(this._rt?.base);
+    this.restoreEffort();
     if (rec.state !== 'inactive') rec.stop();
     this.renderBar();
   }
@@ -387,24 +470,30 @@ export class Film {
     if (!bar) return;
     bar.innerHTML = '';
     if (this.rendering) {
-      const pct = Math.round((this.rendering.done / this.rendering.frames) * 100);
-      bar.append(
+      const r = this.rendering;
+      const pct = Math.round((r.done / r.frames) * 100);
+      const rate = r.done / Math.max(0.5, (performance.now() - r.started) / 1000);
+      const left = r.done > 8 ? Math.max(0, (r.frames - r.done) / rate) : null;
+      bar.append(...[
         el('span', { class: 'film-rec' }, el('i', { class: 'film-dot' }), `Making your video  ${pct}%`),
+        left != null ? el('span', { class: 'film-note' }, `About ${fmtLeft(left)} left.`) : null,
+        el('span', { class: 'film-note' }, 'Keep this tab in front. It slows right down in the background.'),
         el('button', { class: 'btn sm', onClick: () => this.stop() }, 'Cancel'),
-      );
+      ].filter(Boolean));
       return;
     }
-    if (this.recorder) {
-      const secs = (performance.now() - this._startedAt) / 1000;
+    if (this.recorder || this.previewing) {
+      const take = this.previewing ? this.previewing.take : this._rt.take;
+      const ts = this.previewing ? this.previewing.ts : (performance.now() - this._rt.start) / 1000;
       bar.append(
-        el('span', { class: 'film-rec' }, el('i', { class: 'film-dot' }), `Recording  ${fmt(secs)} / ${fmt(this._takeSecs)}`),
+        el('span', { class: 'film-rec' }, this.recorder ? el('i', { class: 'film-dot' }) : '▶', `${this.recorder ? 'Recording' : 'Preview'}  ${fmt(ts)} / ${fmt(take.total)}`),
         el('button', { class: 'btn sm', onClick: () => this.stop() }, '■ Stop'),
       );
       return;
     }
     if (this.result) {
       const mb = (this.result.blob.size / 1048576).toFixed(1);
-      const name = `sharir-${this.player.ex.id}-${this.format}.${this.result.ext}`;
+      const name = `sharir-${this.player.ex.id}-${this.reps}rep-${this.format}.${this.result.ext}`;
       bar.append(
         el('span', { class: 'film-note' }, `Your video is ready. ${fmt(this.result.secs)}, ${mb} MB.`),
         el('a', { class: 'btn sm primary', href: this.result.url, download: name }, '⤓ Save video'),
@@ -415,13 +504,21 @@ export class Film {
     }
     const seg = (items, cur, pick) => el('div', { class: 'seg' },
       ...items.map(([k, label]) => el('button', { class: k === cur ? 'active' : '', onClick: () => pick(k) }, label)));
+    const select = (items, cur, pick, title) => {
+      const s = el('select', { class: 'sel', title },
+        ...items.map(([k, label]) => el('option', { value: String(k), selected: String(k) === String(cur) ? '' : null }, label)));
+      s.addEventListener('change', () => pick(s.value));
+      return s;
+    };
+    const take = this.take;
     bar.append(
       seg(Object.entries(FORMATS).map(([k, f]) => [k, f.label]), this.format, (k) => { this.format = k; this.renderBar(); this.layout(); }),
-      seg([[1, '1 rep'], [2, '2 reps'], [3, '3 reps']], this.reps, (k) => { this.reps = k; this.renderBar(); }),
-      el('button', { class: 'chip' + (this.slow ? ' active' : ''), onClick: () => { this.slow = !this.slow; this.renderBar(); } }, 'Slow motion'),
-      el('button', { class: 'chip' + (this.turn ? ' active' : ''), onClick: () => { this.turn = !this.turn; this.renderBar(); } }, 'Slow turn'),
+      select(REP_CHOICES.map(n => [n, n === 1 ? '1 rep' : `${n} reps`]), this.reps, (v) => { this.reps = +v; this.renderBar(); }, 'How many reps'),
+      select(PACES.map(p => [p.key, p.label]), this.pace, (v) => { this.pace = v; this.renderBar(); }, 'How long each phase stays on screen'),
+      select(CAMERAS.map(c => [c.key, c.label]), this.camera, (v) => { this.camera = v; this.renderBar(); }, 'How the camera moves'),
       el('button', { class: 'chip' + (this.captions ? ' active' : ''), onClick: () => { this.captions = !this.captions; this.renderBar(); this.app.updateSafeInsets(); this.app.viewer.requestRender(); } }, 'Captions'),
-      el('button', { class: 'btn sm film-go', onClick: () => this.record() }, '● Record'),
+      el('button', { class: 'btn sm', onClick: () => this.preview() }, '▶ Preview'),
+      el('button', { class: 'btn sm film-go', onClick: () => this.record() }, `● Record  ${fmt(take.total)}`),
       el('button', { class: 'btn sm', onClick: () => this.exit() }, 'Done'),
     );
     if (this._msg) { bar.append(el('span', { class: 'film-note' }, this._msg)); this._msg = null; }
@@ -429,6 +526,19 @@ export class Film {
 }
 
 // ---------- helpers ----------
+/**
+ * The caption for this moment. The same four moments the Movement panel names, plus two
+ * that only a set has: the start, and the last rep, where the bar slows as the muscles
+ * reach their limit.
+ */
+function captionFor(t, s) {
+  if (s?.intro) return { name: 'Ready', hint: 'The bar is held straight above the chest, arms locked.' };
+  if (s && s.reps >= 5 && s.rep === s.reps - 1 && s.phase === 'press') {
+    return { name: 'Last rep', hint: 'The bar slows down. The muscles are close to their limit.' };
+  }
+  return phaseName(t);
+}
+
 /**
  * Let the page breathe between frames. Not setTimeout: a hidden tab slows timers to one
  * a second or even one a minute, which stalled a render the moment the user looked away.
@@ -472,3 +582,4 @@ function round(ctx, x, y, w, h, r) {
 }
 
 function fmt(s) { const t = Math.max(0, Math.round(s)); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`; }
+function fmtLeft(s) { return s < 60 ? `${Math.max(1, Math.round(s))} s` : `${Math.round(s / 60)} min`; }
