@@ -14,6 +14,9 @@ import { bodyKey, phaseAt } from './lift.js';
  * - Poses are kept once worked out, per body. Some lifts measure the bar against the skin
  *   at every moment of the rep, and that should not be paid again on every frame.
  */
+/** How finely the movement is sampled: more than one pose per frame of a 3-second rep. */
+const STEPS = 360;
+
 export class ExercisePlayer {
   constructor(app) {
     this.app = app;
@@ -46,6 +49,24 @@ export class ExercisePlayer {
     this._grab = () => { this.autoFrame = false; };
     this.app.viewer.controls.addEventListener('start', this._grab);
     this.scheduleFrame(320);
+    this._warm();
+  }
+
+  /**
+   * Work out every pose of the rep in the background, a few at a time between frames, so
+   * the first rep plays as smoothly as the rest. Lifts that measure the bar against the
+   * legs take tens of milliseconds a pose, the first time.
+   */
+  _warm() {
+    const ex = this.ex;
+    let i = 0;
+    const step = (deadline) => {
+      if (this.ex !== ex) return;
+      const t0 = performance.now();
+      while (i <= STEPS && performance.now() - t0 < 12) { this.poseAt(i / STEPS); i++; }
+      if (i <= STEPS) (window.requestIdleCallback || setTimeout)(step, { timeout: 100 });
+    };
+    (window.requestIdleCallback || setTimeout)(step, { timeout: 200 });
   }
 
   /** Fit the shot again shortly, if the user has not moved the camera since Movement opened. */
@@ -128,11 +149,11 @@ export class ExercisePlayer {
   /** The pose at movement point u, for this body, worked out once. */
   poseAt(u) {
     const rig = this.app.body.rig;
-    const key = `${bodyKey()}|${Math.round(u * 600)}`;
+    const key = `${bodyKey()}|${Math.round(u * STEPS)}`;
     let p = this._poses.get(key);
     if (!p) {
       if (this._poses.size > 3000) this._poses.clear();
-      p = this.ex.pose(Math.round(u * 600) / 600, { height: this.app.currentHeightCm() / 100, rig });
+      p = this.ex.pose(Math.round(u * STEPS) / STEPS, { height: this.app.currentHeightCm() / 100, rig });
       this._poses.set(key, p);
     }
     return p;
