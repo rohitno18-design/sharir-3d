@@ -256,6 +256,7 @@ export class Rig {
     this.reset();
     this._resolve();
     this._chest = this._collectChest();
+    this._cloud = this.ok ? this._collectBody() : null;
     if (this.ok) {
       this.stanceRef = this._collectStanceRef();
       this._shareSkeleton();
@@ -426,6 +427,108 @@ export class Rig {
       }
     }
     return new Float32Array(pts);
+  }
+
+  /**
+   * The skin of the trunk and legs as one sparse point cloud, each point tagged with the
+   * bone that carries it: 0 trunk (with the head and neck), 1 and 2 the left and right
+   * thigh, 3 and 4 the left and right shin. Every lift checks its bar against this, so a
+   * bar can rest on the upper back, slide down the thighs or pass the face without ever
+   * going into the body. The arms are left out, since they hold the bar, and so are the
+   * feet, which stand on the floor.
+   */
+  _collectBody() {
+    const ARM = /\barm\b|elbow|forearm|wrist|hand|palm|cubital|bicipital|radial foveola|deltoid region|^nail plate$|^perionyx$/i;
+    const FOOT = /foot|sole|heel|hallucial|metatarsal|\(foot\)/i;
+    const THIGH = /thigh|femoral triangle|knee|popliteal/i;
+    const SHIN = /region of leg|ankle|malleol/i;
+    const kneeY = this.p.l?.knee?.y ?? 0.5;
+    const pts = [], tag = [];
+    for (const [id, gs] of this._geoms) {
+      const part = this.registry.byId.get(id);
+      if (!part || part.sys !== 'integumentary' || (part.sx && part.sx !== 'm')) continue;
+      if (ARM.test(part.n) || FOOT.test(part.n) || /eyelash|eyebrow/i.test(part.n)) continue;
+      const leg = THIGH.test(part.n) || SHIN.test(part.n);
+      for (const g of gs) {
+        const pos = g.attributes.position;
+        for (let i = 0; i < pos.count; i++) {
+          const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+          pts.push(x, y, z);
+          tag.push(leg ? (y > kneeY ? 1 : 3) + (x < 0 ? 1 : 0) : 0);
+        }
+      }
+    }
+    return { pts: new Float32Array(pts), tag: new Int8Array(tag) };
+  }
+
+  /** The body cloud through this body's morph, redone only when the body changes. */
+  _cloudMorphed() {
+    const c = this._cloud;
+    if (!c) return null;
+    const key = morphKey();
+    if (this._cloudKey === key) return this._cloudRest;
+    const bones = [null, boneIndex('thigh', 'l'), boneIndex('thigh', 'r'), boneIndex('shin', 'l'), boneIndex('shin', 'r')];
+    const out = new Float32Array(c.pts.length), v = new THREE.Vector3();
+    for (let i = 0, k = 0; i < c.pts.length; i += 3, k++) {
+      const b = bones[c.tag[k]];
+      applyMorph(v.set(c.pts[i], c.pts[i + 1], c.pts[i + 2]), v, b == null ? { tissue: 'skin' } : { tissue: 'skin', bone: b });
+      out[i] = v.x; out[i + 1] = v.y; out[i + 2] = v.z;
+    }
+    this._cloudKey = key; this._cloudRest = out;
+    return out;
+  }
+
+  /** A bone's world matrix under `pose`, without applying the pose. */
+  poseMatrix(pose, index, out = new THREE.Matrix4()) {
+    const bone = this.bones[index];
+    const key = bone.name === 'root' ? 'root' : `${bone.name}.${bone.side}`;
+    this.localMatrix(bone, pose[key], out);
+    if (bone.parent >= 0) out.premultiply(this.poseMatrix(pose, bone.parent, new THREE.Matrix4()));
+    return out;
+  }
+
+  /**
+   * The trunk and leg skin where `pose` would put it, in the world. Worked out once per
+   * pose, so a lift can ask many questions of it while it settles where the bar goes.
+   */
+  bodyCloud(pose) {
+    const rest = this._cloudMorphed();
+    if (!rest) return null;
+    const tag = this._cloud.tag;
+    const mats = [0, boneIndex('thigh', 'l'), boneIndex('thigh', 'r'), boneIndex('shin', 'l'), boneIndex('shin', 'r')]
+      .map(i => this.poseMatrix(pose, i).elements);
+    const out = new Float32Array(rest.length);
+    for (let i = 0, k = 0; i < rest.length; i += 3, k++) {
+      const m = mats[tag[k]], x = rest[i], y = rest[i + 1], z = rest[i + 2];
+      out[i] = m[0] * x + m[4] * y + m[8] * z + m[12];
+      out[i + 1] = m[1] * x + m[5] * y + m[9] * z + m[13];
+      out[i + 2] = m[2] * x + m[6] * y + m[10] * z + m[14];
+    }
+    return { pts: out, tag };
+  }
+
+  /**
+   * How far a bar lying along the world's x axis through `c` is from the skin: the gap
+   * between the bar's surface and the nearest point of `cloud`, negative if it is inside.
+   * `only` limits it to some of the tags, e.g. the trunk alone.
+   */
+  barGap(cloud, c, radius, only = null) {
+    if (!cloud) return Infinity;
+    const p = cloud.pts, tag = cloud.tag;
+    let best = Infinity;
+    for (let i = 0, k = 0; i < p.length; i += 3, k++) {
+      if (only && !only.includes(tag[k])) continue;
+      const dy = p[i + 1] - c.y;
+      if (dy * dy >= best) continue;
+      const dz = p[i + 2] - c.z, d2 = dy * dy + dz * dz;
+      if (d2 < best) best = d2;
+    }
+    return Math.sqrt(best) - radius;
+  }
+
+  /** Where the hips are on a standing body of this size: halfway between the two hip joints. */
+  hipCentre(out = new THREE.Vector3()) {
+    return out.copy(this._morphed('l', 'hip')).add(this._morphed('r', 'hip')).multiplyScalar(0.5);
   }
 
   /**
@@ -1156,8 +1259,8 @@ export class Rig {
   }
 
   /** `target` (rest space) brought into the arm's own frame: morphed, then undone through the girdle. */
-  _armTarget(side, target, girdle) {
-    const T = applyMorph(target, new THREE.Vector3(), { tissue: 'bone' });
+  _armTarget(side, target, girdle, morphed = false) {
+    const T = morphed ? target.clone() : applyMorph(target, new THREE.Vector3(), { tissue: 'bone' });
     if (!girdle) return { T, inv: null };
     const inv = this.localMatrix(this.bones[boneIndex('girdle', side)], girdle, new THREE.Matrix4()).invert();
     return { T: T.applyMatrix4(inv), inv };
@@ -1167,11 +1270,11 @@ export class Rig {
    * How far `target` is from the shoulder, as a fraction of the whole arm. Over 1 cannot be
    * reached at all; LOCKOUT_REACH is as straight as an elbow should go.
    */
-  reachRatio(side, target, girdle = null) {
+  reachRatio(side, target, girdle = null, morphed = false) {
     if (!this.p[side]) return 0;
     const S = this._morphed(side, 'gh'), E = this._morphed(side, 'el');
     const G = this._gripAfterWrist(side);
-    const { T } = this._armTarget(side, target, girdle);
+    const { T } = this._armTarget(side, target, girdle, morphed);
     return S.distanceTo(T) / (S.distanceTo(E) + E.distanceTo(G));
   }
 
@@ -1195,11 +1298,11 @@ export class Rig {
    * `up` is the world's up in rest space: the body lies on its back, so it is rest +z.
    * Returned in rest space, ready to hand to solveArm as its pole.
    */
-  uprightPole(side, target, girdle, hint, up = new THREE.Vector3(0, 0, 1)) {
+  uprightPole(side, target, girdle, hint, up = new THREE.Vector3(0, 0, 1), { morphed = false, across: acrossIn = null } = {}) {
     if (!this.p[side]) return hint;
     const S = this._morphed(side, 'gh'), E0 = this._morphed(side, 'el');
     const G = this._gripAfterWrist(side);
-    const { T, inv } = this._armTarget(side, target, girdle);
+    const { T, inv } = this._armTarget(side, target, girdle, morphed);
     const L1 = S.distanceTo(E0), L2 = E0.distanceTo(G);
     const toT = T.clone().sub(S);
     const dist = Math.min(toT.length(), (L1 + L2) * 0.999);
@@ -1217,7 +1320,8 @@ export class Rig {
     u.normalize();
     const v = n.clone().cross(u).normalize();
     const Tr = T.clone().applyMatrix4(fwd);
-    const across = up.clone().cross(new THREE.Vector3(0, 1, 0)).normalize();   // body's side-to-side
+    // Standing, "up" runs along the body, and side-to-side has to be given instead.
+    const across = acrossIn ? acrossIn.clone().normalize() : up.clone().cross(new THREE.Vector3(0, 1, 0)).normalize();
     const along = up.clone().cross(across).normalize();                        // head to feet
     // Leaning across the body counts for more than leaning along it. Seen from the feet,
     // a tilted forearm pushes the bar sideways, which is the fault a coach calls first; a
@@ -1247,7 +1351,7 @@ export class Rig {
    *                        to its little finger side
    */
   solveArm(side, target, pole, opts = {}) {
-    const { pronation = 0, girdle = null, rootQ = null, align = null } = opts;
+    const { pronation = 0, girdle = null, rootQ = null, align = null, morphed = false } = opts;
     if (!this.p[side]) return {};
     // Solve in morphed space, not rest space. The bone matrices rotate vertices that have
     // already been through the height/weight field, so the arm they actually swing is the
@@ -1259,7 +1363,7 @@ export class Rig {
     // whole frame has already shifted. Bring the target and the elbow hint back through
     // that rotation — otherwise a few degrees at the collarbone slides the grip several
     // centimetres along the bar, and the hands change width mid-rep.
-    const { T, inv } = this._armTarget(side, target, girdle);
+    const { T, inv } = this._armTarget(side, target, girdle, morphed);
     if (inv) pole = pole.clone().transformDirection(inv);
     const girdleQ = girdle?.rot ? new THREE.Quaternion().setFromEuler(new THREE.Euler(...girdle.rot, 'XYZ')) : new THREE.Quaternion();
     const outer = (rootQ ? rootQ.clone() : new THREE.Quaternion()).multiply(girdleQ);

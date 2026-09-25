@@ -55,7 +55,7 @@ export class Film {
 
   get player() { return this.app.exercise; }
   get busy() { return !!(this.recorder || this.rendering || this.previewing); }
-  get take() { return buildTake({ reps: this.reps, pace: this.pace, repSecs: this.player?.ex?.duration || 3.4 }); }
+  get take() { return buildTake({ reps: this.reps, pace: this.pace, repSecs: this.player?.ex?.duration || 3.4, phases: this.player?.ex?.phases }); }
 
   enter() {
     if (this.active || !this.player?.ex) return;
@@ -74,7 +74,7 @@ export class Film {
     this.renderBar();
     this.layout();
     this.player.pause();
-    this.player.seek(0.62);
+    this.player.seek(this.player.ex?.poster ?? 0.5);
     this._offDraw = v.onAfterRender(() => this.draw());
     document.addEventListener('keydown', this._onKey);
     window.addEventListener('resize', this._onResize);
@@ -228,7 +228,7 @@ export class Film {
     // around the lift, so its text runs a little smaller.
     const u = ((cols ? H : W) / 1080) * (W === H ? 0.86 : 1);
     const pad = 64 * u;
-    const phase = captionFor(p.t, s);
+    const phase = captionFor(p.t, s, p.ex);
     const colW = cols ? W * 0.5 - pad * 1.5 : W - pad * 2;
     const hintFont = `500 ${32 * u}px Inter, sans-serif`;
     const hintLines = wrap(ctx, phase.hint, colW, hintFont);
@@ -390,7 +390,7 @@ export class Film {
       this.endCamera(base);
       this.rendering = null;
       this.restoreEffort();
-      this.player.seek(0.62);
+      this.player.seek(this.player.ex?.poster ?? 0.5);
       this.renderBar();
     }
   }
@@ -531,12 +531,12 @@ export class Film {
  * that only a set has: the start, and the last rep, where the bar slows as the muscles
  * reach their limit.
  */
-function captionFor(t, s) {
-  if (s?.intro) return { name: 'Ready', hint: 'The bar is held straight above the chest, arms locked.' };
-  if (s && s.reps >= 5 && s.rep === s.reps - 1 && s.phase === 'press') {
+function captionFor(t, s, ex) {
+  if (s?.intro) return { name: 'Ready', hint: ex?.ready || 'In the start position.' };
+  if (s && s.reps >= 5 && s.rep === s.reps - 1 && s.work) {
     return { name: 'Last rep', hint: 'The bar slows down. The muscles are close to their limit.' };
   }
-  return phaseName(t);
+  return phaseName(t, ex);
 }
 
 /**

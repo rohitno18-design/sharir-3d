@@ -8,7 +8,7 @@ import * as THREE from 'three';
  * real-time fallback all play exactly the same take.
  */
 
-/** The four moments of a rep, as spans of the player's own rep time (0..1). */
+/** The bench press's four moments of a rep. Every lift brings its own; this is the fallback. */
 export const PHASES = [
   { key: 'lower', t0: 0.00, t1: 0.42 },
   { key: 'chest', t0: 0.42, t1: 0.52 },
@@ -39,25 +39,26 @@ export const REP_CHOICES = [1, 3, 5, 8, 10, 12, 15, 20];
  * Build a take.
  * @param repSecs how long one rep takes at real speed
  */
-export function buildTake({ reps = 1, pace = 'teach:3', repSecs = 3.4 }) {
+export function buildTake({ reps = 1, pace = 'teach:3', repSecs = 3.4, phases = PHASES }) {
   const pc = PACES.find(p => p.key === pace) || PACES[1];
   const segs = [];
   let time = 0;
   const push = (seg) => { seg.start = time; time += seg.dur; segs.push(seg); };
-  // A moment at the top before the first rep, so the video does not open mid-movement.
-  push({ rep: -1, phase: 3, dur: 0.8, hold: 0.96 });
+  // A moment in the start position before the first rep, so the video does not open
+  // mid-movement. Every lift starts its rep (t = 0) in its start position.
+  push({ rep: -1, phase: 0, dur: 0.8, hold: 0 });
   for (let i = 0; i < reps; i++) {
     const teach = pc.teach === 'all' || (pc.teach === 'ends' && (i === 0 || i === reps - 1));
     const f = reps > 1 ? i / (reps - 1) : 1;
-    PHASES.forEach((ph, k) => {
+    phases.forEach((ph, k) => {
       let real = (ph.t1 - ph.t0) * repSecs;
-      // The press slows as the muscles tire: the last rep of a hard set is the slowest.
-      if (ph.key === 'press') real *= 1 + 1.1 * f * f;
+      // The working phase slows as the muscles tire: the last rep of a hard set is the slowest.
+      if (ph.work) real *= 1 + 1.1 * f * f;
       push({ rep: i, phase: k, dur: teach ? Math.max(pc.secs, real) : real, taught: teach });
     });
   }
-  push({ rep: reps - 1, phase: 3, dur: 0.6, hold: 0.99 });
-  return { reps, pace: pc, segs, total: time, s0: loadFor(reps) };
+  push({ rep: reps - 1, phase: phases.length - 1, dur: 0.6, hold: 0.999 });
+  return { reps, pace: pc, segs, total: time, s0: loadFor(reps), phases };
 }
 
 /**
@@ -69,12 +70,12 @@ export function sampleTake(take, ts) {
   let seg = segs[segs.length - 1];
   for (const s of segs) { if (ts < s.start + s.dur) { seg = s; break; } }
   const k = Math.min(1, Math.max(0, (ts - seg.start) / seg.dur));
-  const ph = PHASES[seg.phase];
+  const ph = (take.phases || PHASES)[seg.phase];
   const t = seg.hold != null ? seg.hold : ph.t0 + k * (ph.t1 - ph.t0);
   const rep = Math.max(0, seg.rep);
   const within = seg.rep < 0 ? 0 : (t >= 0.999 ? 1 : t);
   const set = seg.rep < 0 ? 0 : Math.min(1, (rep + within) / take.reps);
-  return { t: t % 1, rep, phase: ph.key, set, intro: seg.rep < 0, taught: !!seg.taught };
+  return { t: t % 1, rep, phase: ph.key, work: !!ph.work, set, intro: seg.rep < 0, taught: !!seg.taught };
 }
 
 /**

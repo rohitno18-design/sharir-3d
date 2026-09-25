@@ -1,13 +1,12 @@
 import { el } from '../core/util.js';
 import { state, set } from '../core/state.js';
 import { EXERCISES } from '../data/exercises.js';
+import { phaseAt } from '../core/lift.js';
 
-/** Which moment of the rep the current phase falls in. Film mode captions use the same words. */
-export function phaseName(t) {
-  if (t < 0.42) return { name: 'Lowering', hint: 'The bar comes down slowly. The lats and the rotator cuff keep it on track.' };
-  if (t < 0.52) return { name: 'On the chest', hint: 'The bar touches the chest and pauses. The chest muscle is stretched the most here.' };
-  if (t < 0.92) return { name: 'Pressing', hint: 'The chest and the front of the shoulder drive the bar up. The triceps take over near the top.' };
-  return { name: 'Lockout', hint: 'The elbows are straight. The triceps and the serratus hold the bar steady.' };
+/** Which moment of the rep the current phase falls in, for a lift. Film captions use the same words. */
+export function phaseName(t, ex) {
+  const ph = ex ? phaseAt(ex.phases, t) : null;
+  return ph ? { name: ph.name, hint: ph.hint, key: ph.key, work: !!ph.work } : { name: '', hint: '' };
 }
 
 /**
@@ -60,9 +59,17 @@ export class ExercisePanel {
     const ex = p?.ex || EXERCISES[0];
     this.root.innerHTML = '';
 
+    // ---- which lift: one per body part ----
+    const pick = el('div', { class: 'exo-pick' });
+    for (const e of EXERCISES) {
+      const chip = el('button', { class: 'chip' + (e.id === ex.id ? ' active' : ''), title: e.name,
+        onClick: () => { if (e.id !== ex.id) this.app.setExercise(e.id); } }, e.part);
+      pick.append(chip);
+    }
     this.root.append(
+      el('div', { class: 'exo-kicker' }, 'Movement'),
+      pick,
       el('div', { class: 'exo-head' },
-        el('div', { class: 'exo-kicker' }, 'Movement'),
         el('h2', { class: 'exo-title' }, ex.name),
         el('div', { class: 'exo-sub' }, ex.sub)),
       el('p', { class: 'pd' }, 'Press play or drag the slider. Watch the work move from one muscle to the next.'),
@@ -85,13 +92,12 @@ export class ExercisePanel {
 
     this.root.append(
       el('div', { class: 'btnrow' }, this.playBtn,
-        el('button', { class: 'btn sm', onClick: () => { p.pause(); p.seek(0); this.liveUpdate(); } }, '⤒ Top'),
-        el('button', { class: 'btn sm', onClick: () => { p.pause(); p.seek(0.47); this.liveUpdate(); } }, '⤓ Chest')),
+        ...(ex.marks || []).map(mk => el('button', { class: 'btn sm', onClick: () => { p.pause(); p.seek(mk.t); this.liveUpdate(); } }, mk.label))),
       el('div', { class: 'exo-scrub' }, scrub),
       el('div', { class: 'exo-phase' },
-        el('b', { 'data-live': 'phase' }, phaseName(p?.t || 0).name),
+        el('b', { 'data-live': 'phase' }, phaseName(p?.t || 0, ex).name),
         el('span', { class: 'muted small', 'data-live': 'press' }, '')),
-      el('p', { class: 'nt muted small', 'data-live': 'hint' }, phaseName(p?.t || 0).hint),
+      el('p', { class: 'nt muted small', 'data-live': 'hint' }, phaseName(p?.t || 0, ex).hint),
       el('div', { class: 'exo-lead' },
         el('span', { class: 'exo-lead-k' }, 'Doing the most work'),
         el('b', { 'data-live': 'lead' }, ''),
@@ -116,6 +122,24 @@ export class ExercisePanel {
         onClick: () => { set({ connective: !state.connective }); this.app.refreshVisibility(); this.render(); } },
         (state.connective ? '✓ ' : '') + 'Fascia & bursae')));
     this.markView();
+
+    // ---- form: how to do it right ----
+    if (ex.form) {
+      this.root.append(el('h3', { class: 'sec' }, 'How to do it right'));
+      const sec = (title, items, open, cls = '') => {
+        if (!items?.length) return null;
+        const ol = el('ol', { class: 'form-list' + cls });
+        for (const it of items) ol.append(el('li', {}, it));
+        return el('details', { class: 'form-sec', ...(open ? { open: '' } : {}) }, el('summary', {}, title), ol);
+      };
+      this.root.append(...[
+        sec('Setting up', ex.form.setup, true),
+        sec('The movement', ex.form.move, true),
+        sec('Mistakes to avoid', ex.form.mistakes, false, ' warn'),
+      ].filter(Boolean));
+      if (ex.form.breathe) this.root.append(el('div', { class: 'note' }, el('b', {}, 'Breathing: '), ex.form.breathe));
+      this.root.append(el('p', { class: 'nt muted small' }, 'The 3D body shows this form. Play it slowly, or pick a moment with the buttons above, to see each point.'));
+    }
 
     // ---- film ----
     this.root.append(el('h3', { class: 'sec' }, 'Make a video'));
@@ -145,7 +169,7 @@ export class ExercisePanel {
     this.root.append(el('p', { class: 'nt muted small' },
       'Tap a muscle in this list, or on the body, to see what it is.'));
     this.root.append(el('p', { class: 'nt muted small' },
-      'The effort levels come from published EMG studies of the flat barbell bench press. Each muscle is shown against its own peak in this lift. This is a teaching aid. It does not measure your body.'));
+      'The effort levels are shaped from published EMG studies of this lift. Each muscle is shown against its own peak in this lift. This is a teaching aid. It does not measure your body.'));
 
     this.liveUpdate();
   }
@@ -156,11 +180,11 @@ export class ExercisePanel {
     if (!p || !p.ex) return;
     if (this.playBtn) this.playBtn.textContent = p.playing ? '❚❚ Pause' : '▶ Play';
     if (this.scrub && document.activeElement !== this.scrub) this.scrub.value = Math.round(p.t * 1000);
-    const ph = phaseName(p.t);
+    const ph = phaseName(p.t, p.ex);
     const set1 = (sel, txt) => { const n = this.root.querySelector(sel); if (n) n.textContent = txt; };
     set1('[data-live=phase]', ph.name);
     set1('[data-live=hint]', ph.hint);
-    set1('[data-live=press]', `Bar ${Math.round(p.press * 100)}% of the way up`);
+    set1('[data-live=press]', p.ex.progress ? p.ex.progress(p.u) : '');
     const ranked = p.ranked();
     if (ranked[0]) { set1('[data-live=lead]', ranked[0].def.label); set1('[data-live=lead-note]', ranked[0].def.note); }
     for (const g of p.groups) {

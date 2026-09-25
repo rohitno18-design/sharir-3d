@@ -19,7 +19,7 @@ import { EffectsPanel, renderEffectDock } from './ui/effectsPanel.js';
 import { AgePanel, renderAgeDock } from './ui/agePanel.js';
 import { ExercisePanel } from './ui/exercisePanel.js';
 import { ExercisePlayer } from './core/exercise.js';
-import { EXERCISES } from './data/exercises.js';
+import { EXERCISES, exerciseById } from './data/exercises.js';
 import { openMicroModal } from './ui/microModal.js';
 import { Nav } from './core/nav.js';
 import { openWelcome } from './ui/welcome.js';
@@ -265,7 +265,7 @@ class App {
     else if (mode === 'systems') this.panel = new SystemsPanel(this.leftRoot, this);
     else if (mode === 'age') this.panel = new AgePanel(this.leftRoot, this);
     else if (mode === 'effects') this.panel = new EffectsPanel(this.leftRoot, this);
-    else if (mode === 'move') { this.exercise.start(EXERCISES[0]); this.panel = new ExercisePanel(this.leftRoot, this); }
+    else if (mode === 'move') { this.exercise.start(exerciseById(state.exercise) || EXERCISES[0]); this.panel = new ExercisePanel(this.leftRoot, this); }
     if (mode !== 'move') { this.film?.exit(); this.exercise?.stop(); }
     // Movement is a picture of a lift, and an empty inspector beside it only takes room
     // from the lifter. It folds away on the way in unless something is already selected
@@ -891,6 +891,19 @@ class App {
     const light = this.theme === 'light';
     b.textContent = light ? '☾' : '☀';
     b.title = light ? 'Switch to the dark look' : 'Switch to the light look';
+  }
+
+  /** Switch the Movement tab to another lift. */
+  setExercise(id) {
+    const ex = exerciseById(id);
+    if (!ex) return;
+    set({ exercise: id });
+    this.film?.exit();
+    this.panel?.dispose?.();
+    this.leftRoot.innerHTML = '';
+    this.exercise.start(ex);
+    this.panel = new ExercisePanel(this.leftRoot, this);
+    this.panel.setView?.(this.panel.view);
   }
 
   /** Back to the starting shot for this tab. */
