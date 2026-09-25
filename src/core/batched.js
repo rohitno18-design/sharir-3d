@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { computeBoundsTree, disposeBoundsTree } from 'three-mesh-bvh';
 import { EFFECT_KINDS } from '../data/targets.js';
-import { closeSkinGaps, blendSkinBindings, orientSkin } from './skinweld.js';
+import { closeSkinGaps, blendSkinBindings, orientSkin, smoothBindings } from './skinweld.js';
 
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
 THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
@@ -133,6 +133,14 @@ export class BatchedBody {
       }
       if (!geoms.length) continue;
       if (skin?.length && rig) blendSkinBindings(skin);
+      // Nerves, vessels and lymphatics are thin tubes. Where one passes in and out of a
+      // limb's reach, the points round one ring of the tube were split between limb and
+      // trunk, and a bent hip tore the tube into long spikes. The skin's smoothing makes
+      // neighbouring points move together; the same pass is run on every tube whose points
+      // do not all follow the same bone.
+      if (rig && TUBES.has(system)) {
+        for (const it of items) if (mixedBinding(it.geometry.attributes.aSkin)) smoothBindings(it.geometry);
+      }
 
       const merged = mergeGeometries(geoms, false);
       for (const g of geoms) g.dispose();          // originals are no longer needed
@@ -302,6 +310,17 @@ export class BatchedBody {
     this.stateTex?.dispose(); this.styleTex?.dispose(); this.growTex?.dispose();
     this.batches.length = 0;
   }
+}
+
+const TUBES = new Set(['nervous', 'cardiovascular', 'lymphoid']);
+
+/** Does this geometry's binding differ anywhere from its first point's? */
+function mixedBinding(sk) {
+  const a = sk.getX(0), b = sk.getY(0), w = sk.getZ(0);
+  for (let i = 1; i < sk.count; i++) {
+    if (sk.getX(i) !== a || sk.getY(i) !== b || Math.abs(sk.getZ(i) - w) > 1e-3) return true;
+  }
+  return false;
 }
 
 function rootOnlySkin(n) {

@@ -148,6 +148,12 @@ const AXIAL = /\brib\b|ribs|sternum|vertebra|sacrum|coccyx|skull|mandible|hyoid|
 const AXIAL_SYS = new Set(['digestive', 'respiratory', 'urinary', 'reproductive', 'endocrine', 'cavities', 'senses']);
 /** Height band each limb occupies in the source model, in metres up from the soles. */
 const BAND = { arm: [0.60, 1.48], leg: [0.0, 0.95] };
+/**
+ * What hangs between the thighs: the testes and the vessels, ducts and nerves that serve
+ * them and the perineum. They sit inside the thigh's reach but never move with a thigh;
+ * bound to one, the testicular arteries were torn away from the testes as the hip bent.
+ */
+const GENITAL = /testicular|spermatic|cremaster|deferen|pampiniform|scrot|penis|penile|pudendal|perine|urethr|prostat|of bulb/i;
 /** Systems whose parts are named after their trunk origin rather than where they run. */
 const TUBULAR = new Set(['cardiovascular', 'nervous', 'lymphoid']);
 /**
@@ -157,7 +163,9 @@ const TUBULAR = new Set(['cardiovascular', 'nervous', 'lymphoid']);
  */
 const REACHES_INTO = {
   arm: (bb) => bb[0][2] < 1.05 || Math.min(Math.abs(bb[0][0]), Math.abs(bb[1][0])) > 0.135,
-  leg: (bb) => bb[0][2] < 0.70,
+  // Below the hip. Below 0.70 m was the old rule, and it missed nerves of the upper inner
+  // thigh by millimetres. What hangs between the thighs is kept apart by name (GENITAL).
+  leg: (bb) => bb[0][2] < 0.76,
 };
 /**
  * Where along the palm the bar sits, from the wrist (0) to the knuckles (1). A pressing
@@ -256,6 +264,11 @@ const ANCHORED = [
   { re: /^subscapularis/i, limb: 'upperarm', trunk: 'girdle', at: 'Lesser tubercle', mode: 'wrap', near: 0.02, far: 0.10 },
   // Psoas and iliacus: from the lumbar spine and pelvis onto the lesser trochanter.
   { re: /^(psoas|iliacus|iliopsoas)/i, limb: 'thigh', trunk: 'root', spine: 'lumbar', at: 'Lesser trochanter', mode: 'fibre' },
+  // The big glute crosses the hip through the widest range of any muscle in the lifts: well
+  // over 120 degrees at the bottom of a squat. Bound by closeness to the thigh, it hinged in
+  // a band over the hip and ballooned out. From the sacrum and ilium to its insertion on the
+  // femur, it stretches evenly along its fibres instead.
+  { re: /^gluteus maximus/i, limb: 'thigh', trunk: 'root', at: 'Gluteal tuberosity', mode: 'fibre' },
 ];
 /** One slot per anchored muscle per side, for the insertion displacements the shader reads. */
 const ANCHOR_SLOTS = ANCHORED.length * 2;
@@ -956,13 +969,37 @@ export class Rig {
 
   bindVertex(x, y, z, out, mode, group, only = null) {
     const side = x >= 0 ? 'l' : 'r';
-    const { best, d: bestD, t: bestT } = this._nearest(x, y, z, side, group, only);
+    let { best, d: bestD, t: bestT } = this._nearest(x, y, z, side, group, only);
+    // A point whose nearest spot on its segment is the far end lies beyond that joint, so it
+    // belongs to the next segment along, measured along that one. Chosen by distance alone,
+    // points on the calf just below the knee went to the thigh (its envelope is wider) while
+    // their neighbours went to the shin, and a bent knee tore the calf into spikes.
+    if (best >= 0 && bestT >= 0.999) {
+      const seg = SEGMENTS[best];
+      const ci = this.byGroup[group].find(i => SEGMENTS[i].parent === seg.name && SEGMENTS[i].from === seg.to
+        && (!only || only.has(SEGMENTS[i].name)));
+      if (ci !== undefined) {
+        const c = this._segDist(x, y, z, this.p[side], SEGMENTS[ci]);
+        if (c.t > 0 && c.d < Math.max(1, bestD * 1.6)) { best = ci; bestT = c.t; bestD = c.d; }
+      }
+    }
     // Only a spanning structure can fall out of the limb; a limb structure binds to its
     // nearest bone however far from the axis it sits.
     if (best < 0 || (mode === 'span' && bestD > 1)) return this.trunkBind(y, out);
 
     const seg = SEGMENTS[best];
     const bone = boneIndex(seg.name, side);
+    // Before the limb starts: a point on the trunk side of the hip joint (or inboard of the
+    // collarbone's inner end) belongs to the trunk, fading over 6 cm. The thigh's envelope
+    // reaches up into the pelvis, and without this the pelvic stretch of the sciatic nerve
+    // followed the thigh: a bent hip swung it out of the pelvis in long straight lines.
+    let before = 1;
+    if (!seg.parent && bestT <= 0.001) {
+      const q = this.p[side], a = q[seg.from], b2 = q[seg.to];
+      const ax = b2.x - a.x, ay = b2.y - a.y, az = b2.z - a.z, L = Math.hypot(ax, ay, az);
+      const along = ((x - a.x) * ax + (y - a.y) * ay + (z - a.z) * az) / L;
+      if (along < 0) before = smoothstep(-0.06, 0, along);
+    }
     // Blend across the joint at either end of this segment, so a bent elbow or a curled
     // finger creases instead of shearing.
     const BLEND = 0.26;                        // as a fraction of the segment's length
@@ -972,7 +1009,7 @@ export class Rig {
       // the upper back for the shoulder girdle.
       other = seg.parent && (!only || only.has(seg.parent)) ? boneIndex(seg.parent, side)
         : (seg.parent ? this.trunkBone(y) : this.bones[bone].parent);
-      w = 0.5 + 0.5 * (bestT / BLEND);
+      w = (0.5 + 0.5 * (bestT / BLEND)) * before;
     } else if (bestT > 1 - BLEND) {
       const childIdx = this.byGroup[group].find(i => SEGMENTS[i].parent === seg.name && SEGMENTS[i].from === seg.to
         && (!only || only.has(SEGMENTS[i].name)));
@@ -1037,7 +1074,7 @@ export class Rig {
       return this.insideFraction(geom, cls.group, 11, cls.only) > 0.9
         ? { group: cls.group, mode: 'limb', only: cls.only } : cls;
     }
-    if (cls.mode !== 'none' || !TUBULAR.has(part.sys) || !part.bb) return cls;
+    if (cls.mode !== 'none' || !TUBULAR.has(part.sys) || !part.bb || GENITAL.test(part.n)) return cls;
     // Vessels, nerves and lymphatics are named after where they come from, not where they
     // run, so the hierarchy rarely places them in a limb. Let the geometry decide — but it
     // needs a gate first. In anatomical position the arm lies flat against the ribcage and
@@ -1045,11 +1082,17 @@ export class Rig {
     // the trunk: the lung's own arteries score as "mostly inside the shoulder" and the
     // pelvic veins as "mostly inside the thigh". A structure only counts as belonging to a
     // limb if it actually reaches out of the trunk along it.
-    let bestGroup = null, bestShare = 0.5;
+    // Any real share inside the limb counts: the femoral nerve lies mostly in the pelvis,
+    // and left wholly on the trunk its thigh part stayed behind when the thigh moved and
+    // stuck out of the leg. Point by point, each part follows where it actually is.
+    // The arm keeps a high bar: it hangs flat against the ribcage in the source pose, so
+    // nerves between the ribs sit partly inside its reach without belonging to it.
+    const NEED = { arm: 0.5, leg: 0.08 };
+    let bestGroup = null, bestShare = 0;
     for (const g of ['arm', 'leg']) {
       if (!REACHES_INTO[g](part.bb)) continue;
       const share = this.insideFraction(geom, g);
-      if (share > bestShare) { bestShare = share; bestGroup = g; }
+      if (share > NEED[g] && share > bestShare) { bestShare = share; bestGroup = g; }
     }
     if (!bestGroup) return cls;
     return { group: bestGroup, mode: bestShare > 0.9 ? 'limb' : 'span' };
@@ -1083,6 +1126,33 @@ export class Rig {
     for (let i = 0; i < n; i++) {
       this.bindVertex(pos.getX(i), pos.getY(i), pos.getZ(i), out, cls.mode, cls.group, cls.only);
       arr[i * 3] = out[0]; arr[i * 3 + 1] = out[1]; arr[i * 3 + 2] = out[2];
+    }
+    // A bone is rigid. Bound point by point, its ends blended with the next bone over, so
+    // a bent hip bent the head of the femur, and the lower corner of the shoulder blade,
+    // lying nearer the upper arm's line than the shoulder girdle's, went with the arm and
+    // tore the blade when the arms reached down. So each bone moves as one piece: the
+    // shoulder blade and collarbone with the girdle, the rest with whichever segment holds
+    // most of it. The radius and ulna keep their blend, because the forearm's twist is
+    // shared along them.
+    if (part.sys === 'skeletal' && cls.mode === 'limb' && !/radius|ulna/i.test(part.n)) {
+      let bone;
+      // The long bones by name: a bone can arrive as several pieces, and a vote taken piece
+      // by piece gave the lower end of the humerus to the forearm.
+      const OWN = [[/scapula|clavicle/i, 'girdle'], [/humerus/i, 'upperarm'], [/femur/i, 'thigh'], [/tibia|fibula|patella/i, 'shin']];
+      const own = OWN.find(([re]) => re.test(part.n));
+      if (own) {
+        let sx = 0;
+        for (let i = 0; i < n; i++) sx += pos.getX(i);
+        bone = boneIndex(own[1], sx >= 0 ? 'l' : 'r');
+      } else {
+        const votes = new Map();
+        for (let i = 0; i < n; i++) {
+          const b = arr[i * 3 + 2] >= 0.5 ? arr[i * 3] : arr[i * 3 + 1];
+          votes.set(b, (votes.get(b) || 0) + 1);
+        }
+        bone = [...votes.entries()].sort((a, b) => b[1] - a[1])[0][0];
+      }
+      for (let i = 0; i < n; i++) { arr[i * 3] = bone; arr[i * 3 + 1] = bone; arr[i * 3 + 2] = 1; }
     }
     return new THREE.BufferAttribute(arr, 3);
   }

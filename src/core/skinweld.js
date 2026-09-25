@@ -359,3 +359,75 @@ export function orientSkin(items) {
   probe.material.dispose();
   return flipped;
 }
+
+/**
+ * Smooth one geometry's bone weights along its own mesh, so neighbouring points move
+ * together. Made for thin tubes (nerves, vessels, lymphatics), where the points round one
+ * ring of the tube could otherwise follow different bones and a bent joint tore the tube
+ * into spikes. Light enough to run on every tube: a tube only ever involves two or three
+ * bones, so the weights are a small dense table, not a map per point.
+ */
+export function smoothBindings(geom, passes = 20) {
+  const sk = geom.attributes.aSkin, pos = geom.attributes.position, n = sk.count;
+  const bones = [], at = new Map();
+  const use = (b) => { if (!at.has(b)) { at.set(b, bones.length); bones.push(b); } return at.get(b); };
+  for (let i = 0; i < n; i++) {
+    const w = sk.getZ(i);
+    if (w >= 1.5) return;                        // stretch-bound muscle fibres are left alone
+    use(sk.getX(i)); if (w < 1) use(sk.getY(i));
+  }
+  const K = bones.length;
+  if (K < 2) return;
+  let W = new Float32Array(n * K);
+  for (let i = 0; i < n; i++) {
+    const w = Math.min(1, Math.max(0, sk.getZ(i)));
+    W[i * K + at.get(sk.getX(i))] += w;
+    if (w < 1) W[i * K + at.get(sk.getY(i))] += 1 - w;
+  }
+  // Neighbours: the triangles' edges, plus points that sit on top of each other (a mesh
+  // split along a seam has two copies of the same point, and they must move as one).
+  const idx = geom.index ? geom.index.array : null;
+  const tris = idx ? idx.length : n;
+  const deg = new Uint32Array(n + 1);
+  const each = (fn) => {
+    for (let t = 0; t < tris; t += 3) {
+      const a = idx ? idx[t] : t, b = idx ? idx[t + 1] : t + 1, c = idx ? idx[t + 2] : t + 2;
+      fn(a, b); fn(b, a); fn(b, c); fn(c, b); fn(c, a); fn(a, c);
+    }
+  };
+  const same = new Int32Array(n).fill(-1);
+  const seen = new Map();
+  for (let i = 0; i < n; i++) {
+    const k = `${Math.round(pos.getX(i) * 5000)},${Math.round(pos.getY(i) * 5000)},${Math.round(pos.getZ(i) * 5000)}`;
+    const j = seen.get(k);
+    if (j === undefined) seen.set(k, i); else same[i] = j;
+  }
+  each((a) => { deg[a + 1]++; });
+  for (let i = 0; i < n; i++) if (same[i] >= 0) { deg[i + 1]++; deg[same[i] + 1]++; }
+  for (let i = 0; i < n; i++) deg[i + 1] += deg[i];
+  const nb = new Uint32Array(deg[n]), fill = deg.slice(0, n);
+  each((a, b) => { nb[fill[a]++] = b; });
+  for (let i = 0; i < n; i++) if (same[i] >= 0) { nb[fill[i]++] = same[i]; nb[fill[same[i]]++] = i; }
+  let V = new Float32Array(n * K);
+  for (let pass = 0; pass < passes; pass++) {
+    for (let i = 0; i < n; i++) {
+      const s = deg[i], e = deg[i + 1], cnt = e - s;
+      for (let k = 0; k < K; k++) {
+        let acc = 0;
+        for (let j = s; j < e; j++) acc += W[nb[j] * K + k];
+        V[i * K + k] = cnt ? 0.5 * W[i * K + k] + 0.5 * acc / cnt : W[i * K + k];
+      }
+    }
+    const tmp = W; W = V; V = tmp;
+  }
+  // Back to two bones per point: the two heaviest, renormalised.
+  for (let i = 0; i < n; i++) {
+    let a = 0, b = -1;
+    for (let k = 1; k < K; k++) if (W[i * K + k] > W[i * K + a]) a = k;
+    for (let k = 0; k < K; k++) if (k !== a && (b < 0 || W[i * K + k] > W[i * K + b])) b = k;
+    const wa = W[i * K + a], wb = b >= 0 ? W[i * K + b] : 0;
+    const sum = wa + wb || 1;
+    sk.setXYZ(i, bones[a], bones[b >= 0 ? b : a], wa / sum);
+  }
+  sk.needsUpdate = true;
+}
