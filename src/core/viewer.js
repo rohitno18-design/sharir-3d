@@ -96,7 +96,44 @@ export class Viewer {
     this.controls.mouseButtons = { LEFT: THREE.MOUSE.ROTATE, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.PAN };
     this.controls.zoomSpeed = 1.1;
     this.controls.rotateSpeed = 0.85;
+    // Scroll zooms towards whatever is under the mouse, not into the middle of the body.
+    this.controls.zoomToCursor = true;
     this.controls.addEventListener('change', () => { this._dirty = true; });
+    this._bindCursorZoom();
+  }
+
+  /**
+   * Zooming to the cursor moves the camera along the line under the mouse, so what is under
+   * the mouse stays there. How far each notch moves is a share of the distance to the orbit
+   * centre, though, and that centre sits deep in the body: zooming in on the face took steps
+   * sized for the middle of the chest and went straight through the skin. So at the start of
+   * each scroll the centre is moved to the depth of the surface actually under the mouse.
+   * Every notch then covers a share of the real distance, the camera slows as it arrives,
+   * and turning afterwards turns round what was zoomed into.
+   */
+  _bindCursorZoom() {
+    if (this._wheelBound) return;
+    this._wheelBound = true;
+    let last = 0, lx = -1e9, ly = -1e9;
+    // Captured on the stage, so it runs before the controls handle the same wheel event.
+    this.canvas.parentElement.addEventListener('wheel', (e) => {
+      if (e.target !== this.canvas || !this.controls.enabled || !this.body) return;
+      this._tween = null;                         // a scroll takes over from any camera move
+      const now = performance.now();
+      const r = this.canvas.getBoundingClientRect();
+      const px = e.clientX - r.left, py = e.clientY - r.top;
+      // One look per scroll gesture, or when the mouse has moved, not one per notch.
+      const fresh = now - last > 160 || Math.abs(px - lx) > 4 || Math.abs(py - ly) > 4;
+      last = now;
+      if (!fresh) return;
+      lx = px; ly = py;
+      const hit = this.surfaceAt(px, py);
+      if (!hit) return;                           // empty space: zoom as before
+      const fwd = this.camera.getWorldDirection(new THREE.Vector3());
+      const depth = hit.clone().sub(this.camera.position).dot(fwd);
+      if (!(depth > this.controls.minDistance)) return;
+      this.controls.target.copy(this.camera.position).addScaledVector(fwd, depth);
+    }, { capture: true, passive: true });
   }
 
   resize() {
@@ -206,6 +243,32 @@ export class Viewer {
    * and at any body size. Only the body is drawn: the bar and the bench are not parts.
    */
   _gpuPick(px, py) {
+    const body = this.body;
+    const [cr, cg, cb] = this._pickPass(px, py, 1);
+    const id = cr + cg * 256 + cb * 65536 - 1;
+    if (id < 0 || id >= body.count || !body.isVisible(id)) return null;
+    return { slot: id, part: body.partAt(id), point: null, distance: 0 };
+  }
+
+  /**
+   * The world point of the body surface under a pixel, or null over empty space. Uses the
+   * same rules as a click: whatever would be picked is what gets zoomed into.
+   */
+  surfaceAt(px, py) {
+    const body = this.body;
+    if (!body) return null;
+    if (!(this.rig?.enabled.value || !isPlainScale() || body.shifted)) return this.pick(px, py)?.point || null;
+    const [r, g, b, a] = this._pickPass(px, py, 2);
+    if (!a) return null;
+    const z = r / 255 + g / 65025 + b / 16581375;
+    return new THREE.Vector3((px / this.width) * 2 - 1, -(py / this.height) * 2 + 1, z * 2 - 1).unproject(this.camera);
+  }
+
+  /**
+   * Draw the body once, one pixel big, and read that pixel back. Mode 1 writes which part
+   * is there, mode 2 how deep it is.
+   */
+  _pickPass(px, py, mode) {
     const body = this.body, r = this.renderer;
     if (!this._pickRT) {
       this._pickRT = new THREE.WebGLRenderTarget(1, 1);
@@ -221,7 +284,7 @@ export class Viewer {
     const saved = body.batches.map(b => [b.mesh.material.blending, b.mesh.material.depthWrite]);
     for (const b of body.batches) { b.mesh.material.blending = THREE.NoBlending; b.mesh.material.depthWrite = true; }
     const clear = r.getClearColor(new THREE.Color()), alpha = r.getClearAlpha();
-    body.uPick.value = 1;
+    body.uPick.value = mode;
     this.camera.setViewOffset(this.width, this.height, Math.floor(px), Math.floor(py), 1, 1);
     r.setRenderTarget(this._pickRT);
     r.setClearColor(0x000000, 0);
@@ -235,11 +298,7 @@ export class Viewer {
     body.batches.forEach((b, i) => { b.mesh.material.blending = saved[i][0]; b.mesh.material.depthWrite = saved[i][1]; });
     for (const o of hidden) o.visible = true;
     this._dirty = true;
-
-    const [cr, cg, cb] = this._pickBuf;
-    const id = cr + cg * 256 + cb * 65536 - 1;
-    if (id < 0 || id >= body.count || !body.isVisible(id)) return null;
-    return { slot: id, part: body.partAt(id), point: null, distance: 0 };
+    return this._pickBuf;
   }
 
   // ---------- camera ----------

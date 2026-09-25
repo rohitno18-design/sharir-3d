@@ -397,6 +397,12 @@ if (uPick > 0.5) {
   if (vStyle.x < 0.35) discard;
   float id = floor(vPartIdx + 0.5) + 1.0;
   gl_FragColor = vec4(mod(id, 256.0), mod(floor(id / 256.0), 256.0), floor(id / 65536.0), 255.0) / 255.0;
+  // Depth pass, for zooming to the cursor: the depth spread over three bytes.
+  if (uPick > 1.5) {
+    vec3 enc = fract(gl_FragCoord.z * vec3(1.0, 255.0, 65025.0));
+    enc.xy -= enc.yz / 255.0;
+    gl_FragColor = vec4(enc, 1.0);
+  }
 }
 `);
   };
