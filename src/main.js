@@ -93,6 +93,7 @@ class App {
     this.dock = document.getElementById('dock');
     this.inspector = new Inspector(this.inspRoot, this);
     this.setMode('explore');
+    this.syncThemeButton();
     this.watchContext();
     this.bindInput();
     this.updateLegend();
@@ -856,6 +857,25 @@ class App {
       this.hi.invalidate();
       this.viewer.requestRender();
     });
+  }
+
+  get theme() { return document.documentElement.dataset.theme || 'light'; }
+
+  /** Light or dark. Remembered for next time. Film videos stay dark either way. */
+  setTheme(theme) {
+    document.documentElement.dataset.theme = theme;
+    try { localStorage.setItem('sharir-theme', theme); } catch {}
+    this.viewer.applyTheme(theme);
+    this.syncThemeButton();
+    this.refreshLabels();
+  }
+
+  syncThemeButton() {
+    const b = document.getElementById('theme-btn');
+    if (!b) return;
+    const light = this.theme === 'light';
+    b.textContent = light ? '☾' : '☀';
+    b.title = light ? 'Switch to the dark look' : 'Switch to the light look';
   }
 
   /** Back to the starting shot for this tab. */

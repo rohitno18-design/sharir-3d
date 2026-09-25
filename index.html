@@ -9,6 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='30' fill='%230b0d10'/><path d='M32 12a7 7 0 1 1 0 14 7 7 0 0 1 0-14zm-9 17h18l4 12-6 2-2-6v17h-4V38h-2v16h-4V37l-2 6-6-2z' fill='%23e9c95c'/></svg>" />
+  <!-- Set the theme before the first paint, so a light page never flashes dark. -->
+  <script>try { document.documentElement.dataset.theme = localStorage.getItem('sharir-theme') || 'light'; } catch (e) { document.documentElement.dataset.theme = 'light'; }</script>
   <link rel="stylesheet" href="/src/styles.css" />
 </head>
 <body>
@@ -74,6 +76,7 @@
       </div>
 
       <div class="top-right">
+        <button id="theme-btn" class="theme-btn" title="Switch between light and dark"></button>
         <div class="seg" id="sex-toggle" title="Body sex">
           <button data-sex="male" class="active">♂ Male</button>
           <button data-sex="female">♀ Female</button>

@@ -96,9 +96,9 @@ export class Labels {
       el.classList.toggle('left', p.lx < cx);
       el.style.left = p.lx + 'px'; el.style.top = p.ly + 'px';
       const elbowX = p.lx < cx ? p.lx + 14 : p.lx - 14;
-      const col = p.it.color || '#e9c95c';
-      lines.push(`<path d="M${p.x.toFixed(1)},${p.y.toFixed(1)} L${elbowX.toFixed(1)},${p.ly.toFixed(1)} L${p.lx.toFixed(1)},${p.ly.toFixed(1)}" fill="none" stroke="${col}" stroke-width="${p.it.hot ? 1.8 : 1}" stroke-opacity="${p.it.hot ? 1 : 0.7}"/>`);
-      lines.push(`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${p.it.hot ? 4 : 3}" fill="${col}" stroke="rgba(0,0,0,.6)" stroke-width="1.5"/>`);
+      const col = p.it.color || 'var(--accent)';
+      lines.push(`<path d="M${p.x.toFixed(1)},${p.y.toFixed(1)} L${elbowX.toFixed(1)},${p.ly.toFixed(1)} L${p.lx.toFixed(1)},${p.ly.toFixed(1)}" fill="none" style="stroke:${col}" stroke-width="${p.it.hot ? 1.8 : 1}" stroke-opacity="${p.it.hot ? 1 : 0.7}"/>`);
+      lines.push(`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${p.it.hot ? 4 : 3}" style="fill:${col}" stroke="rgba(0,0,0,.6)" stroke-width="1.5"/>`);
     }
     for (const p of shown.filter(p => p.it.kind === 'title' || p.it.kind === 'pin')) {
       const el = this._el(p.it);

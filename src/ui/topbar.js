@@ -26,6 +26,7 @@ export class Topbar {
     if (FEATURES.hindi) {
       for (const b of document.querySelectorAll('#lang-toggle button')) b.addEventListener('click', () => app.setLang(b.dataset.lang));
     } else document.getElementById('lang-toggle')?.remove();
+    document.getElementById('theme-btn')?.addEventListener('click', () => app.setTheme(app.theme === 'light' ? 'dark' : 'light'));
     const tr = document.querySelector('.top-right');
     if (tr && !tr.children.length) tr.remove();          // don't leave an empty grid cell
     if (!FEATURES.hindi) this.input.placeholder = 'Search any bone, muscle, nerve, organ… (e.g. femur, heart, vagus)';

@@ -47,6 +47,7 @@ export class Viewer {
     this.ground = g; this.scene.add(g);
     const ring = new THREE.Mesh(new THREE.RingGeometry(1.39, 1.4, 128), new THREE.MeshBasicMaterial({ color: 0xe9c95c, transparent: true, opacity: 0.35, side: THREE.DoubleSide }));
     ring.rotation.x = -Math.PI / 2; ring.position.y = 0.0005; this.scene.add(ring); this.ring = ring;
+    this.applyTheme(document.documentElement.dataset.theme || 'light');
 
     // Body root + system groups
     this.bodyRoot = new THREE.Group(); this.bodyRoot.name = 'body';
@@ -134,6 +135,19 @@ export class Viewer {
       if (!(depth > this.controls.minDistance)) return;
       this.controls.target.copy(this.camera.position).addScaledVector(fwd, depth);
     }, { capture: true, passive: true });
+  }
+
+  /**
+   * The floor the body stands on follows the page. A near-black disc read as a hole in a
+   * light grey stage, so on light it becomes a soft shadow, and the ring a deeper gold.
+   */
+  applyTheme(theme) {
+    const light = theme === 'light';
+    this.ground.material.color.set(light ? 0x8e97a3 : 0x0f1216);
+    this.ground.material.opacity = light ? 0.35 : 0.9;
+    this.ring.material.color.set(light ? 0xb08a2e : 0xe9c95c);
+    this.ring.material.opacity = light ? 0.6 : 0.35;
+    this._dirty = true;
   }
 
   resize() {
