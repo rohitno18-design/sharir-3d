@@ -25,6 +25,11 @@ export class Highlighter {
     this.solo = null;
     this._dirty = true;
     this._pulse = 0;
+    // Organs that grow or shrink: where each part is heading, and where it is on the way.
+    this.growTarget = new Map();   // slot -> { cx, cy, cz, axis, scale }
+    this.growNow = new Map();      // slot -> { cx, cy, cz, axis, scale }
+    this.compare = false;          // "before": every change undone while held
+    this._lastT = 0;
     viewer.onFrame((t) => this.tick(t));
   }
 
@@ -43,7 +48,86 @@ export class Highlighter {
   setEffects(map) {
     this.effects = map || new Map();
     this.glowing = new Set(this.effects.keys());
+    this._planGrowth();
     this.invalidate();
+  }
+
+  /** Show the body as it was before, with every change undone, while this is on. */
+  setCompare(on) {
+    if (this.compare === on) return;
+    this.compare = on;
+    this.invalidate();
+    this.viewer.requestRender();
+  }
+
+  /**
+   * Work out which parts change size, and about which centre.
+   *
+   * An organ made of several pieces (the liver's segments, the heart's walls) scales about
+   * the middle of the whole organ on its side of the body, so the pieces stay together
+   * instead of each swelling on its own spot and pulling apart. A muscle thickens about its
+   * own middle, across its length and not along it, so it does not come off its bones.
+   * Skin is one stitched surface and is left alone; so is anything that spans a whole
+   * system, which the body's overall shape already shows.
+   */
+  _planGrowth() {
+    const body = this.body;
+    this.growTarget = new Map();
+    if (!body?.grow) return;
+    // A change that spans a whole system (every muscle in the body) is already drawn by the
+    // body's own shape. Counted per group across both sides, before splitting by side.
+    const groupSize = new Map();
+    for (const fx of this.effects.values()) if (fx.group) groupSize.set(fx.group, (groupSize.get(fx.group) || 0) + 1);
+    const groups = new Map();
+    for (const [id, fx] of this.effects) {
+      if (fx.scale == null || Math.abs(fx.scale - 1) < 0.002) continue;
+      if (fx.group && groupSize.get(fx.group) > 300) continue;
+      const slot = body.slot(id);
+      if (slot === undefined) continue;
+      const part = body.parts[slot];
+      if (part.sys === 'integumentary') continue;
+      const key = (fx.group || id) + '|' + (part.side || '');
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push({ slot, part, scale: Math.min(1.6, Math.max(0.6, fx.scale)) });
+    }
+    const c = new THREE.Vector3(), size = new THREE.Vector3();
+    for (const items of groups.values()) {
+      const organ = new THREE.Box3();
+      for (const it of items) if (it.part.sys !== 'muscular') organ.union(body.bounds[it.slot]);
+      const oc = organ.isEmpty() ? null : organ.getCenter(new THREE.Vector3());
+      for (const it of items) {
+        const bb = body.bounds[it.slot];
+        let axis = 0;
+        if (it.part.sys === 'muscular') {
+          bb.getCenter(c); bb.getSize(size);
+          const dims = [size.x, size.y, size.z];
+          const long = dims.indexOf(Math.max(...dims));
+          if (dims[long] > 2 * Math.min(...dims.filter((_, i) => i !== long))) axis = long + 1;
+        } else c.copy(oc);
+        this.growTarget.set(it.slot, { cx: c.x, cy: c.y, cz: c.z, axis, scale: it.scale });
+      }
+    }
+  }
+
+  /** Ease every part towards its size. Returns true while anything is still moving. */
+  _stepGrowth(dt) {
+    const body = this.body;
+    if (!body?.grow || (!this.growTarget.size && !this.growNow.size)) return false;
+    const k = 1 - Math.exp(-dt * 3.2);            // most of the way in about a second
+    let moving = false;
+    for (const [slot, tgt] of this.growTarget) {
+      if (!this.growNow.has(slot)) this.growNow.set(slot, { ...tgt, scale: 1 });
+    }
+    for (const [slot, now] of this.growNow) {
+      const tgt = this.growTarget.get(slot);
+      const want = this.compare || !tgt ? 1 : tgt.scale;
+      if (tgt) { now.cx = tgt.cx; now.cy = tgt.cy; now.cz = tgt.cz; now.axis = tgt.axis; }
+      now.scale += (want - now.scale) * k;
+      if (Math.abs(want - now.scale) < 0.0004) now.scale = want; else moving = true;
+      body.setGrow(slot, now.cx, now.cy, now.cz, now.axis, now.scale);
+      if (!tgt && now.scale === 1) { body.setGrow(slot, 0, 0, 0, 0, 1); this.growNow.delete(slot); }
+    }
+    return moving;
   }
   clearEffects() { this.setEffects(new Map()); }
 
@@ -109,7 +193,7 @@ export class Highlighter {
       const isSel = sel.has(part.id);
       const isHover = this.hover === part.id;
 
-      let opacity = sys.opacity * (fx && fx.opacity != null ? fx.opacity : 1);
+      let opacity = sys.opacity * (fx && fx.opacity != null && !this.compare ? fx.opacity : 1);
       if (xray && !isSel && !isHover && !fx) opacity *= 0.16;
       if (anyEffect && !fx && !isSel && !isHover && !covered.has(part.sys)) opacity *= 0.35;
 
@@ -117,7 +201,10 @@ export class Highlighter {
       // ghosting everything does not work, because thousands of low-alpha surfaces stack
       // back up to opaque along any view ray.
       let hiddenByReveal = false;
-      if (reveal && !isSel && !isHover && !fx) {
+      // Glowing parts follow the same rule when one organ is picked. With a steroid cycle
+      // every muscle glows, and kept on screen, even faint, hundreds of them stacked into a
+      // solid wall in front of the liver.
+      if (reveal && !isSel && !isHover) {
         if (part.sys === selSys) opacity *= 0.22;
         else if (part.sys === 'skeletal' && selSys !== 'integumentary') opacity *= 0.14;
         else hiddenByReveal = true;
@@ -133,7 +220,7 @@ export class Highlighter {
       if (opacity >= 0.95) opaqueN[body.batchOf[slot]]++;
       const selectedAmt = isSel ? 1 : (isHover ? 0.45 : 0);
       const kind = fx ? effectKindIndex(fx.kind) : 0;
-      const intensity = fx ? fx.intensity : 0;
+      const intensity = fx && !this.compare ? fx.intensity : 0;
       body.setStyle(slot, opacity, selectedAmt, kind, intensity);
     }
     body.setBatchesFromParts();
@@ -153,7 +240,10 @@ export class Highlighter {
   /** Effect glow breathes; nothing else animates, so this is the only per-frame work. */
   tick(t) {
     if (this._dirty) this.applyAll();
-    if (!this.glowing.size) return;
+    const dt = Math.min(0.1, Math.max(0, t - this._lastT));
+    this._lastT = t;
+    if (this._stepGrowth(dt) || this.body?._dirtyGrow) { this.body.flush(); this.viewer.requestRender(); }
+    if (!this.glowing.size || this.compare) return;
     const body = this.body;
     for (const id of this.glowing) {
       const fx = this.effects.get(id); if (!fx) continue;

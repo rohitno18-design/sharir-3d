@@ -20,6 +20,7 @@ THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
  *
  *   partState  rgba = offset.xyz, visible
  *   partStyle  rgba = opacity, selected, effectKind, effectIntensity
+ *   partGrow   rgba = centre.xyz, axis * 10 + scale   (organs growing or shrinking)
  *
  * Hiding a part, selecting it, glowing it or exploding the whole body is then four floats
  * written to a texture — no scene-graph churn, no geometry rebuild.
@@ -40,6 +41,9 @@ export class BatchedBody {
     this.style = null;
     this.stateTex = null;
     this.styleTex = null;
+    this.grow = null;
+    this.growTex = null;
+    this._dirtyGrow = false;
     this.uPick = { value: 0 };  // shared by every batch material: 1 during a picking pass
     this._dirtyState = false;
     this._dirtyStyle = false;
@@ -78,6 +82,10 @@ export class BatchedBody {
     this.stateTex = new THREE.DataTexture(this.state, this.width, 1, THREE.RGBAFormat, THREE.FloatType);
     this.styleTex = new THREE.DataTexture(this.style, this.width, 1, THREE.RGBAFormat, THREE.FloatType);
     this.stateTex.needsUpdate = this.styleTex.needsUpdate = true;
+    this.grow = new Float32Array(this.width * 4);
+    for (let i = 0; i < this.count; i++) this.grow[i * 4 + 3] = 1;          // scale 1, no axis
+    this.growTex = new THREE.DataTexture(this.grow, this.width, 1, THREE.RGBAFormat, THREE.FloatType);
+    this.growTex.needsUpdate = true;
 
     // 2. merge each system into one geometry
     for (const [system, items] of groups) {
@@ -242,11 +250,24 @@ export class BatchedBody {
       this._dirtyStyle = true;
     }
   }
+  /**
+   * Grow or shrink a part about a centre. axis 0 scales evenly; 1, 2 or 3 leaves that
+   * axis (x, y, z) alone, so a muscle thickens without getting longer and pulling off
+   * the bone at either end.
+   */
+  setGrow(slot, cx, cy, cz, axis, scale) {
+    const i = slot * 4, w = axis * 10 + scale;
+    if (this.grow[i] !== cx || this.grow[i + 1] !== cy || this.grow[i + 2] !== cz || this.grow[i + 3] !== w) {
+      this.grow[i] = cx; this.grow[i + 1] = cy; this.grow[i + 2] = cz; this.grow[i + 3] = w;
+      this._dirtyGrow = true;
+    }
+  }
   isVisible(slot) { return this.state[slot * 4 + 3] > 0.5; }
 
   /** Push any pending texture writes. Returns true when something actually changed. */
   flush() {
-    const changed = this._dirtyState || this._dirtyStyle;
+    const changed = this._dirtyState || this._dirtyStyle || this._dirtyGrow;
+    if (this._dirtyGrow) { this.growTex.needsUpdate = true; this._dirtyGrow = false; }
     if (this._dirtyState) { this.stateTex.needsUpdate = true; this._dirtyState = false; }
     if (this._dirtyStyle) { this.styleTex.needsUpdate = true; this._dirtyStyle = false; }
     return changed;
@@ -278,7 +299,7 @@ export class BatchedBody {
       b.mesh.material.dispose();
       this.scene.remove(b.mesh);
     }
-    this.stateTex?.dispose(); this.styleTex?.dispose();
+    this.stateTex?.dispose(); this.styleTex?.dispose(); this.growTex?.dispose();
     this.batches.length = 0;
   }
 }
@@ -330,6 +351,7 @@ export function patchForBatching(material, body) {
     if (prev) prev(shader, renderer);
     shader.uniforms.uPartState = { value: body.stateTex };
     shader.uniforms.uPartStyle = { value: body.styleTex };
+    shader.uniforms.uPartGrow = { value: body.growTex };
     shader.uniforms.uStateWidth = { value: body.width };
     shader.uniforms.uPick = body.uPick;
 
@@ -337,6 +359,7 @@ export function patchForBatching(material, body) {
 attribute float aPartIndex;
 uniform sampler2D uPartState;
 uniform sampler2D uPartStyle;
+uniform sampler2D uPartGrow;
 uniform float uStateWidth;
 varying float vVisible;
 varying vec4 vStyle;
@@ -348,6 +371,18 @@ vec4 partState = texture2D(uPartState, stateUv);
 vStyle = texture2D(uPartStyle, stateUv);
 vVisible = partState.w;
 vPartIdx = aPartIndex;
+// An organ that has grown or shrunk, scaled about its centre in the rest pose, before the
+// body is shaped and posed, so it moves and bends with the body like any other part.
+vec4 grow = texture2D(uPartGrow, stateUv);
+float growAxis = floor(grow.w / 10.0);
+float growScale = grow.w - growAxis * 10.0;
+if (abs(growScale - 1.0) > 0.0005) {
+  vec3 k = vec3(growScale);
+  if (growAxis > 0.5 && growAxis < 1.5) k.x = 1.0;
+  else if (growAxis > 1.5 && growAxis < 2.5) k.y = 1.0;
+  else if (growAxis > 2.5) k.z = 1.0;
+  transformed = grow.xyz + (transformed - grow.xyz) * k;
+}
 `).replace('#include <project_vertex>', `
 // The atlas moves whole systems sideways. That has to happen after the body is shaped and
 // posed: the shape is measured from each bone, and a point already moved a metre away

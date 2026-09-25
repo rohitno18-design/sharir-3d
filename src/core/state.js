@@ -30,6 +30,7 @@ export const state = {
   clip: { x: 1, y: 1, z: 1 },// 0..1 fraction kept (1 = no cut)
   effect: null,              // effect id (the one whose detail is open)
   stack: [],                 // effect ids combined together — 'what if I do all of these'
+  fxBrowse: true,            // What happens if: the list is showing, rather than the combination
   effectStep: '1d',
   playing: false,
   showLandmarks: true,

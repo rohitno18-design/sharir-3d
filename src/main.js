@@ -45,8 +45,8 @@ class App {
   constructor() {
     this.viewer = new Viewer(document.getElementById('gl'));
     this.labels = new Labels(this.viewer, document.getElementById('label-lines'), document.getElementById('labels'));
-    this.labels.onClick = (it) => { if (it.partId) this.selectPart(it.partId, { focus: false }); };
-    this.labels.onHover = (it) => this.hoverPart(it?.partId || null);
+    this.labels.onClick = (it) => { if (it.target) this.focusTarget(it.target); else if (it.partId) this.selectPart(it.partId, { focus: false }); };
+    this.labels.onHover = (it) => { if (it?.target) this.hoverTarget(it.target); else if (!it && this._targetHover) this.hoverTarget(null); else this.hoverPart(it?.partId || null); };
     this.effects = new EffectsLibrary();
     this.ageData = null;
     this.hoverTip = document.getElementById('hover-tip');
@@ -243,6 +243,7 @@ class App {
 
   // ---------------- modes ----------------
   setMode(mode, record = true) {
+    const prevMode = state.mode;
     if (record && mode !== state.mode) this.nav.push('mode');
     // A temporary view belongs to the tab that laid it (an effect, a Movement look, a
     // focused target). Carried into another tab, the body shows one set of systems while
@@ -278,13 +279,18 @@ class App {
       if (right.classList.contains('collapsed')) this.togglePanel('right', true);
     }
     if (mode !== 'effects') { set({ effect: null, playing: false }); clearTimeout(this._playT); }
+    // Coming back to What happens if with a combination already picked shows it, not the list.
+    if (mode === 'effects' && !state.effect) set({ fxBrowse: !state.stack.length });
     // dock
     if (mode === 'age') { renderAgeDock(this.dock, this); this.applyAgeEffects(); }
-    else if (mode === 'effects' && state.effect) { renderEffectDock(this.dock, this); this.applyEffect(); }
+    else if (mode === 'effects' && this.activeEffects().length) { renderEffectDock(this.dock, this); this.applyEffect(); }
     // Movement mode has no dock, but its muscle-effort map lives in the same effect
     // channel — clearing it here would wipe the activation the player just set up.
     else { this.dock.hidden = true; if (mode !== 'move') this.hi.clearEffects(); }
     document.documentElement.style.setProperty('--dock-h', this.dock.hidden ? '0px' : (state.mode === 'age' ? '196px' : '112px'));
+    // What a combination does to muscle and fat belongs to What happens if. Leaving the
+    // tab gives the body back its own shape.
+    if (prevMode === 'effects' && mode !== 'effects') { this.setCompare(false); this.applyBodyMorph(); }
     requestAnimationFrame(() => this.updateSafeInsets());
     this.refreshLabels();
     this.updateNavUI();
@@ -306,7 +312,11 @@ class App {
     this.setMode(s.mode, false);
     // After the tab, because the atlas only opens on the Systems tab.
     if (!!state.atlas !== !!s.atlas) this.toggleAtlas();
-    if (s.effect) { set({ effect: s.effect, effectStep: s.effectStep }); this.applyEffect(); renderEffectDock(this.dock, this); this.dock.hidden = false; document.documentElement.style.setProperty('--dock-h', '112px'); }
+    state.stack = [...(s.stack || [])];
+    if (s.mode === 'effects' && (s.effect || state.stack.length)) {
+      set({ effect: s.effect, effectStep: s.effectStep });
+      this.applyEffect(); this.syncEffectDock(); this.panel?.render?.();
+    }
 
     this.selectedIds = s.selected ? (this.registry.byId.get(s.selected)?.k === 'group'
       ? this.registry.subtree(s.selected).filter(x => this.meshes.has(x)) : [s.selected]) : [];
@@ -325,6 +335,7 @@ class App {
     if (state.isolate) { set({ isolate: null }); this.hi.setIsolate(null); this.hi.invalidate(); this.inspector.render(); return true; }
     if (state.selected) { this.clearSelection(); return true; }
     if (state.effect) { this.closeEffect(); return true; }
+    if (state.mode === 'effects' && !state.fxBrowse && state.stack.length) { this.browseEffects(); return true; }
     return false;
   }
 
@@ -424,6 +435,10 @@ class App {
     if (state.effect) {
       const e = this.effects.get(state.effect);
       if (e) chips.push({ text: `${e.icon || ''} ${e.name.en}`.trim(), kind: 'effect', onClear: () => this.closeEffect() });
+    } else if (state.mode === 'effects' && state.stack.length) {
+      const list = this.activeEffects();
+      const text = list.length > 1 ? `${list.map(e => e.icon || '').join('')} ${list.length} together` : `${list[0]?.icon || ''} ${list[0]?.name.en || ''}`;
+      chips.push({ text: text.trim(), kind: 'effect', onClear: () => this.clearStack() });
     }
     if (state.selected) {
       const p = this.registry.byId.get(state.selected);
@@ -551,7 +566,7 @@ class App {
    */
   syncBodyEverywhere() {
     if (state.mode === 'age') { this.panel?.render?.(); renderAgeDock(this.dock, this); this.applyAgeEffects(); }
-    else if (state.effect) { this.applyEffect(); renderEffectDock(this.dock, this); this.panel?.render?.(); }
+    else if (state.mode === 'effects' && this.activeEffects().length) { this.applyEffect(); renderEffectDock(this.dock, this); this.panel?.render?.(); }
     this.inspector.render();
     this.updateNavUI();
     this.refreshLabels();
@@ -567,7 +582,7 @@ class App {
    */
   stackBodyDrift() {
     const combined = this._combined;
-    if (!combined || !combined.size) return { dMuscle: 0, dFatPct: 0, any: false };
+    if (this._compare || !combined || !combined.size || state.mode !== 'effects' || !this.activeEffects().length) return { dMuscle: 0, dFatPct: 0, any: false };
     const MUSCLE = new Set(['skeletal-muscle', 'biceps', 'triceps', 'forearm-muscles', 'deltoids',
       'pectorals', 'lats', 'trapezius', 'abs', 'erector-spinae', 'glutes', 'quadriceps',
       'hamstrings', 'calves', 'hip-flexors', 'rotator-cuff']);
@@ -606,12 +621,12 @@ class App {
    * Deurenberg (1991) + a South-Asian correction, then corrected for how trained the body
    * is — Deurenberg is well known to overestimate fat in muscular people.
    */
-  bodyComposition() {
+  bodyComposition({ drift: withDrift = true } = {}) {
     const h = this.currentHeightM();
     const kg = this.currentWeight();
     const bmi = kg / (h * h);
     const male = state.sex === 'male' ? 1 : 0;
-    const drift = this.stackBodyDrift();
+    const drift = withDrift ? this.stackBodyDrift() : { dMuscle: 0, dFatPct: 0 };
     const muscle = Math.max(0, Math.min(1, (state.muscle ?? 0.5) + drift.dMuscle));
     const trained = muscle - 0.5;                       // −0.5 frail … +0.5 elite
 
@@ -1033,9 +1048,24 @@ class App {
       for (const s of this.registry.siblingsOf(sel)) if (s.id !== sel.id) push(s, true);
     }
     // effect targets
-    if (state.effect && this.hi.effects.size) {
-      const seen = new Set();
-      for (const [id] of this.hi.effects) { const p = this.registry.byId.get(id); if (!p || seen.has(p.n)) continue; seen.add(p.n); if (seen.size > 22) break; push(p, true); }
+    // One label per organ the panel talks about ("Liver", "Testes"), at the middle of that
+    // organ, in its colour of good or harm. Labelling the first parts found instead put
+    // twenty names on brain folds and hip bursae.
+    if (state.mode === 'effects' && this.hi.effects.size && this._combined && !sel) {
+      const KIND_COL = { positive: '#1f9d55', negative: '#d64545', strain: '#c98a0b', neutral: '#2f7fd1' };
+      const rows = [...this._combined.values()].sort((a, b) => b.intensity - a.intensity);
+      let n = 0;
+      for (const c of rows) {
+        if (n >= 14) break;
+        if (c.target === 'whole-body' || c.target === 'skin') continue;   // no single place to point at
+        const ids = this.registry.resolveTarget(c.target).filter(id => this.body.slot(id) !== undefined && this.hi.isPartVisible(this.registry.byId.get(id)));
+        if (!ids.length || ids.length > 300) continue;
+        const box = this.hi.boxOf(ids, applyMorph);
+        if (box.isEmpty()) continue;
+        const v = box.getCenter(new THREE.Vector3()).applyMatrix4(this.viewer.bodyRoot.matrixWorld);
+        items.push({ id: 'fx-' + c.target, target: c.target, anchor: v, text: TARGETS[c.target]?.label || c.target, color: KIND_COL[c.kind], hot: true });
+        n++;
+      }
     }
     this._labelItems = items;
     this.labels.setItems(items);
@@ -1054,33 +1084,77 @@ class App {
     this.leftRoot.innerHTML = '';
     this.ensurePanel('left');
     this.panel = new EffectsPanel(this.leftRoot, this);
-    renderEffectDock(this.dock, this);
-    document.documentElement.style.setProperty('--dock-h', '112px');
     this.applyEffect();
+    this.syncEffectDock();
     this.viewer.resetView(this.currentHeightM());
     this.topbar.syncToggles();
     this.updateNavUI();
   }
 
-  closeEffect() {
+  /**
+   * Leave the one item that is open. With a combination picked, the body and the timeline
+   * go straight back to showing the combination; `toTogether` also opens its panel instead
+   * of the list.
+   */
+  closeEffect(toTogether = false) {
     this.nav.push('close-effect');
-    set({ effect: null, playing: false });
-    this.clearSysOverride();
-    this.hi.clearEffects();
-    this.dock.hidden = true;
-    document.documentElement.style.setProperty('--dock-h', '0px');
+    clearTimeout(this._playT);
+    set({ effect: null, playing: false, fxBrowse: !(toTogether && state.stack.length) });
+    this._afterEffectChange();
+  }
+
+  /** The panel for the combination: every item picked, running on one timeline. */
+  showTogether() {
+    if (!state.stack.length) return;
+    this.nav.push('together');
+    set({ effect: null, fxBrowse: false });
+    this._afterEffectChange();
+  }
+
+  /** Back to the list to pick more. The body keeps showing the combination meanwhile. */
+  browseEffects() {
+    set({ effect: null, fxBrowse: true });
+    this._afterEffectChange();
+  }
+
+  _afterEffectChange() {
+    if (this.activeEffects().length) this.applyEffect();
+    else { this.clearSysOverride(); this.hi.clearEffects(); this._combined = null; this.applyBodyMorph(); }
     this.panel?.dispose?.();
     this.leftRoot.innerHTML = '';
     this.panel = new EffectsPanel(this.leftRoot, this);
+    this.syncEffectDock();
     this.refreshLabels();
     this.updateNavUI();
+  }
+
+  /** The timeline shows whenever anything is picked: one item, or a combination. */
+  syncEffectDock() {
+    if (state.mode !== 'effects') return;
+    if (this.activeEffects().length) renderEffectDock(this.dock, this);
+    else this.dock.hidden = true;
+    document.documentElement.style.setProperty('--dock-h', this.dock.hidden ? '0px' : '112px');
+    requestAnimationFrame(() => this.updateSafeInsets());
+  }
+
+  /**
+   * Hold to compare: the body as it was before any of this, with every organ back to its
+   * size, the muscle and fat change undone and the colours off. Small changes are much
+   * easier to see flicking between the two than looking at one.
+   */
+  setCompare(on) {
+    if (!!this._compare === !!on) return;
+    this._compare = !!on;
+    this.hi.setCompare(!!on);
+    this.applyBodyMorph();
+    this.dock.classList.toggle('comparing', !!on);
   }
 
   setEffectStep(t) {
     set({ effectStep: t });
     this.applyEffect();
     this.panel?.render?.();
-    renderEffectDock(this.dock, this);
+    this.syncEffectDock();
   }
 
   togglePlay() {
@@ -1099,11 +1173,12 @@ class App {
     } else clearTimeout(this._playT);
   }
 
-  /** Everything currently being simulated: the open intervention plus anything stacked with it. */
+  /**
+   * What the body and the timeline are showing. With one item open, that item on its own,
+   * so the body matches what its page says. Otherwise the combination, if there is one.
+   */
   activeEffects() {
-    const ids = [];
-    if (state.effect) ids.push(state.effect);
-    for (const id of state.stack) if (!ids.includes(id)) ids.push(id);
+    const ids = state.effect ? [state.effect] : state.stack;
     return ids.map(id => this.effects.get(id)).filter(Boolean);
   }
 
@@ -1119,7 +1194,7 @@ class App {
       let phase = 0;
       for (const id of ids) {
         map.set(id, { kind: c.kind, intensity: c.intensity, scale: c.visual?.scale,
-                      opacity: c.visual?.opacity, phase: (phase += 0.37) });
+                      opacity: c.visual?.opacity, phase: (phase += 0.37), group: target });
       }
     }
     if (unresolved.length) console.warn('[effects] unresolved targets:', unresolved);
@@ -1137,29 +1212,33 @@ class App {
     this.updateLegend();
   }
 
-  /** Add or remove an intervention from the combined stack. */
+  /** Add or remove an item from the combination. */
   toggleStack(id) {
-    if (id === state.effect) return;                 // the open one is always included
     const i = state.stack.indexOf(id);
-    if (i >= 0) state.stack.splice(i, 1);
+    // A new array each time: the back button keeps snapshots of this list, and changing
+    // it in place would change every saved snapshot along with it.
+    if (i >= 0) state.stack = state.stack.filter(x => x !== id);
     else {
       if (state.stack.length >= 5) { toast('You can combine five at most. Remove one first.'); return; }
-      state.stack.push(id);
+      state.stack = [...state.stack, id];
     }
-    this.applyEffect();
+    if (!state.effect && !state.fxBrowse && !state.stack.length) set({ fxBrowse: true });
+    if (this.activeEffects().length) this.applyEffect();
+    else { this.clearSysOverride(); this.hi.clearEffects(); this._combined = null; this.applyBodyMorph(); }
     this.panel?.render?.();
-    renderEffectDock(this.dock, this);
+    this.syncEffectDock();
     this.updateNavUI();
     const e = this.effects.get(id);
-    toast(i >= 0 ? `Removed ${e.name.en}` : `Added ${e.name.en}. Showing the combined effect.`);
+    const n = state.stack.length;
+    toast(i >= 0 ? `Removed ${e.name.en}.`
+      : state.effect ? `Added ${e.name.en} to your combination. You now have ${n}.`
+      : n > 1 ? `Added ${e.name.en}. The body now shows all ${n} together.` : `Added ${e.name.en}. Add one more to combine them.`);
   }
 
   clearStack() {
     state.stack = [];
-    this.applyEffect();
-    this.panel?.render?.();
-    renderEffectDock(this.dock, this);
-    this.updateNavUI();
+    if (!state.effect) set({ fxBrowse: true });
+    this._afterEffectChange();
   }
 
 
@@ -1219,7 +1298,7 @@ class App {
     for (const c of (stage.changes || [])) {
       if (c.sex && c.sex !== 'both' && c.sex !== state.sex) continue;
       const ids = this.registry.resolveTarget(c.target);
-      for (const id of ids) map.set(id, { kind: c.kind, intensity: c.intensity ?? 0.4, scale: c.visual?.scale, opacity: c.visual?.opacity, phase: (phase += 0.37) });
+      for (const id of ids) map.set(id, { kind: c.kind, intensity: c.intensity ?? 0.4, scale: c.visual?.scale, opacity: c.visual?.opacity, phase: (phase += 0.37), group: c.target });
     }
     this.hi.setEffects(map);
     this.hi.invalidate();
@@ -1332,8 +1411,8 @@ class App {
       else if (k === 'r') this.resetCamera();
       else if (k === 'n') document.getElementById('tb-labels').click();
       else if (k === 's' && !e.ctrlKey && !e.metaKey) this.saveShot();
-      else if (k === ' ' && state.effect) { e.preventDefault(); this.togglePlay(); }
-      else if ((k === 'arrowright' || k === 'arrowleft') && state.effect) {
+      else if (k === ' ' && state.mode === 'effects' && this.activeEffects().length) { e.preventDefault(); this.togglePlay(); }
+      else if ((k === 'arrowright' || k === 'arrowleft') && state.mode === 'effects' && this.activeEffects().length) {
         const i = TIMELINE_STEPS.findIndex(s => s.t === state.effectStep);
         const n = Math.max(0, Math.min(TIMELINE_STEPS.length - 1, i + (k === 'arrowright' ? 1 : -1)));
         this.setEffectStep(TIMELINE_STEPS[n].t);

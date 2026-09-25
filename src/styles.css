@@ -651,3 +651,80 @@ body.film #stage { border-radius: 12px; overflow: hidden; box-shadow: 0 30px 90p
 .theme-btn:hover { background: rgb(var(--gold) / .16); color: var(--accent-ink); border-color: rgb(var(--gold) / .5); }
 /* Film mode is a video frame, and videos stay dark whatever the app's theme. */
 body.film #stage { background: radial-gradient(1200px 800px at 50% 40%, #171b21 0%, #0c0e12 55%, #07080a 100%); }
+
+/* ---------- What happens if: one timeline for one item or a whole combination ---------- */
+.tl { grid-template-columns: 44px 1fr auto; }
+.tl-head .lg i.k-positive { background: var(--pos); } .tl-head .lg i.k-negative { background: var(--neg); }
+.tl-head .lg i.k-strain { background: var(--strain); } .tl-head .lg i.k-neutral { background: var(--neutral); }
+.before-btn { padding: 9px 12px; border-radius: 10px; border: 1px solid var(--line-2); background: rgb(var(--ink) / .05);
+  font: 700 12px/1 var(--display); color: var(--text-2); user-select: none; touch-action: none; white-space: nowrap; }
+.before-btn:hover { border-color: rgb(var(--gold) / .5); color: var(--accent-ink); }
+#dock.comparing .before-btn { background: var(--accent); color: var(--on-accent); border-color: transparent; }
+#dock.comparing .tl-head .h::after { content: 'Showing the body before any of this'; display: block; font: 600 11px/1.3 var(--font); color: var(--accent-ink); margin-top: 3px; }
+#dock.comparing .tl-head .h small { display: none; }
+
+.stack-chip { cursor: pointer; }
+.stack-chip:hover { border-color: rgb(var(--gold) / .5); }
+.together-go { width: 100%; justify-content: center; padding: 10px 12px; font-size: 13px; margin: 2px 0 6px; }
+
+/* the body after this long */
+.fx-body { background: rgb(var(--ink) / .035); border: 1px solid var(--line); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+.fx-body .sb-rows { margin: 0; }
+.size-list { display: flex; flex-direction: column; gap: 3px; }
+.size-row { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: baseline; padding: 6px 8px; border-radius: 8px;
+  border-left: 3px solid var(--neutral); background: rgb(var(--ink) / .04); cursor: pointer; font-size: 12.5px; }
+.size-row:hover { background: rgb(var(--ink) / .08); }
+.size-row.positive { border-left-color: var(--pos); } .size-row.negative { border-left-color: var(--neg); } .size-row.strain { border-left-color: var(--strain); }
+.size-row b { font: 700 12px/1.2 var(--display); color: var(--text-strong); }
+.size-from { font-size: 12px; }
+
+/* good against harm at each point */
+.bal-wrap { margin: 12px 0 4px; }
+.bal-head { font: 700 10.5px/1 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 8px; }
+.bal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; align-items: end; }
+.bal-col { display: flex; flex-direction: column; align-items: stretch; gap: 4px; padding: 4px 3px 3px; border-radius: 8px; border: 1px solid transparent; }
+.bal-col:hover { background: rgb(var(--ink) / .05); }
+.bal-col.active { border-color: rgb(var(--gold) / .6); background: rgb(var(--gold) / .1); }
+.bal-bar { height: 64px; display: flex; flex-direction: column-reverse; border-radius: 4px; overflow: hidden; background: rgb(var(--ink) / .05); }
+.bal-bar i { display: block; width: 100%; }
+.bal-bar i.positive, .bal-legend i.positive { background: var(--pos); }
+.bal-bar i.negative, .bal-legend i.negative { background: var(--neg); }
+.bal-bar i.strain, .bal-legend i.strain { background: var(--strain); }
+.bal-bar i.neutral, .bal-legend i.neutral { background: var(--neutral); }
+.bal-col span { font: 600 10px/1 var(--mono); color: var(--text-3); text-align: center; }
+.bal-col.active span { color: var(--accent-ink); }
+.bal-legend { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 4px; font-size: 11px; color: var(--text-3); }
+.bal-legend i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 4px; }
+
+/* what each one is doing now */
+.habit-now { display: flex; flex-direction: column; gap: 6px; }
+.hn-row { display: grid; grid-template-columns: 26px 1fr; gap: 8px; padding: 8px 9px; border-radius: 10px; border: 1px solid var(--line);
+  background: rgb(var(--ink) / .03); cursor: pointer; }
+.hn-row:hover { border-color: rgb(var(--gold) / .45); }
+.hn-ico { font-size: 18px; text-align: center; }
+.hn-row b { display: block; font-size: 12.5px; color: var(--text-strong); margin-bottom: 2px; }
+.hn-row span { font-size: 12px; color: var(--text-2); line-height: 1.45; }
+
+/* organ by organ */
+.org { border-left: 3px solid var(--neutral); background: rgb(var(--ink) / .03); border-radius: 0 9px 9px 0; margin: 6px 0; }
+.org.positive { border-left-color: var(--pos); } .org.negative { border-left-color: var(--neg); } .org.strain { border-left-color: var(--strain); }
+.org summary { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; padding: 8px 10px; cursor: pointer; list-style: none; }
+.org summary::-webkit-details-marker { display: none; }
+.org summary::after { content: '+'; margin-left: auto; color: var(--text-3); font-weight: 600; }
+.org[open] summary::after { content: '−'; }
+.org summary:hover { background: rgb(var(--ink) / .04); }
+.org-t { font-weight: 600; font-size: 13px; }
+.org-ico { font-size: 13px; letter-spacing: 2px; }
+.org-badge { font: 700 10px/1 var(--display); letter-spacing: .04em; padding: 4px 7px; border-radius: 10px; }
+.org-badge.rein { background: rgb(var(--gold) / .16); color: var(--accent-ink); }
+.org-badge.conf { background: color-mix(in srgb, var(--strain) 18%, transparent); color: var(--strain); }
+.org-hit { padding: 6px 10px 8px; border-top: 1px solid var(--line); }
+.org-from { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 3px; }
+.org-from b { font-size: 12.5px; }
+.org .nt { font-size: 12.5px; color: var(--text-2); line-height: 1.5; }
+.org .efx-foot { padding: 0 10px 8px; }
+.fx-older { margin: 12px 0; }
+.fx-older > summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; cursor: pointer; list-style: none;
+  font: 700 11.5px/1.3 var(--display); letter-spacing: .06em; text-transform: uppercase; color: var(--text-2); padding: 6px 0; }
+.fx-older > summary::-webkit-details-marker { display: none; }
+.fx-older > summary .n { font: 600 10px/1 var(--mono); color: var(--text-3); background: rgb(var(--ink) / .06); padding: 3px 6px; border-radius: 5px; }
