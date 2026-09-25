@@ -8,7 +8,9 @@
  */
 import { BENCH_PRESS, pressPhase } from './lifts/bench-press.js';
 import { BARBELL_CURL } from './lifts/barbell-curl.js';
+import { BARBELL_SHRUG } from './lifts/barbell-shrug.js';
+import { OVERHEAD_PRESS } from './lifts/overhead-press.js';
 
 export { pressPhase };
-export const EXERCISES = [BENCH_PRESS, BARBELL_CURL];
+export const EXERCISES = [BENCH_PRESS, OVERHEAD_PRESS, BARBELL_CURL, BARBELL_SHRUG];
 export const exerciseById = (id) => EXERCISES.find((e) => e.id === id) || null;

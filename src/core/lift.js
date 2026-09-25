@@ -163,6 +163,7 @@ export function plantFeet(rig, frame, pose, feet = {}) {
  * bar.pole   side -> the world direction the elbow should point, or 'upright' for
  *            forearms as near vertical under the bar as the arm allows
  * bar.radius, bar.flesh  the shaft's radius and the tissue between bar and finger bone
+ * bar.wrist  how far the wrists bend back, radians, if not the usual slight extension
  */
 export function handsOnBar(rig, frame, pose, bar) {
   for (const side of SIDES) {
@@ -175,7 +176,7 @@ export function handsOnBar(rig, frame, pose, bar) {
       pole = rig.uprightPole(side, grip, girdle, hint, frame.dirToBody(Y), { morphed: true, across: frame.dirToBody(X) });
     } else pole = frame.dirToBody(pole.clone().normalize());
     const align = new THREE.Vector3(m * (bar.align ?? 1), 0, 0);
-    const arm = rig.solveArm(side, grip, pole, { girdle, rootQ: frame.q, align, morphed: true });
+    const arm = rig.solveArm(side, grip, pole, { girdle, rootQ: frame.q, align, morphed: true, ...(bar.wrist != null ? { wrist: bar.wrist } : {}) });
     Object.assign(pose, arm);
     // The fingers wrap at right angles to the bar, and which way that is depends on how the
     // hand is turned right now, so it is worked out from the solved arm.
@@ -202,6 +203,19 @@ export function hangHeight(rig, frame, pose, half, z) {
   let lo = sh.y - 1.2, hi = sh.y;
   for (let i = 0; i < 24; i++) { const mid = (lo + hi) / 2; if (fits(mid)) hi = mid; else lo = mid; }
   return hi;
+}
+
+/**
+ * The highest the bar can go at world depth z with the arms straight overhead: the height
+ * where the shorter reach runs out.
+ */
+export function pressHeight(rig, frame, pose, half, z) {
+  const sh = shoulderWorld(rig, frame, pose, 'l');
+  const fits = (y) => SIDES.every(side => rig.reachRatio(side,
+    frame.toBody(new THREE.Vector3(sgn(side) * half, y, z)), pose[`girdle.${side}`] || null, true) <= rig.lockoutReach);
+  let lo = sh.y, hi = sh.y + 1.2;
+  for (let i = 0; i < 24; i++) { const mid = (lo + hi) / 2; if (fits(mid)) lo = mid; else hi = mid; }
+  return lo;
 }
 
 /**

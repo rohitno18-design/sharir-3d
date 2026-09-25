@@ -1225,8 +1225,8 @@ export class Rig {
    * `dev` radians sideways — positive towards the little finger. Side-bend turns about the
    * axis through the back of the hand and the palm, which in the rest pose is z.
    */
-  wristQuat(side = 'l', dev = 0) {
-    const ext = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), WRIST_EXTENSION);
+  wristQuat(side = 'l', dev = 0, extension = WRIST_EXTENSION) {
+    const ext = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), extension);
     if (!dev) return ext;
     const sideways = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), dev * this._ulnarSign(side));
     return ext.multiply(sideways);
@@ -1351,7 +1351,9 @@ export class Rig {
    *                        to its little finger side
    */
   solveArm(side, target, pole, opts = {}) {
-    const { pronation = 0, girdle = null, rootQ = null, align = null, morphed = false } = opts;
+    // `wrist`: how far the wrist bends back, if not the pressing default. A bar resting in
+    // the heel of the hand, as in the front rack of an overhead press, needs far more.
+    const { pronation = 0, girdle = null, rootQ = null, align = null, morphed = false, wrist = WRIST_EXTENSION } = opts;
     if (!this.p[side]) return {};
     // Solve in morphed space, not rest space. The bone matrices rotate vertices that have
     // already been through the height/weight field, so the arm they actually swing is the
@@ -1377,7 +1379,7 @@ export class Rig {
     let dev = 0, sol = null, G = null, wq = null;
     const passes = align ? 3 : 1;
     for (let pass = 0; pass < passes; pass++) {
-      wq = this.wristQuat(side, dev);
+      wq = this.wristQuat(side, dev, wrist);
       G = this._gripAfterWrist(side, wq);
       sol = this._solve2(S, E, G, T, pole);
       if (!align) break;
@@ -1385,7 +1387,7 @@ export class Rig {
       const a = sol.restD2;
       // The bar's direction as the forearm sees it, before any twist.
       const want = align.clone().normalize().applyQuaternion(base.clone().invert()).dot(a);
-      const along = (x) => bh.clone().applyQuaternion(this.wristQuat(side, x)).dot(a);
+      const along = (x) => bh.clone().applyQuaternion(this.wristQuat(side, x, wrist)).dot(a);
       // Bisect for the side-bend that gives the bar that angle to the forearm. Out of the
       // wrist's range, it stops at the limit and the forearm twist does what it can.
       let lo = -WRIST_RADIAL_MAX, hi = WRIST_ULNAR_MAX;
