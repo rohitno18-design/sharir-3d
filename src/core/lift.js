@@ -85,6 +85,13 @@ export class Frame {
     return new Frame(rig, quat, hip);
   }
 
+  /** The frame a pose's root entry already describes (lying on the bench, say). */
+  static fromEntry(rig, entry) {
+    const q = entry.quat ? entry.quat.clone() : new THREE.Quaternion().setFromEuler(new THREE.Euler(...(entry.rot || [0, 0, 0]), 'XYZ'));
+    const M = rig.localMatrix(rig.bones[0], entry, new THREE.Matrix4());
+    return new Frame(rig, q, rig.hipCentre().applyMatrix4(M));
+  }
+
   entry() { return { quat: this.q, pos: [this.pos.x, this.pos.y, this.pos.z] }; }
   /** World point -> the body's own shaped rest space. */
   toBody(w) { return w.clone().applyMatrix4(this.Mi); }

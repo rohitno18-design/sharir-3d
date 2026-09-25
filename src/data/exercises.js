@@ -14,7 +14,12 @@ import { BACK_SQUAT } from './lifts/back-squat.js';
 import { CALF_RAISE } from './lifts/calf-raise.js';
 import { ROMANIAN_DEADLIFT } from './lifts/romanian-deadlift.js';
 import { BARBELL_ROW } from './lifts/barbell-row.js';
+import { LYING_TRICEPS_EXTENSION } from './lifts/lying-triceps-extension.js';
+import { HIP_THRUST } from './lifts/hip-thrust.js';
 
 export { pressPhase };
-export const EXERCISES = [BENCH_PRESS, BARBELL_ROW, OVERHEAD_PRESS, BARBELL_CURL, BARBELL_SHRUG, BACK_SQUAT, ROMANIAN_DEADLIFT, CALF_RAISE];
+export const EXERCISES = [
+  BENCH_PRESS, BARBELL_ROW, OVERHEAD_PRESS, BARBELL_CURL, LYING_TRICEPS_EXTENSION, BARBELL_SHRUG,
+  BACK_SQUAT, ROMANIAN_DEADLIFT, HIP_THRUST, CALF_RAISE,
+];
 export const exerciseById = (id) => EXERCISES.find((e) => e.id === id) || null;
