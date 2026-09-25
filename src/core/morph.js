@@ -185,7 +185,7 @@ vec3 morphBody(vec3 p) {
     float limbBone = uAnchorLimb[int(ib + 0.5)];
     dA = boneDisp(p, base, limbBone, tw);
     dB = trunkDisp(p, base, tw);
-    w = w - 2.0;
+    w = min(w - 2.0, 1.0);                           // 3 and over: past the insertion, all limb
   } else {
     dA = boneDisp(p, base, ia, tw);
     dB = ia == ib ? dA : boneDisp(p, base, ib, tw);
@@ -378,7 +378,7 @@ export function applyMorph(p, out = new THREE.Vector3(), mask = null) {
     if (w > 1.5) {
       boneDisp(p, base, skel.anchorLimb[Math.round(b)], tissue, _dA);
       trunkDisp(p, base, tissue, _dB);
-      w -= 2;
+      w = Math.min(w - 2, 1);
     } else {
       boneDisp(p, base, a, tissue, _dA);
       if (a === b) _dB.copy(_dA); else boneDisp(p, base, b, tissue, _dB);

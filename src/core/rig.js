@@ -275,6 +275,8 @@ const ANCHORED = [
   { re: /^(gluteus medius|gluteus minimus|piriformis|superior gemellus|inferior gemellus|obturator internus)/i, limb: 'thigh', trunk: 'root', at: 'Greater trochanter', mode: 'fibre' },
   { re: /^(quadratus femoris|obturator externus)/i, limb: 'thigh', trunk: 'root', at: 'Intertrochanteric crest', mode: 'fibre' },
 ];
+/** The joints at either end of each limb bone a muscle can insert on, top first. */
+const LIMB_AXIS = { thigh: ['hip', 'knee'], upperarm: ['gh', 'el'] };
 /** One slot per anchored muscle per side, for the insertion displacements the shader reads. */
 const ANCHOR_SLOTS = ANCHORED.length * 2;
 const anchorSlot = (def, side) => ANCHORED.indexOf(def) + (side === 'r' ? ANCHORED.length : 0);
@@ -311,6 +313,11 @@ export class Rig {
     // would carry it. A 'fibre' vertex adds its share of this.
     this.anchorDisp = new Float32Array(ANCHOR_SLOTS * 3);
     this.uAnchor = { value: this.anchorDisp };
+    // The limb bone each insertion sits on. Tissue that runs on past its insertion, down
+    // the bone, turns with that bone.
+    this.anchorBone = new Float32Array(ANCHOR_SLOTS);
+    for (const side of SIDES) for (const def of ANCHORED) this.anchorBone[anchorSlot(def, side)] = boneIndex(def.limb, side);
+    this.uAnchorBone = { value: this.anchorBone };
     this.enabled = { value: 0 };
     this.anchors = { l: [], r: [] };
     this._m = Array.from({ length: BONE_COUNT }, () => new THREE.Matrix4());
@@ -1206,10 +1213,34 @@ export class Rig {
    *
    * Encoded as (trunkBone, anchorSlot, 2 + fraction), so a weight of 2 or more tells the
    * shader this vertex stretches rather than swings.
+   *
+   * Some of a muscle runs on past its insertion, down along the bone: the lower glute
+   * wraps the femur below the gluteal tuberosity on its way to the iliotibial tract.
+   * Shifted with the insertion but not turned, that tissue kept pointing the old way when
+   * the hip folded, and stuck out behind the thigh in spikes. It turns with the bone
+   * instead, encoded as 3 + share (0 = stretches with the insertion, 1 = rides the bone),
+   * blending in over the first few centimetres past the insertion.
    */
   _skinFibre(geom, def, arr, anchorOf, closest) {
     const pos = geom.attributes.position;
-    const pt = new THREE.Vector3();
+    const pt = new THREE.Vector3(), _d = new THREE.Vector3(), _e = new THREE.Vector3();
+    // The way the fibres run on each side: from the middle of the muscle to its insertion.
+    // "Past the insertion" is measured along this, so the belly of a muscle that happens to
+    // lie beside its bone (the lat next to a hanging arm) is never taken for tendon.
+    const [j0, j1] = LIMB_AXIS[def.limb];
+    const mid = { l: new THREE.Vector3(), r: new THREE.Vector3() }, count = { l: 0, r: 0 };
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i), side = x >= 0 ? 'l' : 'r';
+      if (!anchorOf[side]) continue;
+      mid[side].x += x; mid[side].y += pos.getY(i); mid[side].z += pos.getZ(i); count[side]++;
+    }
+    const along = {};
+    for (const side of SIDES) {
+      const a = anchorOf[side], q = this.p[side];
+      if (!a || !count[side]) continue;
+      mid[side].divideScalar(count[side]);
+      along[side] = { dir: a.point.clone().sub(mid[side]).normalize(), bone: new THREE.Line3(q[j0].clone(), q[j1].clone()) };
+    }
     const farthest = { l: 0, r: 0 };
     for (let i = 0; i < pos.count; i++) {
       const x = pos.getX(i), side = x >= 0 ? 'l' : 'r', a = anchorOf[side];
@@ -1223,10 +1254,15 @@ export class Rig {
       if (!a) { arr[i * 3] = trunk; arr[i * 3 + 1] = 0; arr[i * 3 + 2] = 1; continue; }
       pt.set(x, pos.getY(i), pos.getZ(i));
       const span = Math.max(0.02, farthest[side] - closest[side]);
-      const f = Math.min(1, Math.max(0, 1 - (pt.distanceTo(a.point) - closest[side]) / span));
+      let f = Math.min(1, Math.max(0, 1 - (pt.distanceTo(a.point) - closest[side]) / span));
+      // How far past the insertion, along the fibres, and how close to the bone itself.
+      const past = _d.copy(pt).sub(a.point).dot(along[side].dir);
+      const onBone = smoothstep(0.06, 0.035, pt.distanceTo(along[side].bone.closestPointToPoint(pt, true, _e)));
+      f = Math.max(f, smoothstep(-0.03, 0.0, past) * onBone);   // all the way by the insertion, where riding takes over
+      const ride = smoothstep(0.0, 0.04, past) * onBone;
       arr[i * 3] = trunk;
       arr[i * 3 + 1] = anchorSlot(def, side);
-      arr[i * 3 + 2] = 2 + f;
+      arr[i * 3 + 2] = ride > 0.001 ? 3 + ride : 2 + f;
     }
     return new THREE.BufferAttribute(arr, 3);
   }
@@ -1286,6 +1322,12 @@ export class Rig {
    * exactly where a vertex ends up. Takes a point already in morphed rest space.
    */
   skinPoint(a, b, w, v) {
+    if (w >= 2.999) {
+      // Past the insertion: blend from stretching with it to turning with the bone.
+      const g = w - 3, s = b * 3, k = 1 - g;
+      this.skinPoint(this.anchorBone[b], a, g, v);
+      return v.set(v.x + k * this.anchorDisp[s], v.y + k * this.anchorDisp[s + 1], v.z + k * this.anchorDisp[s + 2]);
+    }
     if (w >= 1.5) {
       // Fibre vertex: carried by its trunk bone, then shifted by its share of the stretch.
       const f = w - 2, s = b * 3;
@@ -1902,6 +1944,7 @@ export const RIG_GLSL = /* glsl */`
 uniform vec4 uBoneReal[${BONE_COUNT}];
 uniform vec4 uBoneDual[${BONE_COUNT}];
 uniform vec3 uAnchorDisp[${ANCHOR_SLOTS}];
+uniform float uAnchorBone[${ANCHOR_SLOTS}];
 uniform float uPosed;
 vec4 sharirQ; vec4 sharirD;
 bool sharirReady = false;
@@ -1914,11 +1957,14 @@ void sharirBlend() {
   // Most of the body follows the trunk alone. Reading bone 0 by a constant index and
   // skipping the blend keeps those vertices as cheap as they were before posing existed.
   if (ia == 0 && ib == 0 && aSkin.z < 1.5) { sharirQ = uBoneReal[0]; sharirD = uBoneDual[0]; return; }
-  if (aSkin.z > 1.5) {                              // fibre vertex: its trunk bone only
+  float w = clamp(aSkin.z, 0.0, 1.0);
+  if (aSkin.z > 2.999) {                            // past the insertion: trunk to limb bone
+    w = 1.0 - (aSkin.z - 3.0);
+    ib = int(uAnchorBone[ib] + 0.5);
+  } else if (aSkin.z > 1.5) {                       // fibre vertex: its trunk bone only
     sharirQ = uBoneReal[ia]; sharirD = uBoneDual[ia];
     return;
   }
-  float w = clamp(aSkin.z, 0.0, 1.0);
   vec4 qa = uBoneReal[ia], da = uBoneDual[ia];
   vec4 qb = uBoneReal[ib], db = uBoneDual[ib];
   if (dot(qa, qb) < 0.0) { qb = -qb; db = -db; }   // same hemisphere: the short way round
@@ -1939,7 +1985,7 @@ vec3 sharirPose(vec3 p) {
   vec3 r = sharirQ.xyz;
   vec3 t = 2.0 * (sharirQ.w * sharirD.xyz - sharirD.w * r + cross(r, sharirD.xyz));
   vec3 q = sharirRotate(p) + t;
-  if (aSkin.z > 1.5) q += (aSkin.z - 2.0) * uAnchorDisp[int(aSkin.y + 0.5)];
+  if (aSkin.z > 1.5) q += min(aSkin.z - 2.0, 4.0 - aSkin.z) * uAnchorDisp[int(aSkin.y + 0.5)];
   return q;
 }
 `;
@@ -1955,6 +2001,7 @@ export function patchForRig(material, rig) {
     shader.uniforms.uBoneReal = rig.uReal;
     shader.uniforms.uBoneDual = rig.uDual;
     shader.uniforms.uAnchorDisp = rig.uAnchor;
+    shader.uniforms.uAnchorBone = rig.uAnchorBone;
     shader.uniforms.uPosed = rig.enabled;
     const marker = 'transformed = morphBody(transformed);';
     if (!shader.vertexShader.includes(marker)) { console.warn('[rig] morph hook not found — pose disabled'); return; }
