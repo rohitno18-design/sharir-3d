@@ -155,6 +155,58 @@ export function plantFeet(rig, frame, pose, feet = {}) {
 }
 
 /**
+ * Where the hips and knees go for a bent-knee stance, the way a squat is coached: the shins
+ * lean forward by `shinLean` along the line of the toes, and the thighs lean back from the
+ * knees by `thighAngle` (from straight up; negative carries on forward in line with the
+ * shin, which is a straight leg). Driving the two together keeps the hips and knees moving
+ * as one; lowering the hips at a steady rate instead let them drift back first and the
+ * squat turned into a bend at the waist. Returns the world points halfway between the two
+ * hip joints and between the two knees.
+ */
+export function squatStance(rig, feet, shinLean, thighAngle) {
+  const A = joint(rig, 'l', 'ankle'), K = joint(rig, 'l', 'knee'), H = joint(rig, 'l', 'hip');
+  const shin = A.distanceTo(K), thigh = K.distanceTo(H);
+  const toeOut = feet.toeOut ?? 0;
+  const ax = feet.spread ?? Math.abs(A.x), az = feet.z ?? A.z;
+  const toe = new THREE.Vector3(Math.sin(toeOut), 0, Math.cos(toeOut));
+  const knee = new THREE.Vector3(ax, A.y, az).addScaledVector(toe, shin * Math.sin(shinLean)).addScaledVector(Y, shin * Math.cos(shinLean));
+  const dx = Math.abs(H.x) - knee.x;
+  const r = Math.sqrt(Math.max(0, thigh * thigh - dx * dx));
+  const hip = new THREE.Vector3(0, knee.y + r * Math.cos(thighAngle), knee.z - r * Math.sin(thighAngle));
+  return { hip, knee: knee.setX(0), r };
+}
+
+/** The shin's length on this body, and the thigh's: ankle to knee, knee to hip. */
+export const legLengths = (rig) => {
+  const A = joint(rig, 'l', 'ankle'), K = joint(rig, 'l', 'knee'), H = joint(rig, 'l', 'hip');
+  return { shin: A.distanceTo(K), thigh: K.distanceTo(H) };
+};
+
+/**
+ * The trunk lean that keeps the lifter in balance: the bar and the body together over the
+ * middle of the foot. `load` is the bar's share of the combined weight (about half for a
+ * working set). The body's own weight is taken as the head, arms and trunk, centred about
+ * 30 cm up the trunk from the hips, plus the thighs, centred between hips and knees.
+ * Solved, not chosen: in a squat the back angle is whatever balance needs.
+ */
+export function leanToBalance(rig, hip, bodyPoint, z, { knee = null, load = 0.55 } = {}) {
+  const hipR = rig.hipCentre();
+  const bar = bodyPoint.clone().sub(hipR), upper = new THREE.Vector3(0, 0.30, 0);
+  const at = (th) => {
+    const c = Math.cos(th), s = Math.sin(th);
+    const zBar = hip.z + bar.y * s + bar.z * c;
+    const zUpper = hip.z + upper.y * s;
+    const zThigh = knee ? (hip.z + knee.z) / 2 : hip.z;
+    return load * zBar + (1 - load) * (0.72 * zUpper + 0.28 * zThigh) - z;
+  };
+  let lo = d(-20), hi = d(80);
+  if (at(lo) > 0) return lo;
+  if (at(hi) < 0) return hi;
+  for (let i = 0; i < 30; i++) { const mid = (lo + hi) / 2; if (at(mid) < 0) lo = mid; else hi = mid; }
+  return (lo + hi) / 2;
+}
+
+/**
  * Put both hands on a bar lying along the world's x axis, and close them round it.
  *
  * bar.at     the bar's centre, world

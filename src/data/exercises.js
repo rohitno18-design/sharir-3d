@@ -10,7 +10,9 @@ import { BENCH_PRESS, pressPhase } from './lifts/bench-press.js';
 import { BARBELL_CURL } from './lifts/barbell-curl.js';
 import { BARBELL_SHRUG } from './lifts/barbell-shrug.js';
 import { OVERHEAD_PRESS } from './lifts/overhead-press.js';
+import { BACK_SQUAT } from './lifts/back-squat.js';
+import { CALF_RAISE } from './lifts/calf-raise.js';
 
 export { pressPhase };
-export const EXERCISES = [BENCH_PRESS, OVERHEAD_PRESS, BARBELL_CURL, BARBELL_SHRUG];
+export const EXERCISES = [BENCH_PRESS, OVERHEAD_PRESS, BARBELL_CURL, BARBELL_SHRUG, BACK_SQUAT, CALF_RAISE];
 export const exerciseById = (id) => EXERCISES.find((e) => e.id === id) || null;
