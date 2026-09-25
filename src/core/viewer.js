@@ -166,7 +166,7 @@ export class Viewer {
     // part's number in place of its colour.
     // The same goes for a reshaped body: its limbs thicken round their own bones, which a
     // ray walked back through the trunk's shape cannot follow.
-    if (this.rig?.enabled.value || !isPlainScale()) return this._gpuPick(px, py);
+    if (this.rig?.enabled.value || !isPlainScale() || body.shifted) return this._gpuPick(px, py);
     const ndc = new THREE.Vector2((px / this.width) * 2 - 1, -(py / this.height) * 2 + 1);
     this.raycaster.setFromCamera(ndc, this.camera);
     const wo = this.raycaster.ray.origin.clone();

@@ -17,8 +17,8 @@ export class MiniViewer {
     this.camera.position.set(0, 0.6, 3);
     this.controls = new OrbitControls(this.camera, this.canvas);
     this.controls.enableDamping = true; this.controls.autoRotate = true; this.controls.autoRotateSpeed = 1.2; this.controls.enablePan = false;
-    const pm = new THREE.PMREMGenerator(this.renderer);
-    this.scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture;
+    this._pm = new THREE.PMREMGenerator(this.renderer);
+    this.scene.environment = this._pm.fromScene(new RoomEnvironment(), 0.04).texture;
     this.scene.environmentIntensity = 0.7;
     const key = new THREE.DirectionalLight(0xffffff, 2.0); key.position.set(2, 3, 4);
     const fill = new THREE.DirectionalLight(0xcfe0ff, 0.8); fill.position.set(-3, 1, -2);
@@ -46,7 +46,32 @@ export class MiniViewer {
     this.camera.position.set(d * 0.35, d * 0.3, d * 0.9); this.controls.target.set(0, 0, 0);
     this.camera.near = d / 100; this.camera.far = d * 20; this.camera.updateProjectionMatrix();
   }
-  dispose() { this.alive = false; this._ro.disconnect(); if (this.content) disposeGroup(this.content); this.renderer.dispose(); this.canvas.remove(); }
+  /** Move this viewer into a new container, so a redrawn panel keeps the same one. */
+  attach(container) {
+    if (container === this.container) return;
+    this._ro.disconnect();
+    this.container = container;
+    container.appendChild(this.canvas);
+    this._ro.observe(container);
+    this.resize();
+  }
+  /**
+   * Every viewer holds a WebGL context of its own, and Chrome allows about sixteen per page.
+   * Past that it kills the oldest one, which is the main body view, and the screen turns
+   * white for good. dispose() alone leaves the context alive until the page happens to
+   * collect it, so it is released here by hand.
+   */
+  dispose() {
+    this.alive = false;
+    this._ro.disconnect();
+    if (this.content) disposeGroup(this.content);
+    this.scene.environment?.dispose();
+    this._pm.dispose();
+    this.controls.dispose();
+    this.renderer.dispose();
+    this.renderer.forceContextLoss();
+    this.canvas.remove();
+  }
 }
 
 function disposeGroup(g) { g.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material) { (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => m.dispose()); } }); }

@@ -348,7 +348,12 @@ vec4 partState = texture2D(uPartState, stateUv);
 vStyle = texture2D(uPartStyle, stateUv);
 vVisible = partState.w;
 vPartIdx = aPartIndex;
+`).replace('#include <project_vertex>', `
+// The atlas moves whole systems sideways. That has to happen after the body is shaped and
+// posed: the shape is measured from each bone, and a point already moved a metre away
+// from its bone was being pushed out by the full metre and torn apart.
 transformed += partState.xyz;
+#include <project_vertex>
 `);
 
     shader.fragmentShader = `

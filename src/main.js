@@ -93,6 +93,7 @@ class App {
     this.dock = document.getElementById('dock');
     this.inspector = new Inspector(this.inspRoot, this);
     this.setMode('explore');
+    this.watchContext();
     this.bindInput();
     this.updateLegend();
     this.updateNavUI();
@@ -247,7 +248,12 @@ class App {
     // the Systems switches show another, and the first switch touched makes several
     // systems appear or vanish at once. Each tab lays its own again below if it wants one.
     if (mode !== state.mode) this.clearSysOverride();
+    // The atlas is a Systems view. Every other tab moves, reshapes or lights up one body,
+    // and none of that means anything with the systems standing apart.
+    if (state.atlas && mode !== 'systems') this.toggleAtlas();
     set({ mode });
+    document.getElementById('tb-atlas').hidden = mode !== 'systems';
+    this.syncViewTitles();
     document.body.classList.toggle('mode-move', mode === 'move');
     this.topbar.syncToggles();
     this.leftRoot.innerHTML = '';
@@ -286,18 +292,19 @@ class App {
   // ---------------- navigation ----------------
   /** Rebuild a whole view from a Nav snapshot. */
   applySnapshot(s) {
-    set({ sex: s.sex, age: s.age, weightKg: s.weightKg, heightCm: s.heightCm, atlas: s.atlas,
+    set({ sex: s.sex, age: s.age, weightKg: s.weightKg, heightCm: s.heightCm,
           effectStep: s.effectStep, isolate: s.isolate, selected: s.selected });
     state.hidden = new Set(s.hidden);
     for (const k of Object.keys(s.systems)) state.systems[k] = { ...s.systems[k] };
 
     this.applyBodyMorph();
     this.hi.setIsolate(s.isolate ? this.registry.subtree(s.isolate).filter(x => this.meshes.has(x)) : null);
-    if (state.atlas !== s.atlas) { set({ atlas: !s.atlas }); this.toggleAtlas(); }
 
     // effect first (it owns the dock), then mode UI
     if (s.effect !== state.effect) set({ effect: s.effect });
     this.setMode(s.mode, false);
+    // After the tab, because the atlas only opens on the Systems tab.
+    if (!!state.atlas !== !!s.atlas) this.toggleAtlas();
     if (s.effect) { set({ effect: s.effect, effectStep: s.effectStep }); this.applyEffect(); renderEffectDock(this.dock, this); this.dock.hidden = false; document.documentElement.style.setProperty('--dock-h', '112px'); }
 
     this.selectedIds = s.selected ? (this.registry.byId.get(s.selected)?.k === 'group'
@@ -816,7 +823,92 @@ class App {
     this.viewer.requestRender();
   }
 
+  /**
+   * The graphics card can take the 3D view away: a driver reset, or the page opening more
+   * WebGL views than the browser allows. The browser then shows the canvas as a blank white
+   * sheet with the panels still on top, and nothing on the page says why. So say so, bring
+   * the view back if the browser returns it, and offer a reload if it does not.
+   */
+  watchContext() {
+    const canvas = this.viewer.renderer.domElement;
+    let note = null, timer = 0;
+    canvas.addEventListener('webglcontextlost', (e) => {
+      e.preventDefault();                          // ask the browser to give it back
+      if (note) return;
+      note = document.createElement('div');
+      note.className = 'gl-lost';
+      note.innerHTML = '<div class="gl-lost-card"><b>The 3D view stopped</b>'
+        + '<p>Your graphics card reset it. Waiting a moment for it to come back.</p></div>';
+      document.getElementById('stage').append(note);
+      timer = setTimeout(() => {
+        const card = note?.querySelector('.gl-lost-card');
+        if (!card) return;
+        card.querySelector('p').textContent = 'It has not come back on its own. Reload to bring it back. You will lose what is on screen now.';
+        const btn = document.createElement('button');
+        btn.className = 'btn primary'; btn.textContent = 'Reload the 3D view';
+        btn.addEventListener('click', () => location.reload());
+        card.append(btn);
+      }, 2500);
+    });
+    canvas.addEventListener('webglcontextrestored', () => {
+      clearTimeout(timer);
+      note?.remove(); note = null;
+      this.hi.invalidate();
+      this.viewer.requestRender();
+    });
+  }
+
+  /** Back to the starting shot for this tab. */
+  resetCamera() {
+    if (this.exercise?.ex) { this.exercise.autoFrame = true; this.exercise.frameCamera(); return; }
+    this.viewer.resetView(this.currentHeightM());
+  }
+
+  /**
+   * The five view buttons. Standing, they are plain directions. On the bench the body lies
+   * face up with its head along -z, so "front" is from above, "top" is from the head end
+   * and "back" (from under the bench, where nothing shows) becomes the foot end.
+   */
+  cameraView(name) {
+    if (!this.exercise?.ex) { this.viewer.view(name); return; }
+    const DIRS = { front: [0, 1, 0.0001], top: [0, 0.35, -1], back: [0, 0.35, 1], left: [1, 0.25, 0], right: [-1, 0.25, 0] };
+    const v = this.viewer, c = v.controls.target.clone();
+    const d = v.camera.position.distanceTo(c);
+    this.exercise.autoFrame = false;                 // the user chose this shot; keep it
+    v.tweenCamera(c.clone().addScaledVector(new THREE.Vector3(...DIRS[name]).normalize(), d), c, 0.7);
+  }
+
+  /** Name the view buttons for the body on screen: standing, or lying on the bench. */
+  syncViewTitles() {
+    const lying = state.mode === 'move';
+    const T = lying
+      ? { front: 'From above, onto the chest', back: 'From the feet', left: "From the lifter's left", right: "From the lifter's right", top: 'From the head end' }
+      : { front: 'Front', back: 'Back', left: 'Left side', right: 'Right side', top: 'From above' };
+    for (const [k, t] of Object.entries(T)) { const b = document.getElementById('tb-' + k); if (b) b.title = t; }
+  }
+
+  toggleXray() {
+    set({ xray: !state.xray });
+    this.hi.invalidate();
+    document.getElementById('tb-xray').classList.toggle('active', state.xray);
+    document.getElementById('btn-xray')?.classList.toggle('active', state.xray);
+    this.updateNavUI();
+    toast(state.xray ? 'X-ray on. Everything you have not picked turns see-through.' : 'X-ray off');
+  }
+
+  toggleReveal() {
+    set({ reveal: !state.reveal });
+    this.hi.invalidate();
+    document.getElementById('tb-reveal').classList.toggle('active', state.reveal);
+    toast(state.reveal ? 'Reveal on. When you pick a part, everything around it fades.' : 'Reveal off. Every layer stays solid when you pick a part.');
+  }
+
+  syncLabelsButton() {
+    document.getElementById('tb-labels').classList.toggle('active', state.labels !== 'off');
+  }
+
   toggleAtlas() {
+    if (!state.atlas && state.mode !== 'systems') { toast('The atlas is in the Systems tab.'); return; }
     set({ atlas: !state.atlas });
     document.getElementById('tb-atlas').classList.toggle('active', state.atlas);
     document.getElementById('btn-atlas')?.classList.toggle('active', state.atlas);
@@ -825,6 +917,7 @@ class App {
       // The atlas shows every system, but that is the atlas's choice, not the user's:
       // keep their switches and give them back on the way out.
       this._atlasSaved = Object.fromEntries(SYSTEMS.map(s => [s.key, { ...state.systems[s.key] }]));
+      this._atlasLabels = state.labels;
       const shift = {}; for (const g of ATLAS_GROUPS) for (const k of g.keys) shift[k] = g.x * (h / 1.7);
       for (let slot = 0; slot < this.body.count; slot++) { const p = this.body.partAt(slot); this.body.setOffset(slot, shift[p.sys] || 0, 0, 0); }
       this.body.flush();
@@ -833,8 +926,13 @@ class App {
       const box = new THREE.Box3(new THREE.Vector3(-3.2 * (h / 1.7), 0, -0.4), new THREE.Vector3(4.1 * (h / 1.7), h, 0.4));
       this.viewer.focusBox(box, { pad: 1.05, keepDir: false });
       this.viewer.ground.visible = false; this.viewer.ring.visible = false;
+      // Picking walks the un-moved geometry unless it is told the systems stand apart.
+      this.body.shifted = true;
       set({ labels: 'off' });
+      this.syncLabelsButton();
       this._atlasTitles();
+      // The switches show what the atlas has put on screen, and get the user's own back after.
+      if (state.mode === 'systems') this.panel?.render?.();
       toast('Atlas view: every system side by side');
     } else {
       for (let slot = 0; slot < this.body.count; slot++) this.body.setOffset(slot, 0, 0, 0);
@@ -845,11 +943,14 @@ class App {
       }
       if (state.mode === 'systems') this.panel?.render?.();
       this.viewer.ground.visible = true; this.viewer.ring.visible = true;
-      set({ labels: 'auto' });
+      this.body.shifted = false;
+      set({ labels: this._atlasLabels || 'auto' });
+      this.syncLabelsButton();
       this.viewer.resetView(h);
       this.refreshVisibility();
     }
     this.refreshLabels();
+    this.updateNavUI();
   }
 
   _atlasTitles() {
@@ -878,10 +979,10 @@ class App {
       if (bb) {
         v = applyMorph(bb.getCenter(new THREE.Vector3()), new THREE.Vector3(), { belly: 1, breast: 1 });
         const slot = this.body.slot(part.id);
-        v.x += this.body.state[slot * 4]; v.y += this.body.state[slot * 4 + 1]; v.z += this.body.state[slot * 4 + 2];
         // A label has to point at the structure where it IS, not where it would be if this
         // body were standing up.
         this.body.posedPoint(slot, v);
+        v.x += this.body.state[slot * 4]; v.y += this.body.state[slot * 4 + 1]; v.z += this.body.state[slot * 4 + 2];
         v.applyMatrix4(this.viewer.bodyRoot.matrixWorld);
       }
       else if (part.pos) v = applyMorph(toGlVec(part.pos), new THREE.Vector3());
@@ -924,8 +1025,12 @@ class App {
   // ---------------- effects mode ----------------
   openEffect(id) {
     this.nav.push('effect');
+    // Search can open an effect from any tab. Leaving that tab properly stops a lift,
+    // closes Film mode and folds the atlas away, the same as clicking the tab would.
+    if (state.mode !== 'effects') this.setMode('effects', false);
     set({ mode: 'effects', effect: id, effectStep: '1d' });
     this.topbar.syncToggles();
+    this.panel?.dispose?.();
     this.leftRoot.innerHTML = '';
     this.ensurePanel('left');
     this.panel = new EffectsPanel(this.leftRoot, this);
@@ -944,6 +1049,7 @@ class App {
     this.hi.clearEffects();
     this.dock.hidden = true;
     document.documentElement.style.setProperty('--dock-h', '0px');
+    this.panel?.dispose?.();
     this.leftRoot.innerHTML = '';
     this.panel = new EffectsPanel(this.leftRoot, this);
     this.refreshLabels();
@@ -1169,13 +1275,15 @@ class App {
     document.getElementById('nav-home').addEventListener('click', () => this.goHome());
 
     const tb = (id, fn) => document.getElementById(id).addEventListener('click', fn);
-    tb('tb-reset', () => { this.viewer.resetView(this.currentHeightM()); });
-    tb('tb-front', () => this.viewer.view('front'));
-    tb('tb-back', () => this.viewer.view('back'));
-    tb('tb-left', () => this.viewer.view('left'));
-    tb('tb-right', () => this.viewer.view('right'));
-    tb('tb-top', () => this.viewer.view('top'));
-    tb('tb-labels', () => { set({ labels: state.labels === 'off' ? 'auto' : state.labels === 'auto' ? 'all' : 'off' }); document.getElementById('tb-labels').classList.toggle('active', state.labels !== 'off'); this.refreshLabels(); toast('Labels: ' + state.labels); });
+    tb('tb-reset', () => this.resetCamera());
+    for (const v of ['front', 'back', 'left', 'right', 'top']) tb('tb-' + v, () => this.cameraView(v));
+    tb('tb-labels', () => {
+      if (state.atlas) { toast('The atlas shows the system names only. Leave the atlas to label parts.'); return; }
+      set({ labels: state.labels === 'off' ? 'auto' : state.labels === 'auto' ? 'all' : 'off' });
+      this.syncLabelsButton();
+      this.refreshLabels();
+      toast({ auto: 'Labels on for what you pick', all: 'Labels on for everything on screen', off: 'Labels off' }[state.labels]);
+    });
     tb('tb-atlas', () => this.toggleAtlas());
     tb('tb-reveal', () => this.toggleReveal());
     tb('tb-xray', () => this.toggleXray());
@@ -1201,7 +1309,7 @@ class App {
       else if (k === 'x') this.toggleXray();
       else if (k === 'v') this.toggleReveal();
       else if (k === 'a') this.toggleAtlas();
-      else if (k === 'r') this.viewer.resetView(this.currentHeightM());
+      else if (k === 'r') this.resetCamera();
       else if (k === 'n') document.getElementById('tb-labels').click();
       else if (k === 's' && !e.ctrlKey && !e.metaKey) this.saveShot();
       else if (k === ' ' && state.effect) { e.preventDefault(); this.togglePlay(); }

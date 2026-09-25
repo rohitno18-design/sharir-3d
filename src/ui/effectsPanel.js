@@ -9,12 +9,18 @@ import { FEATURES } from '../data/flags.js';
 export class EffectsPanel {
   constructor(root, app) { this.root = root; this.app = app; this.mini = null; this.render(); }
 
-  dispose() { if (this.mini) { this.mini.dispose(); this.mini = null; } }
+  dispose() {
+    this._molToken = (this._molToken || 0) + 1;     // a molecule still loading must not open a viewer
+    if (this.mini) { this.mini.dispose(); this.mini = null; this.miniKey = null; }
+  }
 
   render() {
-    this.dispose();
     const lang = state.lang;
     const lib = this.app.effects;
+    // The panel redraws on every timeline step and every change to the combination. The
+    // molecule viewer is kept across those redraws instead of being built again each time.
+    const mol = state.effect && lib.get(state.effect)?.molecule;
+    if (!mol || mol !== this.miniKey) this.dispose();
     this.root.innerHTML = '';
     if (!state.effect) {
       this.root.append(
@@ -64,11 +70,20 @@ export class EffectsPanel {
     if (e.molecule) {
       const wrap = el('div', { class: 'molwrap' }, el('div', { class: 'cap' }, el('b', {}, moleculeLabel(e.molecule)), ' '));
       this.root.append(el('h3', { class: 'sec' }, lang === 'hi' ? 'अणु (3D)' : 'The molecule in 3D'), wrap);
+      const token = this._molToken = (this._molToken || 0) + 1;
       loadMolecules().then(all => {
+        // A newer redraw has taken over, or the panel has closed.
+        if (token !== this._molToken || !wrap.isConnected) return;
         const mol = all[e.molecule];
         if (!mol) { wrap.remove(); return; }
-        this.mini = new MiniViewer(wrap);
-        this.mini.show(buildMolecule(mol));
+        if (this.mini && this.miniKey === e.molecule) this.mini.attach(wrap);
+        else {
+          this.dispose();
+          this._molToken = token;
+          this.mini = new MiniViewer(wrap);
+          this.mini.show(buildMolecule(mol));
+          this.miniKey = e.molecule;
+        }
         wrap.querySelector('.cap').innerHTML = `<b>${esc(moleculeLabel(e.molecule))}</b> · ${esc(mol.formula)} · ${mol.atoms.length} atoms${mol.is2d ? ' (2D layout)' : ''}`;
       });
     }

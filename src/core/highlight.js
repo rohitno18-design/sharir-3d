@@ -188,8 +188,8 @@ export class Highlighter {
       for (let i = 0; i < 8; i++) {
         v.set(i & 1 ? bb.max.x : bb.min.x, i & 2 ? bb.max.y : bb.min.y, i & 4 ? bb.max.z : bb.min.z);
         applyMorphFn(v, v, { belly: 1, breast: 1 });
-        v.x += ox; v.y += oy; v.z += oz;
         this.body.posedPoint(slot, v);
+        v.x += ox; v.y += oy; v.z += oz;
         box.expandByPoint(v);
       }
     }

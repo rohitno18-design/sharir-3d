@@ -580,3 +580,9 @@ body.film #stage { border-radius: 12px; overflow: hidden; box-shadow: 0 30px 90p
 .film-dot { width: 10px; height: 10px; border-radius: 50%; background: #e5484d; animation: filmblink 1s steps(2, start) infinite; }
 @keyframes filmblink { to { visibility: hidden; } }
 .film-note { font-size: 12.5px; color: var(--text-2); }
+
+/* Shown over the stage if the graphics card takes the 3D view away. */
+.gl-lost { position: absolute; inset: 0; z-index: 5; display: grid; place-items: center; background: var(--bg); }
+.gl-lost-card { max-width: 340px; padding: 20px 22px; border-radius: 14px; background: var(--bg-2); border: 1px solid rgba(255,255,255,.1); text-align: center; }
+.gl-lost-card b { font-size: 16px; }
+.gl-lost-card p { color: var(--muted, #9aa3ad); margin: 8px 0 14px; line-height: 1.5; }
