@@ -293,6 +293,25 @@ export function clearOfBody(rig, cloud, at, dir, radius, { clear = 0.004, only =
 }
 
 /**
+ * A bar hanging from straight arms in front of the legs: as low as the arms reach, and
+ * resting against the thighs or shins wherever they are in this pose, never inside them.
+ * How low it hangs depends on how far forward the legs push it, and the other way round,
+ * so the two are settled together. `z` is where it would hang if nothing were in the way.
+ */
+export function hangingBar(rig, frame, pose, half, z, radius, { clear = 0.004, only = [1, 2, 3, 4], snug = false } = {}) {
+  const cloud = rig.bodyCloud(pose);
+  let y = 0;
+  for (let i = 0; i < 4; i++) {
+    y = hangHeight(rig, frame, pose, half, z);
+    // Snug: the lats pull the bar back against the legs, as in a deadlift, so it comes to
+    // rest on the front of the thighs or shins wherever it would otherwise hang.
+    const from = snug ? new THREE.Vector3(0, y, -0.25) : new THREE.Vector3(0, y, z);
+    z = clearOfBody(rig, cloud, from, new THREE.Vector3(0, 0, 1), radius, { clear, only, reach: snug ? 0.6 : 0.3 }).z;
+  }
+  return new THREE.Vector3(0, y, z);
+}
+
+/**
  * Where a bar resting on the body sits, in the body's own shaped rest space: at height y,
  * pushed out from the skin on the front (side +1) or the back (side -1) until it just
  * touches. Standing, before any pose, so it can ride with the trunk through the lift.
