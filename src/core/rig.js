@@ -269,6 +269,11 @@ const ANCHORED = [
   // a band over the hip and ballooned out. From the sacrum and ilium to its insertion on the
   // femur, it stretches evenly along its fibres instead.
   { re: /^gluteus maximus/i, limb: 'thigh', trunk: 'root', at: 'Gluteal tuberosity', mode: 'fibre' },
+  // The muscles under it, from the pelvis to the top of the femur, move the same way.
+  // Bound the old way while the glute stretched along its fibres, the small rotators moved
+  // differently from the muscle over them and poked out through it in spikes.
+  { re: /^(gluteus medius|gluteus minimus|piriformis|superior gemellus|inferior gemellus|obturator internus)/i, limb: 'thigh', trunk: 'root', at: 'Greater trochanter', mode: 'fibre' },
+  { re: /^(quadratus femoris|obturator externus)/i, limb: 'thigh', trunk: 'root', at: 'Intertrochanteric crest', mode: 'fibre' },
 ];
 /** One slot per anchored muscle per side, for the insertion displacements the shader reads. */
 const ANCHOR_SLOTS = ANCHORED.length * 2;

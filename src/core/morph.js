@@ -57,7 +57,7 @@ export function proportions(heightM, headRatio) {
 /** Rows in the segment texture: axis start + chain, axis end, girth by tissue. */
 const SEG_ROWS = 3;
 const MAX_SEGS = 64;
-const ANCHOR_SLOTS = 16;           // two per fibre-bound muscle; see ANCHORED in rig.js
+const ANCHOR_SLOTS = 24;           // two per fibre-bound muscle; see ANCHORED in rig.js
 
 const segData = new Float32Array(MAX_SEGS * SEG_ROWS * 4);
 const segTex = new THREE.DataTexture(segData, MAX_SEGS, SEG_ROWS, THREE.RGBAFormat, THREE.FloatType);
