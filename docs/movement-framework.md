@@ -62,13 +62,35 @@ playback slow.
 | Glutes | Hip thrust | Trunk pivots about the bench edge; shins upright at the top |
 | Calves | Standing calf raise | Ball of the foot stays planted; straight body leans to stay balanced |
 
+## The spine, the neck and mistakes
+
+The trunk is a chain: pelvis (the root), lower back (turns at L5 on the sacrum), upper back
+(T12 on L1), neck (C7 on T1) and head (the skull on the atlas). The shoulder girdles hang
+from the upper back. Soft tissue blends across a band at each joint so the body bends
+instead of tearing; each vertebra, rib and skull bone moves as one rigid piece with its own
+level. Held straight, which every lift does by default, the body is exactly as before.
+
+`bendSpine(pose, { lumbar, thorax, neck, head })` bends it (radians, positive rounds or nods
+forward). The arms solve in the upper back's own frame (`armSpace`), so hands stay on the
+bar however the back is bent.
+
+A lift can list `faults: [{ key, label, note }]`. The panel shows a "See it on the body"
+button for each under Mistakes to avoid; `pose(u, { fault })` then poses the mistake. The
+body, the live cue and Film captions all say it is a mistake. So far: rounded back in the
+Romanian deadlift, lower back rounding at the bottom of the squat.
+
+The neck is used for correct form too: the hip thrust tucks the chin, and the overhead
+press moves the head back to let the bar pass, then forward under it at lockout.
+
+An EZ bar (`equipment.bar: 'ez'`, `ezGrip`) gives each hand its own angled line along the
+bar, with the bends lying across the forearms. The lying triceps extension uses it.
+
 ## Known limits
 
-- **No neck.** The head moves with the trunk. Cues like "tuck the chin" in the hip thrust
-  are in the text but not shown.
-- **No spine flexion.** Good for correct form; a later version needs spine joints to show
-  mistakes such as a rounded back, and for crunches or back extensions.
-- **Bars only lie along the world's x axis.** Dumbbells need each hand free of the other.
+- **Effort curves are a teaching aid.** Shaped from published EMG studies; EMG cannot
+  measure one person's muscles from a screen.
+- **Bars other than the EZ bar lie along the world's x axis.** Dumbbells need each hand
+  free of the other.
 
 ## Next steps
 

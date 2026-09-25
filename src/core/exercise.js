@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { bodyKey, phaseAt } from './lift.js';
+import { bodyKey, phaseAt, EZ_BENDS } from './lift.js';
 
 /**
  * Exercise player. Runs any lift written in the movement framework's format.
@@ -29,12 +29,14 @@ export class ExercisePlayer {
     this._fx = new Map();
     this._last = 0;
     this._poses = new Map();
+    this.fault = null;          // a mistake being shown on the body, or null for correct form
   }
 
   // ---------- lifecycle ----------
   start(ex) {
     if (this.ex) this.stop();
     this.ex = ex;
+    this.fault = null;
     this.t = 0;
     this.playing = false;
     this._poses = new Map();
@@ -149,11 +151,11 @@ export class ExercisePlayer {
   /** The pose at movement point u, for this body, worked out once. */
   poseAt(u) {
     const rig = this.app.body.rig;
-    const key = `${bodyKey()}|${Math.round(u * STEPS)}`;
+    const key = `${bodyKey()}|${this.fault || ''}|${Math.round(u * STEPS)}`;
     let p = this._poses.get(key);
     if (!p) {
       if (this._poses.size > 3000) this._poses.clear();
-      p = this.ex.pose(Math.round(u * STEPS) / STEPS, { height: this.app.currentHeightCm() / 100, rig });
+      p = this.ex.pose(Math.round(u * STEPS) / STEPS, { height: this.app.currentHeightCm() / 100, rig, fault: this.fault });
       this._poses.set(key, p);
     }
     return p;
@@ -166,7 +168,8 @@ export class ExercisePlayer {
     const rig = this.app.body.rig;
     if (!rig || !rig.ok) return;
 
-    rig.setPose(this.poseAt(this.ex.u(this.t)));
+    this._pose = this.poseAt(this.ex.u(this.t));
+    rig.setPose(this._pose);
 
     for (const g of this.groups) {
       g.effort = Math.max(0, Math.min(1, g.def.effort(this.t)));
@@ -180,6 +183,15 @@ export class ExercisePlayer {
     // place rather than from whichever caller happened to remember.
     this.onSeek?.();
     this.app.viewer.requestRender();
+  }
+
+  /**
+   * Show one of the lift's mistakes on the body, or pass null to go back to correct form.
+   * The mistake's poses are worked out like any others, and kept apart from the correct ones.
+   */
+  setFault(key) {
+    this.fault = key && this.ex?.faults?.some(f => f.key === key) ? key : null;
+    this.seek(this.t);
   }
 
   /** Muscle groups sorted by how hard they are working, for the readout. */
@@ -231,11 +243,25 @@ export class ExercisePlayer {
     if (eq.bar) {
       const bar = new THREE.Group();
       const R = this.ex.bar?.radius ?? 0.0145;
-      const short = eq.bar === 'short';
+      const short = eq.bar === 'short' || eq.bar === 'ez';
       const len = short ? 1.2 : 2.15;
-      const shaft = new THREE.Mesh(new THREE.CylinderGeometry(R, R, len, 18), steel);
-      shaft.rotation.z = Math.PI / 2;
-      bar.add(shaft);
+      if (eq.bar === 'ez') {
+        // The EZ bar's bends: straight in the middle, angled inner grips, angled outer grips,
+        // then the sleeves. Built as a chain of short shafts through these points.
+        const pts = EZ_BENDS.map(([x, o]) => new THREE.Vector3(x, o, 0));
+        const all = [...pts.slice(1).reverse().map(p => p.clone().setX(-p.x)), ...pts];
+        for (let i = 0; i < all.length - 1; i++) {
+          const a = all[i], b = all[i + 1], seg = b.clone().sub(a);
+          const piece = new THREE.Mesh(new THREE.CylinderGeometry(R, R, seg.length() + R * 0.6, 14), steel);
+          piece.position.copy(a).add(b).multiplyScalar(0.5);
+          piece.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), seg.normalize());
+          bar.add(piece);
+        }
+      } else {
+        const shaft = new THREE.Mesh(new THREE.CylinderGeometry(R, R, len, 18), steel);
+        shaft.rotation.z = Math.PI / 2;
+        bar.add(shaft);
+      }
       const plateR = short ? 0.13 : 0.225, first = short ? 0.42 : 0.75, t = short ? 0.035 : 0.045;
       for (const s of [-1, 1]) {
         for (let i = 0; i < 2; i++) {
@@ -268,6 +294,14 @@ export class ExercisePlayer {
     // to, so the grip can never drift off it at any phase or any body size.
     const l = rig.jointAt('grip', 'l'), r = rig.jointAt('grip', 'r');
     this.bar.position.set((l.x + r.x) / 2, (l.y + r.y) / 2, (l.z + r.z) / 2);
+    // An EZ bar is turned in the hands, so its bends lie the way the pose says, and its
+    // straight middle sits a little off the line between the two grips.
+    const bend = this._pose?._bar;
+    if (bend) {
+      const x = new THREE.Vector3(1, 0, 0), c = bend.c.clone().normalize();
+      this.bar.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(x, c, x.clone().cross(c)));
+      this.bar.position.addScaledVector(c, -bend.offset);
+    } else this.bar.quaternion.identity();
   }
 
   // ---------- camera ----------

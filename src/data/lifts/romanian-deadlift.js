@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { d, lerp, clamp01, bell, keyCurve, Frame, plantFeet, handsOnBar, joint, shoulderWorld, hangingBar, midfoot, squatStance, SIDES, sgn, form, bodyKey } from '../../core/lift.js';
+import { d, lerp, clamp01, bell, keyCurve, Frame, plantFeet, handsOnBar, joint, shoulderWorld, hangingBar, midfoot, squatStance, SIDES, sgn, form, bodyKey, bendSpine } from '../../core/lift.js';
 
 /**
  * Romanian deadlift: a hip hinge with the knees slightly bent.
@@ -54,6 +54,11 @@ export const ROMANIAN_DEADLIFT = {
     'Breathe in and brace at the top. Hold it on the way down. Breathe out as you stand up.',
   ),
 
+  faults: [{
+    key: 'rounded-back', label: 'Rounded back',
+    note: 'The hips hardly go back, and the back curls forward to reach the bar lower. The lower back takes the load the hamstrings should take, and the front of the spinal discs is squeezed.',
+  }],
+
   equipment: { floor: true, bar: 'olympic' },
 
   camera(ctx) {
@@ -65,19 +70,22 @@ export const ROMANIAN_DEADLIFT = {
     };
   },
 
-  pose(u, { rig }) {
+  pose(u, { rig, fault }) {
+    const rounded = fault === 'rounded-back';
     // The knees keep a slight bend and the shins stay nearly upright; the trunk tips
     // forward from the hips. Letting the hips drift back until the bar hung straight under
     // the shoulders bent the knees to 55 degrees, which is a squat, not a Romanian deadlift.
     // "Hips back" shifts the weight towards the heels, and the shins tip a few degrees past
     // upright; that is where most of the hips' travel comes from.
-    const lean = lerp(d(4), HINGE, u);
+    // Rounded: the hips stop short, and the back curls to make up the depth.
+    const lean = lerp(d(4), rounded ? d(48) : HINGE, u);
     const shin = lerp(d(3), d(-4), u);
     const knee = lerp(d(10), d(21), u);
     const { hip } = squatStance(rig, {}, shin, knee - shin);
     const frame = Frame.lean(rig, lean, hip);
     const p = { root: frame.entry() };
-    for (const side of SIDES) p[`girdle.${side}`] = { rot: [0, sgn(side) * d(4), 0] };
+    if (rounded) bendSpine(p, { lumbar: d(26) * u, thorax: d(20) * u, neck: d(8) * u });
+    for (const side of SIDES) p[`girdle.${side}`] = { rot: [0, sgn(side) * (rounded ? d(-6) * u : d(4)), 0] };
     plantFeet(rig, frame, p);
     // The lats hold the bar back against the legs, so the arms angle back from the
     // shoulders and the bar slides down the thighs and then the shins.

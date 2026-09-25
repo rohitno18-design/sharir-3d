@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { d, lerp, clamp01, ease, bell, keyCurve, Frame, plantFeet, handsOnBar, joint, restingOn, midfoot, squatStance, leanToBalance, SIDES, sgn, form, bodyKey } from '../../core/lift.js';
+import { d, lerp, clamp01, ease, bell, keyCurve, Frame, plantFeet, handsOnBar, joint, restingOn, midfoot, squatStance, leanToBalance, SIDES, sgn, form, bodyKey, bendSpine, armSpace } from '../../core/lift.js';
 
 /**
  * Barbell back squat, bar high on the upper back.
@@ -62,6 +62,11 @@ export const BACK_SQUAT = {
     'Take a big breath at the top and hold it on the way down. Breathe out near the top on the way up.',
   ),
 
+  faults: [{
+    key: 'butt-wink', label: 'Lower back rounding at the bottom',
+    note: 'At the bottom the pelvis tucks under and the lower back rounds. Under a heavy bar that squeezes the spinal discs. Stop just above the depth where it starts.',
+  }],
+
   equipment: { floor: true, bar: 'olympic' },
 
   camera(ctx) {
@@ -98,7 +103,7 @@ export const BACK_SQUAT = {
     return ankle.addScaledVector(dir, full).setX(0);
   },
 
-  pose(u, { rig }) {
+  pose(u, { rig, fault }) {
     const s = this._setup(rig);
     // Standing, the legs are straight and lean forward a touch from the ankles, which is
     // how a body carries its weight over the middle of the foot.
@@ -113,13 +118,18 @@ export const BACK_SQUAT = {
     // the way down.
     if (u < 0.2) hip.lerp(this._straight(rig, s, hip), 1 - u / 0.2);
     // A working set with a bar of about 80% of bodyweight: the bar is 0.45 of the weight.
-    const frame = Frame.lean(rig, leanToBalance(rig, hip, s.bar, s.mf, { knee, load: 0.45 }), hip);
+    const lean = leanToBalance(rig, hip, s.bar, s.mf, { knee, load: 0.45 });
+    // The mistake: in the last part of the descent the pelvis tucks under (it tips back)
+    // while the lower back rounds forward by the same amount, so the chest stays where it was.
+    const wink = fault === 'butt-wink' ? d(18) * Math.max(0, (u - 0.7) / 0.3) ** 1.5 : 0;
+    const frame = Frame.lean(rig, lean - wink, hip);
     const p = { root: frame.entry() };
+    if (wink) bendSpine(p, { lumbar: wink });
     plantFeet(rig, frame, p, s.feet);
     // Shoulder blades squeezed together: that is what makes the shelf the bar sits on.
     for (const side of SIDES) p[`girdle.${side}`] = { rot: [0, sgn(side) * d(9), 0] };
     handsOnBar(rig, frame, p, {
-      at: frame.toWorld(s.bar), half: s.half, align: 1, ...BAR,
+      at: s.bar.clone().applyMatrix4(armSpace(rig, frame, p).M), half: s.half, align: 1, ...BAR,
       pole: (side) => frame.dirToWorld(new THREE.Vector3(sgn(side) * 0.25, -1, -0.45)),
     });
     return p;

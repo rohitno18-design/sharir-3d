@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { d, lerp, clamp01, bell, keyCurve, Frame, handsOnBar, joint, shoulderWorld, SIDES, sgn, form, bodyKey } from '../../core/lift.js';
+import { d, lerp, clamp01, bell, keyCurve, Frame, handsOnBar, joint, shoulderWorld, ezGrip, SIDES, sgn, form, bodyKey, TRUNK } from '../../core/lift.js';
 import { BENCH_PRESS } from './bench-press.js';
 
 /**
@@ -19,7 +19,7 @@ export const LYING_TRICEPS_EXTENSION = {
   id: 'lying-triceps-extension',
   part: 'Triceps',
   name: 'Lying triceps extension',
-  sub: 'On a flat bench with a short bar, upper arms still',
+  sub: 'On a flat bench with an EZ bar, upper arms still',
   source: 'Frédéric Delavier, Strength Training Anatomy — Lying Triceps Extensions; standard strength-coaching technique',
   duration: 3.2,
   bar: BAR,
@@ -38,7 +38,7 @@ export const LYING_TRICEPS_EXTENSION = {
   form: form(
     [
       'Lie on a flat bench with your feet flat on the floor.',
-      'Hold the bar with an overhand grip, hands about shoulder width apart or a little closer.',
+      'Hold an EZ bar on its inner angled grips, palms facing away from you. The angle turns your thumbs up a little, which is easier on the wrists and elbows than a straight bar.',
       'Start with your arms straight up, tilted a little back towards your head, so the bar is above your forehead.',
     ],
     [
@@ -58,7 +58,7 @@ export const LYING_TRICEPS_EXTENSION = {
 
   equipment: {
     floor: true,
-    bar: 'short',
+    bar: 'ez',
     bench: BENCH_PRESS.equipment.bench,
   },
 
@@ -93,20 +93,24 @@ export const LYING_TRICEPS_EXTENSION = {
     const cloud = rig.bodyCloud(base);
     const barAt = (bend) => elbow.clone().addScaledVector(upper.clone().applyAxisAngle(X, -bend), L2);
     let most = BEND;
-    if (rig.barGap(cloud, barAt(most), BAR.radius, [0]) < 0.03) {
+    if (rig.barGap(cloud, barAt(most), BAR.radius, TRUNK) < 0.03) {
       let lo = d(60), hi = BEND;
-      for (let i = 0; i < 20; i++) { const mid = (lo + hi) / 2; if (rig.barGap(cloud, barAt(mid), BAR.radius, [0]) >= 0.03) lo = mid; else hi = mid; }
+      for (let i = 0; i < 20; i++) { const mid = (lo + hi) / 2; if (rig.barGap(cloud, barAt(mid), BAR.radius, TRUNK) >= 0.03) lo = mid; else hi = mid; }
       most = lo;
     }
-    this._s = { key, frame, base, barAt, half, most };
+    this._s = { key, frame, base, barAt, half, most, elbow };
     return this._s;
   },
 
   pose(u, ctx) {
     const s = this._setup(ctx.rig, ctx);
     const p = { ...s.base };
+    const at = s.barAt(lerp(d(4), s.most, u));
+    // The bar's bends lie across the forearms and turn the hands a little thumbs-up.
+    const ez = ezGrip(s.half, at.clone().sub(s.elbow).normalize());
+    p._bar = { c: ez.c, offset: ez.offset };
     handsOnBar(ctx.rig, s.frame, p, {
-      at: s.barAt(lerp(d(4), s.most, u)), half: s.half, align: 1, ...BAR,
+      at, half: s.half, align: 1, ...BAR, line: ez.line,
       // The elbows point up at the ceiling and stay there.
       pole: (side) => new THREE.Vector3(sgn(side) * 0.05, 1, 0.35),
     });

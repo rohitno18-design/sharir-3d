@@ -72,6 +72,7 @@ export class ExercisePanel {
       el('div', { class: 'exo-head' },
         el('h2', { class: 'exo-title' }, ex.name),
         el('div', { class: 'exo-sub' }, ex.sub)),
+      ...(p?.fault ? [this.faultBanner(ex, p)] : []),
       el('p', { class: 'pd' }, 'Press play or drag the slider. Watch the work move from one muscle to the next.'),
       // The colour key, drawn with the same ramp the body uses, so it needs no words.
       el('div', { class: 'exo-legend' },
@@ -132,10 +133,22 @@ export class ExercisePanel {
         for (const it of items) ol.append(el('li', {}, it));
         return el('details', { class: 'form-sec', ...(open ? { open: '' } : {}) }, el('summary', {}, title), ol);
       };
+      const mistakes = sec('Mistakes to avoid', ex.form.mistakes, !!ex.faults?.length, ' warn');
+      // Some mistakes can be shown on the body. Seeing the wrong way next to the right way
+      // teaches form faster than reading about it.
+      if (mistakes && ex.faults?.length) {
+        const row = el('div', { class: 'fault-row' }, el('span', { class: 'muted small' }, 'See it on the body:'));
+        for (const f of ex.faults) {
+          const on = p?.fault === f.key;
+          row.append(el('button', { class: 'btn sm fault-btn' + (on ? ' on' : ''),
+            onClick: () => { p.setFault(on ? null : f.key); this.render(); } }, on ? `✓ ${f.label}` : `▶ ${f.label}`));
+        }
+        mistakes.append(row);
+      }
       this.root.append(...[
         sec('Setting up', ex.form.setup, true),
         sec('The movement', ex.form.move, true),
-        sec('Mistakes to avoid', ex.form.mistakes, false, ' warn'),
+        mistakes,
       ].filter(Boolean));
       if (ex.form.breathe) this.root.append(el('div', { class: 'note' }, el('b', {}, 'Breathing: '), ex.form.breathe));
       this.root.append(el('p', { class: 'nt muted small' }, 'The 3D body shows this form. Play it slowly, or pick a moment with the buttons above, to see each point.'));
@@ -174,6 +187,15 @@ export class ExercisePanel {
     this.liveUpdate();
   }
 
+  /** The red note that says the body is showing a mistake, not the right way. */
+  faultBanner(ex, p) {
+    const f = ex.faults.find(x => x.key === p.fault);
+    return el('div', { class: 'fault-banner' },
+      el('b', {}, `Showing a mistake: ${f.label}`),
+      el('span', {}, f.note),
+      el('button', { class: 'btn sm', onClick: () => { p.setFault(null); this.render(); } }, 'Show the correct form'));
+  }
+
   /** Called every frame while playing — updates numbers in place, never rebuilds. */
   liveUpdate() {
     const p = this.player;
@@ -183,7 +205,9 @@ export class ExercisePanel {
     const ph = phaseName(p.t, p.ex);
     const set1 = (sel, txt) => { const n = this.root.querySelector(sel); if (n) n.textContent = txt; };
     set1('[data-live=phase]', ph.name);
-    set1('[data-live=hint]', ph.hint);
+    // While a mistake is on show, the cue says so, rather than describing the right way
+    // under a body doing the wrong one.
+    set1('[data-live=hint]', p.fault ? 'This is the mistake, not the right way. The note above explains what goes wrong.' : ph.hint);
     set1('[data-live=press]', p.ex.progress ? p.ex.progress(p.u) : '');
     const ranked = p.ranked();
     if (ranked[0]) { set1('[data-live=lead]', ranked[0].def.label); set1('[data-live=lead-note]', ranked[0].def.note); }

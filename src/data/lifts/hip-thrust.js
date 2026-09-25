@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { d, lerp, clamp01, bell, keyCurve, Frame, plantFeet, handsOnBar, joint, restingOn, clearOfBody, legLengths, SIDES, sgn, form, bodyKey } from '../../core/lift.js';
+import { d, lerp, clamp01, bell, keyCurve, Frame, plantFeet, handsOnBar, joint, restingOn, clearOfBody, legLengths, SIDES, sgn, form, bodyKey, bendSpine } from '../../core/lift.js';
 
 /**
  * Barbell hip thrust.
@@ -104,6 +104,9 @@ export const HIP_THRUST = {
     const s = this._setup(rig);
     const frame = this._frame(rig, u, s.back, s.edge);
     const p = { root: frame.entry() };
+    // Chin tucked and eyes forward, not up at the ceiling. The higher the hips, the more the
+    // neck has to bend to keep looking forward, and a tucked chin keeps the ribs down.
+    bendSpine(p, { neck: lerp(d(14), d(30), u), head: lerp(d(6), d(16), u) });
     for (const side of SIDES) p[`girdle.${side}`] = { rot: [0, sgn(side) * d(4), 0] };
     plantFeet(rig, frame, p, { spread: s.feet.spread, z: s.feet.z });
     // The bar rides on the hip crease. With the hips low the thighs fold up towards it, so

@@ -30,6 +30,20 @@ export const toGl = (a) => new THREE.Vector3(a[0], a[2], -a[1]);
  * Joint centres. Articular capsules where the atlas provides one; the bone itself where it
  * does not (a phalanx's centre is a fine stand-in for a fingertip).
  */
+/** Vertebrae the spine's joints sit between: each joint is at the disc between the two. */
+const SPINE_JOINTS = {
+  lumbar: ['skeletal:Vertebra L5', 'skeletal:Sacrum', 0.35],
+  thorax: ['skeletal:Vertebra T12', 'skeletal:Vertebra L1', 0.5],
+  neck:   ['skeletal:Vertebra C7', 'skeletal:Vertebra T1', 0.5],
+  head:   ['skeletal:Atlas (C1)', 'skeletal:Atlas (C1)', 0.0],
+};
+/** How wide each joint's blend band is, top to bottom: soft tissue bends over this span. */
+const SPINE_BAND = { lumbar: 0.055, thorax: 0.055, neck: 0.032, head: 0.022 };
+/** Rigid parts that belong to one piece of the trunk whatever their height. */
+const OF_THORAX = /\brib\b|ribs|sternum|manubrium|xiphoid|costal cartilage|clavicle/i;
+const OF_HEAD = /skull|cranium|mandible|maxilla|bones of head|teeth|tooth|auditory ossicle|malleus|incus|stapes/i;
+const OF_PELVIS = /sacrum|coccyx|hip bone|ilium|ischium|pubis|pelvi/i;
+
 const PIVOTS = {
   sc:       'joints:Articular capsule of sternoclavicular joint',
   gh:       'joints:Articular capsule of glenohumeral joint',
@@ -84,11 +98,27 @@ const SEGMENTS = [
 ];
 
 const PER_SIDE = SEGMENTS.length;
-export const BONE_COUNT = 1 + PER_SIDE * 2;          // root + one tree per side
+/**
+ * The trunk above the pelvis, as a chain up the middle. The root is the pelvis. The lower
+ * back turns at the joint between L5 and the sacrum, the upper back between T12 and L1,
+ * the neck at the base of the neck (C7 on T1), and the head where the skull sits on the
+ * atlas. Every lift so far holds them straight, which is correct form; they are there so a
+ * rounded back, a tucked chin or a head moved back out of the bar's way can be shown.
+ */
+const CENTRAL = ['lumbar', 'thorax', 'neck', 'head'];
+const CENTRAL_PARENT = { lumbar: 'root', thorax: 'lumbar', neck: 'thorax', head: 'neck' };
+export const BONE_COUNT = 1 + CENTRAL.length + PER_SIDE * 2;
 const SIDES = ['l', 'r'];
-/** Bone index for a named segment. root = 0, then the left tree, then the right. */
-export const boneIndex = (name, side) =>
-  name === 'root' ? 0 : 1 + SIDES.indexOf(side) * PER_SIDE + SEGMENTS.findIndex(s => s.name === name);
+/**
+ * Bone index for a named segment: root = 0, then the spine and neck, then the left tree,
+ * then the right. Parents always come before children, which is the order poses are built in.
+ */
+export const boneIndex = (name, side) => {
+  if (name === 'root') return 0;
+  const c = CENTRAL.indexOf(name);
+  if (c >= 0) return 1 + c;
+  return 1 + CENTRAL.length + SIDES.indexOf(side) * PER_SIDE + SEGMENTS.findIndex(s => s.name === name);
+};
 const SEG_INDEX = Object.fromEntries(SEGMENTS.map((s, i) => [s.name, i]));
 
 // Structures that belong to a limb outright — they move with it in full.
@@ -183,6 +213,12 @@ const ACROSS_WEIGHT = 3;
 const BAR_AXIS = new THREE.Vector3(1, 0, 0);
 /** Segments a scapular muscle is allowed to follow. */
 const GIRDLE_ONLY = new Set(['girdle']);
+/**
+ * The trunk bone a fibre muscle's trunk end is carried by. One per muscle, because the
+ * insertion's movement is measured against a single bone: the pecs and the lats ride on
+ * the upper back, the psoas on the lower back.
+ */
+const trunkOf = (def, side) => def.spine ? boneIndex(def.spine) : (def.trunk === 'root' ? 0 : boneIndex(def.trunk, side));
 
 /**
  * Muscles that cross the shoulder or the hip, bound by where they actually insert.
@@ -211,19 +247,27 @@ const GIRDLE_ONLY = new Set(['girdle']);
 const ANCHORED = [
   // The lat's tendon runs into the floor of the bicipital groove. Its record in this atlas
   // lists only the slip on the scapula, so the landmark is the source here.
-  { re: /^latissimus dorsi/i, limb: 'upperarm', trunk: 'root', at: 'Intertubercular sulcus', mode: 'fibre' },
+  { re: /^latissimus dorsi/i, limb: 'upperarm', trunk: 'root', spine: 'thorax', at: 'Intertubercular sulcus', mode: 'fibre' },
   { re: /^teres major/i, limb: 'upperarm', trunk: 'girdle', at: 'Crest of lesser tubercle', mode: 'fibre' },
-  { re: /pectoralis major/i, limb: 'upperarm', trunk: 'root', at: 'Crest of greater tubercle',
+  { re: /pectoralis major/i, limb: 'upperarm', trunk: 'root', spine: 'thorax', at: 'Crest of greater tubercle',
     record: { muscle: 'Pectoralis major muscle', bone: 'Humerus' }, mode: 'fibre' },
   // The rotator cuff: from the shoulder blade onto the ball of the humerus.
   { re: /^(supraspinatus|infraspinatus|teres minor)/i, limb: 'upperarm', trunk: 'girdle', at: 'Greater tubercle', mode: 'wrap', near: 0.02, far: 0.10 },
   { re: /^subscapularis/i, limb: 'upperarm', trunk: 'girdle', at: 'Lesser tubercle', mode: 'wrap', near: 0.02, far: 0.10 },
   // Psoas and iliacus: from the lumbar spine and pelvis onto the lesser trochanter.
-  { re: /^(psoas|iliacus|iliopsoas)/i, limb: 'thigh', trunk: 'root', at: 'Lesser trochanter', mode: 'fibre' },
+  { re: /^(psoas|iliacus|iliopsoas)/i, limb: 'thigh', trunk: 'root', spine: 'lumbar', at: 'Lesser trochanter', mode: 'fibre' },
 ];
 /** One slot per anchored muscle per side, for the insertion displacements the shader reads. */
 const ANCHOR_SLOTS = ANCHORED.length * 2;
 const anchorSlot = (def, side) => ANCHORED.indexOf(def) + (side === 'r' ? ANCHORED.length : 0);
+
+/**
+ * Body-cloud tags: 0 pelvis, 1-2 thighs, 3-4 shins, 5 lower back, 6 upper back, 7 neck,
+ * 8 head. The bone that carries each tag, in that order.
+ */
+const CLOUD_BONES = () => [0, boneIndex('thigh', 'l'), boneIndex('thigh', 'r'), boneIndex('shin', 'l'), boneIndex('shin', 'r'),
+  boneIndex('lumbar'), boneIndex('thorax'), boneIndex('neck'), boneIndex('head')];
+const TRUNK_TAG = { 0: 0, 1: 5, 2: 6, 3: 7, 4: 8 };
 
 export class Rig {
   constructor(registry, groups = null) {
@@ -277,7 +321,7 @@ export class Rig {
   /** Tell the morph where each bone lies, so limbs can thicken round their own bones. */
   _shareSkeleton() {
     const chainOf = (b) => {
-      if (!b || b.name === 'root' || b.name === 'girdle') return -1;
+      if (!b || b.name === 'root' || b.name === 'girdle' || b.group === 'trunk') return -1;
       const leg = b.group === 'leg';
       return (leg ? 2 : 0) + (b.side === 'r' ? 1 : 0);
     };
@@ -454,7 +498,7 @@ export class Rig {
         for (let i = 0; i < pos.count; i++) {
           const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
           pts.push(x, y, z);
-          tag.push(leg ? (y > kneeY ? 1 : 3) + (x < 0 ? 1 : 0) : 0);
+          tag.push(leg ? (y > kneeY ? 1 : 3) + (x < 0 ? 1 : 0) : TRUNK_TAG[this.trunkBone(y)]);
         }
       }
     }
@@ -467,7 +511,7 @@ export class Rig {
     if (!c) return null;
     const key = morphKey();
     if (this._cloudKey === key) return this._cloudRest;
-    const bones = [null, boneIndex('thigh', 'l'), boneIndex('thigh', 'r'), boneIndex('shin', 'l'), boneIndex('shin', 'r')];
+    const bones = CLOUD_BONES().map((b, i) => (i === 0 ? null : b));
     const out = new Float32Array(c.pts.length), v = new THREE.Vector3();
     for (let i = 0, k = 0; i < c.pts.length; i += 3, k++) {
       const b = bones[c.tag[k]];
@@ -481,7 +525,7 @@ export class Rig {
   /** A bone's world matrix under `pose`, without applying the pose. */
   poseMatrix(pose, index, out = new THREE.Matrix4()) {
     const bone = this.bones[index];
-    const key = bone.name === 'root' ? 'root' : `${bone.name}.${bone.side}`;
+    const key = bone.side ? `${bone.name}.${bone.side}` : bone.name;
     this.localMatrix(bone, pose[key], out);
     if (bone.parent >= 0) out.premultiply(this.poseMatrix(pose, bone.parent, new THREE.Matrix4()));
     return out;
@@ -495,8 +539,7 @@ export class Rig {
     const rest = this._cloudMorphed();
     if (!rest) return null;
     const tag = this._cloud.tag;
-    const mats = [0, boneIndex('thigh', 'l'), boneIndex('thigh', 'r'), boneIndex('shin', 'l'), boneIndex('shin', 'r')]
-      .map(i => this.poseMatrix(pose, i).elements);
+    const mats = CLOUD_BONES().map(i => this.poseMatrix(pose, i).elements);
     const out = new Float32Array(rest.length);
     for (let i = 0, k = 0; i < rest.length; i += 3, k++) {
       const m = mats[tag[k]], x = rest[i], y = rest[i + 1], z = rest[i + 2];
@@ -596,6 +639,33 @@ export class Rig {
       }
     }
     this.bones[0] = { name: 'root', side: null, index: 0, parent: -1, pivot: new THREE.Vector3(0, 0, 0) };
+    // The spine and neck, from the vertebrae themselves.
+    const jointAt = (name) => {
+      const [a, b, k] = SPINE_JOINTS[name];
+      const A = this._centre(a), B = this._centre(b);
+      if (!A || !B) return null;
+      // The centre of a vertebra's box includes its spinous process, behind the body of the
+      // vertebra that the spine actually bends about; the joint sits 2 cm further forward.
+      const J = A.clone().lerp(B, k); J.x = 0; J.z += 0.02;
+      if (name === 'head') J.y += 0.012;          // on top of the atlas, under the skull
+      return J;
+    };
+    this.spine = {};
+    for (const name of CENTRAL) {
+      const J = jointAt(name);
+      if (!J) { console.warn('[rig] spine joint missing', name); return; }
+      this.spine[name] = J;
+    }
+    const top = new THREE.Vector3(0, this.spine.head.y + 0.19, 0);
+    CENTRAL.forEach((name, i) => {
+      const index = boneIndex(name);
+      this.bones[index] = {
+        name, side: null, index, group: 'trunk', radius: 0.2,
+        parent: boneIndex(CENTRAL_PARENT[name]),
+        pivot: this.spine[name], tail: i < CENTRAL.length - 1 ? this.spine[CENTRAL[i + 1]] : top,
+      };
+    });
+    for (const side of SIDES) this.bones[boneIndex('girdle', side)].parent = boneIndex('thorax');
     // Segment order within a group, for the joint blends.
     for (const g of ['arm', 'leg']) this.byGroup[g] = SEGMENTS.map((s, i) => (s.group === g ? i : -1)).filter(i => i >= 0);
     for (const side of SIDES) {
@@ -848,12 +918,48 @@ export class Rig {
     return { d: Math.sqrt(dx * dx + dy * dy + dz * dz) / seg.radius, t };
   }
 
+  /**
+   * Which piece of the trunk a point outside the limbs moves with: pelvis, lower back,
+   * upper back, neck or head, by its height, blended across a band at each joint so the
+   * body bends there instead of shearing. [boneA, boneB, weightA], like any other binding.
+   */
+  trunkBind(y, out = [0, 0, 1]) {
+    const sp = this.spine;
+    if (!sp) { out[0] = 0; out[1] = 0; out[2] = 1; return out; }
+    let below = 0;
+    for (const name of CENTRAL) {
+      const J = sp[name], band = SPINE_BAND[name], bone = boneIndex(name);
+      if (y < J.y - band) { out[0] = below; out[1] = below; out[2] = 1; return out; }
+      if (y < J.y + band) {
+        const w = smoothstep(J.y - band, J.y + band, y);
+        out[0] = bone; out[1] = below; out[2] = w;
+        return out;
+      }
+      below = bone;
+    }
+    out[0] = below; out[1] = below; out[2] = 1;
+    return out;
+  }
+
+  /** The single trunk bone a point is mostly carried by. */
+  trunkBone(y) { const b = this.trunkBind(y); return b[2] >= 0.5 ? b[0] : b[1]; }
+
+  /** A rigid part of the axial skeleton moves as one piece: which piece. */
+  _rigidTrunkBone(part) {
+    const chain = part.n + ' | ' + this.registry.ancestors(part.id).map(a => a.n).join(' | ');
+    if (OF_PELVIS.test(chain)) return 0;
+    if (OF_HEAD.test(chain)) return boneIndex('head');
+    if (OF_THORAX.test(chain)) return boneIndex('thorax');
+    if (!part.bb) return 0;
+    return this.trunkBone((part.bb[0][2] + part.bb[1][2]) / 2);
+  }
+
   bindVertex(x, y, z, out, mode, group, only = null) {
     const side = x >= 0 ? 'l' : 'r';
     const { best, d: bestD, t: bestT } = this._nearest(x, y, z, side, group, only);
     // Only a spanning structure can fall out of the limb; a limb structure binds to its
     // nearest bone however far from the axis it sits.
-    if (best < 0 || (mode === 'span' && bestD > 1)) { out[0] = 0; out[1] = 0; out[2] = 1; return out; }
+    if (best < 0 || (mode === 'span' && bestD > 1)) return this.trunkBind(y, out);
 
     const seg = SEGMENTS[best];
     const bone = boneIndex(seg.name, side);
@@ -862,7 +968,10 @@ export class Rig {
     const BLEND = 0.26;                        // as a fraction of the segment's length
     let other = bone, w = 1;
     if (bestT < BLEND) {
-      other = seg.parent && (!only || only.has(seg.parent)) ? boneIndex(seg.parent, side) : 0;
+      // A limb's first segment blends onto what it hangs from: the pelvis for the thigh,
+      // the upper back for the shoulder girdle.
+      other = seg.parent && (!only || only.has(seg.parent)) ? boneIndex(seg.parent, side)
+        : (seg.parent ? this.trunkBone(y) : this.bones[bone].parent);
       w = 0.5 + 0.5 * (bestT / BLEND);
     } else if (bestT > 1 - BLEND) {
       const childIdx = this.byGroup[group].find(i => SEGMENTS[i].parent === seg.name && SEGMENTS[i].from === seg.to
@@ -889,7 +998,7 @@ export class Rig {
     const edge = mode === 'span' ? smoothstep(1.0, 0.72, bestD) : 1;
     if (edge < 1) {
       out[0] = w >= 0.5 ? bone : other;
-      out[1] = 0;
+      out[1] = this.trunkBone(y);
       out[2] = edge;
       return out;
     }
@@ -953,11 +1062,23 @@ export class Rig {
     const anchor = this.ok ? this._anchorDef(part) : null;
     if (anchor) return this._skinAnchored(geom, anchor, arr);
     const cls = this.ok ? this.resolveBinding(geom, part) : { mode: 'none' };
+    const pos = geom.attributes.position;
     if (cls.mode === 'none') {
-      for (let i = 0; i < n; i++) arr[i * 3 + 2] = 1;          // root, weight 1
+      if (!this.ok) { for (let i = 0; i < n; i++) arr[i * 3 + 2] = 1; return new THREE.BufferAttribute(arr, 3); }
+      // The trunk. A bone moves as one piece with its part of the spine; soft tissue bends
+      // smoothly across each joint of the spine and neck.
+      if (part.sys === 'skeletal') {
+        const b = this._rigidTrunkBone(part);
+        for (let i = 0; i < n; i++) { arr[i * 3] = b; arr[i * 3 + 1] = b; arr[i * 3 + 2] = 1; }
+        return new THREE.BufferAttribute(arr, 3);
+      }
+      const t = [0, 0, 1];
+      for (let i = 0; i < n; i++) {
+        this.trunkBind(pos.getY(i), t);
+        arr[i * 3] = t[0]; arr[i * 3 + 1] = t[1]; arr[i * 3 + 2] = t[2];
+      }
       return new THREE.BufferAttribute(arr, 3);
     }
-    const pos = geom.attributes.position;
     const out = [0, 0, 1];
     for (let i = 0; i < n; i++) {
       this.bindVertex(pos.getX(i), pos.getY(i), pos.getZ(i), out, cls.mode, cls.group, cls.only);
@@ -996,7 +1117,7 @@ export class Rig {
       const far = Math.max(def.far, near + 0.08);
       const w = smoothstep(far, near, pt.distanceTo(a.point));
       arr[i * 3] = boneIndex(def.limb, side);
-      arr[i * 3 + 1] = def.trunk === 'root' ? 0 : boneIndex(def.trunk, side);
+      arr[i * 3 + 1] = def.trunk === 'root' ? this.trunkBone(pt.y) : boneIndex(def.trunk, side);
       arr[i * 3 + 2] = w;
     }
     return new THREE.BufferAttribute(arr, 3);
@@ -1023,7 +1144,7 @@ export class Rig {
     }
     for (let i = 0; i < pos.count; i++) {
       const x = pos.getX(i), side = x >= 0 ? 'l' : 'r', a = anchorOf[side];
-      const trunk = def.trunk === 'root' ? 0 : boneIndex(def.trunk, side);
+      const trunk = trunkOf(def, side);
       if (!a) { arr[i * 3] = trunk; arr[i * 3 + 1] = 0; arr[i * 3 + 2] = 1; continue; }
       pt.set(x, pos.getY(i), pos.getZ(i));
       const span = Math.max(0.02, farthest[side] - closest[side]);
@@ -1047,7 +1168,7 @@ export class Rig {
         const s = anchorSlot(e.def, side) * 3;
         applyMorph(e.point, I, { tissue: 'muscle', bone: boneIndex(e.def.limb, side) });
         const limb = this._m[boneIndex(e.def.limb, side)];
-        const trunk = this._m[e.def.trunk === 'root' ? 0 : boneIndex(e.def.trunk, side)];
+        const trunk = this._m[trunkOf(e.def, side)];
         A.copy(I).applyMatrix4(limb);
         B.copy(I).applyMatrix4(trunk);
         this.anchorDisp[s] = A.x - B.x; this.anchorDisp[s + 1] = A.y - B.y; this.anchorDisp[s + 2] = A.z - B.z;
@@ -1128,7 +1249,7 @@ export class Rig {
     const local = new THREE.Matrix4();
     for (let i = 0; i < BONE_COUNT; i++) {
       const bone = this.bones[i];
-      const key = bone.name === 'root' ? 'root' : `${bone.name}.${bone.side}`;
+      const key = bone.side ? `${bone.name}.${bone.side}` : bone.name;
       this.localMatrix(bone, pose[key], local);
       if (bone.parent >= 0) this._m[i].multiplyMatrices(this._m[bone.parent], local);
       else this._m[i].copy(local);

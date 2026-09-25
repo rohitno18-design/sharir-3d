@@ -30,6 +30,8 @@ export const ease = (k) => k * k * (3 - 2 * k);
 export const bell = (t, c, w) => Math.exp(-(((t - c) / w) ** 2));
 export const SIDES = ['l', 'r'];
 export const sgn = (side) => (side === 'l' ? 1 : -1);
+/** Body-cloud tags for the whole trunk: pelvis, lower back, upper back, neck and head. */
+export const TRUNK = [0, 5, 6, 7, 8];
 /** Changes whenever the body's size or shape does: what anything measured on the body is cached under. */
 export const bodyKey = () => morphKey();
 const X = new THREE.Vector3(1, 0, 0), Y = new THREE.Vector3(0, 1, 0);
@@ -104,11 +106,47 @@ export class Frame {
 export const joint = (rig, side, key) => rig.morphedJoint(side, key, new THREE.Vector3());
 export const jointWorld = (rig, frame, side, key) => frame.toWorld(joint(rig, side, key));
 
-/** The two shoulder joints' midpoint, in the world, with the shoulder blades as posed. */
+/** A shoulder joint in the world, with the back and the shoulder blades as posed. */
 export function shoulderWorld(rig, frame, pose, side) {
   const gi = rig.bones.findIndex(b => b.name === 'girdle' && b.side === side);
-  const M = frame.M.clone().multiply(rig.localMatrix(rig.bones[gi], pose[`girdle.${side}`], new THREE.Matrix4()));
+  const M = armSpace(rig, frame, pose).M.clone().multiply(rig.localMatrix(rig.bones[gi], pose[`girdle.${side}`], new THREE.Matrix4()));
   return joint(rig, side, 'gh').applyMatrix4(M);
+}
+
+/**
+ * The space the arms hang in: the upper back. With the back straight that is the trunk's
+ * own frame; with it rounded or arched, the lower and upper back's turns are added on top.
+ * The arm solver works in the frame its shoulder girdle hangs from, so every target the
+ * arms reach for goes through this first.
+ */
+export function armSpace(rig, frame, pose) {
+  const spine = ['lumbar', 'thorax'].map(n => pose[n]);
+  if (!spine.some(Boolean)) {
+    return { M: frame.M, q: frame.q, toArm: (w) => frame.toBody(w), dirToArm: (w) => frame.dirToBody(w) };
+  }
+  const bi = (n) => rig.bones.findIndex(b => b.name === n);
+  const U = rig.localMatrix(rig.bones[bi('lumbar')], pose.lumbar, new THREE.Matrix4())
+    .multiply(rig.localMatrix(rig.bones[bi('thorax')], pose.thorax, new THREE.Matrix4()));
+  const Ui = U.clone().invert();
+  const uq = new THREE.Quaternion().setFromRotationMatrix(U);
+  return {
+    M: frame.M.clone().multiply(U),
+    q: frame.q.clone().multiply(uq),
+    toArm: (w) => frame.toBody(w).applyMatrix4(Ui),
+    dirToArm: (w) => frame.dirToBody(w).applyQuaternion(uq.clone().invert()),
+  };
+}
+
+/**
+ * Bend the spine: `lumbar` and `thorax` round the back forward (positive) or arch it
+ * (negative), `neck` and `head` nod the head forward or tip it back. Radians.
+ */
+export function bendSpine(pose, { lumbar = 0, thorax = 0, neck = 0, head = 0 } = {}) {
+  if (lumbar) pose.lumbar = { rot: [lumbar, 0, 0] };
+  if (thorax) pose.thorax = { rot: [thorax, 0, 0] };
+  if (neck) pose.neck = { rot: [neck, 0, 0] };
+  if (head) pose.head = { rot: [head, 0, 0] };
+  return pose;
 }
 
 /**
@@ -225,27 +263,31 @@ export function leanToBalance(rig, hip, bodyPoint, z, { knee = null, load = 0.55
  * bar.wrist  how far the wrists bend back, radians, if not the usual slight extension
  */
 export function handsOnBar(rig, frame, pose, bar) {
+  const A = armSpace(rig, frame, pose);
   for (const side of SIDES) {
     const m = sgn(side);
     const girdle = pose[`girdle.${side}`] || null;
-    const grip = frame.toBody(bar.at.clone().add(new THREE.Vector3(m * bar.half, 0, 0)));
+    const grip = A.toArm(bar.at.clone().add(new THREE.Vector3(m * bar.half, 0, 0)));
     let pole = typeof bar.pole === 'function' ? bar.pole(side) : bar.pole;
     if (pole === 'upright' || pole?.upright) {
-      const hint = frame.dirToBody(pole.hint || new THREE.Vector3(m * 0.4, -0.5, 0.6).normalize());
-      pole = rig.uprightPole(side, grip, girdle, hint, frame.dirToBody(Y), { morphed: true, across: frame.dirToBody(X) });
-    } else pole = frame.dirToBody(pole.clone().normalize());
-    const align = new THREE.Vector3(m * (bar.align ?? 1), 0, 0);
-    const arm = rig.solveArm(side, grip, pole, { girdle, rootQ: frame.q, align, morphed: true, ...(bar.wrist != null ? { wrist: bar.wrist } : {}) });
+      const hint = A.dirToArm(pole.hint || new THREE.Vector3(m * 0.4, -0.5, 0.6).normalize());
+      pole = rig.uprightPole(side, grip, girdle, hint, A.dirToArm(Y), { morphed: true, across: A.dirToArm(X) });
+    } else pole = A.dirToArm(pole.clone().normalize());
+    // The bar's line through this hand. A straight bar runs along x; an EZ bar's grips are
+    // angled, and `bar.line(side)` gives the angled line in the world.
+    const lineW = bar.line ? bar.line(side).normalize() : X.clone();
+    const align = lineW.clone().multiplyScalar(m * (bar.align ?? 1));
+    const arm = rig.solveArm(side, grip, pole, { girdle, rootQ: A.q, align, morphed: true, ...(bar.wrist != null ? { wrist: bar.wrist } : {}) });
     Object.assign(pose, arm);
     // The fingers wrap at right angles to the bar, and which way that is depends on how the
     // hand is turned right now, so it is worked out from the solved arm.
     const girdleQ = girdle?.rot ? new THREE.Quaternion().setFromEuler(new THREE.Euler(...girdle.rot, 'XYZ')) : new THREE.Quaternion();
-    const handQ = frame.q.clone().multiply(girdleQ)
+    const handQ = A.q.clone().multiply(girdleQ)
       .multiply(arm[`upperarm.${side}`].quat)
       .multiply(arm[`forearm1.${side}`].quat)
       .multiply(arm[`forearm2.${side}`].quat)
       .multiply(arm[`hand.${side}`].quat);
-    const barAxis = X.clone().applyQuaternion(handQ.invert());
+    const barAxis = lineW.clone().applyQuaternion(handQ.invert());
     Object.assign(pose, rig.gripAround(side, bar.radius, bar.flesh, barAxis));
   }
   return pose;
@@ -257,8 +299,9 @@ export function handsOnBar(rig, frame, pose, bar) {
  */
 export function hangHeight(rig, frame, pose, half, z) {
   const sh = shoulderWorld(rig, frame, pose, 'l');
+  const A = armSpace(rig, frame, pose);
   const fits = (y) => SIDES.every(side => rig.reachRatio(side,
-    frame.toBody(new THREE.Vector3(sgn(side) * half, y, z)), pose[`girdle.${side}`] || null, true) <= rig.lockoutReach);
+    A.toArm(new THREE.Vector3(sgn(side) * half, y, z)), pose[`girdle.${side}`] || null, true) <= rig.lockoutReach);
   let lo = sh.y - 1.2, hi = sh.y;
   for (let i = 0; i < 24; i++) { const mid = (lo + hi) / 2; if (fits(mid)) hi = mid; else lo = mid; }
   return hi;
@@ -270,8 +313,9 @@ export function hangHeight(rig, frame, pose, half, z) {
  */
 export function pressHeight(rig, frame, pose, half, z) {
   const sh = shoulderWorld(rig, frame, pose, 'l');
+  const A = armSpace(rig, frame, pose);
   const fits = (y) => SIDES.every(side => rig.reachRatio(side,
-    frame.toBody(new THREE.Vector3(sgn(side) * half, y, z)), pose[`girdle.${side}`] || null, true) <= rig.lockoutReach);
+    A.toArm(new THREE.Vector3(sgn(side) * half, y, z)), pose[`girdle.${side}`] || null, true) <= rig.lockoutReach);
   let lo = sh.y, hi = sh.y + 1.2;
   for (let i = 0; i < 24; i++) { const mid = (lo + hi) / 2; if (fits(mid)) lo = mid; else hi = mid; }
   return lo;
@@ -323,9 +367,35 @@ export function hangingBar(rig, frame, pose, half, z, radius, { clear = 0.004, o
  * pushed out from the skin on the front (side +1) or the back (side -1) until it just
  * touches. Standing, before any pose, so it can ride with the trunk through the lift.
  */
-export function restingOn(rig, y, side, radius, { clear = 0.003, only = [0] } = {}) {
+export function restingOn(rig, y, side, radius, { clear = 0.003, only = TRUNK } = {}) {
   const cloud = rig.bodyCloud({});
   return clearOfBody(rig, cloud, new THREE.Vector3(0, y, 0), new THREE.Vector3(0, 0, side), radius, { clear, only, reach: 0.4, step: 0.005 });
+}
+
+/**
+ * The EZ bar's shape, one half: [distance from the middle, how far the bar is bent out].
+ * The inner grips are the angled stretch from 10 to 20 cm out.
+ */
+export const EZ_BENDS = [[0, 0], [0.10, 0], [0.20, 0.032], [0.30, 0], [0.60, 0]];
+
+/**
+ * An EZ bar held with the hands `half` out from the middle, and the forearm running along
+ * `forearm` (world): which way the bar's bends lie, how far the grip sits off the straight
+ * middle, and each hand's line along the bar. The bends lie across the forearms, the way
+ * the bar hangs when it is picked up, and turn each hand a little towards thumbs-up, which
+ * is the point of the bar: less twist at the wrist than a straight bar forces.
+ */
+export function ezGrip(half, forearm) {
+  let k = 1;
+  while (k < EZ_BENDS.length - 1 && EZ_BENDS[k][0] < half) k++;
+  const [x0, o0] = EZ_BENDS[k - 1], [x1, o1] = EZ_BENDS[k];
+  const slope = (o1 - o0) / (x1 - x0);
+  const offset = o0 + slope * (half - x0);
+  const c = X.clone().cross(forearm).normalize();
+  return {
+    c, offset,
+    line: (side) => X.clone().addScaledVector(c, (side === 'l' ? 1 : -1) * slope),
+  };
 }
 
 /** A short caption list turned into the `form` block's shape, for authoring convenience. */

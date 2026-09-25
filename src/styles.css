@@ -740,3 +740,12 @@ body.film #stage { background: radial-gradient(1200px 800px at 50% 40%, #171b21 
 .form-sec[open] > summary::after { content: '−'; }
 .form-list { margin: 0; padding: 0 12px 10px 30px; display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; line-height: 1.5; color: var(--text-2); }
 .form-list.warn li::marker { color: var(--neg); }
+
+/* ---------- Movement: showing a mistake ---------- */
+.fault-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 0 12px 12px 12px; }
+.fault-btn.on { background: var(--neg); color: #fff; border-color: transparent; }
+.fault-banner { display: flex; flex-direction: column; gap: 5px; margin: 0 0 12px; padding: 10px 11px; border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--neg) 55%, transparent); background: color-mix(in srgb, var(--neg) 10%, transparent); }
+.fault-banner b { color: var(--neg); font: 700 13px/1.2 var(--display); }
+.fault-banner span { font-size: 12px; line-height: 1.45; color: var(--text-2); }
+.fault-banner .btn { align-self: flex-start; }

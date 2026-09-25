@@ -228,7 +228,7 @@ export class Film {
     // around the lift, so its text runs a little smaller.
     const u = ((cols ? H : W) / 1080) * (W === H ? 0.86 : 1);
     const pad = 64 * u;
-    const phase = captionFor(p.t, s, p.ex);
+    const phase = captionFor(p.t, s, p.ex, p.fault);
     const colW = cols ? W * 0.5 - pad * 1.5 : W - pad * 2;
     const hintFont = `500 ${32 * u}px Inter, sans-serif`;
     const hintLines = wrap(ctx, phase.hint, colW, hintFont);
@@ -531,7 +531,10 @@ export class Film {
  * that only a set has: the start, and the last rep, where the bar slows as the muscles
  * reach their limit.
  */
-function captionFor(t, s, ex) {
+function captionFor(t, s, ex, fault) {
+  // A mistake on show is labelled as one in the video too.
+  const f = fault && ex?.faults?.find(x => x.key === fault);
+  if (f) return { name: `Mistake: ${f.label}`, hint: f.note };
   if (s?.intro) return { name: 'Ready', hint: ex?.ready || 'In the start position.' };
   if (s && s.reps >= 5 && s.rep === s.reps - 1 && s.work) {
     return { name: 'Last rep', hint: 'The bar slows down. The muscles are close to their limit.' };

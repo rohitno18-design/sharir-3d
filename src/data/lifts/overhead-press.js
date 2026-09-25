@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { d, lerp, clamp01, ease, bell, keyCurve, Frame, plantFeet, handsOnBar, joint, shoulderWorld, pressHeight, clearOfBody, restingOn, midfoot, SIDES, sgn, form, bodyKey } from '../../core/lift.js';
+import { d, lerp, clamp01, ease, bell, keyCurve, Frame, plantFeet, handsOnBar, joint, shoulderWorld, pressHeight, clearOfBody, restingOn, midfoot, SIDES, sgn, form, bodyKey, TRUNK, bendSpine } from '../../core/lift.js';
 
 /**
  * Standing overhead press.
@@ -14,6 +14,7 @@ import { d, lerp, clamp01, ease, bell, keyCurve, Frame, plantFeet, handsOnBar, j
 const BAR = { radius: 0.0145, flesh: 0.011 };
 const Z = new THREE.Vector3(0, 0, 1);
 const LEAN = d(-6);          // the whole-body lean back at the start
+const smooth = (k) => ease(clamp01(k));
 
 export const OVERHEAD_PRESS = {
   id: 'overhead-press',
@@ -105,10 +106,14 @@ export const OVERHEAD_PRESS = {
     // The shoulder blades turn up at the top: the shrug that finishes the press.
     const shrug = d(12) * u * u;
     for (const side of SIDES) p[`girdle.${side}`] = { rot: [0, 0, sgn(side) * shrug] };
+    // The head goes back to let the bar past the chin, and comes forward "through the
+    // window" once the bar is above the forehead.
+    const back = smooth(u / 0.12) * (1 - smooth((u - 0.42) / 0.25));
+    bendSpine(p, { neck: d(-14) * back + d(5) * smooth((u - 0.6) / 0.4), head: d(-6) * back });
     const y0 = frame.toWorld(e.rack).y;
     const y1 = pressHeight(rig, frame, p, e.half, e.mf);
     let at = new THREE.Vector3(0, lerp(y0, y1, u), e.mf);
-    if (u > 0) at = clearOfBody(rig, rig.bodyCloud(p), at, Z, BAR.radius, { clear: 0.006, only: [0], reach: 0.25 });
+    if (u > 0) at = clearOfBody(rig, rig.bodyCloud(p), at, Z, BAR.radius, { clear: 0.006, only: TRUNK, reach: 0.25 });
     // Elbows a little in front of the bar and pointing forward, not flared out. At the start
     // the arm is folded too far for an upright forearm, and "as upright as possible" then
     // dropped the elbows behind the bar, which is the wrong rack.
