@@ -452,7 +452,7 @@ export function smoothBindings(geom, passes = 20) {
  * @param partAt  slot -> registry part
  * @param opts    { match, bones (Set of bone indices the field may use), anchorBone }
  */
-export function followSkin(skin, target, partAt, { match, bones, anchorBone = null, sigma = 0.04, radius = 0.10, fade = [0.52, 0.64], top = 1.12 } = {}) {
+export function followSkin(skin, target, partAt, { match, bones, anchorBone = null, sigma = 0.04, radius = 0.10, fade = [0.52, 0.64], top = 1.12, mix = 1, cap = null } = {}) {
   const SP = skin.attributes.position, SS = skin.attributes.aSkin, SA = skin.attributes.aPartIndex;
   const TP = target.attributes.position, TS = target.attributes.aSkin, TA = target.attributes.aPartIndex;
   if (!SS || !TS || !SA || !TA) return 0;
@@ -501,9 +501,19 @@ export function followSkin(skin, target, partAt, { match, bones, anchorBone = nu
     }
     if (total < 1e-6) continue;
     for (const [b, v] of W) W.set(b, v / total);
+    // `cap`: some bones' share fades out with height, e.g. the thigh's above the hip joint,
+    // where tissue is fixed to the rim of the pelvis.
+    if (cap) {
+      const k = 1 - Math.min(1, Math.max(0, (y - cap.from) / (cap.to - cap.from)));
+      const ease = k * k * (3 - 2 * k);
+      let moved = 0;
+      for (const b of cap.bones) if (W.has(b)) { const v = W.get(b); W.set(b, v * ease); moved += v * (1 - ease); }
+      if (moved > 0) W.set(cap.to_bone, (W.get(cap.to_bone) || 0) + moved);
+    }
     // Down the thigh, back to the muscle's own binding. (A fibre-bound point cannot be
     // mixed with a weight; these muscles have none that low.)
-    const t = Math.min(1, (y - fade[0]) / (fade[1] - fade[0])), s = t * t * (3 - 2 * t);
+    // `mix` below 1 keeps part of the muscle's own binding everywhere.
+    const t = Math.min(1, (y - fade[0]) / (fade[1] - fade[0])), s = t * t * (3 - 2 * t) * (fibre ? 1 : mix);
     if (s < 1 && !fibre) {
       for (const [b, v] of W) W.set(b, v * s);
       const wa = Math.min(1, oz);

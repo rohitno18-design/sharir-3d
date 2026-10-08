@@ -297,6 +297,19 @@ const ANCHORED = [
 const FOLLOW_SKIN = /^(gluteus|piriformis|superior gemellus|inferior gemellus|obturator internus|quadratus femoris|iliotibial tract|intermuscular gluteal|gluteal|tensor fasciae|trochanteric|piriformis fascia|obturator fascia)/i;
 
 /**
+ * Above the hip joint, at the side, the iliotibial tract and the fascia lata are fixed to
+ * the rim of the pelvis. The skin's weights there still carried a little of the thigh, and
+ * patchily: next to each other, one point went with the pelvis and the next a fifth with
+ * the thigh. Once the femur turned out at the bottom of a squat, as a real one does, the
+ * top of the tract tore. So within the hip's field the thigh's share fades out smoothly
+ * between 1 and 8 cm above the joint. The same holds for anything bound to the thigh by
+ * closeness (`bindVertex`): measured along the femur, the side of the hip above the greater
+ * trochanter counted as level with the joint, and the top of the fascia lata went half
+ * with the thigh.
+ */
+const HIP_CREST = [0.01, 0.08];
+
+/**
  * Creases: the inside of a bent knee or elbow, where the thigh meets the calf or the upper
  * arm meets the forearm. Skinning bends each side about the joint, but nothing stopped
  * one side passing into the other: at a knee bent to 90 degrees the hamstring tendons
@@ -340,6 +353,17 @@ const CREASE_SLOTS = CREASES.length * 2;
 
 /** The joints at either end of each limb bone a muscle can insert on, top first. */
 const LIMB_AXIS = { thigh: ['hip', 'knee'], upperarm: ['gh', 'el'] };
+/**
+ * The lat, teres major and pec lie on the wall of the trunk, and as the arm moves their
+ * fibres slide along it. Moved straight towards where the insertion went, the lat over the
+ * lower corner of the shoulder blade lifted 1 to 2 cm off the ribs and out of the skin
+ * when the elbows went back under a squat bar. So away from the tendon, the part of the
+ * shift that points out of the body (out from the trunk's long axis, at this depth) is
+ * taken away; near the tendon, where the fold of the armpit really does lift away with
+ * the arm, it is kept.
+ */
+const WALL_Z = 0.0;
+const WALL_FREE = [0.5, 0.9];
 /** One slot per anchored muscle per side, for the insertion displacements the shader reads. */
 const ANCHOR_SLOTS = ANCHORED.length * 2;
 const anchorSlot = (def, side) => ANCHORED.indexOf(def) + (side === 'r' ? ANCHORED.length : 0);
@@ -353,6 +377,7 @@ const CLOUD_BONES = () => [0, boneIndex('thigh', 'l'), boneIndex('thigh', 'r'), 
 const TRUNK_TAG = { 0: 0, 1: 5, 2: 6, 3: 7, 4: 8 };
 
 const _creaseRest = new THREE.Vector3();
+const _wallN = new THREE.Vector3();
 
 /**
  * The rotation that carries direction `a1` onto `a2`, and turns `b1` (the part of it across
@@ -398,6 +423,10 @@ export class Rig {
     this.anchorBone = new Float32Array(ANCHOR_SLOTS);
     for (const side of SIDES) for (const def of ANCHORED) this.anchorBone[anchorSlot(def, side)] = boneIndex(def.limb, side);
     this.uAnchorBone = { value: this.anchorBone };
+    // Which insertions' muscles lie on the trunk's wall and slide along it (see WALL_Z).
+    this.anchorWall = new Float32Array(ANCHOR_SLOTS);
+    for (const side of SIDES) for (const def of ANCHORED) this.anchorWall[anchorSlot(def, side)] = def.start ? 1 : 0;
+    this.uAnchorWall = { value: this.anchorWall };
     // One slot per crease per side: posed joint (w on/off), posed plane normal pointing to
     // the upper bone (w squeeze), posed inside-of-the-bend direction (w reach), the rest
     // joint, the rest normal, the bones (upper, lower, second lower), and the hinge axis
@@ -529,7 +558,9 @@ export class Rig {
         const carried = (q.gh.y - q.wr.y) * Math.sin(a1);
         const inner = axis + armShift + carried - (axis - r.innerWr) * g('forearm2');
         const need = Math.max(0, (r.innerWr - r.hipWr) - (inner - hip));
-        a2 = Math.asin(Math.min(0.45, need / L2));
+        // The arm is held further out from the shoulder: an elbow cannot bend sideways, so
+        // bending the forearm out to clear the hip was a pose no arm can make.
+        a2 = Math.asin(Math.min(0.45, need / Math.max(0.2, q.gh.y - q.wr.y)));
       }
       // Thighs against each other.
       let a3 = 0;
@@ -541,8 +572,7 @@ export class Rig {
         drop = Math.max(drop, q.hip.distanceTo(q.knee) * (1 - Math.cos(a3)));
       }
       biggest = Math.max(biggest, a1, a2, a3);
-      pose[`upperarm.${side}`] = { quat: rotZ(m * a1) };
-      pose[`forearm1.${side}`] = { quat: rotZ(m * a2) };
+      pose[`upperarm.${side}`] = { quat: rotZ(m * (a1 + a2)) };
       pose[`thigh.${side}`] = { quat: rotZ(m * a3) };
       pose[`shin.${side}`] = { quat: rotZ(-m * a3) };
     }
@@ -567,6 +597,8 @@ export class Rig {
         match: FOLLOW_SKIN,
         bones: new Set([0, boneIndex('lumbar'), boneIndex('thigh', 'l'), boneIndex('thigh', 'r')]),
         anchorBone: this.anchorBone,
+        cap: { bones: [boneIndex('thigh', 'l'), boneIndex('thigh', 'r')], to_bone: 0,
+          from: this.p.l.hip.y + HIP_CREST[0], to: this.p.l.hip.y + HIP_CREST[1] },
       },
     ];
   }
@@ -1123,8 +1155,29 @@ export class Rig {
     return this.trunkBone((part.bb[0][2] + part.bb[1][2]) / 2);
   }
 
-  bindVertex(x, y, z, out, mode, group, only = null) {
-    const side = x >= 0 ? 'l' : 'r';
+  bindVertex(x, y, z, out, mode, group, only = null, partSide = null) {
+    // A sided part's points all go with its own limb: read off each point's position, the
+    // strip of the left fascia lata that crosses the midline at the groin went with the
+    // right thigh.
+    const side = partSide || (x >= 0 ? 'l' : 'r');
+    this._bindVertex(x, y, z, out, mode, group, only, side);
+    if (group !== 'leg') return out;
+    // Above the hip joint, on the outer side of the hip, the thigh lets go (see HIP_CREST).
+    // Behind and inside the joint the thigh's own blend already does.
+    const hip = this.p[side].hip, hipY = hip.y;
+    if (y <= hipY + HIP_CREST[0]) return out;
+    const outer = smoothstep(0, 0.04, Math.abs(x) - Math.abs(hip.x));
+    if (outer <= 0) return out;
+    const thigh = boneIndex('thigh', side), w = Math.min(1, out[2]);
+    const share = (out[0] === thigh ? w : 0) + (w < 1 && out[1] === thigh ? 1 - w : 0);
+    if (share <= 0) return out;
+    const keep = share * (1 - outer * smoothstep(hipY + HIP_CREST[0], hipY + HIP_CREST[1], y)), trunk = this.trunkBone(y);
+    if (keep <= 0.001) { out[0] = trunk; out[1] = trunk; out[2] = 1; }
+    else { out[0] = thigh; out[1] = trunk; out[2] = keep; }
+    return out;
+  }
+
+  _bindVertex(x, y, z, out, mode, group, only = null, side = x >= 0 ? 'l' : 'r') {
     let { best, d: bestD, t: bestT } = this._nearest(x, y, z, side, group, only);
     // A point whose nearest spot on its segment is the far end lies beyond that joint, so it
     // belongs to the next segment along, measured along that one. Chosen by distance alone,
@@ -1280,7 +1333,7 @@ export class Rig {
     }
     const out = [0, 0, 1];
     for (let i = 0; i < n; i++) {
-      this.bindVertex(pos.getX(i), pos.getY(i), pos.getZ(i), out, cls.mode, cls.group, cls.only);
+      this.bindVertex(pos.getX(i), pos.getY(i), pos.getZ(i), out, cls.mode, cls.group, cls.only, part.side || null);
       arr[i * 3] = out[0]; arr[i * 3 + 1] = out[1]; arr[i * 3 + 2] = out[2];
     }
     // A bone is rigid. Bound point by point, its ends blended with the next bone over, so
@@ -1559,8 +1612,18 @@ export class Rig {
     if (w >= 1.5) {
       // Fibre vertex: carried by its trunk bone, then shifted by its share of the stretch.
       const f = w - 2, s = b * 3;
+      const rx = v.x, rz = v.z;
       this._skin(a, a, 1, v);
-      return v.set(v.x + f * this.anchorDisp[s], v.y + f * this.anchorDisp[s + 1], v.z + f * this.anchorDisp[s + 2]);
+      let dx = f * this.anchorDisp[s], dy = f * this.anchorDisp[s + 1], dz = f * this.anchorDisp[s + 2];
+      if (this.anchorWall[b]) {
+        const n = _wallN.set(rx, 0, rz - WALL_Z);
+        if (n.lengthSq() > 1e-8) {
+          n.normalize().transformDirection(this._m[a]);
+          const out = dx * n.x + dy * n.y + dz * n.z, keep = 1 - smoothstep(WALL_FREE[0], WALL_FREE[1], f);
+          if (out > 0) { dx -= keep * out * n.x; dy -= keep * out * n.y; dz -= keep * out * n.z; }
+        }
+      }
+      return v.set(v.x + dx, v.y + dy, v.z + dz);
     }
     const R = this.dqReal, D = this.dqDual;
     let qa0 = R[a * 4], qa1 = R[a * 4 + 1], qa2 = R[a * 4 + 2], qa3 = R[a * 4 + 3];
@@ -2362,6 +2425,7 @@ uniform vec4 uBoneReal[${BONE_COUNT}];
 uniform vec4 uBoneDual[${BONE_COUNT}];
 uniform vec3 uAnchorDisp[${ANCHOR_SLOTS}];
 uniform float uAnchorBone[${ANCHOR_SLOTS}];
+uniform float uAnchorWall[${ANCHOR_SLOTS}];
 uniform float uPosed;
 uniform vec4 uCrJ[${CREASE_SLOTS}];
 uniform vec4 uCrM[${CREASE_SLOTS}];
@@ -2411,7 +2475,20 @@ vec3 sharirPose(vec3 p) {
   vec3 r = sharirQ.xyz;
   vec3 t = 2.0 * (sharirQ.w * sharirD.xyz - sharirD.w * r + cross(r, sharirD.xyz));
   vec3 q = sharirRotate(p) + t;
-  if (aSkin.z > 1.5) q += min(aSkin.z - 2.0, 4.0 - aSkin.z) * uAnchorDisp[int(aSkin.y + 0.5)];
+  if (aSkin.z > 1.5) {
+    int slot = int(aSkin.y + 0.5);
+    vec3 shift = min(aSkin.z - 2.0, 4.0 - aSkin.z) * uAnchorDisp[slot];
+    // On the trunk's wall: slide along it, never lift off it (WALL_Z in rig.js).
+    if (uAnchorWall[slot] > 0.5 && aSkin.z < 2.999) {
+      vec3 nr = vec3(p.x, 0.0, p.z - ${WALL_Z.toFixed(4)});
+      if (dot(nr, nr) > 1e-8) {
+        vec3 n = sharirRotate(normalize(nr));
+        float lift = dot(shift, n), keep = 1.0 - smoothstep(${WALL_FREE[0].toFixed(3)}, ${WALL_FREE[1].toFixed(3)}, aSkin.z - 2.0);
+        if (lift > 0.0) shift -= keep * lift * n;
+      }
+    }
+    q += shift;
+  }
   return q;
 }
 // The crease contact (CREASES in rig.js; Rig.creasePoint does the same on the CPU).
@@ -2467,6 +2544,7 @@ export function patchForRig(material, rig) {
     shader.uniforms.uBoneDual = rig.uDual;
     shader.uniforms.uAnchorDisp = rig.uAnchor;
     shader.uniforms.uAnchorBone = rig.uAnchorBone;
+    shader.uniforms.uAnchorWall = rig.uAnchorWall;
     shader.uniforms.uPosed = rig.enabled;
     for (const [k, u] of Object.entries(rig.uCrease)) shader.uniforms['uCr' + k] = u;
     const marker = 'transformed = morphBody(transformed);';

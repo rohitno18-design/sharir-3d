@@ -123,9 +123,21 @@ adductors keep their own binding: given the skin's weights near the groin, they 
 
 The lat, teres major and pec major are bound along their fibres from where each muscle
 starts: its far edge seen from the insertion, and the midline for the lat's spine and the
-pec's breastbone. Each point takes its side from its own muscle. Read from its position, the
-strip of the left lat over the spine went with the right arm, and the lats tore apart along
-the back whenever the humerus turned.
+pec's breastbone. Away from the tendon they slide along the trunk's wall and never lift off
+it (`WALL_Z`), so the lat over the shoulder blade stays under the skin when the elbows go
+back under a squat bar.
+
+Every sided part takes its side from its own part, never from which side of the midline a
+point lies. Read from position, the strip of the left lat over the spine went with the
+right arm and the lats tore apart along the back; the strip of the left fascia lata at the
+groin went with the right thigh and tore in every lift.
+
+Above the hip joint, on the outer side of the hip, the thigh's share fades out over 7 cm
+(`HIP_CREST`): the iliotibial tract and the fascia lata are fixed to the rim of the pelvis
+there. With the femur turning out at the bottom of a squat, their tops had torn.
+
+A heavy body standing in Explore holds its arms a little further out from the shoulder to
+clear its hips. It used to bend the forearm sideways at the elbow, which no elbow can do.
 
 ## Creases: where two sides of a bend meet
 
