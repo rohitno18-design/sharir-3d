@@ -165,6 +165,7 @@ export class BatchedBody {
       const skin = this.batches.find(b => b.system === 'integumentary');
       const muscle = this.batches.find(b => b.system === 'muscular');
       if (skin && muscle) followSkin(skin.mesh.geometry, muscle.mesh.geometry, (slot) => this.parts[slot], rig.skinField());
+      if (skin) rig.collectCreaseSamples(skin.mesh.geometry, (slot) => this.parts[slot]);
     }
     this._findDominantBones();
     return this;

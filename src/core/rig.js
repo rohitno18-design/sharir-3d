@@ -281,6 +281,48 @@ const ANCHORED = [
  * list: given the skin's weights near the groin, they tore.
  */
 const FOLLOW_SKIN = /^(gluteus|piriformis|superior gemellus|inferior gemellus|obturator internus|quadratus femoris|iliotibial tract|intermuscular gluteal|gluteal|tensor fasciae|trochanteric|piriformis fascia|obturator fascia)/i;
+/**
+ * Creases: the inside of a bent knee or elbow, where the thigh meets the calf or the upper
+ * arm meets the forearm. Skinning bends each side about the joint, but nothing stopped
+ * one side passing into the other: at a knee bent to 90 degrees the hamstring tendons
+ * curled round the crease and into the calf. Each crease is a contact surface instead: the
+ * plane through the joint that halves the angle between the two bones. Tissue that would
+ * cross it is squeezed into a thin layer on its own side, deepest crossing nearest the
+ * plane, so the order of the layers is kept and the skin stays outermost.
+ *
+ * Before that, tissue shared between the two bones is lifted out of the crease. Blended
+ * half and half, a tendon behind the knee swings round the joint on a circle and sinks
+ * into the crease, where it made a U-turn. A real tendon runs straight across the back of
+ * a bent knee like a bowstring: out to the corner where the back of the thigh and the back
+ * of the calf meet. Shared tissue on the inside of the bend is lifted that far, fully at
+ * an even share and not at all where one bone carries it alone, and never by more than
+ * half its depth, so a very deep bend does not throw it out.
+ *
+ * The front of the hip is a crease too. At the bottom of a deep squat the hip bends about
+ * 120 degrees and the front of the thigh swung up into the side of the belly: in the Skin
+ * view the lower belly looked folded in. There only the thigh's tissue is held back. The
+ * hip joint lies deep and the belly sits well in front of it, so the contact is not a
+ * plane through the joint: it is moved, pose by pose, to the underside of the belly over
+ * that thigh (sampled from the skin once at load, `collectCreaseSamples`), and the thigh
+ * presses flat against it. The belly itself is left where it is. What counts as thigh is
+ * read from the binding, not from height, so the pelvis, the groin and the pelvic floor
+ * below the joint are never moved.
+ *
+ * from/at/to are the joints along the two bones (or `up`, a direction in the upper bone,
+ * for the pelvis); prox is the upper bone, dist the lower one(s); reach is how far from the
+ * joint a point can be and still be in the crease; squeeze is the depth of the layer
+ * crossing tissue is pressed into; thighOnly holds back only the lower bone's tissue;
+ * bowstring lifts shared tissue out of the crease.
+ */
+const CREASES = [
+  { from: 'hip', at: 'knee', to: 'ankle', prox: 'thigh', dist: ['shin'], reach: 0.17, squeeze: 0.012, bowstring: true },
+  // No bowstring at the elbow: folded right up in a front rack, the corner it lifts to runs
+  // far out and it stretched the forearm muscles and the skin of the elbow.
+  { from: 'gh', at: 'el', to: 'wr', prox: 'upperarm', dist: ['forearm1', 'forearm2'], reach: 0.13, squeeze: 0.008 },
+  { up: [0, 1, 0], at: 'hip', to: 'knee', prox: 'root', also: 'lumbar', dist: ['thigh'], reach: 0.32, squeeze: 0.015, thighOnly: true },
+];
+const CREASE_SLOTS = CREASES.length * 2;
+
 /** The joints at either end of each limb bone a muscle can insert on, top first. */
 const LIMB_AXIS = { thigh: ['hip', 'knee'], upperarm: ['gh', 'el'] };
 /** One slot per anchored muscle per side, for the insertion displacements the shader reads. */
@@ -294,6 +336,8 @@ const anchorSlot = (def, side) => ANCHORED.indexOf(def) + (side === 'r' ? ANCHOR
 const CLOUD_BONES = () => [0, boneIndex('thigh', 'l'), boneIndex('thigh', 'r'), boneIndex('shin', 'l'), boneIndex('shin', 'r'),
   boneIndex('lumbar'), boneIndex('thorax'), boneIndex('neck'), boneIndex('head')];
 const TRUNK_TAG = { 0: 0, 1: 5, 2: 6, 3: 7, 4: 8 };
+
+const _creaseRest = new THREE.Vector3();
 
 export class Rig {
   constructor(registry, groups = null) {
@@ -324,6 +368,13 @@ export class Rig {
     this.anchorBone = new Float32Array(ANCHOR_SLOTS);
     for (const side of SIDES) for (const def of ANCHORED) this.anchorBone[anchorSlot(def, side)] = boneIndex(def.limb, side);
     this.uAnchorBone = { value: this.anchorBone };
+    // One slot per crease per side: posed joint (w on/off), posed plane normal pointing to
+    // the upper bone (w squeeze), posed inside-of-the-bend direction (w reach), the rest
+    // joint, the rest normal, the bones (upper, lower, second lower), and the hinge axis
+    // (w: the sine of half the angle between the bones), posed and at rest, and the side
+    // of the straight limb that becomes the inside of the bend.
+    this.crease = ['J', 'M', 'B', 'RJ', 'RM', 'Bone', 'H', 'RH', 'RN'].reduce((o, k) => (o[k] = new Float32Array(CREASE_SLOTS * 4), o), {});
+    this.uCrease = Object.fromEntries(Object.entries(this.crease).map(([k, v]) => [k, { value: v }]));
     this.enabled = { value: 0 };
     this.anchors = { l: [], r: [] };
     this._m = Array.from({ length: BONE_COUNT }, () => new THREE.Matrix4());
@@ -1310,6 +1361,7 @@ export class Rig {
       this.dqDual.set([0, 0, 0, 0], i * 4);
     }
     this.anchorDisp.fill(0);
+    this.crease.J.fill(0);
     this.enabled.value = 0;
   }
 
@@ -1336,17 +1388,23 @@ export class Rig {
    * CPU mirror of the shader's skinning, for measurement and anything that needs to know
    * exactly where a vertex ends up. Takes a point already in morphed rest space.
    */
-  skinPoint(a, b, w, v) {
+  skinPoint(a, b, w, v, mask = 0) {
+    const rest = _creaseRest.copy(v);
+    this._skin(a, b, w, v);
+    return this.creasePoint(rest, v, a, b, w, mask);
+  }
+
+  _skin(a, b, w, v) {
     if (w >= 2.999) {
       // Past the insertion: blend from stretching with it to turning with the bone.
       const g = w - 3, s = b * 3, k = 1 - g;
-      this.skinPoint(this.anchorBone[b], a, g, v);
+      this._skin(this.anchorBone[b], a, g, v);
       return v.set(v.x + k * this.anchorDisp[s], v.y + k * this.anchorDisp[s + 1], v.z + k * this.anchorDisp[s + 2]);
     }
     if (w >= 1.5) {
       // Fibre vertex: carried by its trunk bone, then shifted by its share of the stretch.
       const f = w - 2, s = b * 3;
-      this.skinPoint(a, a, 1, v);
+      this._skin(a, a, 1, v);
       return v.set(v.x + f * this.anchorDisp[s], v.y + f * this.anchorDisp[s + 1], v.z + f * this.anchorDisp[s + 2]);
     }
     const R = this.dqReal, D = this.dqDual;
@@ -1389,7 +1447,153 @@ export class Rig {
       this._writeDual(i, this._m[i]);
     }
     this._writeAnchors();
+    this._writeCreases();
     this.enabled.value = 1;
+  }
+
+  /**
+   * For the creases that hold back only the lower bone's tissue: skin points of the trunk
+   * just over each thigh, which decide where the contact sits in each pose.
+   */
+  collectCreaseSamples(skin, partAt) {
+    const P = skin.attributes.position, S = skin.attributes.aSkin, M = skin.attributes.aMorphMask, A = skin.attributes.aPartIndex;
+    this.creaseSamples = {};
+    CREASES.forEach((c, ci) => {
+      if (!c.thighOnly) return;
+      for (const side of SIDES) {
+        const J = this.p[side][c.at], low = boneIndex(c.dist[0], side), out = [];
+        for (let i = 0; i < P.count; i++) {
+          const part = partAt(A.getX(i));
+          if (!part || (part.sx && part.sx !== 'm') || /hair|nail/i.test(part.n)) continue;
+          const a = S.getX(i), b = S.getY(i), w = Math.min(1, S.getZ(i));
+          const share = (a === low ? w : 0) + (w < 1 && b === low ? 1 - w : 0);
+          if (share > 0.15) continue;
+          const x = P.getX(i), y = P.getY(i), z = P.getZ(i);
+          if (Math.abs(x - J.x) > 0.08 || z < J.z + 0.02 || y < J.y - 0.03 || y > J.y + 0.2) continue;
+          out.push([x, y, z, a, b, S.getZ(i), M ? M.getX(i) : 1]);
+        }
+        const step = Math.max(1, Math.floor(out.length / 300));
+        this.creaseSamples[ci + side] = out.filter((_, k) => k % step === 0);
+      }
+    });
+  }
+
+  /** Where each crease's contact plane is in this pose. See CREASES. */
+  _writeCreases() {
+    const C = this.crease;
+    const J = new THREE.Vector3(), P = new THREE.Vector3(), D = new THREE.Vector3();
+    const rj = new THREE.Vector3(), rp = new THREE.Vector3(), rd = new THREE.Vector3();
+    const m = new THREE.Vector3(), b = new THREE.Vector3();
+    CREASES.forEach((c, ci) => SIDES.forEach((side, si) => {
+      const k = (ci * 2 + si) * 4;
+      const prox = c.prox === 'root' ? 0 : boneIndex(c.prox, side), dist = boneIndex(c.dist[0], side);
+      C.J[k + 3] = 0;
+      if (!this.p[side]?.[c.at]) return;
+      this.morphedJoint(side, c.at, rj); this.morphedJoint(side, c.to, rd);
+      if (c.up) rp.set(...c.up).multiplyScalar(0.2).add(rj);
+      else this.morphedJoint(side, c.from, rp);
+      // The joint and the far end of the lower bone move with the lower bone; the upper
+      // joint with the upper bone.
+      J.copy(rj).applyMatrix4(this._m[dist]);
+      P.copy(rp).applyMatrix4(this._m[prox]).sub(J).normalize();
+      D.copy(rd).applyMatrix4(this._m[boneIndex(c.dist[c.dist.length - 1], side)]).sub(J).normalize();
+      b.copy(P).add(D);
+      const bend = b.length();
+      // Nearly straight, there is no inside of the bend and no crease.
+      if (bend < 0.12) return;
+      b.divideScalar(bend);
+      m.copy(P).sub(D).normalize();
+      // At rest: the plane's normal along the straight limb, the hinge axis (the same line
+      // in both bones, so the posed axis turned back by the lower bone), and the side of the
+      // straight limb that becomes the inside of the bend.
+      const restM = rp.clone().sub(rj).normalize().sub(rd.clone().sub(rj).normalize()).normalize();
+      const back = new THREE.Quaternion().setFromRotationMatrix(this._m[dist]).invert();
+      const h = new THREE.Vector3().crossVectors(P, D).normalize();
+      const hr = h.clone().applyQuaternion(back);
+      const rn = b.clone().applyQuaternion(back);
+      rn.addScaledVector(restM, -rn.dot(restM)).addScaledVector(hr, -rn.dot(hr)).normalize();
+      C.J.set([J.x, J.y, J.z, 1], k);
+      C.M.set([m.x, m.y, m.z, c.squeeze], k);
+      C.B.set([b.x, b.y, b.z, c.reach], k);
+      C.H.set([h.x, h.y, h.z, Math.sqrt(Math.max(0.05, 1 - (bend / 2) ** 2))], k);
+      C.RJ.set([rj.x, rj.y, rj.z, c.thighOnly ? 1 : 0], k);
+      C.RM.set([restM.x, restM.y, restM.z, c.bowstring ? 1 : 0], k);
+      C.RH.set([hr.x, hr.y, hr.z, 0], k);
+      // Where the contact sits along the plane's normal: through the joint, or for the hip
+      // at the underside of the belly over this thigh.
+      let offset = 0;
+      const samples = c.thighOnly && this.creaseSamples?.[ci + side];
+      if (samples?.length) {
+        const v = new THREE.Vector3(), o = new THREE.Vector3(), all = [];
+        for (const [x, y, z, sa, sbn, sw, mask] of samples) {
+          v.set(x, y, z);
+          this.morphVertex(v, o, sa, sbn, sw, mask);
+          this._skin(sa, sbn, sw, o);
+          o.sub(J);
+          if (o.dot(b) > 0) all.push(o.dot(m));
+        }
+        all.sort((p, q) => p - q);
+        if (all.length) offset = Math.max(-0.025, Math.min(0, all[Math.floor(all.length * 0.05)]));
+      }
+      C.RN.set([rn.x, rn.y, rn.z, offset], k);
+      C.Bone.set([prox, dist, c.dist[1] ? boneIndex(c.dist[1], side) : c.also ? boneIndex(c.also) : dist, 0], k);
+    }));
+  }
+
+  /**
+   * The crease contact, on the CPU, exactly as the shader does it. `rest` is the point
+   * before posing (after the morph), `v` the posed point, changed in place.
+   */
+  creasePoint(rest, v, a, b, w, mask = 0) {
+    // Fibre-bound muscles (the lats, pecs and the psoas deep in front of the hip) stretch
+    // along their own fibres and are left out: pushed by the hip's contact, the psoas was
+    // driven out through the skin of the groin.
+    if (!this.enabled.value || w > 1.5 || (mask & 4)) return v;
+    const C = this.crease;
+    for (let k = 0; k < CREASE_SLOTS * 4; k += 4) {
+      if (C.J[k + 3] < 0.5) continue;
+      const on = (x) => x === C.Bone[k] || x === C.Bone[k + 1] || x === C.Bone[k + 2];
+      if (!on(a) || (w < 0.999 && !on(b))) continue;
+      const rx = rest.x - C.RJ[k], ry = rest.y - C.RJ[k + 1], rz = rest.z - C.RJ[k + 2];
+      if (rx * rx + ry * ry + rz * rz > C.B[k + 3] * C.B[k + 3]) continue;
+      // How much of this point the lower bone carries.
+      const low = (a === C.Bone[k + 1] ? Math.min(1, w) : 0) + (w < 0.999 && b === C.Bone[k + 1] ? 1 - w : 0);
+      let side = rx * C.RM[k] + ry * C.RM[k + 1] + rz * C.RM[k + 2] >= 0 ? 1 : -1, hold = 1;
+      if (C.RJ[k + 3] > 0.5) {                     // only the lower bone's tissue is held back
+        if (low < 0.35) continue;
+        side = -1; hold = smoothstep(0.35, 0.65, low);
+      }
+      let dx = v.x - C.J[k], dy = v.y - C.J[k + 1], dz = v.z - C.J[k + 2];
+      const sb = dx * C.B[k] + dy * C.B[k + 1] + dz * C.B[k + 2];
+      if (sb <= 0) continue;
+      // The bowstring: shared tissue out to the corner of the crease.
+      const up = a === C.Bone[k] ? Math.min(1, w) : 0, share = up + (w < 0.999 && b === C.Bone[k] ? 1 - w : 0);
+      const even = C.RM[k + 3] > 0.5 ? 4 * share * (1 - share) : 0;
+      if (even > 0.001) {
+        // How deep under the surface of the bend this tissue lies: its distance from the
+        // straight limb's axis at rest, leaving out the hinge's own direction.
+        const am = rx * C.RM[k] + ry * C.RM[k + 1] + rz * C.RM[k + 2], ah = rx * C.RH[k] + ry * C.RH[k + 1] + rz * C.RH[k + 2];
+        const ex = rx - C.RM[k] * am - C.RH[k] * ah, ey = ry - C.RM[k + 1] * am - C.RH[k + 1] * ah, ez = rz - C.RM[k + 2] * am - C.RH[k + 2] * ah;
+        // Only the inside of the limb (the back of the knee, the front of the elbow), and
+        // fading out before the edge of the crease.
+        const r = ex * C.RN[k] + ey * C.RN[k + 1] + ez * C.RN[k + 2];
+        const reach = C.B[k + 3], far = Math.sqrt(rx * rx + ry * ry + rz * rz);
+        const fade = 1 - smoothstep(0.55 * reach, reach, far);
+        const lift = even * fade * Math.min(0.5 * Math.max(0, r), Math.max(0, r / C.H[k + 3] - sb));
+        if (lift > 0) {
+          v.set(v.x + C.B[k] * lift, v.y + C.B[k + 1] * lift, v.z + C.B[k + 2] * lift);
+          dx = v.x - C.J[k]; dy = v.y - C.J[k + 1]; dz = v.z - C.J[k + 2];
+        }
+      }
+      // The hip's shifted contact applies near the surface only: deep tissue by the joint
+      // is never pushed out towards the skin.
+      const deep = C.RN[k + 3] ? smoothstep(0.05, 0.09, Math.sqrt(rx * rx + ry * ry + rz * rz)) : 0;
+      const sd = side * (dx * C.M[k] + dy * C.M[k + 1] + dz * C.M[k + 2] - C.RN[k + 3] * deep), q = C.M[k + 3];
+      if (sd >= q) continue;
+      const push = hold * side * (q * Math.exp((sd - q) / q) - sd);
+      v.set(v.x + C.M[k] * push, v.y + C.M[k + 1] * push, v.z + C.M[k + 2] * push);
+    }
+    return v;
   }
 
   /** One bone's transform in its parent's frame: rotate about its own (morphed) joint centre. */
@@ -1961,6 +2165,15 @@ uniform vec4 uBoneDual[${BONE_COUNT}];
 uniform vec3 uAnchorDisp[${ANCHOR_SLOTS}];
 uniform float uAnchorBone[${ANCHOR_SLOTS}];
 uniform float uPosed;
+uniform vec4 uCrJ[${CREASE_SLOTS}];
+uniform vec4 uCrM[${CREASE_SLOTS}];
+uniform vec4 uCrB[${CREASE_SLOTS}];
+uniform vec4 uCrRJ[${CREASE_SLOTS}];
+uniform vec4 uCrRM[${CREASE_SLOTS}];
+uniform vec4 uCrBone[${CREASE_SLOTS}];
+uniform vec4 uCrH[${CREASE_SLOTS}];
+uniform vec4 uCrRH[${CREASE_SLOTS}];
+uniform vec4 uCrRN[${CREASE_SLOTS}];
 vec4 sharirQ; vec4 sharirD;
 bool sharirReady = false;
 void sharirBlend() {
@@ -2003,6 +2216,45 @@ vec3 sharirPose(vec3 p) {
   if (aSkin.z > 1.5) q += min(aSkin.z - 2.0, 4.0 - aSkin.z) * uAnchorDisp[int(aSkin.y + 0.5)];
   return q;
 }
+// The crease contact (CREASES in rig.js; Rig.creasePoint does the same on the CPU).
+bool sharirOnCrease(float x, vec4 bones) {
+  return abs(x - bones.x) < 0.5 || abs(x - bones.y) < 0.5 || abs(x - bones.z) < 0.5;
+}
+vec3 sharirCrease(vec3 rest, vec3 q, float mask) {
+  if (uPosed < 0.5 || aSkin.z > 1.5 || mod(floor(mask / 4.0), 2.0) > 0.5) return q;
+  vec3 sk = aSkin;
+  for (int c = 0; c < ${CREASE_SLOTS}; c++) {
+    if (uCrJ[c].w < 0.5) continue;
+    if (!sharirOnCrease(sk.x, uCrBone[c]) || (sk.z < 0.999 && !sharirOnCrease(sk.y, uCrBone[c]))) continue;
+    vec3 r = rest - uCrRJ[c].xyz;
+    if (dot(r, r) > uCrB[c].w * uCrB[c].w) continue;
+    float side = dot(r, uCrRM[c].xyz) >= 0.0 ? 1.0 : -1.0, hold = 1.0;
+    if (uCrRJ[c].w > 0.5) {
+      float low = (abs(sk.x - uCrBone[c].y) < 0.5 ? min(sk.z, 1.0) : 0.0)
+                + (sk.z < 0.999 && abs(sk.y - uCrBone[c].y) < 0.5 ? 1.0 - sk.z : 0.0);
+      if (low < 0.35) continue;
+      side = -1.0; hold = smoothstep(0.35, 0.65, low);
+    }
+    vec3 d = q - uCrJ[c].xyz;
+    float sb = dot(d, uCrB[c].xyz);
+    if (sb <= 0.0) continue;
+    float share = (abs(sk.x - uCrBone[c].x) < 0.5 ? min(sk.z, 1.0) : 0.0)
+                + (sk.z < 0.999 && abs(sk.y - uCrBone[c].x) < 0.5 ? 1.0 - sk.z : 0.0);
+    float even = uCrRM[c].w > 0.5 ? 4.0 * share * (1.0 - share) : 0.0;
+    if (even > 0.001) {
+      vec3 e = r - uCrRM[c].xyz * dot(r, uCrRM[c].xyz) - uCrRH[c].xyz * dot(r, uCrRH[c].xyz);
+      float fade = 1.0 - smoothstep(0.55 * uCrB[c].w, uCrB[c].w, length(r));
+      float depth = max(0.0, dot(e, uCrRN[c].xyz));
+      float lift = even * fade * min(0.5 * depth, max(0.0, depth / uCrH[c].w - sb));
+      q += uCrB[c].xyz * lift;
+      d = q - uCrJ[c].xyz;
+    }
+    float sd = side * (dot(d, uCrM[c].xyz) - uCrRN[c].w * smoothstep(0.05, 0.09, length(r))), sq = uCrM[c].w;
+    if (sd >= sq) continue;
+    q += uCrM[c].xyz * (hold * side * (sq * exp((sd - sq) / sq) - sd));
+  }
+  return q;
+}
 `;
 
 /**
@@ -2018,11 +2270,12 @@ export function patchForRig(material, rig) {
     shader.uniforms.uAnchorDisp = rig.uAnchor;
     shader.uniforms.uAnchorBone = rig.uAnchorBone;
     shader.uniforms.uPosed = rig.enabled;
+    for (const [k, u] of Object.entries(rig.uCrease)) shader.uniforms['uCr' + k] = u;
     const marker = 'transformed = morphBody(transformed);';
     if (!shader.vertexShader.includes(marker)) { console.warn('[rig] morph hook not found — pose disabled'); return; }
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', '#include <common>\n' + RIG_GLSL)
-      .replace(marker, 'transformed = sharirPose(morphBody(transformed));');
+      .replace(marker, 'vec3 sharirRest = morphBody(transformed);\n transformed = sharirCrease(sharirRest, sharirPose(sharirRest), aMorphMask);');
     if (shader.vertexShader.includes('#include <beginnormal_vertex>')) {
       shader.vertexShader = shader.vertexShader.replace('#include <beginnormal_vertex>',
         '#include <beginnormal_vertex>\n objectNormal = sharirPoseNormal(objectNormal);');

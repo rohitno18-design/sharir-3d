@@ -102,6 +102,28 @@ along their fibres, the gluteus maximus slid off the buttock at the bottom of a 
 deadlift and the deep rotators and pelvic floor showed through. The hamstrings and
 adductors keep their own binding: given the skin's weights near the groin, they tore.
 
+## Creases: where two sides of a bend meet
+
+Skinning bends each side about the joint but cannot stop one side passing into the other.
+So the knees, the elbows and the front of the hips have a contact (`CREASES` in
+`rig.js`, run in the shader after posing and mirrored on the CPU by `Rig.creasePoint`).
+
+- **Knee and elbow.** The contact is the plane through the joint that halves the angle
+  between the two bones. Tissue that would cross it is squeezed into a thin layer on its
+  own side, so the layers keep their order and the skin stays outermost. Tissue shared
+  between the two bones is first lifted out of the crease, like a bowstring: a hamstring
+  tendon runs straight across the back of a bent knee instead of making a U-turn into it.
+- **Front of the hip.** Only the thigh's tissue is held back, and the contact sits at the
+  underside of the belly over that thigh, found pose by pose from skin samples taken at
+  load. At the bottom of a deep squat the front of the thigh no longer passes into the
+  belly. Deep tissue by the joint and the fibre-bound psoas are left alone: pushed, the
+  psoas came out through the skin of the groin.
+
+Checked by slicing the body front to back and drawing the skin outline over every muscle
+point, and by counting muscle points that end up outside the posed skin. Rays are cast in
+seven directions and a point counts as outside only when six agree, because a single ray
+through a tangle of skin elsewhere gives a false result.
+
 ## Known limits
 
 - **Effort curves are a teaching aid.** Shaped from published EMG studies; EMG cannot
