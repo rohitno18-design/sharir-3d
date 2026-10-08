@@ -431,3 +431,93 @@ export function smoothBindings(geom, passes = 20) {
   }
   sk.needsUpdate = true;
 }
+
+/**
+ * The muscles round the back and side of the hip follow the skin over them.
+ *
+ * Bound by their fibres, each point of the gluteus maximus moved in a straight line
+ * towards where its tendon went. A hip bent to 90 degrees swings that tendon a long way
+ * round the joint, so the middle of the muscle cut across the hip instead of wrapping
+ * round it. The muscle slid down off the buttock, and the deep rotators and the pelvic
+ * floor under it showed through as blades and curled sheets.
+ *
+ * The skin over the same place deforms well: its weights are smoothed across the whole
+ * surface (`blendSkinBindings`). So each point of these muscles takes the skin's weights
+ * near it, averaged with a smooth falloff, and every layer here moves by one smooth field.
+ * Layers moved by one smooth field keep their order: none can pass through another.
+ * Further down the thigh the field fades back into the muscle's own binding.
+ *
+ * @param skin    merged skin geometry, its weights already blended
+ * @param target  merged muscle geometry, rebound in place
+ * @param partAt  slot -> registry part
+ * @param opts    { match, bones (Set of bone indices the field may use), anchorBone }
+ */
+export function followSkin(skin, target, partAt, { match, bones, anchorBone = null, sigma = 0.04, radius = 0.10, fade = [0.52, 0.64], top = 1.12 } = {}) {
+  const SP = skin.attributes.position, SS = skin.attributes.aSkin, SA = skin.attributes.aPartIndex;
+  const TP = target.attributes.position, TS = target.attributes.aSkin, TA = target.attributes.aPartIndex;
+  if (!SS || !TS || !SA || !TA) return 0;
+  const allowed = (a, b, w) => bones.has(a) && (w >= 1 || bones.has(b));
+  // The skin points the field is made from: the body's own surface, and only where it is
+  // carried by the pelvis, lower back and thighs. At rest the hands hang beside the
+  // thighs, and their skin must never pull a hip muscle along.
+  const cell = 0.04, R = Math.ceil(radius / cell), r2 = radius * radius, k2 = 1 / (2 * sigma * sigma);
+  const grid = new Map();
+  const cellKey = (i, j, k) => ((i + 2048) * 4096 + (j + 2048)) * 4096 + (k + 2048);
+  for (let i = 0; i < SP.count; i++) {
+    const part = partAt(SA.getX(i));
+    if (!part || (part.sx && part.sx !== 'm') || /hair|nail|perionyx|eyebrow|eyelash|cilia/i.test(part.n)) continue;
+    if (!allowed(SS.getX(i), SS.getY(i), SS.getZ(i))) continue;
+    const key = cellKey(Math.floor(SP.getX(i) / cell), Math.floor(SP.getY(i) / cell), Math.floor(SP.getZ(i) / cell));
+    let list = grid.get(key);
+    if (!list) grid.set(key, list = []);
+    list.push(i);
+  }
+  const W = new Map();
+  let changed = 0;
+  for (let i = 0; i < TP.count; i++) {
+    const y = TP.getY(i);
+    if (y < fade[0] || y > top) continue;
+    const part = partAt(TA.getX(i));
+    if (!part || !match.test(part.n)) continue;
+    const oa = TS.getX(i), ob = TS.getY(i), oz = TS.getZ(i), fibre = oz > 1.5;
+    if (fibre ? !bones.has(oa) || (anchorBone && !bones.has(anchorBone[ob])) : !allowed(oa, ob, oz)) continue;
+    const x = TP.getX(i), z = TP.getZ(i);
+    const cx = Math.floor(x / cell), cy = Math.floor(y / cell), cz = Math.floor(z / cell);
+    W.clear();
+    let total = 0;
+    for (let dx = -R; dx <= R; dx++) for (let dy = -R; dy <= R; dy++) for (let dz = -R; dz <= R; dz++) {
+      const list = grid.get(cellKey(cx + dx, cy + dy, cz + dz));
+      if (!list) continue;
+      for (const j of list) {
+        const sx = SP.getX(j);
+        if (Math.abs(x) > 0.015 && sx * x < 0) continue;          // never from the other leg
+        const d2 = (sx - x) ** 2 + (SP.getY(j) - y) ** 2 + (SP.getZ(j) - z) ** 2;
+        if (d2 > r2) continue;
+        const g = Math.exp(-d2 * k2), a = SS.getX(j), b = SS.getY(j), w = Math.min(1, Math.max(0, SS.getZ(j)));
+        total += g;
+        W.set(a, (W.get(a) || 0) + g * w);
+        if (w < 1) W.set(b, (W.get(b) || 0) + g * (1 - w));
+      }
+    }
+    if (total < 1e-6) continue;
+    for (const [b, v] of W) W.set(b, v / total);
+    // Down the thigh, back to the muscle's own binding. (A fibre-bound point cannot be
+    // mixed with a weight; these muscles have none that low.)
+    const t = Math.min(1, (y - fade[0]) / (fade[1] - fade[0])), s = t * t * (3 - 2 * t);
+    if (s < 1 && !fibre) {
+      for (const [b, v] of W) W.set(b, v * s);
+      const wa = Math.min(1, oz);
+      W.set(oa, (W.get(oa) || 0) + (1 - s) * wa);
+      if (wa < 1) W.set(ob, (W.get(ob) || 0) + (1 - s) * (1 - wa));
+    }
+    let a = -1, wa = -1, b = -1, wb = 0;
+    for (const [bone, v] of W) {
+      if (v > wa) { b = a; wb = wa; a = bone; wa = v; } else if (v > wb) { b = bone; wb = v; }
+    }
+    if (b < 0 || wb <= 0) TS.setXYZ(i, a, a, 1);
+    else TS.setXYZ(i, a, b, wa / (wa + wb));
+    changed++;
+  }
+  TS.needsUpdate = true;
+  return changed;
+}

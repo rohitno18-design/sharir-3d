@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { computeBoundsTree, disposeBoundsTree } from 'three-mesh-bvh';
 import { EFFECT_KINDS } from '../data/targets.js';
-import { closeSkinGaps, blendSkinBindings, orientSkin, smoothBindings } from './skinweld.js';
+import { closeSkinGaps, blendSkinBindings, orientSkin, smoothBindings, followSkin } from './skinweld.js';
 
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
 THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
@@ -158,6 +158,13 @@ export class BatchedBody {
 
       this.batches.push({ system, mesh });
       for (const it of items) this.batchOf[this.indexOf.get(it.part.id)] = this.batches.length - 1;
+    }
+    // The muscles round the back of the hip move with the skin over them. Done once every
+    // system is merged, because the skin is built after the muscles.
+    if (rig) {
+      const skin = this.batches.find(b => b.system === 'integumentary');
+      const muscle = this.batches.find(b => b.system === 'muscular');
+      if (skin && muscle) followSkin(skin.mesh.geometry, muscle.mesh.geometry, (slot) => this.parts[slot], rig.skinField());
     }
     this._findDominantBones();
     return this;

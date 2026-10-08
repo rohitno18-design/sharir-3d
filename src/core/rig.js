@@ -264,17 +264,23 @@ const ANCHORED = [
   { re: /^subscapularis/i, limb: 'upperarm', trunk: 'girdle', at: 'Lesser tubercle', mode: 'wrap', near: 0.02, far: 0.10 },
   // Psoas and iliacus: from the lumbar spine and pelvis onto the lesser trochanter.
   { re: /^(psoas|iliacus|iliopsoas)/i, limb: 'thigh', trunk: 'root', spine: 'lumbar', at: 'Lesser trochanter', mode: 'fibre' },
-  // The big glute crosses the hip through the widest range of any muscle in the lifts: well
-  // over 120 degrees at the bottom of a squat. Bound by closeness to the thigh, it hinged in
-  // a band over the hip and ballooned out. From the sacrum and ilium to its insertion on the
-  // femur, it stretches evenly along its fibres instead.
-  { re: /^gluteus maximus/i, limb: 'thigh', trunk: 'root', at: 'Gluteal tuberosity', mode: 'fibre' },
-  // The muscles under it, from the pelvis to the top of the femur, move the same way.
-  // Bound the old way while the glute stretched along its fibres, the small rotators moved
-  // differently from the muscle over them and poked out through it in spikes.
-  { re: /^(gluteus medius|gluteus minimus|piriformis|superior gemellus|inferior gemellus|obturator internus)/i, limb: 'thigh', trunk: 'root', at: 'Greater trochanter', mode: 'fibre' },
-  { re: /^(quadratus femoris|obturator externus)/i, limb: 'thigh', trunk: 'root', at: 'Intertrochanteric crest', mode: 'fibre' },
+  // The glutes and the small rotators under them are not here: they follow the skin over
+  // the hip instead (FOLLOW_SKIN below). This one lies in front, under the adductors.
+  { re: /^obturator externus/i, limb: 'thigh', trunk: 'root', at: 'Intertrochanteric crest', mode: 'fibre' },
 ];
+
+/**
+ * The muscles round the back and side of the hip, and the sheets and bursae between them.
+ * They take the skin's smoothed weights near them (`followSkin` in skinweld.js), so in a
+ * hinge or a squat they wrap round the hip together, the way the buttock does.
+ *
+ * Bound along their fibres, the gluteus maximus slid down off the buttock at the bottom of
+ * a Romanian deadlift: the deep rotators and the pelvic floor under it showed through as
+ * blades and curled sheets. Bound by closeness to the thigh, before that, it hinged in a
+ * band over the hip and ballooned out. The hamstrings and the adductors are not in this
+ * list: given the skin's weights near the groin, they tore.
+ */
+const FOLLOW_SKIN = /^(gluteus|piriformis|superior gemellus|inferior gemellus|obturator internus|quadratus femoris|iliotibial tract|intermuscular gluteal|gluteal|tensor fasciae|trochanteric|piriformis fascia|obturator fascia)/i;
 /** The joints at either end of each limb bone a muscle can insert on, top first. */
 const LIMB_AXIS = { thigh: ['hip', 'knee'], upperarm: ['gh', 'el'] };
 /** One slot per anchored muscle per side, for the insertion displacements the shader reads. */
@@ -472,6 +478,15 @@ export class Rig {
    * to it afterwards keeps a second full copy of the atlas in memory for nothing.
    */
   releaseGeometry() { this._geoms = null; }
+
+  /** What `followSkin` needs: which muscles, and which bones the hip's field may use. */
+  skinField() {
+    return {
+      match: FOLLOW_SKIN,
+      bones: new Set([0, boneIndex('lumbar'), boneIndex('thigh', 'l'), boneIndex('thigh', 'r')]),
+      anchorBone: this.anchorBone,
+    };
+  }
 
   /**
    * The skin over the front of the chest, kept as a small point set so a bar can be laid
@@ -1214,10 +1229,10 @@ export class Rig {
    * Encoded as (trunkBone, anchorSlot, 2 + fraction), so a weight of 2 or more tells the
    * shader this vertex stretches rather than swings.
    *
-   * Some of a muscle runs on past its insertion, down along the bone: the lower glute
-   * wraps the femur below the gluteal tuberosity on its way to the iliotibial tract.
-   * Shifted with the insertion but not turned, that tissue kept pointing the old way when
-   * the hip folded, and stuck out behind the thigh in spikes. It turns with the bone
+   * Some of a muscle runs on past its insertion, down along the bone (the lower glute did,
+   * on its way to the iliotibial tract, when it was bound this way). Shifted with the
+   * insertion but not turned, that tissue kept pointing the old way when the joint folded,
+   * and stuck out in spikes. It turns with the bone
    * instead, encoded as 3 + share (0 = stretches with the insertion, 1 = rides the bone),
    * blending in over the first few centimetres past the insertion.
    */

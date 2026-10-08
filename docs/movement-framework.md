@@ -87,14 +87,20 @@ bar, with the bends lying across the forearms. The lying triceps extension uses 
 
 ## Muscles that cross the hip and shoulder
 
-The lats, pecs, teres major, psoas and the glutes and deep hip rotators are bound by their
-fibres (`ANCHORED` in `rig.js`): each point moves towards the insertion's new place in
-proportion to how far along the muscle it sits, so the muscle stretches instead of
-swinging. Tissue that runs on past the insertion, down along the bone (the lower glute on
-its way to the iliotibial tract), turns with the bone instead. It blends in over the first
-few centimetres past the insertion. "Past" is measured along the way the fibres run and
-only counts close to the bone. Measured along the bone, a lat lying beside a hanging arm
-was taken for tendon and tore.
+The lats, pecs, teres major, psoas and obturator externus are bound by their fibres
+(`ANCHORED` in `rig.js`): each point moves towards the insertion's new place in proportion
+to how far along the muscle it sits, so the muscle stretches instead of swinging. Tissue
+that runs on past the insertion, down along the bone, turns with the bone instead. It
+blends in over the first few centimetres past the insertion. "Past" is measured along the
+way the fibres run and only counts close to the bone.
+
+The glutes, the small rotators under them, the iliotibial tract and the sheets and bursae
+round the back of the hip follow the skin over them (`FOLLOW_SKIN` in `rig.js`,
+`followSkin` in `skinweld.js`). Each point takes the skin's smoothed weights near it, so
+every layer there moves by one smooth field and none can pass through another. Bound
+along their fibres, the gluteus maximus slid off the buttock at the bottom of a Romanian
+deadlift and the deep rotators and pelvic floor showed through. The hamstrings and
+adductors keep their own binding: given the skin's weights near the groin, they tore.
 
 ## Known limits
 
