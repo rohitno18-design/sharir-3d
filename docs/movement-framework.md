@@ -102,6 +102,31 @@ along their fibres, the gluteus maximus slid off the buttock at the bottom of a 
 deadlift and the deep rotators and pelvic floor showed through. The hamstrings and
 adductors keep their own binding: given the skin's weights near the groin, they tore.
 
+## Elbows, forearms and knees
+
+- **The elbow and the knee are hinges.** Each bends about one fixed axis (the line between
+  the epicondyles at the lower end of the humerus or femur) and about nothing else. The
+  solvers (`solveArm`, `solveLeg` in `rig.js`) find the hinge angle first, from how far the
+  grip or the ankle has to be from the shoulder or hip, and then turn the upper bone as a
+  whole, about its own length as well, to aim the elbow or knee at its pole. Solved as the
+  shortest turn of each bone, the elbow bent 40 to 100 degrees off its axis and the knee
+  110 degrees at the bottom of the squat. With the limb near straight there is nothing to
+  aim, so the upper bone takes its shortest turn and blends into aiming as it bends.
+- **The palm turns the way a real one does.** The ulna stays on the elbow's hinge and the
+  radius rolls round it, carrying the hand, about the line from the head of the radius to
+  the head of the ulna. Both bones are rigid. Soft tissue in the forearm turns with the
+  radius by how far down the forearm it lies. Past 140 degrees of turn the humerus rolls
+  in to share it, as it does for an overhand grip on a hanging bar.
+- **A straight arm is a little shorter than its two bones end to end**, because the elbow
+  carries the forearm out of line and turning the palm down draws the hand in by about a
+  centimetre. `straightReach` gives the real figure, and the lifts plan their reach with it.
+
+The lat, teres major and pec major are bound along their fibres from where each muscle
+starts: its far edge seen from the insertion, and the midline for the lat's spine and the
+pec's breastbone. Each point takes its side from its own muscle. Read from its position, the
+strip of the left lat over the spine went with the right arm, and the lats tore apart along
+the back whenever the humerus turned.
+
 ## Creases: where two sides of a bend meet
 
 Skinning bends each side about the joint but cannot stop one side passing into the other.

@@ -193,6 +193,18 @@ const SHARED_BAND = 0.35;
  * point is that a tight grip is what stops the wrist folding back any further.
  */
 const WRIST_EXTENSION = 16 * Math.PI / 180;
+// The elbow's range on its hinge, from the rest pose. The rest pose's elbow is a little bent,
+// so the arm is straight somewhere below zero: it is found each time, between these.
+const ELBOW_OPEN = -40 * Math.PI / 180;
+const ELBOW_MAX = 145 * Math.PI / 180;
+// The knee folds further than the elbow; past straight it does not go.
+const KNEE_MAX = 155 * Math.PI / 180;
+// Over how much bend (past straight) the upper arm goes from its shortest turn to aiming the
+// elbow at its pole.
+const ELBOW_AIM = [10 * Math.PI / 180, 35 * Math.PI / 180];
+// How far the forearm turns the palm before the humerus starts to help, the way an
+// overhand grip on a hanging bar is shared between the forearm and the shoulder.
+const PRONATION_EASY = 140 * Math.PI / 180;
 /**
  * A closed hand does not hold a bar at right angles to the forearm. The bar lies obliquely
  * across the palm, from the heel under the little finger up to the base of the index
@@ -255,10 +267,12 @@ const trunkOf = (def, side) => def.spine ? boneIndex(def.spine) : (def.trunk ===
 const ANCHORED = [
   // The lat's tendon runs into the floor of the bicipital groove. Its record in this atlas
   // lists only the slip on the scapula, so the landmark is the source here.
-  { re: /^latissimus dorsi/i, limb: 'upperarm', trunk: 'root', spine: 'thorax', at: 'Intertubercular sulcus', mode: 'fibre' },
-  { re: /^teres major/i, limb: 'upperarm', trunk: 'girdle', at: 'Crest of lesser tubercle', mode: 'fibre' },
+  // `start`: measure how far along each fibre a point is from where the muscle starts, so
+  // the start stays put however the humerus turns (see `_skinFibre`).
+  { re: /^latissimus dorsi/i, limb: 'upperarm', trunk: 'root', spine: 'thorax', at: 'Intertubercular sulcus', mode: 'fibre', start: true },
+  { re: /^teres major/i, limb: 'upperarm', trunk: 'girdle', at: 'Crest of lesser tubercle', mode: 'fibre', start: true },
   { re: /pectoralis major/i, limb: 'upperarm', trunk: 'root', spine: 'thorax', at: 'Crest of greater tubercle',
-    record: { muscle: 'Pectoralis major muscle', bone: 'Humerus' }, mode: 'fibre' },
+    record: { muscle: 'Pectoralis major muscle', bone: 'Humerus' }, mode: 'fibre', start: true },
   // The rotator cuff: from the shoulder blade onto the ball of the humerus.
   { re: /^(supraspinatus|infraspinatus|teres minor)/i, limb: 'upperarm', trunk: 'girdle', at: 'Greater tubercle', mode: 'wrap', near: 0.02, far: 0.10 },
   { re: /^subscapularis/i, limb: 'upperarm', trunk: 'girdle', at: 'Lesser tubercle', mode: 'wrap', near: 0.02, far: 0.10 },
@@ -281,6 +295,7 @@ const ANCHORED = [
  * list: given the skin's weights near the groin, they tore.
  */
 const FOLLOW_SKIN = /^(gluteus|piriformis|superior gemellus|inferior gemellus|obturator internus|quadratus femoris|iliotibial tract|intermuscular gluteal|gluteal|tensor fasciae|trochanteric|piriformis fascia|obturator fascia)/i;
+
 /**
  * Creases: the inside of a bent knee or elbow, where the thigh meets the calf or the upper
  * arm meets the forearm. Skinning bends each side about the joint, but nothing stopped
@@ -338,6 +353,21 @@ const CLOUD_BONES = () => [0, boneIndex('thigh', 'l'), boneIndex('thigh', 'r'), 
 const TRUNK_TAG = { 0: 0, 1: 5, 2: 6, 3: 7, 4: 8 };
 
 const _creaseRest = new THREE.Vector3();
+
+/**
+ * The rotation that carries direction `a1` onto `a2`, and turns `b1` (the part of it across
+ * `a1`) to point as nearly as it can along `b2`. Used to place a bent arm as one rigid piece:
+ * the line to the grip onto the line to the target, the elbow towards its pole.
+ */
+function turnFrame(a1, b1, a2, b2) {
+  const x1 = a1.clone().normalize(), x2 = a2.clone().normalize();
+  const y1 = b1.clone().addScaledVector(x1, -b1.dot(x1)), y2 = b2.clone().addScaledVector(x2, -b2.dot(x2));
+  if (y1.lengthSq() < 1e-12 || y2.lengthSq() < 1e-12) return new THREE.Quaternion().setFromUnitVectors(x1, x2);
+  y1.normalize(); y2.normalize();
+  const m1 = new THREE.Matrix4().makeBasis(x1, y1, x1.clone().cross(y1));
+  const m2 = new THREE.Matrix4().makeBasis(x2, y2, x2.clone().cross(y2));
+  return new THREE.Quaternion().setFromRotationMatrix(m2.multiply(m1.transpose()));
+}
 
 export class Rig {
   constructor(registry, groups = null) {
@@ -532,11 +562,13 @@ export class Rig {
 
   /** What `followSkin` needs: which muscles, and which bones the hip's field may use. */
   skinField() {
-    return {
-      match: FOLLOW_SKIN,
-      bones: new Set([0, boneIndex('lumbar'), boneIndex('thigh', 'l'), boneIndex('thigh', 'r')]),
-      anchorBone: this.anchorBone,
-    };
+    return [
+      {
+        match: FOLLOW_SKIN,
+        bones: new Set([0, boneIndex('lumbar'), boneIndex('thigh', 'l'), boneIndex('thigh', 'r')]),
+        anchorBone: this.anchorBone,
+      },
+    ];
   }
 
   /**
@@ -715,7 +747,7 @@ export class Rig {
         if (!c) { console.warn('[rig] missing pivot', k, side); return; }
         q[k] = c;
       }
-      q.fm = q.el.clone().lerp(q.wr, 0.5);                       // forearm twist split
+      this._resolveForearm(side, q);
       if (!this._resolveHand(side, q)) { console.warn('[rig] hand joints missing', side); return; }
       this.p[side] = q;
     }
@@ -801,6 +833,52 @@ export class Rig {
     let far = pts[0];
     for (const v of pts) if (v.distanceToSquared(from) > far.distanceToSquared(from)) far = v;
     return far.clone();
+  }
+
+  /**
+   * The elbow and the forearm, from the bones themselves.
+   *
+   * The elbow is a hinge across the lower end of the humerus: `el` is moved to the middle
+   * of that end (the capsule's box sits 1.4 cm higher, and a hinge turned about the wrong
+   * point slides the ulna off the humerus), and `hinge` runs from the inner to the outer
+   * epicondyle, which is the bend's axis to within a few degrees.
+   *
+   * Turning the palm down does not twist the forearm: the ulna stays on the hinge and the
+   * radius rolls round it, carrying the hand, about the line from the head of the radius
+   * to the head of the ulna. `pron` is that line and `fm`, the pivot of the radius, is its
+   * middle.
+   */
+  _resolveForearm(side, q) {
+    const m = side === 'l' ? 1 : -1;
+    q.hinge = new THREE.Vector3(m, 0, 0);
+    q.pron = q.wr.clone().sub(q.el).normalize();
+    q.fm = q.el.clone().lerp(q.wr, 0.5);
+    const H = this._points(`skeletal:Humerus.${side}`), R = this._points(`skeletal:Radius.${side}`), U = this._points(`skeletal:Ulna.${side}`);
+    if (!H || !R || !U) { console.warn('[rig] forearm bones missing', side); return; }
+    // The arm hangs straight down at rest, so a bone's ends are its highest and lowest points.
+    const end = (pts, frac, top) => {
+      const sorted = pts.slice().sort((a, b) => (top ? b.y - a.y : a.y - b.y));
+      const n = Math.max(1, Math.ceil(pts.length * frac)), c = new THREE.Vector3();
+      for (let i = 0; i < n; i++) c.add(sorted[i]);
+      return c.divideScalar(n);
+    };
+    q.el = end(H, 0.06, false);
+    const lm = (name) => this.registry.parts.find(p => p.k === 'landmark' && p.n === name && p.pos && Math.sign(p.pos[0]) === m);
+    const me = lm('Medial epicondyle of humerus'), le = lm('Lateral epicondyle of humerus');
+    if (me && le) q.hinge = toGl(le.pos).sub(toGl(me.pos)).normalize();
+    // Bending the elbow is a positive turn: it carries the wrist forwards.
+    const fore = q.wr.clone().sub(q.el);
+    if (fore.clone().applyAxisAngle(q.hinge, 0.3).z < fore.z) q.hinge.negate();
+    const head = end(R, 0.04, true), ulnarHead = end(U, 0.04, false);
+    q.pron = ulnarHead.clone().sub(head).normalize();
+    q.fm = head.clone().lerp(ulnarHead, 0.5);
+    // The knee is a hinge too, across the two condyles at the lower end of the femur.
+    // Bending it is a positive turn: it carries the ankle backwards.
+    q.kneeHinge = new THREE.Vector3(m, 0, 0);
+    const mk = lm('Medial epicondyle of femur'), lk = lm('Lateral epicondyle of femur');
+    if (mk && lk) q.kneeHinge = toGl(lk.pos).sub(toGl(mk.pos)).normalize();
+    const shin = q.ankle.clone().sub(q.knee);
+    if (shin.clone().applyAxisAngle(q.kneeHinge, 0.3).z > shin.z) q.kneeHinge.negate();
   }
 
   _resolveHand(side, q) {
@@ -1181,7 +1259,7 @@ export class Rig {
     const n = geom.attributes.position.count;
     const arr = new Float32Array(n * 3);
     const anchor = this.ok ? this._anchorDef(part) : null;
-    if (anchor) return this._skinAnchored(geom, anchor, arr);
+    if (anchor) return this._skinAnchored(geom, anchor, arr, part.side);
     const cls = this.ok ? this.resolveBinding(geom, part) : { mode: 'none' };
     const pos = geom.attributes.position;
     if (cls.mode === 'none') {
@@ -1210,13 +1288,16 @@ export class Rig {
     // lying nearer the upper arm's line than the shoulder girdle's, went with the arm and
     // tore the blade when the arms reached down. So each bone moves as one piece: the
     // shoulder blade and collarbone with the girdle, the rest with whichever segment holds
-    // most of it. The radius and ulna keep their blend, because the forearm's twist is
-    // shared along them.
-    if (part.sys === 'skeletal' && cls.mode === 'limb' && !/radius|ulna/i.test(part.n)) {
+    // most of it. The ulna stays on the elbow's hinge and the radius rolls round it (see
+    // `_resolveForearm`); blended, they had bent like rubber and the head of the radius
+    // came 4 cm out of the elbow.
+    if (part.sys !== 'skeletal' && cls.group === 'arm') this._forearmTurn(geom, arr);
+    if (part.sys === 'skeletal' && cls.mode === 'limb') {
       let bone;
       // The long bones by name: a bone can arrive as several pieces, and a vote taken piece
       // by piece gave the lower end of the humerus to the forearm.
-      const OWN = [[/scapula|clavicle/i, 'girdle'], [/humerus/i, 'upperarm'], [/femur/i, 'thigh'], [/tibia|fibula|patella/i, 'shin']];
+      const OWN = [[/scapula|clavicle/i, 'girdle'], [/humerus/i, 'upperarm'], [/^ulna$/i, 'forearm1'], [/^radius$/i, 'forearm2'],
+        [/femur/i, 'thigh'], [/tibia|fibula|patella/i, 'shin']];
       const own = OWN.find(([re]) => re.test(part.n));
       if (own) {
         let sx = 0;
@@ -1239,7 +1320,31 @@ export class Rig {
    * Weight every vertex by its distance from the muscle's insertion: fully with the limb
    * within `near` of the tendon, fully with the trunk beyond `far`, smooth in between.
    */
-  _skinAnchored(geom, def, arr) {
+  /**
+   * Soft tissue in the forearm turns with the radius by how far down the forearm it lies:
+   * not at all at the elbow, fully at the wrist, the way skin and muscle spiral round a
+   * forearm turning the palm down. Only points carried by the forearm alone change; the
+   * blends onto the upper arm at the elbow and the hand at the wrist are kept.
+   */
+  _forearmTurn(geom, arr) {
+    const pos = geom.attributes.position;
+    for (let i = 0; i < pos.count; i++) {
+      const side = pos.getX(i) >= 0 ? 'l' : 'r', q = this.p[side];
+      const f1 = boneIndex('forearm1', side), f2 = boneIndex('forearm2', side);
+      const a = arr[i * 3], b = arr[i * 3 + 1], w = arr[i * 3 + 2];
+      if ((a !== f1 && a !== f2) || (w < 0.999 && b !== f1 && b !== f2)) continue;
+      const ax = q.wr.x - q.el.x, ay = q.wr.y - q.el.y, az = q.wr.z - q.el.z, L2 = ax * ax + ay * ay + az * az;
+      const t = ((pos.getX(i) - q.el.x) * ax + (pos.getY(i) - q.el.y) * ay + (pos.getZ(i) - q.el.z) * az) / L2;
+      const turn = smoothstep(0.08, 0.92, t);
+      arr[i * 3] = f2; arr[i * 3 + 1] = f1; arr[i * 3 + 2] = turn;
+    }
+  }
+
+  _skinAnchored(geom, def, arr, partSide = null) {
+    // Which side's insertion a point belongs to is its muscle's side. Read off the point's
+    // own position, the strip of the left lat that crosses the midline of the back went
+    // with the right arm, and the two lats tore apart along the spine.
+    const sideOf = (x) => partSide || (x >= 0 ? 'l' : 'r');
     const pos = geom.attributes.position;
     const pt = new THREE.Vector3();
     const anchorOf = { l: this.anchors.l.find(e => e.def === def), r: this.anchors.r.find(e => e.def === def) };
@@ -1249,15 +1354,15 @@ export class Rig {
     // trail behind the arm. So the ramp starts from this muscle's own closest point.
     const closest = { l: Infinity, r: Infinity };
     for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i), side = x >= 0 ? 'l' : 'r', a = anchorOf[side];
+      const x = pos.getX(i), side = sideOf(x), a = anchorOf[side];
       if (!a) continue;
       pt.set(x, pos.getY(i), pos.getZ(i));
       closest[side] = Math.min(closest[side], pt.distanceTo(a.point));
     }
-    if (def.mode === 'fibre') return this._skinFibre(geom, def, arr, anchorOf, closest);
+    if (def.mode === 'fibre') return this._skinFibre(geom, def, arr, anchorOf, closest, sideOf);
     for (let i = 0; i < pos.count; i++) {
       const x = pos.getX(i);
-      const side = x >= 0 ? 'l' : 'r';
+      const side = sideOf(x);
       const a = anchorOf[side];
       if (!a) { arr[i * 3] = 0; arr[i * 3 + 1] = 0; arr[i * 3 + 2] = 1; continue; }
       pt.set(x, pos.getY(i), pos.getZ(i));
@@ -1287,7 +1392,7 @@ export class Rig {
    * instead, encoded as 3 + share (0 = stretches with the insertion, 1 = rides the bone),
    * blending in over the first few centimetres past the insertion.
    */
-  _skinFibre(geom, def, arr, anchorOf, closest) {
+  _skinFibre(geom, def, arr, anchorOf, closest, sideOf) {
     const pos = geom.attributes.position;
     const pt = new THREE.Vector3(), _d = new THREE.Vector3(), _e = new THREE.Vector3();
     // The way the fibres run on each side: from the middle of the muscle to its insertion.
@@ -1296,7 +1401,7 @@ export class Rig {
     const [j0, j1] = LIMB_AXIS[def.limb];
     const mid = { l: new THREE.Vector3(), r: new THREE.Vector3() }, count = { l: 0, r: 0 };
     for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i), side = x >= 0 ? 'l' : 'r';
+      const x = pos.getX(i), side = sideOf(x);
       if (!anchorOf[side]) continue;
       mid[side].x += x; mid[side].y += pos.getY(i); mid[side].z += pos.getZ(i); count[side]++;
     }
@@ -1307,20 +1412,70 @@ export class Rig {
       mid[side].divideScalar(count[side]);
       along[side] = { dir: a.point.clone().sub(mid[side]).normalize(), bone: new THREE.Line3(q[j0].clone(), q[j1].clone()) };
     }
-    const farthest = { l: 0, r: 0 };
+    // How far along its fibre each point sits: 0 where the muscle starts on the trunk, 1 at
+    // the tendon. Measured as plain distance from the insertion against the muscle's
+    // farthest point, the lat's start on the spine counted as halfway along, because its
+    // corner on the hip bone lies further off; it slid 3 to 5 cm out of the back when the
+    // humerus turned. So the start is found in each direction: seen from the insertion, the
+    // muscle's far edge that way is where its fibres begin. Directions in which the muscle
+    // ends close to the insertion (round the tendon) have no start of their own.
+    const BINS = 10;
+    const binOf = (dx, dy, dz) => {
+      const l = Math.abs(dx) + Math.abs(dy) + Math.abs(dz) || 1;
+      let u = dx / l, v = dy / l;
+      if (dz < 0) { const ou = u; u = (1 - Math.abs(v)) * (ou >= 0 ? 1 : -1); v = (1 - Math.abs(ou)) * (v >= 0 ? 1 : -1); }
+      return Math.min(BINS - 1, Math.floor((u * 0.5 + 0.5) * BINS)) * BINS + Math.min(BINS - 1, Math.floor((v * 0.5 + 0.5) * BINS));
+    };
+    const dist = new Float32Array(pos.count), bin = new Int16Array(pos.count);
+    const reach = { l: new Float32Array(BINS * BINS), r: new Float32Array(BINS * BINS) }, farthest = { l: 0, r: 0 };
     for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i), side = x >= 0 ? 'l' : 'r', a = anchorOf[side];
+      const x = pos.getX(i), side = sideOf(x), a = anchorOf[side];
       if (!a) continue;
-      pt.set(x, pos.getY(i), pos.getZ(i));
-      farthest[side] = Math.max(farthest[side], pt.distanceTo(a.point));
+      const dx = x - a.point.x, dy = pos.getY(i) - a.point.y, dz = pos.getZ(i) - a.point.z;
+      dist[i] = Math.hypot(dx, dy, dz); bin[i] = binOf(dx, dy, dz);
+      reach[side][bin[i]] = Math.max(reach[side][bin[i]], dist[i]);
+      farthest[side] = Math.max(farthest[side], dist[i]);
     }
+    // Any part of the muscle on the body's midline is on its start too: the lat's line
+    // along the spine, the pec's along the breastbone.
+    const start = { l: [], r: [] };
+    for (let i = 0; i < pos.count && def.start; i++) {
+      const x = pos.getX(i), side = sideOf(x), r = reach[side][bin[i]];
+      if (!anchorOf[side]) continue;
+      if (Math.abs(x) < 0.015 || (r >= 0.4 * farthest[side] && dist[i] >= r - 0.012)) start[side].push(i);
+    }
+    // A few hundred of them, in a flat array, are plenty to measure against and quick to search.
+    const starts = {};
+    for (const side of SIDES) {
+      const list = start[side], step = Math.max(1, Math.floor(list.length / 400)), flat = [];
+      for (let k = 0; k < list.length; k += step) flat.push(pos.getX(list[k]), pos.getY(list[k]), pos.getZ(list[k]));
+      starts[side] = new Float32Array(flat);
+    }
+    const nearestStart = (side, x, y, z) => {
+      const f = starts[side];
+      let best = Infinity;
+      for (let k = 0; k < f.length; k += 3) {
+        const dx = f[k] - x, dy = f[k + 1] - y, dz = f[k + 2] - z, d = dx * dx + dy * dy + dz * dz;
+        if (d < best) best = d;
+      }
+      return Math.sqrt(best);
+    };
     for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i), side = x >= 0 ? 'l' : 'r', a = anchorOf[side];
+      const x = pos.getX(i), side = sideOf(x), a = anchorOf[side];
       const trunk = trunkOf(def, side);
       if (!a) { arr[i * 3] = trunk; arr[i * 3 + 1] = 0; arr[i * 3 + 2] = 1; continue; }
       pt.set(x, pos.getY(i), pos.getZ(i));
-      const span = Math.max(0.02, farthest[side] - closest[side]);
-      let f = Math.min(1, Math.max(0, 1 - (pt.distanceTo(a.point) - closest[side]) / span));
+      const toEnd = Math.max(0, dist[i] - closest[side]);
+      let f;
+      if (def.start) {
+        let toStart = nearestStart(side, pt.x, pt.y, pt.z);
+        if (!Number.isFinite(toStart)) toStart = farthest[side];
+        f = toStart + toEnd > 1e-6 ? toStart / (toStart + toEnd) : 1;
+      } else {
+        // The small fans round the hip turn with the thigh about a joint they wrap closely;
+        // plain distance from the insertion suits them.
+        f = Math.min(1, Math.max(0, 1 - toEnd / Math.max(0.02, farthest[side] - closest[side])));
+      }
       // How far past the insertion, along the fibres, and how close to the bone itself.
       const past = _d.copy(pt).sub(a.point).dot(along[side].dir);
       const onBone = smoothstep(0.06, 0.035, pt.distanceTo(along[side].bone.closestPointToPoint(pt, true, _e)));
@@ -1617,43 +1772,6 @@ export class Rig {
   }
 
   // ---------- inverse kinematics ----------
-  /**
-   * Generic two-bone solve. Given a root joint S, a middle joint E and an end G — all in
-   * morphed space — find the rotations that put G on `target` with the middle joint falling
-   * towards `pole`.
-   */
-  _solve2(S, E, G, target, pole) {
-    const L1 = S.distanceTo(E);
-    const L2 = E.distanceTo(G);
-    const restD1 = E.clone().sub(S).normalize();
-    const restD2 = G.clone().sub(E).normalize();
-
-    const toT = target.clone().sub(S);
-    let dist = toT.length();
-    const reach = (L1 + L2) * 0.999;
-    if (dist > reach) { toT.multiplyScalar(reach / dist); dist = reach; }
-    if (dist < Math.abs(L1 - L2) * 1.001) { dist = Math.abs(L1 - L2) * 1.001; toT.setLength(dist); }
-    const dirT = toT.clone().normalize();
-
-    // Law of cosines gives the angle between the line to the target and the first bone.
-    const cosA = (L1 * L1 + dist * dist - L2 * L2) / (2 * L1 * dist);
-    const a = Math.acos(Math.min(1, Math.max(-1, cosA)));
-
-    // Rotating about (dirT x pole) by a POSITIVE angle carries dirT towards the pole:
-    // (dirT x pole) x dirT is the part of the pole perpendicular to dirT.
-    const axis = new THREE.Vector3().crossVectors(dirT, pole);
-    if (axis.lengthSq() < 1e-8) axis.set(0, 0, 1); else axis.normalize();
-    const d1 = dirT.clone().applyAxisAngle(axis, a);
-    const mid = S.clone().addScaledVector(d1, L1);
-    const d2 = S.clone().add(toT).sub(mid).normalize();
-
-    const q1 = new THREE.Quaternion().setFromUnitVectors(restD1, d1);
-    // The second bone's rotation is expressed in the first's rotated frame, so the target
-    // direction has to come back through the first bone.
-    const d2Local = d2.clone().applyQuaternion(q1.clone().invert());
-    const swing2 = new THREE.Quaternion().setFromUnitVectors(restD2, d2Local);
-    return { q1, swing2, restD2 };
-  }
 
   /**
    * A joint centre after the body morph but before any pose — i.e. where it sits on a
@@ -1729,10 +1847,30 @@ export class Rig {
    */
   reachRatio(side, target, girdle = null, morphed = false) {
     if (!this.p[side]) return 0;
-    const S = this._morphed(side, 'gh'), E = this._morphed(side, 'el');
-    const G = this._gripAfterWrist(side);
+    const S = this._morphed(side, 'gh');
     const { T } = this._armTarget(side, target, girdle, morphed);
-    return S.distanceTo(T) / (S.distanceTo(E) + E.distanceTo(G));
+    return S.distanceTo(T) / this.straightReach(side);
+  }
+
+  /**
+   * How far the grip can be from the shoulder with the elbow straight. Less than the two
+   * bones end to end: a real elbow carries the forearm a little out of line, and turning
+   * the palm down rolls the radius over the ulna and draws the hand in by about a
+   * centimetre. The shortest over the palm's usual turns, so a lift never plans a reach
+   * the arm cannot make.
+   */
+  straightReach(side) {
+    const S = this._morphed(side, 'gh'), E = this._morphed(side, 'el'), Fm = this._morphed(side, 'fm');
+    const { hinge, pron } = this.p[side];
+    const G0 = this._gripAfterWrist(side), m = side === 'l' ? 1 : -1;
+    let reach = Infinity;
+    for (const turn of [0, 90, 140, 170]) {
+      const Gp = G0.clone().sub(Fm).applyAxisAngle(pron, m * turn * Math.PI / 180).add(Fm);
+      let best = 0;
+      for (let t = -40; t <= 20; t += 1) best = Math.max(best, S.distanceTo(Gp.clone().sub(E).applyAxisAngle(hinge, t * Math.PI / 180).add(E)));
+      reach = Math.min(reach, best);
+    }
+    return reach;
   }
 
   get lockoutReach() { return LOCKOUT_REACH; }
@@ -1801,15 +1939,32 @@ export class Rig {
   }
 
   /**
-   * @param opts.pronation  fallback forearm twist, radians, if no alignment is asked for
+   * Put one hand on its grip target.
+   *
+   * The elbow is a hinge: the forearm bends about one fixed axis across the lower end of
+   * the humerus and about nothing else. Solved as the shortest turn that pointed the
+   * forearm at the grip, it bent and twisted 40 to 60 degrees off that axis in most lifts,
+   * and 100 degrees with the bar on the back. So the hinge angle comes first, from how far
+   * the grip has to be from the shoulder, and the upper arm then turns as a whole, about
+   * its own length as well, to put that bent arm where it has to go with the elbow towards
+   * `pole`.
+   *
+   * The palm turns the way a real one does: the radius rolls round the ulna, carrying the
+   * hand, about the line from the head of the radius to the head of the ulna (see
+   * `_resolveForearm`). That line is not the line to the grip, so turning the palm moves
+   * the grip; the turn, the wrist, the hinge and the upper arm are settled together over a
+   * few passes.
+   *
+   * @param opts.pronation  palm turn, radians, if no alignment is asked for
    * @param opts.girdle     this side's girdle pose entry, so the arm solves in its frame
    * @param opts.rootQ      the root's rotation, needed to know which way the hand faces
    * @param opts.align      world direction the bar runs, from this hand's index finger side
    *                        to its little finger side
+   * @param opts.wrist      how far the wrist bends back, if not the pressing default. A bar
+   *                        resting in the heel of the hand, as in the front rack of an
+   *                        overhead press, needs far more.
    */
   solveArm(side, target, pole, opts = {}) {
-    // `wrist`: how far the wrist bends back, if not the pressing default. A bar resting in
-    // the heel of the hand, as in the front rack of an overhead press, needs far more.
     const { pronation = 0, girdle = null, rootQ = null, align = null, morphed = false, wrist = WRIST_EXTENSION } = opts;
     if (!this.p[side]) return {};
     // Solve in morphed space, not rest space. The bone matrices rotate vertices that have
@@ -1818,6 +1973,8 @@ export class Rig {
     // any body that is not the source model's size.
     const S = this._morphed(side, 'gh');
     const E = this._morphed(side, 'el');
+    const Fm = this._morphed(side, 'fm');
+    const { hinge, pron } = this.p[side];
     // The shoulder blade moves before the arm does, so by the time this solves, the arm's
     // whole frame has already shifted. Bring the target and the elbow hint back through
     // that rotation — otherwise a few degrees at the collarbone slides the grip several
@@ -1826,72 +1983,91 @@ export class Rig {
     if (inv) pole = pole.clone().transformDirection(inv);
     const girdleQ = girdle?.rot ? new THREE.Quaternion().setFromEuler(new THREE.Euler(...girdle.rot, 'XYZ')) : new THREE.Quaternion();
     const outer = (rootQ ? rootQ.clone() : new THREE.Quaternion()).multiply(girdleQ);
-
-    // The hand has to hold the bar the same way all through the rep, and that takes two
-    // turns: the forearm twisting about its own axis, and the wrist bending sideways. The
-    // twist can only line the bar up if the bar already makes the right angle with the
-    // forearm, and setting that angle is the wrist's job. The wrist also moves the grip,
-    // which moves the arm, so the three are settled together over a few passes.
     const bh = this.barInHand(side);
-    let dev = 0, sol = null, G = null, wq = null;
-    const passes = align ? 3 : 1;
-    for (let pass = 0; pass < passes; pass++) {
+    const turnAbout = (v, centre, axis, angle) => v.clone().sub(centre).applyAxisAngle(axis, angle).add(centre);
+
+    let dev = 0, phi = (side === 'l' ? 1 : -1) * pronation, roll = 0, straightness = 1;
+    let wq, q1, qBend, qTurn;
+    const solve = () => {
       wq = this.wristQuat(side, dev, wrist);
-      G = this._gripAfterWrist(side, wq);
-      sol = this._solve2(S, E, G, T, pole);
-      if (!align) break;
-      const base = outer.clone().multiply(sol.q1).multiply(sol.swing2);
-      const a = sol.restD2;
-      // The bar's direction as the forearm sees it, before any twist.
-      const want = align.clone().normalize().applyQuaternion(base.clone().invert()).dot(a);
-      const along = (x) => bh.clone().applyQuaternion(this.wristQuat(side, x, wrist)).dot(a);
-      // Bisect for the side-bend that gives the bar that angle to the forearm. Out of the
-      // wrist's range, it stops at the limit and the forearm twist does what it can.
-      let lo = -WRIST_RADIAL_MAX, hi = WRIST_ULNAR_MAX;
-      const rising = along(hi) > along(lo);
-      if ((want - along(lo)) * (rising ? 1 : -1) <= 0) dev = lo;
-      else if ((want - along(hi)) * (rising ? 1 : -1) >= 0) dev = hi;
-      else {
-        for (let i = 0; i < 24; i++) {
-          const mid = (lo + hi) / 2;
-          if ((along(mid) < want) === rising) lo = mid; else hi = mid;
+      const Gp = turnAbout(this._gripAfterWrist(side, wq), Fm, pron, phi);
+      // The hinge angle that puts the grip as far from the shoulder as the target is. The
+      // straighter the arm, the further the grip; past either end of the elbow's range the
+      // arm stops there and the grip falls short of the target.
+      const reach = (th) => S.distanceTo(turnAbout(Gp, E, hinge, th));
+      // Fully straight is where the grip is furthest from the shoulder; the elbow opens no
+      // further than that.
+      let a0 = ELBOW_OPEN, a1 = 0.3;
+      for (let i = 0; i < 40; i++) {
+        const m1 = a0 + (a1 - a0) / 3, m2 = a1 - (a1 - a0) / 3;
+        if (reach(m1) < reach(m2)) a0 = m1; else a1 = m2;
+      }
+      const straight = (a0 + a1) / 2;
+      const want = Math.max(reach(ELBOW_MAX), Math.min(reach(straight), S.distanceTo(T)));
+      let lo = straight, hi = ELBOW_MAX;
+      for (let i = 0; i < 40; i++) { const mid = (lo + hi) / 2; if (reach(mid) > want) lo = mid; else hi = mid; }
+      const bend = (lo + hi) / 2;
+      const G = turnAbout(Gp, E, hinge, bend);
+      // Where the elbow points only means something once it bends. Nearly straight, the bent
+      // arm's plane is a sliver, and aiming it at the pole turned the humerus 30 to 45
+      // degrees on its own axis for nothing, dragging the lat round with it. So the upper
+      // arm takes the shortest turn onto the target while the arm is near straight, and
+      // turns to aim the elbow as it bends. Both carry the grip onto the target, so any
+      // mix of them does too.
+      const short = new THREE.Quaternion().setFromUnitVectors(G.clone().sub(S).normalize(), T.clone().sub(S).normalize());
+      const aimed = turnFrame(G.clone().sub(S), E.clone().sub(S), T.clone().sub(S), pole);
+      const aim = smoothstep(straight + ELBOW_AIM[0], straight + ELBOW_AIM[1], bend);
+      q1 = short.slerp(aimed, aim);
+      straightness = 1 - aim;
+      // A turn of the humerus about the line from the shoulder to the grip leaves the grip
+      // where it is.
+      if (roll) q1.premultiply(new THREE.Quaternion().setFromAxisAngle(T.clone().sub(S).normalize(), roll));
+      qBend = new THREE.Quaternion().setFromAxisAngle(hinge, bend);
+      qTurn = new THREE.Quaternion().setFromAxisAngle(pron, phi);
+    };
+    solve();
+    if (align) {
+      const w0 = align.clone().normalize();
+      for (let pass = 0; pass < 4; pass++) {
+        // The wrist's side-bend sets the angle the bar makes with the forearm's turning
+        // axis, which no turn about that axis can change. Out of the wrist's range it stops
+        // at the limit and the turn does what it can.
+        const forearm = outer.clone().multiply(q1).multiply(qBend).multiply(qTurn);
+        const want = w0.clone().applyQuaternion(forearm.clone().invert()).dot(pron);
+        const along = (x) => bh.clone().applyQuaternion(this.wristQuat(side, x, wrist)).dot(pron);
+        let lo = -WRIST_RADIAL_MAX, hi = WRIST_ULNAR_MAX;
+        const rising = along(hi) > along(lo);
+        if ((want - along(lo)) * (rising ? 1 : -1) <= 0) dev = lo;
+        else if ((want - along(hi)) * (rising ? 1 : -1) >= 0) dev = hi;
+        else {
+          for (let i = 0; i < 24; i++) {
+            const mid = (lo + hi) / 2;
+            if ((along(mid) < want) === rising) lo = mid; else hi = mid;
+          }
+          dev = (lo + hi) / 2;
         }
-        dev = (lo + hi) / 2;
+        // Then roll the radius until the bar line in the palm runs along the real bar.
+        const base = outer.clone().multiply(q1).multiply(qBend);
+        const f = pron.clone().applyQuaternion(base).normalize();
+        const k = bh.clone().applyQuaternion(this.wristQuat(side, dev, wrist)).applyQuaternion(qTurn).applyQuaternion(base);
+        const w = w0.clone();
+        k.addScaledVector(f, -k.dot(f)).normalize();
+        w.addScaledVector(f, -w.dot(f)).normalize();
+        phi += Math.atan2(new THREE.Vector3().crossVectors(k, w).dot(f), k.dot(w));
+        // Past an easy turn, the humerus rolls in with it. With the arm near straight the
+        // humerus and the forearm turn about nearly the same line, so the roll takes over
+        // that much of the palm's turn.
+        const over = (Math.abs(phi) - PRONATION_EASY) * Math.sign(phi);
+        if (Math.abs(phi) > PRONATION_EASY && straightness > 0) { roll += over * straightness; phi -= over * straightness; }
+        solve();
       }
     }
-    const { q1, swing2, restD2 } = sol;
-
-    // How far to turn the forearm. A fixed guess is right at one moment of the rep and off
-    // at the others, and the bar then lies diagonally across the fingers. So it is solved:
-    // turn the forearm about its own axis until the bar line in the palm runs along the
-    // real bar. That turn keeps the grip point where it is, because the grip lies on the
-    // forearm's axis.
-    const m = side === 'l' ? 1 : -1;
-    let phi = m * pronation;
-    if (align) {
-      const base = outer.clone().multiply(q1).multiply(swing2);
-      const f = restD2.clone().applyQuaternion(base).normalize();
-      const k = bh.clone().applyQuaternion(wq).applyQuaternion(base);
-      const w = align.clone().normalize();
-      k.addScaledVector(f, -k.dot(f)).normalize();
-      w.addScaledVector(f, -w.dot(f)).normalize();
-      phi = Math.atan2(new THREE.Vector3().crossVectors(k, w).dot(f), k.dot(w));
-    }
-
-    // A twist only leaves the grip alone if the grip lies ON the twist axis, and each
-    // segment spins about its OWN pivot. Elbow, wrist and palm are near-collinear in the
-    // source model, but the morph field is non-linear and bends that line, so each axis is
-    // aimed from its own pivot at the grip rather than reusing the forearm's direction.
-    // The turn is shared out along the forearm so it spirals instead of wringing the wrist.
-    const Fm = this._morphed(side, 'fm');
-    const twist1 = new THREE.Quaternion().setFromAxisAngle(restD2, phi * 0.32);
-    const twist2 = new THREE.Quaternion().setFromAxisAngle(G.clone().sub(Fm).normalize(), phi * 0.68);
     (this.wristDev ||= {})[side] = dev;
 
     return {
       [`upperarm.${side}`]: { quat: q1 },
-      [`forearm1.${side}`]: { quat: swing2.clone().multiply(twist1) },
-      [`forearm2.${side}`]: { quat: twist2 },
+      [`forearm1.${side}`]: { quat: qBend },
+      [`forearm2.${side}`]: { quat: qTurn },
       [`hand.${side}`]: { quat: wq },
     };
   }
@@ -2061,10 +2237,32 @@ export class Rig {
     const E = this._morphed(side, 'knee');
     const G = this._morphed(side, 'ankle');
     const T = targetIsMorphed ? target.clone() : applyMorph(target, new THREE.Vector3(), { tissue: 'bone' });
-    const { q1, swing2 } = this._solve2(S, E, G, T, pole);
+    // The knee is a hinge, like the elbow (see `solveArm`). Solved as the shortest turn of
+    // the shin towards the ankle, it bent 45 degrees off its axis halfway down a squat and
+    // twisted far more at the bottom, because the knees push out over the toes. A real leg
+    // does that by turning the femur out at the hip, and the knee still only bends.
+    const hinge = this.p[side].kneeHinge;
+    const turnAbout = (v, centre, axis, angle) => v.clone().sub(centre).applyAxisAngle(axis, angle).add(centre);
+    const reach = (th) => S.distanceTo(turnAbout(G, E, hinge, th));
+    let a0 = -20 * Math.PI / 180, a1 = 20 * Math.PI / 180;
+    for (let i = 0; i < 40; i++) {
+      const m1 = a0 + (a1 - a0) / 3, m2 = a1 - (a1 - a0) / 3;
+      if (reach(m1) < reach(m2)) a0 = m1; else a1 = m2;
+    }
+    const straight = (a0 + a1) / 2;
+    const want = Math.max(reach(KNEE_MAX), Math.min(reach(straight), S.distanceTo(T)));
+    let lo = straight, hi = KNEE_MAX;
+    for (let i = 0; i < 40; i++) { const mid = (lo + hi) / 2; if (reach(mid) > want) lo = mid; else hi = mid; }
+    const bend = (lo + hi) / 2;
+    const Gb = turnAbout(G, E, hinge, bend);
+    // Nearly straight, where the knee points means nothing, and the femur takes its
+    // shortest turn; as the knee bends, the femur turns to point it at the pole.
+    const short = new THREE.Quaternion().setFromUnitVectors(Gb.clone().sub(S).normalize(), T.clone().sub(S).normalize());
+    const aimed = turnFrame(Gb.clone().sub(S), E.clone().sub(S), T.clone().sub(S), pole);
+    const q1 = short.slerp(aimed, smoothstep(straight + ELBOW_AIM[0], straight + ELBOW_AIM[1], bend));
     return {
       [`thigh.${side}`]: { quat: q1 },
-      [`shin.${side}`]: { quat: swing2 },
+      [`shin.${side}`]: { quat: new THREE.Quaternion().setFromAxisAngle(hinge, bend) },
     };
   }
 
