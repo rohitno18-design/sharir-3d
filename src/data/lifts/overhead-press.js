@@ -14,6 +14,22 @@ import { d, lerp, clamp01, ease, bell, keyCurve, Frame, plantFeet, handsOnBar, j
 const BAR = { radius: 0.0145, flesh: 0.011 };
 const Z = new THREE.Vector3(0, 0, 1);
 const LEAN = d(-6);          // the whole-body lean back at the start
+/**
+ * How far the collarbones rise at lockout. The shoulder blades turn up as the arms go up,
+ * and the collarbones lift with them, about 4 degrees for every 10 the arm rises (Inman's
+ * shoulder rhythm), to some 30 degrees with the arms overhead. With the old 12 degrees the
+ * ball of the humerus turned 167 degrees in its socket, far past the 120 a real shoulder
+ * joint allows, and the back of the deltoid and the skin of the armpit tore.
+ */
+const LOCKOUT_SHRUG = d(28);
+/**
+ * Where the point of each elbow faces. In the rack it points forward and down, in front of
+ * the bar. Locked out overhead it faces out to the side and a little back, with the elbow
+ * creases facing forward and in. Kept pointing forward all the way up, the forearm had to
+ * turn the palm almost 180 degrees to face it forward, past what a forearm can turn.
+ */
+const RACK_POLE = new THREE.Vector3(0.3, -0.45, 0.85);
+const LOCKOUT_POLE = new THREE.Vector3(1, 0, -0.5);
 const smooth = (k) => ease(clamp01(k));
 
 export const OVERHEAD_PRESS = {
@@ -103,8 +119,8 @@ export const OVERHEAD_PRESS = {
     const frame = Frame.lean(rig, lerp(LEAN, 0, k), e.start.clone().lerp(e.top, k));
     const p = { root: frame.entry() };
     plantFeet(rig, frame, p);
-    // The shoulder blades turn up at the top: the shrug that finishes the press.
-    const shrug = d(12) * u * u;
+    // The shoulder blades turn up as the arms rise, and finish with the shrug at the top.
+    const shrug = LOCKOUT_SHRUG * Math.pow(u, 1.3);
     for (const side of SIDES) p[`girdle.${side}`] = { rot: [0, 0, sgn(side) * shrug] };
     // The head goes back to let the bar past the chin, and comes forward "through the
     // window" once the bar is above the forehead.
@@ -123,7 +139,11 @@ export const OVERHEAD_PRESS = {
     handsOnBar(rig, frame, p, {
       at, half: e.half, align: 1, ...BAR,
       wrist: lerp(d(62), d(16), ease(clamp01(u * 2.2))),
-      pole: (side) => new THREE.Vector3(sgn(side) * 0.3, -0.45, 0.85),
+      pole: (side) => {
+        const k = smooth((u - 0.6) / 0.4);
+        const m = new THREE.Vector3(sgn(side), 1, 1);
+        return RACK_POLE.clone().multiply(m).normalize().lerp(LOCKOUT_POLE.clone().multiply(m).normalize(), k).normalize();
+      },
     });
     return p;
   },

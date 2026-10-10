@@ -531,3 +531,96 @@ export function followSkin(skin, target, partAt, { match, bones, anchorBone = nu
   TS.needsUpdate = true;
   return changed;
 }
+
+/**
+ * The skin over the top of the shoulders and the base of the neck moves with the muscles
+ * under it, as far as they move with the shoulder girdle.
+ *
+ * The skin there was bound to the trunk alone. In a shrug the collarbones lift the tops of
+ * the shoulders five or six centimetres, and the trapezius, the deltoid and the bursa
+ * between them came up through skin that stayed where it was: a stiff neck with the
+ * shoulders sliding up past it like pads. Each skin point here now hands the girdle the
+ * share of its trunk weight that the muscle near it moves with the girdle, smoothed so
+ * the skin stretches evenly from the neck out to the shoulder. A muscle bound along its
+ * fibres onto the girdle counts by how far along it the point is.
+ *
+ * Skin that is partly carried by the arm keeps that share. A point's two bones are not
+ * enough for trunk, girdle and arm together, and given only two, the skin over the back
+ * of the shoulder tore where points carried by the arm met points carried by the girdle.
+ * So the skin can take the girdle as a third bone (`aSkin2`: bone, share of the whole).
+ */
+export function skinOverGirdle(skin, muscle, partAt, { girdle, arm, trunk, girdleSlots, y0 = 1.27, y1 = 1.60, radius = 0.045, sigma = 0.018 }) {
+  const SP = skin.attributes.position, SS = skin.attributes.aSkin, SA = skin.attributes.aPartIndex;
+  const MP = muscle.attributes.position, MS = muscle.attributes.aSkin, MA = muscle.attributes.aPartIndex;
+  if (!SS || !MS || !SA || !MA) return 0;
+  if (!skin.attributes.aSkin2) skin.setAttribute('aSkin2', new THREE.BufferAttribute(new Float32Array(SP.count * 2), 2));
+  const S2 = skin.attributes.aSkin2;
+  const cell = 0.02, R = Math.ceil(radius / cell), r2 = radius * radius, k2 = 1 / (2 * sigma * sigma);
+  const cellKey = (i, j, k) => ((i + 2048) * 4096 + (j + 2048)) * 4096 + (k + 2048);
+  const grid = new Map();
+  for (let i = 0; i < MP.count; i++) {
+    const y = MP.getY(i);
+    if (y < y0 - radius || y > y1 + radius) continue;
+    const part = partAt(MA.getX(i));
+    if (!part || (part.sx && part.sx !== 'm')) continue;
+    const key = cellKey(Math.floor(MP.getX(i) / cell), Math.floor(y / cell), Math.floor(MP.getZ(i) / cell));
+    let list = grid.get(key);
+    if (!list) grid.set(key, list = []);
+    list.push(i);
+  }
+  let changed = 0;
+  for (let i = 0; i < SP.count; i++) {
+    const x = SP.getX(i), y = SP.getY(i), z = SP.getZ(i);
+    if (y < y0 || y > y1 || Math.abs(x) < 0.01) continue;
+    const part = partAt(SA.getX(i));
+    if (!part || (part.sx && part.sx !== 'm') || /hair|nail|eyebrow|eyelash|cilia/i.test(part.n)) continue;
+    const oa = SS.getX(i), ob = SS.getY(i), oz = SS.getZ(i);
+    if (oz > 1.5) continue;
+    const G = x >= 0 ? girdle.l : girdle.r;
+    // How much of this point's weight is on the trunk, and where the rest is.
+    const wa = Math.min(1, Math.max(0, oz)), wb = 1 - wa;
+    const wt = (trunk.has(oa) ? wa : 0) + (oa !== ob && trunk.has(ob) ? wb : 0);
+    if (wt <= 0.001) continue;
+    const cx = Math.floor(x / cell), cy = Math.floor(y / cell), cz = Math.floor(z / cell);
+    let total = 0, share = 0;
+    for (let dx = -R; dx <= R; dx++) for (let dy = -R; dy <= R; dy++) for (let dz = -R; dz <= R; dz++) {
+      const list = grid.get(cellKey(cx + dx, cy + dy, cz + dz));
+      if (!list) continue;
+      for (const j of list) {
+        const mx = MP.getX(j);
+        if (mx * x < 0 && Math.abs(mx) > 0.01) continue;           // never from the other shoulder
+        const d2 = (mx - x) ** 2 + (MP.getY(j) - y) ** 2 + (MP.getZ(j) - z) ** 2;
+        if (d2 > r2) continue;
+        const g = Math.exp(-d2 * k2), a = MS.getX(j), b = MS.getY(j), w = MS.getZ(j);
+        total += g;
+        if (w > 1.5) { if (girdleSlots.has(b)) share += g * Math.min(1, w > 2.999 ? 1 : w - 2); }
+        else {
+          const ww = Math.min(1, Math.max(0, w));
+          share += g * ((a === G ? ww : 0) + (b === G && ww < 1 ? 1 - ww : 0));
+        }
+      }
+    }
+    if (total < 1e-6) continue;
+    const s = Math.min(1, share / total);
+    const give = wt * s;                    // the girdle's share of the whole, taken from the trunk
+    if (give < 0.005) continue;
+    if (oa === G || ob === G) {
+      // Already partly on the girdle, with the trunk the other bone: move the trunk's share across.
+      const other = oa === G ? ob : oa, wg = oa === G ? wa : wb;
+      SS.setXYZ(i, G, other, Math.min(1, wg + give));
+    } else if (wt >= 0.999) {
+      // On the trunk alone: keep its own blend down the spine and add the girdle on top.
+      S2.setXY(i, G, give);
+    } else {
+      // Trunk and arm: the trunk gives up its share, the arm keeps its own.
+      const ta = trunk.has(oa), tw = ta ? wa : wb;            // the trunk bone's weight
+      const tFinal = tw - give;
+      const wNew = ta ? tFinal / (1 - give) : 1 - tFinal / (1 - give);
+      SS.setXYZ(i, oa, ob, Math.min(1, Math.max(0, wNew)));
+      S2.setXY(i, G, give);
+    }
+    changed++;
+  }
+  SS.needsUpdate = true; S2.needsUpdate = true;
+  return changed;
+}

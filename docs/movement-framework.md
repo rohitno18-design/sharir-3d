@@ -110,8 +110,13 @@ adductors keep their own binding: given the skin's weights near the groin, they 
   grip or the ankle has to be from the shoulder or hip, and then turn the upper bone as a
   whole, about its own length as well, to aim the elbow or knee at its pole. Solved as the
   shortest turn of each bone, the elbow bent 40 to 100 degrees off its axis and the knee
-  110 degrees at the bottom of the squat. With the limb near straight there is nothing to
-  aim, so the upper bone takes its shortest turn and blends into aiming as it bends.
+  110 degrees at the bottom of the squat. Bent, the upper bone turns to put the joint
+  towards its pole. Nearly straight, where the joint is means nothing, so it turns to lay
+  the hinge across the line to the pole instead, which still points the joint there; the
+  two differ only by the carrying angle, so the blend between them cannot flip. It used to
+  take the shortest turn when straight, and at the top of an overhead press the shortest
+  turn from hanging to overhead is unstable: it spun the humerus 90 degrees in the last
+  few degrees of the lockout and twisted the back of the deltoid into a ribbon.
 - **The palm turns the way a real one does.** The ulna stays on the elbow's hinge and the
   radius rolls round it, carrying the hand, about the line from the head of the radius to
   the head of the ulna. Both bones are rigid. Soft tissue in the forearm turns with the
@@ -139,6 +144,42 @@ there. With the femur turning out at the bottom of a squat, their tops had torn.
 A heavy body standing in Explore holds its arms a little further out from the shoulder to
 clear its hips. It used to bend the forearm sideways at the elbow, which no elbow can do.
 
+## The shoulder girdle and the neck
+
+- **The collarbones rise with the arms.** In the overhead press the shoulder girdle turns
+  up about 4 degrees for every 10 the arm rises (Inman's shoulder rhythm), to 28 degrees at
+  lockout. With 12, the ball of the humerus turned 167 degrees in its socket, far past the
+  120 a real shoulder allows, and the back of the deltoid and the armpit tore.
+- **The elbows turn out at lockout.** In the rack the point of the elbow faces forward and
+  down; locked out overhead it faces out and a little back, so the palm can face forward
+  with the forearm in its middle range (about 70 degrees of turn) instead of at its limit.
+- **Neck to shoulder.** The upper trapezius, levator scapulae and omohyoid run from the
+  neck to a small attachment on the collarbone or shoulder blade, and are bound along their
+  fibres like the lats. In a shrug they shorten from the neck out to the shoulder. Bound by
+  closeness before, their shoulder ends went up with the girdle and the rest stayed on the
+  neck, so the shoulders slid up past a neck that did not change.
+- **The sheets onto the shoulder blade** (serratus anterior, pectoralis minor, the rhomboids,
+  the middle and lower trapezius) blend from the trunk to the girdle by how far along each
+  point is, measured from where the atlas has them attached on the ribs and spine to the
+  girdle's bones (`_skinGirdleBlend`). Bound by closeness, they went from trunk to girdle
+  across 3 cm and tore there in a shrug.
+- **The skin over the shoulders** takes the girdle's share of the muscle under it
+  (`skinOverGirdle` in skinweld.js), as a third bone on top of its own two, so skin that is
+  partly carried by the arm keeps that share. Bound to the trunk alone, it stayed put while
+  the trapezius, the deltoid and the bursa between them came up through it.
+- The atlas has the ascending and descending parts of the trapezius named the wrong way
+  round, and their origins and insertions too. The registry puts them right at load
+  (`SWAPPED_NAMES` in registry.js), so "upper trapezius" lights the upper trapezius.
+
+## Hands on the bar
+
+Each finger closes the way a hand closes on a bar: all three joints bend together, and when
+a bone meets the bar the joints past the leading one give way just enough for it to slide
+over the surface, so the hand keeps closing until the bar sits in the curve of the fingers.
+Stopped the moment anything touched, the fingertip met the bar first, because the bar lies
+in the heel of the hand well below the knuckles, and every lift held the bar in a loose hook
+with the fingers standing 5 cm above it.
+
 ## Creases: where two sides of a bend meet
 
 Skinning bends each side about the joint but cannot stop one side passing into the other.
@@ -162,6 +203,15 @@ seven directions and a point counts as outside only when six agree, because a si
 through a tangle of skin elsewhere gives a false result.
 
 ## Known limits
+
+- **The collarbone and the shoulder blade are one piece.** The real shoulder blade also
+  turns on the end of the collarbone; here it can only turn with it, from the breastbone.
+  So with the arms overhead the shoulder joint still turns about 140 degrees where a real
+  one turns about 120, and the skin of the armpit stretches more than it should.
+- **Muscles do not bulge as they work.** A working muscle is shown by its colour, not by
+  getting shorter and thicker. In a shrug the front of the neck hardly changes, which is
+  true of the real one: the sternocleidomastoid and the muscles in front of the windpipe
+  attach to the breastbone and the inner end of the collarbone, and those barely move.
 
 - **Effort curves are a teaching aid.** Shaped from published EMG studies; EMG cannot
   measure one person's muscles from a screen.

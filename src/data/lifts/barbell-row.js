@@ -117,8 +117,8 @@ export const BARBELL_ROW = {
       effort: (t) => clamp01(0.20 + 0.70 * bell(t, 0.20, 0.12) + 0.45 * bell(t, 0.62, 0.14)),
     },
     {
-      key: 'mid-back', label: 'Rhomboids and middle trapezius', role: 'Prime mover',
-      note: 'Between the shoulder blades. They squeeze the blades together, and work hardest at the top.',
+      key: 'mid-back', label: 'Rhomboids and the middle and lower trapezius', role: 'Prime mover',
+      note: 'Between and below the shoulder blades. They squeeze the blades together and hold them down. They work hardest at the top.',
       match: /rhomboid|transverse part of trapezius|ascending part of trapezius/i,
       effort: (t) => clamp01(0.18 + 0.75 * bell(t, 0.36, 0.10) + 0.35 * bell(t, 0.56, 0.12)),
     },

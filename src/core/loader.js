@@ -51,6 +51,9 @@ export function systemMaterial(system, rig) {
   // hides behind its near side in patches. Opaque, it must: the highlighter switches this
   // per frame from what is actually showing.
   mat.userData.ghostable = TRANSPARENT.has(system);
+  // The skin over the shoulders blends three bones (see skinOverGirdle in skinweld.js).
+  // So do the neck muscles bound along their fibres (Rig.blendFibreTrunks).
+  if (system === 'integumentary' || system === 'muscular') mat.defines = { ...(mat.defines || {}), SHARIR_SKIN3: '' };
   patchMaterial(mat);                      // body morph runs first…
   if (rig) patchForRig(mat, rig);          // …then the pose…
   return mat;                              // …and batching patches on top of both

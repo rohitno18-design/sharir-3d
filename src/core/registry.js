@@ -26,9 +26,22 @@ export function sanitizeNodeName(name) {
   return name.replace(/\s/g, '_').replace(/[\[\]\.:\/]/g, '');
 }
 
+/**
+ * Names the atlas has the wrong way round, in pairs. Its "ascending part" of the trapezius
+ * is the upper part, from the back of the skull out to the collarbone, which anatomy calls
+ * the descending part (it runs down to the shoulder). Its "descending part" is the lower
+ * part, on the back of the ribcage, which runs up to the shoulder blade. The Latin names
+ * came with them.
+ */
+const SWAPPED_NAMES = [
+  ['Ascending part of trapezius muscle', 'Descending part of trapezius muscle'],
+  ['Pars ascendens musculi trapezii', 'Pars descendens musculi trapezii'],
+];
+
 export class Registry {
   constructor(data) {
     this.parts = data.parts;
+    this._fixSwappedNames();
     this.bbox = data.bbox;
     this.byId = new Map();
     this.children = new Map();
@@ -62,6 +75,26 @@ export class Registry {
     this._fixAttachmentKinds();
     this._fixSexTags();
     this._buildSearch();
+  }
+
+  /**
+   * Put right the names in SWAPPED_NAMES. The ids stay as they are: they are what the
+   * model's meshes are looked up by.
+   *
+   * The trapezius's attachments are the wrong way round too. Every part of it arises from
+   * the skull or the spine and inserts on the collarbone or the shoulder blade, but the
+   * atlas has the upper part "arising" from the collarbone and "inserting" on the skull,
+   * and the other two "arising" from the shoulder blade.
+   */
+  _fixSwappedNames() {
+    const swap = new Map();
+    for (const [a, b] of SWAPPED_NAMES) { swap.set(a, b); swap.set(b, a); }
+    for (const p of this.parts) {
+      for (const f of ['n', 'b', 'muscle', 'la']) if (p[f] && swap.has(p[f])) p[f] = swap.get(p[f]);
+      if ((p.k === 'origin' || p.k === 'insertion') && /trapezius/i.test(p.muscle || '')) {
+        p.k = /clavicle|scapula/i.test(p.bone || '') ? 'insertion' : 'origin';
+      }
+    }
   }
 
   /**

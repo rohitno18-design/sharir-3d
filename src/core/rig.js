@@ -141,6 +141,11 @@ const SPANNING_TO_ARM = /pectoralis major|latissimus dorsi|teres major/i;
 //   the ribcage: its digitations sit close enough to the humerus that the envelope claimed
 //   them, and the arm then swung them out through the chest wall.
 const SPANNING_TO_GIRDLE = /pectoralis minor|trapezius|rhomboid|serratus anterior|levator scapulae|subclavius|omohyoid/i;
+//   Of those, the broad sheets that run from the ribs or the spine onto the shoulder blade
+//   move by a smooth blend between the trunk and the girdle (`_skinGirdleBlend`). Bound by
+//   closeness, each went from the trunk to the girdle across 3 cm at the edge of the
+//   girdle's envelope, and a shrug or an overhead lockout tore them there.
+const GIRDLE_BLEND = /^(serratus anterior|pectoralis minor|rhomboid major|rhomboid minor|transverse part of trapezius|ascending part of trapezius)/i;
 // The same across the hip: these run from pelvis or spine onto the femur.
 const SPANNING_LEG = /glute(us|al)|iliopsoas|iliacus|psoas|piriformis|obturator (internus|externus)|gemellus|quadratus femoris|tensor fasciae latae|sartorius|rectus femoris|adductor (longus|brevis|magnus|minimus)|pectineus|gracilis|semitendinosus|semimembranosus|biceps femoris/i;
 // Never movable, whatever the geometry says: the axial skeleton and everything inside it.
@@ -276,6 +281,17 @@ const ANCHORED = [
   // The rotator cuff: from the shoulder blade onto the ball of the humerus.
   { re: /^(supraspinatus|infraspinatus|teres minor)/i, limb: 'upperarm', trunk: 'girdle', at: 'Greater tubercle', mode: 'wrap', near: 0.02, far: 0.10 },
   { re: /^subscapularis/i, limb: 'upperarm', trunk: 'girdle', at: 'Lesser tubercle', mode: 'wrap', near: 0.02, far: 0.10 },
+  // From the neck onto the shoulder girdle. Bound by closeness, their shoulder ends went
+  // up with the collarbone in a shrug and the rest stayed on the neck, so the shoulders
+  // slid up past a neck that did not change. Bound along their fibres, they shorten from
+  // the neck to the shoulder the way the real muscles do. `spineBlend`: each point is
+  // carried by the spine's own blend at its height (head, neck, upper back) before it
+  // shifts, so the skull end goes with the head when the chin tucks for a hip thrust and
+  // the base stays on the back (`blendFibreTrunks`). Carried by the neck alone, the base
+  // swung out through the skin of the back.
+  { re: /^descending part of trapezius/i, limb: 'girdle', spine: 'thorax', spineBlend: true, record: { muscle: 'Descending part of trapezius muscle', bone: 'Clavicle' }, mode: 'fibre', start: true, wall: false },
+  { re: /^levator scapulae/i, limb: 'girdle', spine: 'thorax', spineBlend: true, record: { muscle: 'Levator scapulae', bone: 'Scapula' }, mode: 'fibre', start: true, wall: false },
+  { re: /^omohyoid/i, limb: 'girdle', spine: 'thorax', spineBlend: true, record: { muscle: 'Omohyoid muscle', bone: 'Scapula' }, mode: 'fibre', start: true, wall: false },
   // Psoas and iliacus: from the lumbar spine and pelvis onto the lesser trochanter.
   { re: /^(psoas|iliacus|iliopsoas)/i, limb: 'thigh', trunk: 'root', spine: 'lumbar', at: 'Lesser trochanter', mode: 'fibre' },
   // The glutes and the small rotators under them are not here: they follow the skin over
@@ -352,7 +368,7 @@ const CREASES = [
 const CREASE_SLOTS = CREASES.length * 2;
 
 /** The joints at either end of each limb bone a muscle can insert on, top first. */
-const LIMB_AXIS = { thigh: ['hip', 'knee'], upperarm: ['gh', 'el'] };
+const LIMB_AXIS = { thigh: ['hip', 'knee'], upperarm: ['gh', 'el'], girdle: ['sc', 'gh'] };
 /**
  * The lat, teres major and pec lie on the wall of the trunk, and as the arm moves their
  * fibres slide along it. Moved straight towards where the insertion went, the lat over the
@@ -378,6 +394,18 @@ const TRUNK_TAG = { 0: 0, 1: 5, 2: 6, 3: 7, 4: 8 };
 
 const _creaseRest = new THREE.Vector3();
 const _wallN = new THREE.Vector3();
+
+/**
+ * Turn a limb with a hinge so that `reach` (root to tip, at rest) lands along `toward`, and
+ * the hinge axis lies across the line to `pole`, square to both. A hinge that bends
+ * positively towards the front puts the joint's point on the side the pole is on.
+ */
+function aimArm(reach, hinge, toward, pole) {
+  const x2 = toward.clone().normalize();
+  const want = new THREE.Vector3().crossVectors(pole, x2);
+  if (want.lengthSq() < 1e-8) return new THREE.Quaternion().setFromUnitVectors(reach.clone().normalize(), x2);
+  return turnFrame(reach, hinge, toward, want);
+}
 
 /**
  * The rotation that carries direction `a1` onto `a2`, and turns `b1` (the part of it across
@@ -425,7 +453,7 @@ export class Rig {
     this.uAnchorBone = { value: this.anchorBone };
     // Which insertions' muscles lie on the trunk's wall and slide along it (see WALL_Z).
     this.anchorWall = new Float32Array(ANCHOR_SLOTS);
-    for (const side of SIDES) for (const def of ANCHORED) this.anchorWall[anchorSlot(def, side)] = def.start ? 1 : 0;
+    for (const side of SIDES) for (const def of ANCHORED) this.anchorWall[anchorSlot(def, side)] = def.start && def.wall !== false ? 1 : 0;
     this.uAnchorWall = { value: this.anchorWall };
     // One slot per crease per side: posed joint (w on/off), posed plane normal pointing to
     // the upper bone (w squeeze), posed inside-of-the-bend direction (w reach), the rest
@@ -591,6 +619,44 @@ export class Rig {
   releaseGeometry() { this._geoms = null; }
 
   /** What `followSkin` needs: which muscles, and which bones the hip's field may use. */
+  /**
+   * Fibre points of the muscles marked `spineBlend` are carried by the spine's blend at
+   * their height instead of one trunk bone: the first bone in `aSkin`, the second in
+   * `aSkin2` (bone, share). Their shift is still measured against the ribcage.
+   */
+  blendFibreTrunks(geom) {
+    const P = geom.attributes.position, S = geom.attributes.aSkin;
+    if (!P || !S) return 0;
+    if (!geom.attributes.aSkin2) geom.setAttribute('aSkin2', new THREE.BufferAttribute(new Float32Array(P.count * 2), 2));
+    const S2 = geom.attributes.aSkin2, slots = new Set(), t = [0, 0, 1];
+    for (const side of SIDES) for (const def of ANCHORED) if (def.spineBlend) slots.add(anchorSlot(def, side));
+    let n = 0;
+    for (let i = 0; i < P.count; i++) {
+      const z = S.getZ(i);
+      if (z < 1.5 || z >= 2.999 || !slots.has(Math.round(S.getY(i)))) continue;
+      this.trunkBind(P.getY(i), t);
+      S.setX(i, t[0]);
+      if (t[0] !== t[1] && t[2] < 0.999) S2.setXY(i, t[1], 1 - t[2]);
+      n++;
+    }
+    S.needsUpdate = true; S2.needsUpdate = true;
+    return n;
+  }
+
+  /** What `skinOverGirdle` (skinweld.js) needs to know about the shoulder girdles. */
+  girdleSkinField() {
+    const arm = new Set(), girdleSlots = new Set();
+    for (const side of SIDES) {
+      for (const seg of SEGMENTS) if (seg.group === 'arm' && seg.name !== 'girdle') arm.add(boneIndex(seg.name, side));
+      for (const def of ANCHORED) if (def.limb === 'girdle') girdleSlots.add(anchorSlot(def, side));
+    }
+    const trunk = new Set([0, ...CENTRAL.map(n => boneIndex(n))]);
+    return {
+      girdle: { l: boneIndex('girdle', 'l'), r: boneIndex('girdle', 'r') },
+      arm, trunk, girdleSlots,
+    };
+  }
+
   skinField() {
     return [
       {
@@ -1313,6 +1379,10 @@ export class Rig {
     const arr = new Float32Array(n * 3);
     const anchor = this.ok ? this._anchorDef(part) : null;
     if (anchor) return this._skinAnchored(geom, anchor, arr, part.side);
+    if (this.ok && part.sys === 'muscular' && part.side && GIRDLE_BLEND.test(part.n)) {
+      const blend = this._skinGirdleBlend(geom, part, arr);
+      if (blend) return blend;
+    }
     const cls = this.ok ? this.resolveBinding(geom, part) : { mode: 'none' };
     const pos = geom.attributes.position;
     if (cls.mode === 'none') {
@@ -1425,6 +1495,96 @@ export class Rig {
       arr[i * 3] = boneIndex(def.limb, side);
       arr[i * 3 + 1] = def.trunk === 'root' ? this.trunkBone(pt.y) : boneIndex(def.trunk, side);
       arr[i * 3 + 2] = w;
+    }
+    return new THREE.BufferAttribute(arr, 3);
+  }
+
+  /**
+   * A sheet of muscle from the trunk onto the shoulder blade, blended between the two by how
+   * far along it each point sits: 0 where it is fixed, 1 where it meets the girdle's bones.
+   *
+   * Where it is fixed comes from the atlas: its attachments on the trunk's bones (the ribs
+   * for serratus anterior and pectoralis minor). The trapezius and the rhomboids arise from
+   * the spinous processes, which the atlas does not mark, so their edge on the midline
+   * counts too. And seen from where the muscle meets the girdle, its far edge in each
+   * direction is where its fibres begin: serratus anterior has eight slips on the ribs, and
+   * the atlas marks only three.
+   *
+   * How far along is measured to the girdle's bones themselves, not to one point, because
+   * these insert along a whole edge of the shoulder blade.
+   */
+  _skinGirdleBlend(geom, part, arr) {
+    const side = part.side, pos = geom.attributes.position, n = pos.count;
+    const flat = (pts, max = 3000) => {
+      const step = Math.max(1, Math.floor(pts.length / max)), out = [];
+      for (let k = 0; k < pts.length; k += step) out.push(pts[k].x, pts[k].y, pts[k].z);
+      return new Float32Array(out);
+    };
+    const nearest = (f, x, y, z) => {
+      let best = Infinity;
+      for (let k = 0; k < f.length; k += 3) {
+        const dx = f[k] - x, dy = f[k + 1] - y, dz = f[k + 2] - z, d = dx * dx + dy * dy + dz * dz;
+        if (d < best) best = d;
+      }
+      return Math.sqrt(best);
+    };
+    const bones = [...(this._points(`skeletal:Scapula.${side}`) || []), ...(this._points(`skeletal:Clavicle.${side}`) || [])];
+    if (!bones.length) return null;
+    const girdleBones = flat(bones, 4000);
+    const fixedPts = [], meetPts = [];
+    for (const a of this.registry.parts) {
+      if ((a.k !== 'origin' && a.k !== 'insertion') || a.side !== side || a.muscle !== part.n) continue;
+      const pts = this._points(a.id);
+      if (pts) (/scapula|clavicle/i.test(a.bone || '') ? meetPts : fixedPts).push(...pts);
+    }
+    const toBone = new Float32Array(n);
+    for (let i = 0; i < n; i++) toBone[i] = nearest(girdleBones, pos.getX(i), pos.getY(i), pos.getZ(i));
+    // Where the muscle meets the girdle, as one point to look out from.
+    const meet = new THREE.Vector3();
+    if (meetPts.length) { for (const v of meetPts) meet.add(v); meet.divideScalar(meetPts.length); }
+    else {
+      let c = 0;
+      for (let i = 0; i < n; i++) if (toBone[i] < 0.012) { meet.x += pos.getX(i); meet.y += pos.getY(i); meet.z += pos.getZ(i); c++; }
+      if (!c) return null;
+      meet.divideScalar(c);
+    }
+    // Its far edge in each direction, seen from there (the same rule as `_skinFibre`).
+    const BINS = 10;
+    const binOf = (dx, dy, dz) => {
+      const l = Math.abs(dx) + Math.abs(dy) + Math.abs(dz) || 1;
+      let u = dx / l, v = dy / l;
+      if (dz < 0) { const ou = u; u = (1 - Math.abs(v)) * (ou >= 0 ? 1 : -1); v = (1 - Math.abs(ou)) * (v >= 0 ? 1 : -1); }
+      return Math.min(BINS - 1, Math.floor((u * 0.5 + 0.5) * BINS)) * BINS + Math.min(BINS - 1, Math.floor((v * 0.5 + 0.5) * BINS));
+    };
+    const dist = new Float32Array(n), bin = new Int16Array(n), reach = new Float32Array(BINS * BINS);
+    let farthest = 0;
+    for (let i = 0; i < n; i++) {
+      const dx = pos.getX(i) - meet.x, dy = pos.getY(i) - meet.y, dz = pos.getZ(i) - meet.z;
+      dist[i] = Math.hypot(dx, dy, dz); bin[i] = binOf(dx, dy, dz);
+      reach[bin[i]] = Math.max(reach[bin[i]], dist[i]); farthest = Math.max(farthest, dist[i]);
+    }
+    // Nothing lying on the girdle's bones is a start, though: serratus anterior inserts all
+    // along the inner edge of the shoulder blade, and seen from the middle of that edge its
+    // lower corner is a far edge too. Counted as a start, the muscle there went from the
+    // girdle to the ribs between neighbouring points and tore round the corner.
+    const fixedFlat = flat(fixedPts, 3000);
+    const start = [];
+    for (let i = 0; i < n; i++) {
+      const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i), r = reach[bin[i]];
+      if (toBone[i] < 0.03) continue;
+      if (Math.abs(x) < 0.015 || (r >= 0.4 * farthest && dist[i] >= r - 0.012)
+        || (fixedFlat.length && nearest(fixedFlat, x, y, z) < 0.01)) start.push(new THREE.Vector3(x, y, z));
+    }
+    if (!start.length) return null;
+    const startFlat = flat(start, 1500);
+    const girdle = boneIndex('girdle', side), t = [0, 0, 1];
+    for (let i = 0; i < n; i++) {
+      const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+      // The muscle sits a centimetre or so off the bone it inserts on.
+      const a = nearest(startFlat, x, y, z), b = Math.max(0, toBone[i] - 0.012);
+      const f = a + b > 1e-6 ? a / (a + b) : 1;
+      if (f < 0.01) { this.trunkBind(y, t); arr[i * 3] = t[0]; arr[i * 3 + 1] = t[1]; arr[i * 3 + 2] = t[2]; continue; }
+      arr[i * 3] = girdle; arr[i * 3 + 1] = this.trunkBone(y); arr[i * 3 + 2] = Math.min(1, f);
     }
     return new THREE.BufferAttribute(arr, 3);
   }
@@ -1596,13 +1756,38 @@ export class Rig {
    * CPU mirror of the shader's skinning, for measurement and anything that needs to know
    * exactly where a vertex ends up. Takes a point already in morphed rest space.
    */
-  skinPoint(a, b, w, v, mask = 0) {
+  skinPoint(a, b, w, v, mask = 0, c = 0, wc = 0) {
     const rest = _creaseRest.copy(v);
-    this._skin(a, b, w, v);
+    if (wc > 0 && w < 1.5) this._skin3(a, b, w, c, wc, v);
+    else this._skin(a, b, w, v, wc > 0 ? c : -1, wc);
     return this.creasePoint(rest, v, a, b, w, mask);
   }
 
-  _skin(a, b, w, v) {
+  /** The skin's three-bone blend: `a` and `b` as usual, then `c` taking a share `wc` of the whole. */
+  _skin3(a, b, w, c, wc, v) {
+    const R = this.dqReal, D = this.dqDual;
+    const q = [0, 0, 0, 0], d = [0, 0, 0, 0];
+    const add = (bone, k, ref) => {
+      let s = k;
+      if (ref && R[bone * 4] * ref[0] + R[bone * 4 + 1] * ref[1] + R[bone * 4 + 2] * ref[2] + R[bone * 4 + 3] * ref[3] < 0) s = -k;
+      for (let j = 0; j < 4; j++) { q[j] += s * R[bone * 4 + j]; d[j] += s * D[bone * 4 + j]; }
+    };
+    const wa = Math.min(1, Math.max(0, w));
+    add(a, wa * (1 - wc), null);
+    add(b, (1 - wa) * (1 - wc), [R[a * 4], R[a * 4 + 1], R[a * 4 + 2], R[a * 4 + 3]]);
+    add(c, wc, q.slice());
+    const len = Math.hypot(q[0], q[1], q[2], q[3]) || 1;
+    const [q0, q1, q2, q3] = q.map(x => x / len), [d0, d1, d2, d3] = d.map(x => x / len);
+    const x = v.x, y = v.y, z = v.z;
+    const cx = q1 * z - q2 * y + q3 * x, cy = q2 * x - q0 * z + q3 * y, cz = q0 * y - q1 * x + q3 * z;
+    const rx = x + 2 * (q1 * cz - q2 * cy), ry = y + 2 * (q2 * cx - q0 * cz), rz = z + 2 * (q0 * cy - q1 * cx);
+    const tx = 2 * (q3 * d0 - d3 * q0 + (q1 * d2 - q2 * d1));
+    const ty = 2 * (q3 * d1 - d3 * q1 + (q2 * d0 - q0 * d2));
+    const tz = 2 * (q3 * d2 - d3 * q2 + (q0 * d1 - q1 * d0));
+    return v.set(rx + tx, ry + ty, rz + tz);
+  }
+
+  _skin(a, b, w, v, c = -1, wc = 0) {
     if (w >= 2.999) {
       // Past the insertion: blend from stretching with it to turning with the bone.
       const g = w - 3, s = b * 3, k = 1 - g;
@@ -1613,7 +1798,7 @@ export class Rig {
       // Fibre vertex: carried by its trunk bone, then shifted by its share of the stretch.
       const f = w - 2, s = b * 3;
       const rx = v.x, rz = v.z;
-      this._skin(a, a, 1, v);
+      if (c >= 0 && wc > 0) this._skin3(a, a, 1, c, wc, v); else this._skin(a, a, 1, v);
       let dx = f * this.anchorDisp[s], dy = f * this.anchorDisp[s + 1], dz = f * this.anchorDisp[s + 2];
       if (this.anchorWall[b]) {
         const n = _wallN.set(rx, 0, rz - WALL_Z);
@@ -2071,16 +2256,16 @@ export class Rig {
       for (let i = 0; i < 40; i++) { const mid = (lo + hi) / 2; if (reach(mid) > want) lo = mid; else hi = mid; }
       const bend = (lo + hi) / 2;
       const G = turnAbout(Gp, E, hinge, bend);
-      // Where the elbow points only means something once it bends. Nearly straight, the bent
-      // arm's plane is a sliver, and aiming it at the pole turned the humerus 30 to 45
-      // degrees on its own axis for nothing, dragging the lat round with it. So the upper
-      // arm takes the shortest turn onto the target while the arm is near straight, and
-      // turns to aim the elbow as it bends. Both carry the grip onto the target, so any
-      // mix of them does too.
-      const short = new THREE.Quaternion().setFromUnitVectors(G.clone().sub(S).normalize(), T.clone().sub(S).normalize());
-      const aimed = turnFrame(G.clone().sub(S), E.clone().sub(S), T.clone().sub(S), pole);
+      // The upper arm turns as one piece, the line to the grip onto the line to the target.
+      // Bent, it turns about that line to put the elbow towards its pole. Nearly straight,
+      // where the elbow is has no meaning, so it turns to lay the elbow's hinge across the
+      // line to the pole instead, which still points the elbow there. The two differ only
+      // by the elbow's carrying angle, so blending them cannot flip. The arm used to take
+      // the shortest turn when straight, and the shortest turn from hanging to overhead is
+      // unstable: at the top of an overhead press it spun the humerus 90 degrees.
       const aim = smoothstep(straight + ELBOW_AIM[0], straight + ELBOW_AIM[1], bend);
-      q1 = short.slerp(aimed, aim);
+      q1 = aimArm(G.clone().sub(S), hinge, T.clone().sub(S), pole)
+        .slerp(turnFrame(G.clone().sub(S), E.clone().sub(S), T.clone().sub(S), pole), aim);
       straightness = 1 - aim;
       // A turn of the humerus about the line from the shoulder to the grip leaves the grip
       // where it is.
@@ -2192,7 +2377,7 @@ export class Rig {
      * `turn` says which way round the bar each joint bends. `start` holds joints already
      * set, and `solid` lists other bones this digit must not pass through.
      */
-    const close = (keys, rate, limit, names, { turn = null, start = [0, 0, 0], solid = [] } = {}) => {
+    const close = (keys, rate, limit, names, { turn = null, start = [0, 0, 0], solid = [], wrap = false } = {}) => {
       const J = keys.map(k => this._morphed(side, k));
       const d = [0, 1, 2].map(i => J[i + 1].clone().sub(J[i]));
       // Bend towards the bar, whichever way round the axis that is for this digit.
@@ -2213,8 +2398,8 @@ export class Rig {
       // guarded by the bone before it.
       // A joint set beforehand has already been placed clear, and is not re-tested.
       const preset = start.map(v => v !== 0);
-      const touching = () => {
-        for (let i = 0; i < 3; i++) {
+      const touching = (from = 0) => {
+        for (let i = from; i < 3; i++) {
           if (preset[i]) continue;
           const A = P[i].clone().lerp(P[i + 1], 0.25);
           if (reach(A, P[i + 1]) < clear[i]) return i;
@@ -2223,6 +2408,37 @@ export class Rig {
         return -1;
       };
       const STEP = 1 * deg;
+      if (wrap) {
+        // Closing on a bar. All three joints bend together at their own rates, led by the
+        // first joint still moving. When a bone meets the bar, the joints past the leading
+        // one give way just enough for the finger to slide over the surface, so the leading
+        // joint keeps closing; when nothing can give, it stops there and the next joint
+        // leads. Every step starts from a grip that clears the bar, so the fingers can only
+        // end up round it, never through it or in a fist beside it.
+        const active = [true, true, true];
+        for (let n = 0; n < 900; n++) {
+          const lead = active.indexOf(true);
+          if (lead < 0) break;
+          const next = th.map((t, q) => (active[q] ? Math.min(limit[q], t + rate[q] * STEP) : t));
+          place(next);
+          let found = touching() < 0 ? next : null;
+          const free = [0, 1, 2].filter(q => q > lead);
+          for (let t = 1; !found && free.length && t <= 60; t++) {
+            for (let k = 0; k <= (free.length > 1 ? t : 0); k++) {
+              const c = next.slice();
+              if (free.length > 1) {
+                c[free[0]] = Math.max(0, next[free[0]] - k * STEP);
+                c[free[1]] = Math.max(0, next[free[1]] - (t - k) * STEP);
+              } else c[free[0]] = Math.max(0, next[free[0]] - t * STEP);
+              place(c);
+              if (touching() < 0) { found = c; break; }
+            }
+          }
+          if (!found) { active[lead] = false; continue; }
+          for (let q = 0; q < 3; q++) { th[q] = found[q]; if (th[q] >= limit[q]) active[q] = false; }
+        }
+        done.fill(true);
+      }
       for (let n = 0; n < 240 && done.includes(false); n++) {
         const next = th.map((t, i) => (done[i] ? t : Math.min(limit[i], t + rate[i] * STEP)));
         place(next);
@@ -2242,13 +2458,19 @@ export class Rig {
     };
 
     // Flexion limits from a real hand: knuckle about 90°, middle joint about 110°, end joint
-    // about 80°. The middle joint leads and the end joint follows at two-thirds of its rate,
-    // which is the coupling the tendons impose.
+    // about 80°.
+    //
+    // Each finger takes the most closed grip that clears the bar (`wrap`). Stopped the
+    // moment any bone touched, the fingertip met the bar first, because the bar lies in the
+    // heel of the hand well below the knuckles, and the whole finger froze there: every lift
+    // held the bar in a loose hook with the fingers standing 5 cm above it, which showed
+    // worst from behind an overhead press. Closed one joint at a time from the knuckle, the
+    // first bone lay flat over the bar and the middle joint stayed straight.
     (this.gripAngles ||= {})[side] = {};
     const fingers = {};
     for (const { n } of DIGITS) {
       fingers[n] = close([`mcp${n}`, `pip${n}`, `dip${n}`, `tip${n}`],
-        [0.8, 1.0, 0.67], [90 * deg, 110 * deg, 80 * deg], [`f${n}a`, `f${n}b`, `f${n}c`]);
+        [0.8, 1.0, 0.67], [90 * deg, 110 * deg, 80 * deg], [`f${n}a`, `f${n}b`, `f${n}c`], { wrap: true });
       this.gripAngles[side][n] = fingers[n].th;
     }
 
@@ -2318,11 +2540,10 @@ export class Rig {
     for (let i = 0; i < 40; i++) { const mid = (lo + hi) / 2; if (reach(mid) > want) lo = mid; else hi = mid; }
     const bend = (lo + hi) / 2;
     const Gb = turnAbout(G, E, hinge, bend);
-    // Nearly straight, where the knee points means nothing, and the femur takes its
-    // shortest turn; as the knee bends, the femur turns to point it at the pole.
-    const short = new THREE.Quaternion().setFromUnitVectors(Gb.clone().sub(S).normalize(), T.clone().sub(S).normalize());
-    const aimed = turnFrame(Gb.clone().sub(S), E.clone().sub(S), T.clone().sub(S), pole);
-    const q1 = short.slerp(aimed, smoothstep(straight + ELBOW_AIM[0], straight + ELBOW_AIM[1], bend));
+    // Bent, the femur turns to put the knee towards its pole; nearly straight, to lay the
+    // knee's hinge across the line to the pole (see `solveArm`).
+    const q1 = aimArm(Gb.clone().sub(S), hinge, T.clone().sub(S), pole)
+      .slerp(turnFrame(Gb.clone().sub(S), E.clone().sub(S), T.clone().sub(S), pole), smoothstep(straight + ELBOW_AIM[0], straight + ELBOW_AIM[1], bend));
     return {
       [`thigh.${side}`]: { quat: q1 },
       [`shin.${side}`]: { quat: new THREE.Quaternion().setFromAxisAngle(hinge, bend) },
@@ -2421,6 +2642,10 @@ const _q = new THREE.Quaternion();
  */
 export const RIG_GLSL = /* glsl */`
 // aSkin (boneA, boneB, weightA, or trunkBone, anchorSlot, 2 + fraction) is declared by the morph patch.
+#ifdef SHARIR_SKIN3
+// The skin can take a third bone (bone, weight), on top of the two in aSkin: see skinOverGirdle.
+attribute vec2 aSkin2;
+#endif
 uniform vec4 uBoneReal[${BONE_COUNT}];
 uniform vec4 uBoneDual[${BONE_COUNT}];
 uniform vec3 uAnchorDisp[${ANCHOR_SLOTS}];
@@ -2446,13 +2671,28 @@ void sharirBlend() {
   int ia = int(aSkin.x + 0.5), ib = int(aSkin.y + 0.5);
   // Most of the body follows the trunk alone. Reading bone 0 by a constant index and
   // skipping the blend keeps those vertices as cheap as they were before posing existed.
+#ifdef SHARIR_SKIN3
+  if (ia == 0 && ib == 0 && aSkin.z < 1.5 && aSkin2.y <= 0.0) { sharirQ = uBoneReal[0]; sharirD = uBoneDual[0]; return; }
+#else
   if (ia == 0 && ib == 0 && aSkin.z < 1.5) { sharirQ = uBoneReal[0]; sharirD = uBoneDual[0]; return; }
+#endif
   float w = clamp(aSkin.z, 0.0, 1.0);
   if (aSkin.z > 2.999) {                            // past the insertion: trunk to limb bone
     w = 1.0 - (aSkin.z - 3.0);
     ib = int(uAnchorBone[ib] + 0.5);
   } else if (aSkin.z > 1.5) {                       // fibre vertex: its trunk bone only
     sharirQ = uBoneReal[ia]; sharirD = uBoneDual[ia];
+#ifdef SHARIR_SKIN3
+    if (aSkin2.y > 0.0) {                           // ...or the spine's blend at its height
+      int ic = int(aSkin2.x + 0.5);
+      vec4 qc = uBoneReal[ic], dc = uBoneDual[ic];
+      if (dot(sharirQ, qc) < 0.0) { qc = -qc; dc = -dc; }
+      vec4 q = sharirQ * (1.0 - aSkin2.y) + qc * aSkin2.y;
+      vec4 d = sharirD * (1.0 - aSkin2.y) + dc * aSkin2.y;
+      float len = length(q);
+      sharirQ = q / len; sharirD = d / len;
+    }
+#endif
     return;
   }
   vec4 qa = uBoneReal[ia], da = uBoneDual[ia];
@@ -2460,6 +2700,15 @@ void sharirBlend() {
   if (dot(qa, qb) < 0.0) { qb = -qb; db = -db; }   // same hemisphere: the short way round
   vec4 q = qa * w + qb * (1.0 - w);
   vec4 d = da * w + db * (1.0 - w);
+#ifdef SHARIR_SKIN3
+  if (aSkin2.y > 0.0 && aSkin.z < 1.5) {
+    int ic = int(aSkin2.x + 0.5);
+    vec4 qc = uBoneReal[ic], dc = uBoneDual[ic];
+    if (dot(q, qc) < 0.0) { qc = -qc; dc = -dc; }
+    q = q * (1.0 - aSkin2.y) + qc * aSkin2.y;
+    d = d * (1.0 - aSkin2.y) + dc * aSkin2.y;
+  }
+#endif
   float len = length(q);
   sharirQ = q / len; sharirD = d / len;
 }
