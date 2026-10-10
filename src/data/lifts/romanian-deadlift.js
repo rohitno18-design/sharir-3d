@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { d, lerp, clamp01, bell, keyCurve, Frame, plantFeet, handsOnBar, joint, shoulderWorld, hangingBar, midfoot, squatStance, SIDES, sgn, form, bodyKey, bendSpine } from '../../core/lift.js';
+import { d, lerp, clamp01, bell, keyCurve, Frame, plantFeet, handsOnBar, joint, shoulderWorld, hangingBar, midfoot, squatStance, SIDES, sgn, form, bodyKey, bendSpine, HANG_POLE } from '../../core/lift.js';
 
 /**
  * Romanian deadlift: a hip hinge with the knees slightly bent.
@@ -91,7 +91,7 @@ export const ROMANIAN_DEADLIFT = {
     // shoulders and the bar slides down the thighs and then the shins.
     const half = Math.abs(joint(rig, 'l', 'gh').x) + 0.035;
     const at = hangingBar(rig, frame, p, half, shoulderWorld(rig, frame, p, 'l').z, BAR.radius, { snug: true });
-    handsOnBar(rig, frame, p, { at, half, align: 1, ...BAR, pole: (side) => frame.dirToWorld(new THREE.Vector3(sgn(side) * 0.3, 0, -1)) });
+    handsOnBar(rig, frame, p, { at, half, align: 1, ...BAR, pole: (side) => frame.dirToWorld(HANG_POLE(side)) });
     return p;
   },
 

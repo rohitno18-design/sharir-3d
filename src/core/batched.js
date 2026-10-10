@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { computeBoundsTree, disposeBoundsTree } from 'three-mesh-bvh';
 import { EFFECT_KINDS } from '../data/targets.js';
-import { closeSkinGaps, blendSkinBindings, orientSkin, smoothBindings, followSkin, skinOverGirdle } from './skinweld.js';
+import { closeSkinGaps, blendSkinBindings, orientSkin, smoothBindings, followSkin, skinOverGirdle, followSkinBinding } from './skinweld.js';
 
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
 THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
@@ -167,6 +167,7 @@ export class BatchedBody {
       if (skin && muscle) for (const field of rig.skinField()) followSkin(skin.mesh.geometry, muscle.mesh.geometry, (slot) => this.parts[slot], field);
       if (muscle) rig.blendFibreTrunks(muscle.mesh.geometry);
       if (skin && muscle) skinOverGirdle(skin.mesh.geometry, muscle.mesh.geometry, (slot) => this.parts[slot], rig.girdleSkinField());
+      if (skin && muscle) followSkinBinding(skin.mesh.geometry, muscle.mesh.geometry, (slot) => this.parts[slot], /^platysma/i);
       if (skin) rig.collectCreaseSamples(skin.mesh.geometry, (slot) => this.parts[slot]);
     }
     this._findDominantBones();

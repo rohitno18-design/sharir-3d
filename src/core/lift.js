@@ -294,6 +294,14 @@ export function handsOnBar(rig, frame, pose, bar) {
 }
 
 /**
+ * Where the points of the elbows face with the arms hanging and an overhand grip: out to
+ * the sides and back, with the upper arms turned in. The palms face back, a turn a forearm
+ * alone can barely make, and in a real hang the shoulder takes part of it. With the
+ * elbows pointing straight back, the forearm made the whole turn, 172 degrees.
+ */
+export const HANG_POLE = (side) => new THREE.Vector3(sgn(side) * 1.0, 0, -0.7);
+
+/**
  * The lowest the bar can hang at world depth z with the arms straight: the height where the
  * straighter arm reaches lockout.
  */

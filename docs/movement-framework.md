@@ -14,6 +14,7 @@ These live in `src/core/lift.js`, so no single lift can break them by accident.
 | The trunk is one braced, neutral piece | The rig has no spine joints; the trunk is placed by its hips and its lean (`Frame`). A rounded back cannot happen. |
 | Feet are planted flat | `plantFeet` solves the legs to fixed points on the floor; knees follow the toes. |
 | Hands are on the bar and closed round it | `handsOnBar` solves both arms to the bar and wraps the fingers against its real radius. |
+| No joint locks out | Elbows stop 12 degrees and knees 6 degrees short of straight (`SOFT_ELBOW`, `SOFT_KNEE` in `rig.js`), so the top of every rep stays in the working position. |
 | Standing lifts are in balance | The bar and the body together stay over the middle of the foot (`midfoot`, `leanToBalance`). |
 | The bar never passes into the body | Every bar is tested against a tagged skin cloud of the trunk, head and legs in the current pose (`rig.bodyCloud`, `clearOfBody`), approaching from outside the way a real bar arrives. |
 
@@ -150,9 +151,16 @@ clear its hips. It used to bend the forearm sideways at the elbow, which no elbo
   up about 4 degrees for every 10 the arm rises (Inman's shoulder rhythm), to 28 degrees at
   lockout. With 12, the ball of the humerus turned 167 degrees in its socket, far past the
   120 a real shoulder allows, and the back of the deltoid and the armpit tore.
-- **The elbows turn out at lockout.** In the rack the point of the elbow faces forward and
-  down; locked out overhead it faces out and a little back, so the palm can face forward
-  with the forearm in its middle range (about 70 degrees of turn) instead of at its limit.
+- **The elbows turn out as the bar rises.** In the rack the point of the elbow faces forward
+  and down; at the top it faces out to the side. The turn is spread evenly over the press
+  and mostly done while the elbow is still bent, so in the last quarter the forearm turns
+  only 8 degrees and the hand stays in its pressing position. Done in the last part of the
+  press only, the forearm untwisted 100 degrees on the way to lockout. Kept pointing
+  forward, the humerus stayed turned in overhead and the back of the deltoid stretched.
+- **The bar slows into the top** (in the press and the bench press), and in the press it
+  passes the face on a clearance path worked out once per body and smoothed. Moving evenly,
+  the elbows snapped the last 13 degrees straight; taken pose by pose, the clearance jumped
+  3.6 cm once the bar was above the head and the arms jerked with it.
 - **Neck to shoulder.** The upper trapezius, levator scapulae and omohyoid run from the
   neck to a small attachment on the collarbone or shoulder blade, and are bound along their
   fibres like the lats. In a shrug they shorten from the neck out to the shoulder. Bound by
@@ -170,6 +178,24 @@ clear its hips. It used to bend the forearm sideways at the elbow, which no elbo
 - The atlas has the ascending and descending parts of the trapezius named the wrong way
   round, and their origins and insertions too. The registry puts them right at load
   (`SWAPPED_NAMES` in registry.js), so "upper trapezius" lights the upper trapezius.
+
+## Muscles that insert along a line
+
+The pec, the lat and teres major insert along a line down the humerus, not at a point.
+Each fibre point is shifted by its own place on that line (`crest` in `ANCHORED`, a second
+slot for the far end of the line): a rigid bone moves the points of a straight line on it
+in proportion, so two ends are enough. Moved by one point, the pec's lower fibres were 11
+cm out with the arms overhead, and its tendon stood out from the armpit as flat sheets.
+Past the insertion, tissue goes from shifting with the insertion to turning with the bone
+as a straight blend of the two positions; blended as two turns, half way came 9 cm from
+either.
+
+Measures taken over a muscle (where it starts, its point nearest the insertion) are taken
+over all of its pieces: the atlas ships some muscles in several, and a small piece by the
+pec's tendon found its own "far edge" two centimetres from the insertion.
+
+The platysma, a muscle inside the skin of the neck and upper chest, moves with the skin
+over it (`followSkinBinding` in skinweld.js).
 
 ## Hands on the bar
 

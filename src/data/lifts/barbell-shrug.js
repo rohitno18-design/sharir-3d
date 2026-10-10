@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { d, lerp, clamp01, bell, keyCurve, Frame, plantFeet, handsOnBar, joint, shoulderWorld, hangHeight, clearOfBody, SIDES, sgn, form } from '../../core/lift.js';
+import { d, lerp, clamp01, bell, keyCurve, Frame, plantFeet, handsOnBar, joint, shoulderWorld, hangHeight, clearOfBody, SIDES, sgn, form, HANG_POLE } from '../../core/lift.js';
 
 /**
  * Barbell shrug: standing, arms straight, the shoulders lifted straight up to the ears.
@@ -83,7 +83,7 @@ export const BARBELL_SHRUG = {
       y = hangHeight(rig, frame, p, half, z);
       z = clearOfBody(rig, cloud, new THREE.Vector3(0, y, z), Z, BAR.radius, { clear: 0.004, reach: 0.3 }).z;
     }
-    handsOnBar(rig, frame, p, { at: new THREE.Vector3(0, y, z), half, align: 1, pole: (side) => new THREE.Vector3(sgn(side) * 0.3, 0, -1), ...BAR });
+    handsOnBar(rig, frame, p, { at: new THREE.Vector3(0, y, z), half, align: 1, pole: (side) => HANG_POLE(side), ...BAR });
     return p;
   },
 

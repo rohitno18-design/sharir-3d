@@ -204,9 +204,19 @@ const ELBOW_OPEN = -40 * Math.PI / 180;
 const ELBOW_MAX = 145 * Math.PI / 180;
 // The knee folds further than the elbow; past straight it does not go.
 const KNEE_MAX = 155 * Math.PI / 180;
-// Over how much bend (past straight) the upper arm goes from its shortest turn to aiming the
-// elbow at its pole.
-const ELBOW_AIM = [10 * Math.PI / 180, 35 * Math.PI / 180];
+/**
+ * A lift never locks a joint out. At the top of a press, a curl or an extension, and
+ * standing, the elbows and knees stay this far short of straight, so the muscles stay
+ * under load and the arm stays in the position it worked in. Taken to straight, the arm
+ * turned in its last few degrees towards the way a relaxed straight arm hangs, and the
+ * forearm and the shoulder visibly rolled at the top of every rep.
+ */
+const SOFT_ELBOW = 12 * Math.PI / 180;
+const SOFT_KNEE = 6 * Math.PI / 180;
+// Over how much bend (past straight) the upper bone goes from laying the hinge across the
+// pole to aiming the joint at its pole. Short of the soft lockout, so in a lift the arm is
+// always aimed one way and never changes over.
+const ELBOW_AIM = [3 * Math.PI / 180, 9 * Math.PI / 180];
 // How far the forearm turns the palm before the humerus starts to help, the way an
 // overhand grip on a hanging bar is shared between the forearm and the shoulder.
 const PRONATION_EASY = 140 * Math.PI / 180;
@@ -225,10 +235,12 @@ const GRIP_OBLIQUE = 6 * Math.PI / 180;
 const WRIST_ULNAR_MAX = 25 * Math.PI / 180;
 const WRIST_RADIAL_MAX = 20 * Math.PI / 180;
 /**
- * How far the arm straightens at lockout, as a fraction of its full length from shoulder
- * to palm. 0.996 is an elbow at about 172 degrees: locked, but not hyperextended.
+ * How far the arm straightens at the top of a lift, as a fraction of its reach with the
+ * elbow at its soft lockout (SOFT_ELBOW). The reach is worked out with the wrist straight,
+ * and a bent wrist shortens it a little; planned to all of it, the last stretch of a bench
+ * press was out of reach and the arm stopped short with a jolt.
  */
-const LOCKOUT_REACH = 0.996;
+const LOCKOUT_REACH = 0.993;
 /** How much more a forearm leaning across the body counts than one leaning along it. */
 const ACROSS_WEIGHT = 3;
 /**
@@ -274,10 +286,14 @@ const ANCHORED = [
   // lists only the slip on the scapula, so the landmark is the source here.
   // `start`: measure how far along each fibre a point is from where the muscle starts, so
   // the start stays put however the humerus turns (see `_skinFibre`).
-  { re: /^latissimus dorsi/i, limb: 'upperarm', trunk: 'root', spine: 'thorax', at: 'Intertubercular sulcus', mode: 'fibre', start: true },
-  { re: /^teres major/i, limb: 'upperarm', trunk: 'girdle', at: 'Crest of lesser tubercle', mode: 'fibre', start: true },
+  { re: /^latissimus dorsi/i, limb: 'upperarm', trunk: 'root', spine: 'thorax', at: 'Intertubercular sulcus', mode: 'fibre', start: true, crest: true },
+  { re: /^teres major/i, limb: 'upperarm', trunk: 'girdle', at: 'Crest of lesser tubercle', mode: 'fibre', start: true, crest: true },
+  // `crest`: the muscle inserts along a line down the humerus, not at a point, and each
+  // fibre goes with its own end of it (see CREST). Moved by one point, the pec's fibres that
+  // insert lower down the crest were 11 cm out with the arms overhead, and its tendon
+  // stood out from the armpit in folded sheets.
   { re: /pectoralis major/i, limb: 'upperarm', trunk: 'root', spine: 'thorax', at: 'Crest of greater tubercle',
-    record: { muscle: 'Pectoralis major muscle', bone: 'Humerus' }, mode: 'fibre', start: true },
+    record: { muscle: 'Pectoralis major muscle', bone: 'Humerus' }, mode: 'fibre', start: true, crest: true },
   // The rotator cuff: from the shoulder blade onto the ball of the humerus.
   { re: /^(supraspinatus|infraspinatus|teres minor)/i, limb: 'upperarm', trunk: 'girdle', at: 'Greater tubercle', mode: 'wrap', near: 0.02, far: 0.10 },
   { re: /^subscapularis/i, limb: 'upperarm', trunk: 'girdle', at: 'Lesser tubercle', mode: 'wrap', near: 0.02, far: 0.10 },
@@ -381,8 +397,18 @@ const LIMB_AXIS = { thigh: ['hip', 'knee'], upperarm: ['gh', 'el'], girdle: ['sc
 const WALL_Z = 0.0;
 const WALL_FREE = [0.5, 0.9];
 /** One slot per anchored muscle per side, for the insertion displacements the shader reads. */
-const ANCHOR_SLOTS = ANCHORED.length * 2;
+/**
+ * A muscle marked `crest` inserts along a line on its bone. The line runs down the bone's
+ * axis through the insertion, as far as the muscle's attachment on the bone reaches. A
+ * second slot holds how far the far end of the line has moved, CREST_LEN down it, and each
+ * fibre point is shifted by its own place along the line: a rigid bone moves the points of
+ * a straight line on it in proportion, so the two ends are enough (see `blendFibreTrunks`).
+ */
+const CREST_DEFS = ANCHORED.filter(d => d.crest);
+const CREST_LEN = 0.05;
+const ANCHOR_SLOTS = ANCHORED.length * 2 + CREST_DEFS.length * 2;
 const anchorSlot = (def, side) => ANCHORED.indexOf(def) + (side === 'r' ? ANCHORED.length : 0);
+const crestSlot = (def, side) => ANCHORED.length * 2 + CREST_DEFS.indexOf(def) * 2 + (side === 'r' ? 1 : 0);
 
 /**
  * Body-cloud tags: 0 pelvis, 1-2 thighs, 3-4 shins, 5 lower back, 6 upper back, 7 neck,
@@ -394,6 +420,12 @@ const TRUNK_TAG = { 0: 0, 1: 5, 2: 6, 3: 7, 4: 8 };
 
 const _creaseRest = new THREE.Vector3();
 const _wallN = new THREE.Vector3();
+
+/** `x` (0 or more) eased into `limit`: unchanged up to 60% of it, then curving in smoothly. */
+function softLimit(x, limit) {
+  const k = 0.6 * limit;
+  return x <= k ? x : k + (limit - k) * Math.tanh((x - k) / (limit - k));
+}
 
 /**
  * Turn a limb with a hinge so that `reach` (root to tip, at rest) lands along `toward`, and
@@ -450,10 +482,12 @@ export class Rig {
     // the bone, turns with that bone.
     this.anchorBone = new Float32Array(ANCHOR_SLOTS);
     for (const side of SIDES) for (const def of ANCHORED) this.anchorBone[anchorSlot(def, side)] = boneIndex(def.limb, side);
+    for (const side of SIDES) for (const def of CREST_DEFS) this.anchorBone[crestSlot(def, side)] = boneIndex(def.limb, side);
     this.uAnchorBone = { value: this.anchorBone };
     // Which insertions' muscles lie on the trunk's wall and slide along it (see WALL_Z).
     this.anchorWall = new Float32Array(ANCHOR_SLOTS);
     for (const side of SIDES) for (const def of ANCHORED) this.anchorWall[anchorSlot(def, side)] = def.start && def.wall !== false ? 1 : 0;
+    for (const side of SIDES) for (const def of CREST_DEFS) this.anchorWall[crestSlot(def, side)] = def.start && def.wall !== false ? 1 : 0;
     this.uAnchorWall = { value: this.anchorWall };
     // One slot per crease per side: posed joint (w on/off), posed plane normal pointing to
     // the upper bone (w squeeze), posed inside-of-the-bend direction (w reach), the rest
@@ -630,6 +664,18 @@ export class Rig {
     if (!geom.attributes.aSkin2) geom.setAttribute('aSkin2', new THREE.BufferAttribute(new Float32Array(P.count * 2), 2));
     const S2 = geom.attributes.aSkin2, slots = new Set(), t = [0, 0, 1];
     for (const side of SIDES) for (const def of ANCHORED) if (def.spineBlend) slots.add(anchorSlot(def, side));
+    // Crest muscles: aSkin2 = (-(far slot + 1), 2 + place along the line in CREST_LENs).
+    const crest = new Map();
+    for (const side of SIDES) for (const e of this.anchors[side]) if (e.crest) crest.set(anchorSlot(e.def, side), { e, far: crestSlot(e.def, side) });
+    const d = new THREE.Vector3();
+    for (let i = 0; i < P.count; i++) {
+      const z = S.getZ(i), c = z >= 1.5 ? crest.get(Math.round(S.getY(i))) : null;
+      if (!c) continue;
+      const { point, crest: L } = c.e;
+      d.set(P.getX(i), P.getY(i), P.getZ(i)).sub(point);
+      const t = Math.min(L.hi, Math.max(L.lo, d.dot(L.dir))) / CREST_LEN;
+      S2.setXY(i, -(c.far + 1), 2 + t);
+    }
     let n = 0;
     for (let i = 0; i < P.count; i++) {
       const z = S.getZ(i);
@@ -892,7 +938,7 @@ export class Rig {
     for (const side of SIDES) {
       for (const def of ANCHORED) {
         const point = this._insertion(def, side);
-        if (point) this.anchors[side].push({ def, point });
+        if (point) this.anchors[side].push({ def, point, crest: def.crest ? this._crestLine(def, side, point) : null });
         else console.warn('[rig] no insertion found for', def.at, side);
       }
     }
@@ -1056,6 +1102,25 @@ export class Rig {
     q.grip = heel.clone().addScaledVector(nrm, lift);
     q.palm = q.grip.clone().addScaledVector(nrm, -BAR_RADIUS);
     return true;
+  }
+
+  /**
+   * The line a `crest` muscle inserts along: down the bone's axis through the insertion,
+   * over the stretch of the bone the atlas marks it attached to. `dir` is unit, `lo` and
+   * `hi` are how far the attachment reaches either way, in metres.
+   */
+  _crestLine(def, side, point) {
+    const [j0, j1] = LIMB_AXIS[def.limb], q = this.p[side];
+    const dir = q[j1].clone().sub(q[j0]).normalize();
+    let lo = -0.02, hi = 0.03;
+    const rec = def.record && this.registry.parts.find(p => (p.k === 'insertion' || p.k === 'origin') && p.side === side
+      && p.muscle === def.record.muscle && p.bone === def.record.bone);
+    const pts = rec && this._points(rec.id);
+    if (pts) {
+      lo = Infinity; hi = -Infinity;
+      for (const v of pts) { const t = v.clone().sub(point).dot(dir); lo = Math.min(lo, t); hi = Math.max(hi, t); }
+    }
+    return { dir, lo, hi, far: point.clone().addScaledVector(dir, CREST_LEN) };
   }
 
   /** Where a muscle meets its limb bone, in rest-space GL coordinates. */
@@ -1378,7 +1443,7 @@ export class Rig {
     const n = geom.attributes.position.count;
     const arr = new Float32Array(n * 3);
     const anchor = this.ok ? this._anchorDef(part) : null;
-    if (anchor) return this._skinAnchored(geom, anchor, arr, part.side);
+    if (anchor) return this._skinAnchored(geom, anchor, arr, part.side, part.id);
     if (this.ok && part.sys === 'muscular' && part.side && GIRDLE_BLEND.test(part.n)) {
       const blend = this._skinGirdleBlend(geom, part, arr);
       if (blend) return blend;
@@ -1463,7 +1528,26 @@ export class Rig {
     }
   }
 
-  _skinAnchored(geom, def, arr, partSide = null) {
+  /**
+   * Every piece of one part, as one list of points. The atlas ships some muscles in several
+   * pieces, and each piece is bound on its own; a measure taken over one piece alone (where
+   * the muscle starts, its point nearest the insertion) is wrong for the muscle. The piece
+   * of the clavicular head of pectoralis major by its tendon found its own "far edge" two
+   * centimetres from the insertion, stayed with the trunk there while the rest of the
+   * tendon went with the arm, and stood out as a flat sheet with the arms overhead.
+   */
+  _partRef(id, geom) {
+    const gs = id && this._geoms ? this._geoms.get(id) : null;
+    if (!gs || gs.length < 2) return geom.attributes.position;
+    let n = 0;
+    for (const g of gs) n += g.attributes.position.count;
+    const a = new Float32Array(n * 3);
+    let k = 0;
+    for (const g of gs) { const p = g.attributes.position; for (let i = 0; i < p.count; i++) { a[k++] = p.getX(i); a[k++] = p.getY(i); a[k++] = p.getZ(i); } }
+    return { count: n, getX: (i) => a[i * 3], getY: (i) => a[i * 3 + 1], getZ: (i) => a[i * 3 + 2] };
+  }
+
+  _skinAnchored(geom, def, arr, partSide = null, partId = null) {
     // Which side's insertion a point belongs to is its muscle's side. Read off the point's
     // own position, the strip of the left lat that crosses the midline of the back went
     // with the right arm, and the two lats tore apart along the spine.
@@ -1475,14 +1559,15 @@ export class Rig {
     // centimetres short of it: the tendon's last stretch is not modelled. Measured from the
     // landmark alone, no vertex would ever reach full weight, and the muscle's end would
     // trail behind the arm. So the ramp starts from this muscle's own closest point.
+    const ref = this._partRef(partId, geom);
     const closest = { l: Infinity, r: Infinity };
-    for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i), side = sideOf(x), a = anchorOf[side];
+    for (let i = 0; i < ref.count; i++) {
+      const x = ref.getX(i), side = sideOf(x), a = anchorOf[side];
       if (!a) continue;
-      pt.set(x, pos.getY(i), pos.getZ(i));
+      pt.set(x, ref.getY(i), ref.getZ(i));
       closest[side] = Math.min(closest[side], pt.distanceTo(a.point));
     }
-    if (def.mode === 'fibre') return this._skinFibre(geom, def, arr, anchorOf, closest, sideOf);
+    if (def.mode === 'fibre') return this._skinFibre(geom, def, arr, anchorOf, closest, sideOf, ref);
     for (let i = 0; i < pos.count; i++) {
       const x = pos.getX(i);
       const side = sideOf(x);
@@ -1605,7 +1690,7 @@ export class Rig {
    * instead, encoded as 3 + share (0 = stretches with the insertion, 1 = rides the bone),
    * blending in over the first few centimetres past the insertion.
    */
-  _skinFibre(geom, def, arr, anchorOf, closest, sideOf) {
+  _skinFibre(geom, def, arr, anchorOf, closest, sideOf, ref = geom.attributes.position) {
     const pos = geom.attributes.position;
     const pt = new THREE.Vector3(), _d = new THREE.Vector3(), _e = new THREE.Vector3();
     // The way the fibres run on each side: from the middle of the muscle to its insertion.
@@ -1613,10 +1698,10 @@ export class Rig {
     // lie beside its bone (the lat next to a hanging arm) is never taken for tendon.
     const [j0, j1] = LIMB_AXIS[def.limb];
     const mid = { l: new THREE.Vector3(), r: new THREE.Vector3() }, count = { l: 0, r: 0 };
-    for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i), side = sideOf(x);
+    for (let i = 0; i < ref.count; i++) {
+      const x = ref.getX(i), side = sideOf(x);
       if (!anchorOf[side]) continue;
-      mid[side].x += x; mid[side].y += pos.getY(i); mid[side].z += pos.getZ(i); count[side]++;
+      mid[side].x += x; mid[side].y += ref.getY(i); mid[side].z += ref.getZ(i); count[side]++;
     }
     const along = {};
     for (const side of SIDES) {
@@ -1639,12 +1724,12 @@ export class Rig {
       if (dz < 0) { const ou = u; u = (1 - Math.abs(v)) * (ou >= 0 ? 1 : -1); v = (1 - Math.abs(ou)) * (v >= 0 ? 1 : -1); }
       return Math.min(BINS - 1, Math.floor((u * 0.5 + 0.5) * BINS)) * BINS + Math.min(BINS - 1, Math.floor((v * 0.5 + 0.5) * BINS));
     };
-    const dist = new Float32Array(pos.count), bin = new Int16Array(pos.count);
+    const dist = new Float32Array(ref.count), bin = new Int16Array(ref.count);
     const reach = { l: new Float32Array(BINS * BINS), r: new Float32Array(BINS * BINS) }, farthest = { l: 0, r: 0 };
-    for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i), side = sideOf(x), a = anchorOf[side];
+    for (let i = 0; i < ref.count; i++) {
+      const x = ref.getX(i), side = sideOf(x), a = anchorOf[side];
       if (!a) continue;
-      const dx = x - a.point.x, dy = pos.getY(i) - a.point.y, dz = pos.getZ(i) - a.point.z;
+      const dx = x - a.point.x, dy = ref.getY(i) - a.point.y, dz = ref.getZ(i) - a.point.z;
       dist[i] = Math.hypot(dx, dy, dz); bin[i] = binOf(dx, dy, dz);
       reach[side][bin[i]] = Math.max(reach[side][bin[i]], dist[i]);
       farthest[side] = Math.max(farthest[side], dist[i]);
@@ -1652,8 +1737,8 @@ export class Rig {
     // Any part of the muscle on the body's midline is on its start too: the lat's line
     // along the spine, the pec's along the breastbone.
     const start = { l: [], r: [] };
-    for (let i = 0; i < pos.count && def.start; i++) {
-      const x = pos.getX(i), side = sideOf(x), r = reach[side][bin[i]];
+    for (let i = 0; i < ref.count && def.start; i++) {
+      const x = ref.getX(i), side = sideOf(x), r = reach[side][bin[i]];
       if (!anchorOf[side]) continue;
       if (Math.abs(x) < 0.015 || (r >= 0.4 * farthest[side] && dist[i] >= r - 0.012)) start[side].push(i);
     }
@@ -1661,7 +1746,7 @@ export class Rig {
     const starts = {};
     for (const side of SIDES) {
       const list = start[side], step = Math.max(1, Math.floor(list.length / 400)), flat = [];
-      for (let k = 0; k < list.length; k += step) flat.push(pos.getX(list[k]), pos.getY(list[k]), pos.getZ(list[k]));
+      for (let k = 0; k < list.length; k += step) flat.push(ref.getX(list[k]), ref.getY(list[k]), ref.getZ(list[k]));
       starts[side] = new Float32Array(flat);
     }
     const nearestStart = (side, x, y, z) => {
@@ -1678,7 +1763,7 @@ export class Rig {
       const trunk = trunkOf(def, side);
       if (!a) { arr[i * 3] = trunk; arr[i * 3 + 1] = 0; arr[i * 3 + 2] = 1; continue; }
       pt.set(x, pos.getY(i), pos.getZ(i));
-      const toEnd = Math.max(0, dist[i] - closest[side]);
+      const toEnd = Math.max(0, pt.distanceTo(a.point) - closest[side]);
       let f;
       if (def.start) {
         let toStart = nearestStart(side, pt.x, pt.y, pt.z);
@@ -1717,6 +1802,13 @@ export class Rig {
         A.copy(I).applyMatrix4(limb);
         B.copy(I).applyMatrix4(trunk);
         this.anchorDisp[s] = A.x - B.x; this.anchorDisp[s + 1] = A.y - B.y; this.anchorDisp[s + 2] = A.z - B.z;
+        if (e.crest) {
+          const c = crestSlot(e.def, side) * 3;
+          applyMorph(e.crest.far, I, { tissue: 'muscle', bone: boneIndex(e.def.limb, side) });
+          A.copy(I).applyMatrix4(limb);
+          B.copy(I).applyMatrix4(trunk);
+          this.anchorDisp[c] = A.x - B.x; this.anchorDisp[c + 1] = A.y - B.y; this.anchorDisp[c + 2] = A.z - B.z;
+        }
       }
     }
   }
@@ -1787,19 +1879,34 @@ export class Rig {
     return v.set(rx + tx, ry + ty, rz + tz);
   }
 
+  /** A fibre point's insertion displacement: its slot's, or its own place along a crest. */
+  _disp(slot, c, wc) {
+    const s = slot * 3, A = this.anchorDisp, o = this._dispOut || (this._dispOut = [0, 0, 0]);
+    o[0] = A[s]; o[1] = A[s + 1]; o[2] = A[s + 2];
+    if (c < -0.5 && wc > 0) {
+      const f = Math.round(-c - 1) * 3, t = wc - 2;
+      o[0] += t * (A[f] - A[s]); o[1] += t * (A[f + 1] - A[s + 1]); o[2] += t * (A[f + 2] - A[s + 2]);
+    }
+    return o;
+  }
+
   _skin(a, b, w, v, c = -1, wc = 0) {
     if (w >= 2.999) {
       // Past the insertion: blend from stretching with it to turning with the bone.
-      const g = w - 3, s = b * 3, k = 1 - g;
-      this._skin(this.anchorBone[b], a, g, v);
-      return v.set(v.x + k * this.anchorDisp[s], v.y + k * this.anchorDisp[s + 1], v.z + k * this.anchorDisp[s + 2]);
+      const g = w - 3, D = this._disp(b, c, wc);
+      const L = this._rideTmp || (this._rideTmp = new THREE.Vector3());
+      L.copy(v);
+      this._skin(this.anchorBone[b], this.anchorBone[b], 1, L);
+      this._skin(a, a, 1, v);
+      v.x += D[0]; v.y += D[1]; v.z += D[2];
+      return v.lerp(L, g);
     }
     if (w >= 1.5) {
       // Fibre vertex: carried by its trunk bone, then shifted by its share of the stretch.
-      const f = w - 2, s = b * 3;
+      const f = w - 2, D = this._disp(b, c, wc);
       const rx = v.x, rz = v.z;
       if (c >= 0 && wc > 0) this._skin3(a, a, 1, c, wc, v); else this._skin(a, a, 1, v);
-      let dx = f * this.anchorDisp[s], dy = f * this.anchorDisp[s + 1], dz = f * this.anchorDisp[s + 2];
+      let dx = f * D[0], dy = f * D[1], dz = f * D[2];
       if (this.anchorWall[b]) {
         const n = _wallN.set(rx, 0, rz - WALL_Z);
         if (n.lengthSq() > 1e-8) {
@@ -2114,9 +2221,13 @@ export class Rig {
     let reach = Infinity;
     for (const turn of [0, 90, 140, 170]) {
       const Gp = G0.clone().sub(Fm).applyAxisAngle(pron, m * turn * Math.PI / 180).add(Fm);
-      let best = 0;
-      for (let t = -40; t <= 20; t += 1) best = Math.max(best, S.distanceTo(Gp.clone().sub(E).applyAxisAngle(hinge, t * Math.PI / 180).add(E)));
-      reach = Math.min(reach, best);
+      let best = 0, bestT = 0;
+      for (let t = -40; t <= 20; t += 1) {
+        const d = S.distanceTo(Gp.clone().sub(E).applyAxisAngle(hinge, t * Math.PI / 180).add(E));
+        if (d > best) { best = d; bestT = t * Math.PI / 180; }
+      }
+      // At the soft lockout, not dead straight (SOFT_ELBOW).
+      reach = Math.min(reach, S.distanceTo(Gp.clone().sub(E).applyAxisAngle(hinge, bestT + SOFT_ELBOW).add(E)));
     }
     return reach;
   }
@@ -2250,9 +2361,9 @@ export class Rig {
         const m1 = a0 + (a1 - a0) / 3, m2 = a1 - (a1 - a0) / 3;
         if (reach(m1) < reach(m2)) a0 = m1; else a1 = m2;
       }
-      const straight = (a0 + a1) / 2;
-      const want = Math.max(reach(ELBOW_MAX), Math.min(reach(straight), S.distanceTo(T)));
-      let lo = straight, hi = ELBOW_MAX;
+      const straight = (a0 + a1) / 2, soft = straight + SOFT_ELBOW;
+      const want = Math.max(reach(ELBOW_MAX), Math.min(reach(soft), S.distanceTo(T)));
+      let lo = soft, hi = ELBOW_MAX;
       for (let i = 0; i < 40; i++) { const mid = (lo + hi) / 2; if (reach(mid) > want) lo = mid; else hi = mid; }
       const bend = (lo + hi) / 2;
       const G = turnAbout(Gp, E, hinge, bend);
@@ -2283,7 +2394,10 @@ export class Rig {
         const forearm = outer.clone().multiply(q1).multiply(qBend).multiply(qTurn);
         const want = w0.clone().applyQuaternion(forearm.clone().invert()).dot(pron);
         const along = (x) => bh.clone().applyQuaternion(this.wristQuat(side, x, wrist)).dot(pron);
-        let lo = -WRIST_RADIAL_MAX, hi = WRIST_ULNAR_MAX;
+        // Solved over twice the wrist's range, then eased into its limits rather than
+        // stopped dead at them: stopped dead, the wrist hit its limit in the first 2% of an
+        // overhead press and the forearm took over the turn in a jerk.
+        let lo = -2 * WRIST_RADIAL_MAX, hi = 2 * WRIST_ULNAR_MAX;
         const rising = along(hi) > along(lo);
         if ((want - along(lo)) * (rising ? 1 : -1) <= 0) dev = lo;
         else if ((want - along(hi)) * (rising ? 1 : -1) >= 0) dev = hi;
@@ -2294,6 +2408,7 @@ export class Rig {
           }
           dev = (lo + hi) / 2;
         }
+        dev = dev >= 0 ? softLimit(dev, WRIST_ULNAR_MAX) : -softLimit(-dev, WRIST_RADIAL_MAX);
         // Then roll the radius until the bar line in the palm runs along the real bar.
         const base = outer.clone().multiply(q1).multiply(qBend);
         const f = pron.clone().applyQuaternion(base).normalize();
@@ -2534,9 +2649,9 @@ export class Rig {
       const m1 = a0 + (a1 - a0) / 3, m2 = a1 - (a1 - a0) / 3;
       if (reach(m1) < reach(m2)) a0 = m1; else a1 = m2;
     }
-    const straight = (a0 + a1) / 2;
-    const want = Math.max(reach(KNEE_MAX), Math.min(reach(straight), S.distanceTo(T)));
-    let lo = straight, hi = KNEE_MAX;
+    const straight = (a0 + a1) / 2, soft = straight + SOFT_KNEE;
+    const want = Math.max(reach(KNEE_MAX), Math.min(reach(soft), S.distanceTo(T)));
+    let lo = soft, hi = KNEE_MAX;
     for (let i = 0; i < 40; i++) { const mid = (lo + hi) / 2; if (reach(mid) > want) lo = mid; else hi = mid; }
     const bend = (lo + hi) / 2;
     const Gb = turnAbout(G, E, hinge, bend);
@@ -2683,7 +2798,7 @@ void sharirBlend() {
   } else if (aSkin.z > 1.5) {                       // fibre vertex: its trunk bone only
     sharirQ = uBoneReal[ia]; sharirD = uBoneDual[ia];
 #ifdef SHARIR_SKIN3
-    if (aSkin2.y > 0.0) {                           // ...or the spine's blend at its height
+    if (aSkin2.y > 0.0 && aSkin2.x > -0.5) {        // ...or the spine's blend at its height
       int ic = int(aSkin2.x + 0.5);
       vec4 qc = uBoneReal[ic], dc = uBoneDual[ic];
       if (dot(sharirQ, qc) < 0.0) { qc = -qc; dc = -dc; }
@@ -2713,6 +2828,12 @@ void sharirBlend() {
   sharirQ = q / len; sharirD = d / len;
 }
 vec3 sharirRotate(vec3 v) { return v + 2.0 * cross(sharirQ.xyz, cross(sharirQ.xyz, v) + sharirQ.w * v); }
+// One bone's dual quaternion applied to a point.
+vec3 sharirApply(int b, vec3 p) {
+  vec4 r = uBoneReal[b], d = uBoneDual[b];
+  vec3 q = p + 2.0 * cross(r.xyz, cross(r.xyz, p) + r.w * p);
+  return q + 2.0 * (r.w * d.xyz - d.w * r.xyz + cross(r.xyz, d.xyz));
+}
 vec3 sharirPoseNormal(vec3 n) {
   if (uPosed < 0.5) return n;
   sharirBlend();
@@ -2726,7 +2847,21 @@ vec3 sharirPose(vec3 p) {
   vec3 q = sharirRotate(p) + t;
   if (aSkin.z > 1.5) {
     int slot = int(aSkin.y + 0.5);
-    vec3 shift = min(aSkin.z - 2.0, 4.0 - aSkin.z) * uAnchorDisp[slot];
+    vec3 disp = uAnchorDisp[slot];
+#ifdef SHARIR_SKIN3
+    if (aSkin2.x < -0.5) {                          // its own place along a crest (CREST)
+      int fslot = int(-aSkin2.x - 0.5);
+      disp += (aSkin2.y - 2.0) * (uAnchorDisp[fslot] - uAnchorDisp[slot]);
+    }
+#endif
+    // Past the insertion: a straight blend from shifting with the insertion to being
+    // carried by the bone. Blended as two turns instead, half way with the humerus 140
+    // degrees overhead came 9 cm from either.
+    if (aSkin.z > 2.999) {
+      float g = aSkin.z - 3.0;
+      return mix(sharirApply(int(aSkin.x + 0.5), p) + disp, sharirApply(int(uAnchorBone[slot] + 0.5), p), g);
+    }
+    vec3 shift = (aSkin.z - 2.0) * disp;
     // On the trunk's wall: slide along it, never lift off it (WALL_Z in rig.js).
     if (uAnchorWall[slot] > 0.5 && aSkin.z < 2.999) {
       vec3 nr = vec3(p.x, 0.0, p.z - ${WALL_Z.toFixed(4)});

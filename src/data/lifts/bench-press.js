@@ -202,7 +202,9 @@ export const BENCH_PRESS = {
         // bar runs across the palm from the index finger out to the little finger, away
         // from the middle. The forearm's twist and the wrist's side-bend are solved to keep
         // it there at every moment of the rep.
-        const grip = this.gripPath(u * top, side, chest);
+        // Slow off the chest and slow into lockout, as a real bar is. Moving evenly to the
+        // top, the elbows snapped the last 13 degrees straight in the final few centimetres.
+        const grip = this.gripPath(u * u * (3 - 2 * u) * top, side, chest);
         // Wrist over elbow: the elbow is solved to sit as nearly straight under the bar as
         // this arm allows, rather than aimed by hand.
         const pole = rig.uprightPole(side, grip, p[`girdle.${side}`], this.elbowPole(u, side));

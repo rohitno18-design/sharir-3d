@@ -624,3 +624,52 @@ export function skinOverGirdle(skin, muscle, partAt, { girdle, arm, trunk, girdl
   SS.needsUpdate = true; S2.needsUpdate = true;
   return changed;
 }
+
+/**
+ * Sheets that lie inside the skin move with the skin over them. The platysma is a muscle
+ * of the skin itself, spread from the jaw down over the collarbone onto the upper chest;
+ * bound to the neck and the ribcage alone, it stayed put while the skin of the shoulders
+ * and the upper chest moved with the girdle in a shrug or a press. Each point takes the
+ * binding of the nearest point of the skin (its two bones and the third, `aSkin2`).
+ */
+export function followSkinBinding(skin, target, partAt, match, radius = 0.03) {
+  const SP = skin.attributes.position, SS = skin.attributes.aSkin, SA = skin.attributes.aPartIndex, S2 = skin.attributes.aSkin2;
+  const TP = target.attributes.position, TS = target.attributes.aSkin, TA = target.attributes.aPartIndex, T2 = target.attributes.aSkin2;
+  if (!SS || !TS || !SA || !TA) return 0;
+  const cell = 0.02, R = Math.ceil(radius / cell), r2 = radius * radius;
+  const cellKey = (i, j, k) => ((i + 2048) * 4096 + (j + 2048)) * 4096 + (k + 2048);
+  const grid = new Map();
+  for (let i = 0; i < SP.count; i++) {
+    const part = partAt(SA.getX(i));
+    if (!part || (part.sx && part.sx !== 'm') || /hair|nail|eyebrow|eyelash|cilia/i.test(part.n)) continue;
+    if (SS.getZ(i) > 1.5) continue;
+    const key = cellKey(Math.floor(SP.getX(i) / cell), Math.floor(SP.getY(i) / cell), Math.floor(SP.getZ(i) / cell));
+    let list = grid.get(key);
+    if (!list) grid.set(key, list = []);
+    list.push(i);
+  }
+  let changed = 0;
+  for (let i = 0; i < TP.count; i++) {
+    const part = partAt(TA.getX(i));
+    if (!part || !match.test(part.n)) continue;
+    const x = TP.getX(i), y = TP.getY(i), z = TP.getZ(i);
+    const cx = Math.floor(x / cell), cy = Math.floor(y / cell), cz = Math.floor(z / cell);
+    let best = -1, bd = r2;
+    for (let dx = -R; dx <= R; dx++) for (let dy = -R; dy <= R; dy++) for (let dz = -R; dz <= R; dz++) {
+      const list = grid.get(cellKey(cx + dx, cy + dy, cz + dz));
+      if (!list) continue;
+      for (const j of list) {
+        const sx = SP.getX(j);
+        if (sx * x < 0 && Math.abs(sx) > 0.01 && Math.abs(x) > 0.01) continue;
+        const d2 = (sx - x) ** 2 + (SP.getY(j) - y) ** 2 + (SP.getZ(j) - z) ** 2;
+        if (d2 < bd) { bd = d2; best = j; }
+      }
+    }
+    if (best < 0) continue;
+    TS.setXYZ(i, SS.getX(best), SS.getY(best), SS.getZ(best));
+    if (T2) T2.setXY(i, S2 ? S2.getX(best) : 0, S2 ? S2.getY(best) : 0);
+    changed++;
+  }
+  TS.needsUpdate = true; if (T2) T2.needsUpdate = true;
+  return changed;
+}

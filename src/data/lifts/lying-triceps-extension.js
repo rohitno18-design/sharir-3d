@@ -105,7 +105,9 @@ export const LYING_TRICEPS_EXTENSION = {
   pose(u, ctx) {
     const s = this._setup(ctx.rig, ctx);
     const p = { ...s.base };
-    const at = s.barAt(lerp(d(4), s.most, u));
+    // From the soft lockout, not from dead straight: the elbows never lock, and an arc
+    // started straighter than the arm will go sat still for the first part of the rep.
+    const at = s.barAt(lerp(d(14), s.most, u));
     // The bar's bends lie across the forearms and turn the hands a little thumbs-up.
     const ez = ezGrip(s.half, at.clone().sub(s.elbow).normalize());
     p._bar = { c: ez.c, offset: ez.offset };

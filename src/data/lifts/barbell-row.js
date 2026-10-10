@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { d, lerp, clamp01, bell, keyCurve, Frame, plantFeet, handsOnBar, joint, shoulderWorld, hangingBar, restingOn, squatStance, midfoot, SIDES, sgn, form, bodyKey } from '../../core/lift.js';
+import { d, lerp, clamp01, bell, keyCurve, Frame, plantFeet, handsOnBar, joint, shoulderWorld, hangingBar, restingOn, squatStance, midfoot, SIDES, sgn, form, bodyKey, ease, HANG_POLE } from '../../core/lift.js';
 
 /**
  * Bent-over barbell row.
@@ -103,8 +103,9 @@ export const BARBELL_ROW = {
     plantFeet(rig, s.frame, p);
     handsOnBar(rig, s.frame, p, {
       at: s.start.clone().lerp(s.top, u), half: s.half, align: 1, ...BAR,
-      // Elbows up and back past the body, about 45 degrees out from the sides.
-      pole: (side) => s.frame.dirToWorld(new THREE.Vector3(sgn(side) * 0.55, -0.15, -1)),
+      // Hanging at the bottom, the elbows face out and back (HANG_POLE); as the bar comes up
+      // they go up and back past the body, about 45 degrees out from the sides.
+      pole: (side) => s.frame.dirToWorld(HANG_POLE(side).normalize().lerp(new THREE.Vector3(sgn(side) * 0.55, -0.15, -1).normalize(), ease(clamp01(u / 0.45))).normalize()),
     });
     return p;
   },

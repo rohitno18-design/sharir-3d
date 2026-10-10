@@ -24,12 +24,13 @@ const LEAN = d(-6);          // the whole-body lean back at the start
 const LOCKOUT_SHRUG = d(28);
 /**
  * Where the point of each elbow faces. In the rack it points forward and down, in front of
- * the bar. Locked out overhead it faces out to the side and a little back, with the elbow
- * creases facing forward and in. Kept pointing forward all the way up, the forearm had to
- * turn the palm almost 180 degrees to face it forward, past what a forearm can turn.
+ * the bar; at the top, forward and out. It turns evenly over the whole press, so the arm
+ * keeps the position it pressed in. Turned to face out and back in the last part of the
+ * press only, the forearm untwisted 100 degrees on the way to lockout and the hand looked
+ * as if it let go of the press position.
  */
 const RACK_POLE = new THREE.Vector3(0.3, -0.45, 0.85);
-const LOCKOUT_POLE = new THREE.Vector3(1, 0, -0.5);
+const LOCKOUT_POLE = new THREE.Vector3(1, -0.1, -0.2);
 const smooth = (k) => ease(clamp01(k));
 
 export const OVERHEAD_PRESS = {
@@ -109,12 +110,45 @@ export const OVERHEAD_PRESS = {
     const start = hip.clone().setZ(hip.z + (mf - f0.toWorld(rack).z));
     // Lockout: upright, shoulder joints under the bar, the bar over mid-foot.
     const top = hip.clone().setZ(hip.z + (mf - gh.z));
+    // Moved forward over the feet without dropping, the hips were 8 mm too far from the
+    // ankles for knees that stay soft (SOFT_KNEE in rig.js), and the feet came off the
+    // floor. So they drop to keep the standing distance to the ankles.
+    const ankle = joint(rig, 'l', 'ankle'), reach = hip.distanceTo(ankle);
+    const flat = (top.x - ankle.x) ** 2 + (top.z - ankle.z) ** 2;
+    if (flat < reach * reach) top.y = ankle.y + Math.sqrt(reach * reach - flat);
     this._e = { key, half, rack, mf, start, top };
     return this._e;
   },
 
-  pose(u, { rig }) {
-    const e = this._ends(rig);
+  /**
+   * How far in front of mid-foot the bar has to pass to clear the chin and face, over the
+   * whole press, worked out once per body. Taken pose by pose, it wobbled by 3 cm on the
+   * way past the face and dropped 3.6 cm in one step once the bar was above the head, and
+   * the arms jerked with it. So the clearance is taken at every step, kept at least that
+   * large with its neighbours' (an envelope), and smoothed.
+   */
+  _clearPath(rig, e) {
+    const key = bodyKey();
+    if (this._cp?.key === key) return this._cp.z;
+    const N = 60, raw = new Float32Array(N + 1);
+    for (let i = 1; i <= N; i++) {
+      const u = i / N, { frame, p } = this._body(u, rig, e);
+      const at = new THREE.Vector3(0, this._height(u, rig, e, frame, p), e.mf);
+      raw[i] = clearOfBody(rig, rig.bodyCloud(p), at, Z, BAR.radius, { clear: 0.006, only: TRUNK, reach: 0.25 }).z - e.mf;
+    }
+    const env = raw.map((_, i) => { let m = 0; for (let j = Math.max(0, i - 4); j <= Math.min(N, i + 4); j++) m = Math.max(m, raw[j]); return m; });
+    const z = env.map((_, i) => {
+      let sw = 0, sv = 0;
+      for (let j = Math.max(0, i - 6); j <= Math.min(N, i + 6); j++) { const w = Math.exp(-((j - i) ** 2) / 8); sw += w; sv += w * env[j]; }
+      return Math.max(raw[i], sv / sw);
+    });
+    z[0] = 0;                                // resting on the shoulders
+    this._cp = { key, z, raw };
+    return z;
+  },
+
+  /** The body at movement point u: the lean, the feet, the shoulder rhythm and the head. */
+  _body(u, rig, e) {
     const k = ease(clamp01(u * 1.25));      // the body is under the bar well before lockout
     const frame = Frame.lean(rig, lerp(LEAN, 0, k), e.start.clone().lerp(e.top, k));
     const p = { root: frame.entry() };
@@ -126,21 +160,37 @@ export const OVERHEAD_PRESS = {
     // window" once the bar is above the forehead.
     const back = smooth(u / 0.12) * (1 - smooth((u - 0.42) / 0.25));
     bendSpine(p, { neck: d(-14) * back + d(5) * smooth((u - 0.6) / 0.4), head: d(-6) * back });
+    return { frame, p };
+  },
+
+  /**
+   * The bar's height. It leaves the shoulders gently and slows into the top, as a real
+   * press does. Rising evenly, it made the elbow snap straight in the last few
+   * centimetres, because an arm near straight gains little length for a lot of bend.
+   */
+  _height(u, rig, e, frame, p) {
     const y0 = frame.toWorld(e.rack).y;
     const y1 = pressHeight(rig, frame, p, e.half, e.mf);
-    let at = new THREE.Vector3(0, lerp(y0, y1, u), e.mf);
-    if (u > 0) at = clearOfBody(rig, rig.bodyCloud(p), at, Z, BAR.radius, { clear: 0.006, only: TRUNK, reach: 0.25 });
+    return lerp(y0, y1, u * u * (3 - 2 * u));
+  },
+
+  pose(u, { rig }) {
+    const e = this._ends(rig);
+    const { frame, p } = this._body(u, rig, e);
+    const path = this._clearPath(rig, e), f = clamp01(u) * (path.length - 1), i = Math.min(path.length - 2, Math.floor(f));
+    const at = new THREE.Vector3(0, this._height(u, rig, e, frame, p), e.mf + lerp(path[i], path[i + 1], f - i));
     // Elbows a little in front of the bar and pointing forward, not flared out. At the start
     // the arm is folded too far for an upright forearm, and "as upright as possible" then
     // dropped the elbows behind the bar, which is the wrong rack.
     // In the rack the wrist bends well back, so the bar sits in the heel of the hand over
-    // the forearm bones; that is what lets the elbows come forward. It straightens as the
-    // bar rises, and is only slightly bent at lockout.
+    // the forearm bones; that is what lets the elbows come forward. It straightens a little,
+    // evenly, as the bar rises, and stays bent back at the top: a pressing wrist, not a
+    // relaxed one.
     handsOnBar(rig, frame, p, {
       at, half: e.half, align: 1, ...BAR,
-      wrist: lerp(d(62), d(16), ease(clamp01(u * 2.2))),
+      wrist: lerp(d(62), d(34), ease(clamp01(u))),
       pole: (side) => {
-        const k = smooth((u - 0.6) / 0.4);
+        const k = smooth(u);
         const m = new THREE.Vector3(sgn(side), 1, 1);
         return RACK_POLE.clone().multiply(m).normalize().lerp(LOCKOUT_POLE.clone().multiply(m).normalize(), k).normalize();
       },
