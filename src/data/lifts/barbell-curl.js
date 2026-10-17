@@ -90,7 +90,7 @@ export const BARBELL_CURL = {
       z = clearOfBody(rig, cloud, new THREE.Vector3(0, y, z), Z, BAR.radius, { clear: 0.004, reach: 0.3 }).z;
     }
     const at = new THREE.Vector3(0, y, z);
-    handsOnBar(rig, frame, p, { at, half, align: -1, pole: pole, ...BAR });
+    handsOnBar(rig, frame, p, { at, half, align: -1, wrist: 0, pole: pole, ...BAR });
     // The elbow where that leaves it, and the forearm from there to the bar: the arc the
     // bar travels is about this point.
     const sides = {};
@@ -118,7 +118,8 @@ export const BARBELL_CURL = {
     const E = L.gh.clone().add(new THREE.Vector3(0, v.y * Math.cos(drift) - v.z * Math.sin(drift), v.y * Math.sin(drift) + v.z * Math.cos(drift)));
     const phi = lerp(L.phi0, TOP, u);
     const at = new THREE.Vector3(0, E.y - L.L2 * Math.cos(phi), E.z + L.L2 * Math.sin(phi));
-    handsOnBar(rig, s.frame, p, { at, half: s.half, align: -1, pole, ...BAR });
+    // Wrists straight and firm in a curl, not bent back.
+    handsOnBar(rig, s.frame, p, { at, half: s.half, align: -1, wrist: 0, pole, ...BAR });
     return p;
   },
 

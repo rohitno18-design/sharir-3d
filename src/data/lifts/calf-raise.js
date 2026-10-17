@@ -78,7 +78,7 @@ export const CALF_RAISE = {
     const rise = RISE * u;
     // Up on the ball of the foot: the ankle arcs up and forward round the ball, and the
     // whole straight body goes with it.
-    const A = joint(rig, 'l', 'ankle'), T = joint(rig, 'l', 'toe');
+    const A = joint(rig, 'l', 'ankle'), T = joint(rig, 'l', 'mtp');
     const v = T.clone().sub(A);
     const ankle = A.clone().setX(0).add(v.clone().sub(v.clone().applyAxisAngle(X, rise)));
     // The body leans forward from the ankles as one straight piece, just enough to keep the
@@ -104,7 +104,8 @@ export const CALF_RAISE = {
     for (const side of SIDES) p[`girdle.${side}`] = { rot: [0, sgn(side) * d(9), 0] };
     handsOnBar(rig, frame, p, {
       at: frame.toWorld(s.bar), half: s.half, align: 1, ...BAR,
-      pole: (side) => new THREE.Vector3(sgn(side) * 0.25, -1, -0.45),
+      // In the body's own frame, like the bar, so the elbows stay put as the body leans.
+      pole: (side) => frame.dirToWorld(new THREE.Vector3(sgn(side) * 0.25, -1, -0.45)),
     });
     return p;
   },

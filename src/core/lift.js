@@ -172,7 +172,10 @@ export function midfoot(rig, feet) {
 export function plantFeet(rig, frame, pose, feet = {}) {
   for (const side of SIDES) {
     const m = sgn(side);
-    const A = joint(rig, side, 'ankle'), T = joint(rig, side, 'toe');
+    // The heel rises round the ball of the foot (the big toe's knuckle), not the tip of the
+    // toe: round the tip, the ball came 3 cm off the floor and the lifter stood on the tip
+    // of the big toe.
+    const A = joint(rig, side, 'ankle'), T = joint(rig, side, 'mtp');
     const toeOut = feet.toeOut ?? 0;
     const yaw = new THREE.Quaternion().setFromAxisAngle(Y, m * toeOut);
     const rise = feet.rise ?? 0;
@@ -195,6 +198,8 @@ export function plantFeet(rig, frame, pose, feet = {}) {
     pose[`foot.${side}`] = {
       quat: frame.q.clone().multiply(leg[`thigh.${side}`].quat).multiply(leg[`shin.${side}`].quat).invert().multiply(orient),
     };
+    // The toes stay flat on the floor as the heel comes up.
+    if (rise) pose[`toes.${side}`] = { quat: new THREE.Quaternion().setFromAxisAngle(X, -rise) };
   }
   return pose;
 }

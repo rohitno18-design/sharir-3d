@@ -95,6 +95,10 @@ const SEGMENTS = [
   { name: 'thigh',    parent: null,       from: 'hip',      to: 'knee',     radius: 0.140, group: 'leg' },
   { name: 'shin',     parent: 'thigh',    from: 'knee',     to: 'ankle',    radius: 0.100, group: 'leg' },
   { name: 'foot',     parent: 'shin',     from: 'ankle',    to: 'toe',      radius: 0.090, group: 'leg' },
+  // The toes bend at the ball of the foot. Not found by closeness (`noBind`): what goes
+  // with them is decided by which side of the line of the knuckles a point lies (see
+  // `_toesShare`).
+  { name: 'toes',     parent: 'foot',     from: 'mtp',      to: 'toe',      radius: 0.040, group: 'leg', noBind: true },
 ];
 
 const PER_SIDE = SEGMENTS.length;
@@ -893,6 +897,11 @@ export class Rig {
       }
       this._resolveForearm(side, q);
       if (!this._resolveHand(side, q)) { console.warn('[rig] hand joints missing', side); return; }
+      // The ball of the foot: the big toe's knuckle, and the little toe's for the line of them.
+      q.mtp = this._joint(`skeletal:First metatarsal bone.${side}`, `skeletal:Proximal phalanx of first finger of foot.${side}`)
+        || q.ankle.clone().lerp(q.toe, 0.72);
+      q.mtp5 = this._joint(`skeletal:Fifth metatarsal bone.${side}`, `skeletal:Proximal phalanx of fifth finger of foot.${side}`)
+        || q.mtp.clone().add(new THREE.Vector3(side === 'l' ? 0.05 : -0.05, 0, -0.03));
       this.p[side] = q;
     }
     for (const side of SIDES) {
@@ -934,7 +943,7 @@ export class Rig {
     });
     for (const side of SIDES) this.bones[boneIndex('girdle', side)].parent = boneIndex('thorax');
     // Segment order within a group, for the joint blends.
-    for (const g of ['arm', 'leg']) this.byGroup[g] = SEGMENTS.map((s, i) => (s.group === g ? i : -1)).filter(i => i >= 0);
+    for (const g of ['arm', 'leg']) this.byGroup[g] = SEGMENTS.map((s, i) => (s.group === g && !s.noBind ? i : -1)).filter(i => i >= 0);
     for (const side of SIDES) {
       for (const def of ANCHORED) {
         const point = this._insertion(def, side);
@@ -1480,12 +1489,13 @@ export class Rig {
     // `_resolveForearm`); blended, they had bent like rubber and the head of the radius
     // came 4 cm out of the elbow.
     if (part.sys !== 'skeletal' && cls.group === 'arm') this._forearmTurn(geom, arr);
+    if (part.sys !== 'skeletal' && cls.group === 'leg') this._toesShare(geom, arr);
     if (part.sys === 'skeletal' && cls.mode === 'limb') {
       let bone;
       // The long bones by name: a bone can arrive as several pieces, and a vote taken piece
       // by piece gave the lower end of the humerus to the forearm.
       const OWN = [[/scapula|clavicle/i, 'girdle'], [/humerus/i, 'upperarm'], [/^ulna$/i, 'forearm1'], [/^radius$/i, 'forearm2'],
-        [/femur/i, 'thigh'], [/tibia|fibula|patella/i, 'shin']];
+        [/femur/i, 'thigh'], [/tibia|fibula|patella/i, 'shin'], [/phalanx of .* finger of foot/i, 'toes']];
       const own = OWN.find(([re]) => re.test(part.n));
       if (own) {
         let sx = 0;
@@ -1508,6 +1518,26 @@ export class Rig {
    * Weight every vertex by its distance from the muscle's insertion: fully with the limb
    * within `near` of the tendon, fully with the trunk beyond `far`, smooth in between.
    */
+  /**
+   * Tissue past the line of the toes' knuckles goes with the toes, blended over 1.2 cm
+   * either side of it. Only points carried by the foot alone change.
+   */
+  _toesShare(geom, arr) {
+    const pos = geom.attributes.position;
+    for (let i = 0; i < pos.count; i++) {
+      const a = arr[i * 3], b = arr[i * 3 + 1], w = arr[i * 3 + 2];
+      if (w > 1.5) continue;
+      const x = pos.getX(i), side = x >= 0 ? 'l' : 'r', foot = boneIndex('foot', side);
+      if (a !== foot || (b !== foot && w < 0.999)) continue;
+      const q = this.p[side], line = q.mtp5.clone().sub(q.mtp).setY(0).normalize();
+      const fwd = new THREE.Vector3(-line.z, 0, line.x);
+      if (fwd.dot(q.toe.clone().sub(q.mtp)) < 0) fwd.negate();
+      const t = smoothstep(-0.012, 0.012, (x - q.mtp.x) * fwd.x + (pos.getZ(i) - q.mtp.z) * fwd.z);
+      if (t <= 0.001) continue;
+      arr[i * 3] = boneIndex('toes', side); arr[i * 3 + 1] = foot; arr[i * 3 + 2] = t;
+    }
+  }
+
   /**
    * Soft tissue in the forearm turns with the radius by how far down the forearm it lies:
    * not at all at the elbow, fully at the wrist, the way skin and muscle spiral round a
@@ -2715,7 +2745,7 @@ const JOINT_OWNER = {
     [`mcp${n}`, `f${n}a`], [`pip${n}`, `f${n}b`], [`dip${n}`, `f${n}c`], [`tip${n}`, `f${n}c`],
   ])),
   cmc1: 't1', mcp1: 't2', ip1: 't3', tip1: 't3',
-  hip: 'thigh', knee: 'shin', ankle: 'foot', toe: 'foot',
+  hip: 'thigh', knee: 'shin', ankle: 'foot', toe: 'foot', mtp: 'foot',
 };
 
 function smoothstep(a, b, x) { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); }
@@ -2837,6 +2867,16 @@ vec3 sharirApply(int b, vec3 p) {
 vec3 sharirPoseNormal(vec3 n) {
   if (uPosed < 0.5) return n;
   sharirBlend();
+  // A fibre point is carried by its trunk bone, but the muscle's surface turns towards the
+  // limb it stretches to, by how far along it the point is. Lit by the trunk alone, a pec
+  // stretched overhead was shaded as if the arm still hung at the side.
+  if (aSkin.z > 1.5 && aSkin.z < 2.999) {
+    int ib = int(uAnchorBone[int(aSkin.y + 0.5)] + 0.5);
+    vec4 qb = uBoneReal[ib];
+    if (dot(sharirQ, qb) < 0.0) qb = -qb;
+    vec4 qn = normalize(mix(sharirQ, qb, clamp(aSkin.z - 2.0, 0.0, 1.0)));
+    return n + 2.0 * cross(qn.xyz, cross(qn.xyz, n) + qn.w * n);
+  }
   return sharirRotate(n);
 }
 vec3 sharirPose(vec3 p) {

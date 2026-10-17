@@ -194,6 +194,13 @@ Measures taken over a muscle (where it starts, its point nearest the insertion) 
 over all of its pieces: the atlas ships some muscles in several, and a small piece by the
 pec's tendon found its own "far edge" two centimetres from the insertion.
 
+A fibre point's surface turns towards the limb it stretches to, by how far along it the
+point is, so a stretched muscle is lit the way it now faces.
+
+The calf raise rises round the ball of the foot. The toes are their own bone (`toes`),
+bending at the line of their knuckles, and stay flat on the floor as the heel comes up;
+rising round the tip of the big toe, the ball of the foot came 3 cm off the floor.
+
 The platysma, a muscle inside the skin of the neck and upper chest, moves with the skin
 over it (`followSkinBinding` in skinweld.js).
 
@@ -229,6 +236,12 @@ seven directions and a point counts as outside only when six agree, because a si
 through a tangle of skin elsewhere gives a false result.
 
 ## Known limits
+
+- **The hamstrings' and adductors' pelvic origins drift.** At the bottom of a squat their
+  ends on the ischium and pubis come 4 to 5.6 cm off the hip bone, because they are bound
+  by closeness to the femur. Holding them to the pelvis over 5 or 14 cm tore them instead
+  (2,200 to 3,500 stretched edges): blending the hip's 120 degree turn partway shears
+  them. The real fix is to bind them along their fibres, like the pec and the lats.
 
 - **The collarbone and the shoulder blade are one piece.** The real shoulder blade also
   turns on the end of the collarbone; here it can only turn with it, from the breastbone.

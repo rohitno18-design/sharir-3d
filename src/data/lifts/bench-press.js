@@ -161,12 +161,14 @@ export const BENCH_PRESS = {
   },
 
   /**
-   * The shoulder blades stay pinned back on the chest and only give a little at lockout,
-   * which is the serratus at work at the top of the rep.
+   * The shoulder blades stay pinned back on the bench and only give a little at lockout,
+   * which is the serratus at work at the top of the rep. A positive turn about the
+   * vertical takes the left blade back. It used to be only 3 degrees back on the chest and
+   * 6 forward at lockout, which is a loose upper back, not a set one.
    */
   girdle(u, side) {
     const m = side === 'l' ? 1 : -1;
-    return { rot: [0, -m * d(lerp(-3, 6, u)), 0] };
+    return { rot: [0, m * d(lerp(9, 4, u)), 0] };
   },
 
   /**
@@ -234,7 +236,9 @@ export const BENCH_PRESS = {
       // Feet planted. The ankle is driven to a fixed point on the floor, so the knee angle
       // falls out of the lifter's own leg length rather than being a number I picked.
       if (rig) {
-        const hipWorldZ = pz - rig.p[side].hip.y;
+        // The hip through this body's morph, like the ankle below: read off the rest skeleton,
+        // the feet slid on any body that was not the model's own size.
+        const hipWorldZ = pz - rig.morphedJoint(side, 'hip').y;
         // How high the ankle sits above a flat sole is a property of this body, not a
         // constant: read it off the standing skeleton so the sole lands on the floor at
         // any height rather than hovering a few centimetres over it.
