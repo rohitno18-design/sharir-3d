@@ -458,6 +458,14 @@ function turnFrame(a1, b1, a2, b2) {
   return new THREE.Quaternion().setFromRotationMatrix(m2.multiply(m1.transpose()));
 }
 
+/**
+ * Nerves and vessels of the trunk's own wall, which run round the ribs and never into a
+ * limb. With the arm hanging flat against the ribcage, the upper intercostal nerves by the
+ * armpit lay inside the arm's reach and went partly with it: overhead they were pulled out
+ * of the chest in loops (1,800 stretched edges in an overhead press).
+ */
+const TRUNK_WALL = /^(intercostal|subcostal|posterior intercostal|anterior intercostal|thoracoabdominal)/i;
+
 export class Rig {
   constructor(registry, groups = null) {
     this.ok = false;
@@ -1423,7 +1431,7 @@ export class Rig {
       return this.insideFraction(geom, cls.group, 11, cls.only) > 0.9
         ? { group: cls.group, mode: 'limb', only: cls.only } : cls;
     }
-    if (cls.mode !== 'none' || !TUBULAR.has(part.sys) || !part.bb || GENITAL.test(part.n)) return cls;
+    if (cls.mode !== 'none' || !TUBULAR.has(part.sys) || !part.bb || GENITAL.test(part.n) || TRUNK_WALL.test(part.n)) return cls;
     // Vessels, nerves and lymphatics are named after where they come from, not where they
     // run, so the hierarchy rarely places them in a limb. Let the geometry decide — but it
     // needs a gate first. In anatomical position the arm lies flat against the ribcage and

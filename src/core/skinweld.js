@@ -632,8 +632,9 @@ export function skinOverGirdle(skin, muscle, partAt, { girdle, arm, trunk, girdl
  * and the upper chest moved with the girdle in a shrug or a press. Each point takes the
  * binding of the nearest point of the skin (its two bones and the third, `aSkin2`).
  */
-export function followSkinBinding(skin, target, partAt, match, radius = 0.03) {
+export function followSkinBinding(skin, target, partAt, match, radius = 0.03, from = null) {
   const SP = skin.attributes.position, SS = skin.attributes.aSkin, SA = skin.attributes.aPartIndex, S2 = skin.attributes.aSkin2;
+  if (!target.attributes.aSkin2 && S2) target.setAttribute('aSkin2', new THREE.BufferAttribute(new Float32Array(target.attributes.position.count * 2), 2));
   const TP = target.attributes.position, TS = target.attributes.aSkin, TA = target.attributes.aPartIndex, T2 = target.attributes.aSkin2;
   if (!SS || !TS || !SA || !TA) return 0;
   const cell = 0.02, R = Math.ceil(radius / cell), r2 = radius * radius;
@@ -642,7 +643,7 @@ export function followSkinBinding(skin, target, partAt, match, radius = 0.03) {
   for (let i = 0; i < SP.count; i++) {
     const part = partAt(SA.getX(i));
     if (!part || (part.sx && part.sx !== 'm') || /hair|nail|eyebrow|eyelash|cilia/i.test(part.n)) continue;
-    if (SS.getZ(i) > 1.5) continue;
+    if (from ? !from.test(part.n) : SS.getZ(i) > 1.5) continue;
     const key = cellKey(Math.floor(SP.getX(i) / cell), Math.floor(SP.getY(i) / cell), Math.floor(SP.getZ(i) / cell));
     let list = grid.get(key);
     if (!list) grid.set(key, list = []);

@@ -201,6 +201,12 @@ The calf raise rises round the ball of the foot. The toes are their own bone (`t
 bending at the line of their knuckles, and stay flat on the floor as the heel comes up;
 rising round the tip of the big toe, the ball of the foot came 3 cm off the floor.
 
+The nerves and vessels of the trunk wall (the intercostals and their kind, `TRUNK_WALL`
+in `rig.js`) stay on the trunk. Bound piece by piece by where they lie, the upper
+intercostal nerves by the armpit went partly with the arm and were pulled out of the
+chest in loops whenever the arms went up. The nerve to the lower subscapularis and teres
+major copies the binding of those muscles.
+
 The platysma, a muscle inside the skin of the neck and upper chest, moves with the skin
 over it (`followSkinBinding` in skinweld.js).
 

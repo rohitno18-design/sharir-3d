@@ -168,6 +168,16 @@ export class BatchedBody {
       if (muscle) rig.blendFibreTrunks(muscle.mesh.geometry);
       if (skin && muscle) skinOverGirdle(skin.mesh.geometry, muscle.mesh.geometry, (slot) => this.parts[slot], rig.girdleSkinField());
       if (skin && muscle) followSkinBinding(skin.mesh.geometry, muscle.mesh.geometry, (slot) => this.parts[slot], /^platysma/i);
+      // The nerve to the lower subscapularis and teres major runs on them, and moves with them:
+      // left on its own binding, it stretched out of the armpit with the arms overhead. (The
+      // thoracodorsal and lateral thoracic vessels were tried the same way and came out
+      // worse: their upper ends lie in the armpit, away from the muscle.)
+      const at = (slot) => this.parts[slot];
+      for (const sys of ['nervous', 'cardiovascular']) {
+        const b = this.batches.find(x => x.system === sys);
+        if (!b || !muscle) continue;
+        followSkinBinding(muscle.mesh.geometry, b.mesh.geometry, at, /^(inferior subscapular|lower subscapular)/i, 0.04, /^(subscapularis|teres major)/i);
+      }
       if (skin) rig.collectCreaseSamples(skin.mesh.geometry, (slot) => this.parts[slot]);
     }
     this._findDominantBones();

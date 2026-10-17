@@ -371,6 +371,7 @@ class App {
     if (!next && !state.sysOverride) return;
     state.sysOverride = next;
     this.hi.invalidate();
+    this.updateLegend();
     if (state.mode === 'systems') this.panel?.render?.();
   }
 
@@ -1010,7 +1011,11 @@ class App {
 
   updateLegend() {
     const leg = document.getElementById('legend');
-    const on = SYSTEMS.filter(s => state.systems[s.key].visible && s.key !== 'references');
+    // What the body actually shows: a tab's own view (an effect, a Movement look) overrides
+    // the Systems switches, and the legend has to follow it. It used to read the switches
+    // alone, and said "Nervous system" over a body of muscle.
+    const shown = (k) => state.sysOverride?.[k]?.visible ?? state.systems[k].visible;
+    const on = SYSTEMS.filter(s => shown(s.key) && s.key !== 'references');
     if (on.length === 0 || on.length > 7) { leg.hidden = true; return; }
     leg.hidden = false;
     leg.innerHTML = on.map(s => `<span><i style="background:${s.color}"></i>${state.lang === 'hi' ? s.hi : s.label}</span>`).join('');
