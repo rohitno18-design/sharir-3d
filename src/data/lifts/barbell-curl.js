@@ -21,6 +21,9 @@ export const BARBELL_CURL = {
   sub: 'Standing, with a short bar and an underhand grip',
   source: 'Frédéric Delavier, Strength Training Anatomy — Barbell Curls; standard strength-coaching technique',
   duration: 3.2,
+  // What the lifter carries and rests on, for the computed-effort model (src/core/biomech.js).
+  // The weight is a working set for a 65 kg lifter; it is scaled to the body on screen.
+  physics: { load: { at: 'hands', kg: 30, against: 'legs' }, support: 'feet' },
   bar: BAR,
 
   // Up in 0.40 of the rep, a short squeeze, down slower than up, a moment at the bottom.

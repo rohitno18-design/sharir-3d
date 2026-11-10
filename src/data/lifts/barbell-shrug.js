@@ -20,6 +20,9 @@ export const BARBELL_SHRUG = {
   sub: 'Standing, arms straight, shoulders straight up and down',
   source: 'Frédéric Delavier, Strength Training Anatomy — Barbell Shrugs; standard strength-coaching technique',
   duration: 3.0,
+  // What the lifter carries and rests on, for the computed-effort model (src/core/biomech.js).
+  // The weight is a working set for a 65 kg lifter; it is scaled to the body on screen.
+  physics: { load: { at: 'hands', kg: 80, against: 'legs' }, support: 'feet' },
   bar: BAR,
 
   u: keyCurve([[0, 0], [0.30, 1], [0.45, 1], [0.85, 0], [1, 0]]),

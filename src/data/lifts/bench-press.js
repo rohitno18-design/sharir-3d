@@ -46,6 +46,9 @@ export const BENCH_PRESS = {
   sub: 'Flat bench, set up the way Delavier teaches it',
   source: 'Frédéric Delavier, Strength Training Anatomy — Bench Presses (p.64) and Positioning for a Power Bench Press (p.65)',
   duration: 3.4,                    // seconds for one full rep
+  // What the lifter carries and rests on, for the computed-effort model (src/core/biomech.js).
+  // The weight is a working set for a 65 kg lifter; it is scaled to the body on screen.
+  physics: { load: { at: 'hands', kg: 60 }, support: 'bench' },
 
   // ---- the rep ----
   u: pressPhase,

@@ -20,6 +20,9 @@ export const ROMANIAN_DEADLIFT = {
   sub: 'Barbell, hips back, knees slightly bent, back flat',
   source: 'Frédéric Delavier, Strength Training Anatomy — Stiff-Legged Deadlifts; standard strength-coaching technique',
   duration: 3.8,
+  // What the lifter carries and rests on, for the computed-effort model (src/core/biomech.js).
+  // The weight is a working set for a 65 kg lifter; it is scaled to the body on screen.
+  physics: { load: { at: 'hands', kg: 80, against: 'legs' }, support: 'feet' },
   bar: BAR,
 
   u: keyCurve([[0, 0], [0.42, 1], [0.50, 1], [0.90, 0], [1, 0]]),

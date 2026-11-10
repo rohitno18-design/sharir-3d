@@ -16,10 +16,18 @@ import { ROMANIAN_DEADLIFT } from './lifts/romanian-deadlift.js';
 import { BARBELL_ROW } from './lifts/barbell-row.js';
 import { LYING_TRICEPS_EXTENSION } from './lifts/lying-triceps-extension.js';
 import { HIP_THRUST } from './lifts/hip-thrust.js';
+import { SCRIPTS } from './moves.js';
+import { movement } from '../core/motion.js';
 
 export { pressPhase };
-export const EXERCISES = [
+/** The ten lifts written by hand, each with its own bar path and effort curves shaped from EMG studies. */
+export const LIFTS = [
   BENCH_PRESS, BARBELL_ROW, OVERHEAD_PRESS, BARBELL_CURL, LYING_TRICEPS_EXTENSION, BARBELL_SHRUG,
   BACK_SQUAT, ROMANIAN_DEADLIFT, HIP_THRUST, CALF_RAISE,
 ];
+/** Movements written as scripts: poses from joint angles, effort computed from joint torques. */
+export const MOVES = SCRIPTS.map(movement);
+export const EXERCISES = [...LIFTS, ...MOVES];
+/** The body parts in the picker's order, each with its movements. */
+export const PARTS = [...new Set(EXERCISES.map(e => e.part))].map(part => ({ part, list: EXERCISES.filter(e => e.part === part) }));
 export const exerciseById = (id) => EXERCISES.find((e) => e.id === id) || null;

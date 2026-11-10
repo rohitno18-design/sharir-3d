@@ -1984,6 +1984,7 @@ export class Rig {
    */
   setPose(pose) {
     if (!this.ok) return;
+    this.lastPose = pose;
     const local = new THREE.Matrix4();
     for (let i = 0; i < BONE_COUNT; i++) {
       const bone = this.bones[i];
@@ -2736,6 +2737,27 @@ export class Rig {
     const b = segName ? this.bones[boneIndex(segName, side)] : null;
     out.applyMatrix4(b ? this._m[b.index] : this._m[0]);
     return out;
+  }
+
+  /**
+   * Where a bone's own joint is under the current pose: the lower back's, the neck's, a
+   * shoulder girdle's. `end` gives the far end of the bone instead (the top of the head).
+   */
+  pivotAt(name, side = null, out = new THREE.Vector3(), end = false) {
+    const b = this.bones[boneIndex(name, side)];
+    if (!b) return out.set(0, 0, 0);
+    applyMorph(end ? b.tail : b.pivot, out, { tissue: 'bone', bone: b.index });
+    return out.applyMatrix4(this._m[b.index]);
+  }
+
+  /** Which way a bone is turned under the current pose, as a rotation of the standing body's axes. */
+  boneQuat(name, side = null, out = new THREE.Quaternion()) {
+    return out.setFromRotationMatrix(this._m[boneIndex(name, side)]);
+  }
+
+  /** A point of the standing body (shaped rest space), carried by one bone to where the pose puts it. */
+  carry(name, side, restPoint, out = new THREE.Vector3()) {
+    return out.copy(restPoint).applyMatrix4(this._m[boneIndex(name, side)]);
   }
 }
 

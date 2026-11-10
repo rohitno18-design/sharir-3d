@@ -1,6 +1,6 @@
 import { el } from '../core/util.js';
 import { state, set } from '../core/state.js';
-import { EXERCISES } from '../data/exercises.js';
+import { EXERCISES, PARTS } from '../data/exercises.js';
 import { phaseAt } from '../core/lift.js';
 
 /** Which moment of the rep the current phase falls in, for a lift. Film captions use the same words. */
@@ -59,16 +59,23 @@ export class ExercisePanel {
     const ex = p?.ex || EXERCISES[0];
     this.root.innerHTML = '';
 
-    // ---- which lift: one per body part ----
+    // ---- which movement: the body part first, then the movements for it ----
     const pick = el('div', { class: 'exo-pick' });
-    for (const e of EXERCISES) {
-      const chip = el('button', { class: 'chip' + (e.id === ex.id ? ' active' : ''), title: e.name,
-        onClick: () => { if (e.id !== ex.id) this.app.setExercise(e.id); } }, e.part);
+    for (const { part, list } of PARTS) {
+      const chip = el('button', { class: 'chip' + (part === ex.part ? ' active' : ''), title: list.map(e => e.name).join(', '),
+        onClick: () => { if (part !== ex.part) this.app.setExercise(list[0].id); } }, part);
       pick.append(chip);
+    }
+    const mine = PARTS.find(p => p.part === ex.part)?.list || [ex];
+    const moves = el('div', { class: 'exo-pick exo-moves' });
+    if (mine.length > 1) for (const e of mine) {
+      moves.append(el('button', { class: 'chip' + (e.id === ex.id ? ' active' : ''),
+        onClick: () => { if (e.id !== ex.id) this.app.setExercise(e.id); } }, e.name));
     }
     this.root.append(
       el('div', { class: 'exo-kicker' }, 'Movement'),
       pick,
+      ...(mine.length > 1 ? [moves] : []),
       el('div', { class: 'exo-head' },
         el('h2', { class: 'exo-title' }, ex.name),
         el('div', { class: 'exo-sub' }, ex.sub)),
@@ -181,8 +188,9 @@ export class ExercisePanel {
     this.root.append(list);
     this.root.append(el('p', { class: 'nt muted small' },
       'Tap a muscle in this list, or on the body, to see what it is.'));
-    this.root.append(el('p', { class: 'nt muted small' },
-      'The effort levels are shaped from published EMG studies of this lift. Each muscle is shown against its own peak in this lift. This is a teaching aid. It does not measure your body.'));
+    this.root.append(el('p', { class: 'nt muted small' }, ex.scripted
+      ? `The effort levels are worked out from physics: the turning force each joint has to hold in this position${ex.physics?.load?.kg ? `, carrying ${ex.physics.load.kg} kg in all` : ''}, against what those muscles can produce. Muscles are shown against the hardest-working one. This is a teaching aid. It does not measure your body.`
+      : 'The effort levels are shaped from published EMG studies of this lift. Each muscle is shown against its own peak in this lift. This is a teaching aid. It does not measure your body.'));
 
     this.liveUpdate();
   }

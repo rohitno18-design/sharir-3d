@@ -40,6 +40,9 @@ export class ExercisePlayer {
     this.t = 0;
     this.playing = false;
     this._poses = new Map();
+    // A scripted movement works out its own muscles for this body before anything is shown.
+    ex.prepare?.(this.app);
+    this._prepared = ex.muscles;
     this._resolveMuscles();
     this._buildProps();
     this.seek(0);
@@ -168,6 +171,18 @@ export class ExercisePlayer {
     const rig = this.app.body.rig;
     if (!rig || !rig.ok) return;
 
+    // The body was resized while a scripted movement was open: its muscles and its balance
+    // were worked out for the old body, so they are worked out again.
+    if (this.ex.prepare) {
+      this.ex.prepare(this.app);
+      if (this.ex.muscles !== this._prepared) {
+        this._prepared = this.ex.muscles;
+        this._poses = new Map();
+        this._resolveMuscles();
+        this.app.panel?.render?.();
+      }
+    }
+
     this._pose = this.poseAt(this.ex.u(this.t));
     rig.setPose(this._pose);
 
@@ -279,6 +294,30 @@ export class ExercisePlayer {
       this.bar = bar;
     } else this.bar = null;
 
+    // Dumbbells: one in each hand, placed in the grip every frame like the bar. The heads
+    // grow with the weight, so a heavy pair looks heavy.
+    this.dumbbells = null;
+    if (eq.dumbbells) {
+      const each = Math.max(1, (this.ex.physics?.load?.kg || 10) / 2);
+      const headR = Math.min(0.085, 0.036 + 0.0032 * each), headL = Math.min(0.075, 0.03 + 0.0022 * each);
+      const R = this.ex.bar?.radius ?? 0.016;
+      this.dumbbells = {};
+      for (const side of ['l', 'r']) {
+        const db = new THREE.Group();
+        const handle = new THREE.Mesh(new THREE.CylinderGeometry(R, R, 0.15, 14), steel);
+        handle.rotation.z = Math.PI / 2;
+        db.add(handle);
+        for (const s of [-1, 1]) {
+          const head = new THREE.Mesh(new THREE.CylinderGeometry(headR, headR, headL, 24), iron);
+          head.rotation.z = Math.PI / 2;
+          head.position.x = s * (0.062 + headL / 2);
+          db.add(head);
+        }
+        g.add(db);
+        this.dumbbells[side] = db;
+      }
+    }
+
     this.app.viewer.scene.add(g);
     this.props = g;
   }
@@ -289,6 +328,15 @@ export class ExercisePlayer {
    */
   _placeBar() {
     const rig = this.app.body.rig;
+    if (this.dumbbells && rig?.ok) {
+      // Each handle lies along the line the palm holds a bar on, wherever the hand is turned.
+      for (const side of ['l', 'r']) {
+        const db = this.dumbbells[side];
+        db.position.copy(rig.jointAt('grip', side));
+        const axis = rig.barInHand(side).applyQuaternion(rig.boneQuat('hand', side)).normalize();
+        db.quaternion.setFromUnitVectors(new THREE.Vector3(1, 0, 0), axis);
+      }
+    }
     if (!this.bar || !rig?.ok) return;
     // The bar lies in the channel of the palm, which is the same point the arm IK solves
     // to, so the grip can never drift off it at any phase or any body size.

@@ -40,6 +40,9 @@ export const OVERHEAD_PRESS = {
   sub: 'Barbell, standing, from the front of the shoulders to overhead',
   source: 'Frédéric Delavier, Strength Training Anatomy — Front Presses; Mark Rippetoe, Starting Strength — The Press',
   duration: 3.2,
+  // What the lifter carries and rests on, for the computed-effort model (src/core/biomech.js).
+  // The weight is a working set for a 65 kg lifter; it is scaled to the body on screen.
+  physics: { load: { at: 'hands', kg: 35 }, support: 'feet' },
   bar: BAR,
 
   u: keyCurve([[0, 0], [0.38, 1], [0.48, 1], [0.90, 0], [1, 0]]),

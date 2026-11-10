@@ -37,9 +37,39 @@ const muscles = data.parts.filter(p => p.k === 'mesh' && p.sys === 'muscular' &&
 const UPPER_KEY = /grip|arm|biceps|brachi|triceps|anconeus|delt|pec|cuff|lat|trap|serratus|coraco|rhomboid|levator|mid-back|hold/i;
 const LOWER_KEY = /quad|glute|ham|calf|calves|gastroc|soleus|adductor|deep|legdrive/i;
 const problems = [];
+let GROUPS_N = 0;
 const bad = (lift, msg) => problems.push(`${lift}: ${msg}`);
 
-for (const ex of EXERCISES) {
+// A scripted movement's muscles are computed in the app, from the model's own table, so
+// that table is what is checked for it (below), not a hand-written list.
+const scripted = EXERCISES.filter(e => e.scripted);
+for (const ex of scripted) {
+  for (const k of ['id', 'part', 'name', 'duration', 'form', 'camera', 'pose']) if (ex[k] == null) bad(ex.id, `missing "${k}"`);
+  if (ex.clipped?.length) for (const c of ex.clipped) bad(ex.id, `asks for more than a joint can do: ${c}`);
+  const ph = [...ex.phases].sort((a, b) => a.t0 - b.t0);
+  if (ph[0].t0 !== 0 || ph[ph.length - 1].t1 !== 1) bad(ex.id, 'phases do not cover the whole rep');
+  if (ph.filter(p => p.work).length !== 1) bad(ex.id, `${ph.filter(p => p.work).length} working phases (should be 1)`);
+}
+{
+  const { GROUPS } = await import(pathToFileURL(join(ROOT, 'src', 'core', 'biomech.js')).href);
+  const owner = new Map();
+  GROUPS_N = GROUPS.length;
+  for (const g of GROUPS) {
+    const hit = muscles.filter(p => g.match.test(p.n));
+    if (LIST) console.log(`  model: ${g.key.padEnd(14)} ${[...new Set(hit.map(p => p.n))].join(' | ')}`);
+    if (!hit.length) bad('effort model', `"${g.key}" matches no muscle`);
+    for (const p of hit) {
+      if (owner.has(p.n) && owner.get(p.n) !== g.key) bad('effort model', `${p.n} is in both "${owner.get(p.n)}" and "${g.key}"`);
+      owner.set(p.n, g.key);
+      const leg = /lower limb/i.test(p.sub), arm = /upper limb/i.test(p.sub);
+      const legGroup = /glute|hip-flexors|adductors|hams|quads|calves|shin/.test(g.key), trunkGroup = /erector|abs|neck/.test(g.key);
+      if (leg && !legGroup && !trunkGroup) bad('effort model', `"${g.key}" lights a leg muscle: ${p.n}`);
+      if (arm && legGroup) bad('effort model', `"${g.key}" lights an arm muscle: ${p.n}`);
+    }
+  }
+}
+
+for (const ex of EXERCISES.filter(e => !e.scripted)) {
   const owner = new Map();
   if (LIST) console.log(`\n## ${ex.id}`);
   for (const def of ex.muscles) {
@@ -71,6 +101,6 @@ for (const ex of EXERCISES) {
   for (const k of ['id', 'part', 'name', 'source', 'duration', 'form', 'camera', 'pose']) if (ex[k] == null) bad(ex.id, `missing "${k}"`);
 }
 
-console.log(`\nLift audit: ${EXERCISES.length} lifts, ${EXERCISES.reduce((n, e) => n + e.muscles.length, 0)} muscle groups, ${muscles.length} muscles in the registry`);
+console.log(`\nLift audit: ${EXERCISES.length - scripted.length} hand-written lifts, ${scripted.length} scripted movements, ${GROUPS_N} model groups, ${muscles.length} muscles in the registry`);
 if (problems.length) { for (const p of problems) console.log('   WRONG   ' + p); console.log(`\n${problems.length} wrong`); process.exit(1); }
 console.log('OK: every group lights only the muscles it names');

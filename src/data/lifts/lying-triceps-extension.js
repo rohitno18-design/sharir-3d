@@ -22,6 +22,9 @@ export const LYING_TRICEPS_EXTENSION = {
   sub: 'On a flat bench with an EZ bar, upper arms still',
   source: 'Frédéric Delavier, Strength Training Anatomy — Lying Triceps Extensions; standard strength-coaching technique',
   duration: 3.2,
+  // What the lifter carries and rests on, for the computed-effort model (src/core/biomech.js).
+  // The weight is a working set for a 65 kg lifter; it is scaled to the body on screen.
+  physics: { load: { at: 'hands', kg: 25 }, support: 'bench' },
   bar: BAR,
 
   u: keyCurve([[0, 0], [0.42, 1], [0.50, 1], [0.88, 0], [1, 0]]),

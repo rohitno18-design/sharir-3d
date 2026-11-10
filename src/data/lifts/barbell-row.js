@@ -20,6 +20,9 @@ export const BARBELL_ROW = {
   sub: 'Back flat and tipped forward, bar pulled to the bottom of the chest',
   source: 'Frédéric Delavier, Strength Training Anatomy — Bent-Over Rows; standard strength-coaching technique',
   duration: 3.0,
+  // What the lifter carries and rests on, for the computed-effort model (src/core/biomech.js).
+  // The weight is a working set for a 65 kg lifter; it is scaled to the body on screen.
+  physics: { load: { at: 'hands', kg: 50 }, support: 'feet' },
   bar: BAR,
 
   u: keyCurve([[0, 0], [0.34, 1], [0.46, 1], [0.88, 0], [1, 0]]),

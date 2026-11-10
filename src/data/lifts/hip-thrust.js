@@ -22,6 +22,9 @@ export const HIP_THRUST = {
   sub: 'Upper back on a bench, bar across the hips',
   source: 'Bret Contreras, the barbell hip thrust; Frédéric Delavier, Strength Training Anatomy — gluteal work; standard strength-coaching technique',
   duration: 3.0,
+  // What the lifter carries and rests on, for the computed-effort model (src/core/biomech.js).
+  // The weight is a working set for a 65 kg lifter; it is scaled to the body on screen.
+  physics: { load: { at: 'hips', kg: 100 }, support: 'bench-edge' },
   bar: BAR,
 
   u: keyCurve([[0, 0], [0.34, 1], [0.46, 1], [0.86, 0], [1, 0]]),
