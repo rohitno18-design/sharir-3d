@@ -38,10 +38,51 @@ const SWAPPED_NAMES = [
   ['Pars ascendens musculi trapezii', 'Pars descendens musculi trapezii'],
 ];
 
+/**
+ * Attachments the atlas has the wrong way round, checked muscle by muscle against standard
+ * anatomy (Gray's, Moore). An origin is the end nearer the middle of the body that stays
+ * put; the insertion is the end that moves. The atlas tags a patch ".o" or ".e" and for
+ * these it chose the other end: serratus anterior "arose" from the shoulder blade and
+ * "inserted" on the ribs, the scalenes "arose" from the first rib, and the small muscles
+ * under the skull "arose" from the skull. Each row is [muscle, bone, what that end is].
+ */
+const ATTACHMENT_KINDS = [
+  // Trunk to shoulder girdle: from the ribs or spine onto the shoulder blade or collarbone.
+  [/^serratus anterior/i, /\brib\b/i, 'origin'], [/^serratus anterior/i, /scapula/i, 'insertion'],
+  [/^pectoralis minor/i, /\brib\b/i, 'origin'], [/^pectoralis minor/i, /scapula/i, 'insertion'],
+  [/^subclavius/i, /clavicle/i, 'insertion'],
+  // The slip from the lower corner of the shoulder blade is one of the lat's origins.
+  [/^latissimus dorsi/i, /scapula/i, 'origin'],
+  // Neck: the scalenes run down from the cervical vertebrae to the first two ribs.
+  [/^scalenus/i, /\brib\b/i, 'insertion'], [/^scalenus/i, /vertebra|atlas|axis/i, 'origin'],
+  // Under the skull: all of these run up from the atlas or the axis to the occipital bone,
+  // except the lower oblique, which runs from the axis out to the atlas.
+  [/^rectus (anterior|lateralis|posterior major|posterior minor) capitis/i, /occipital/i, 'insertion'],
+  [/^rectus (anterior|lateralis|posterior major|posterior minor) capitis/i, /atlas|axis/i, 'origin'],
+  [/^obliquus superior capitis/i, /occipital/i, 'insertion'],
+  [/^obliquus inferior capitis/i, /axis/i, 'origin'], [/^obliquus inferior capitis/i, /atlas/i, 'insertion'],
+  [/^longus capitis/i, /occipital/i, 'insertion'],
+  [/^thyrohyoid/i, /thyroid cartilage/i, 'origin'], [/^thyrohyoid/i, /hyoid/i, 'insertion'],
+  [/^anterior belly of digastric/i, /mandible/i, 'origin'],
+  // Belly wall: the rectus runs up from the pubis to the rib cartilages, the outer oblique
+  // down from the ribs to the hip bone, the inner oblique up from the hip bone to the ribs.
+  [/^rectus abdominis/i, /\brib\b/i, 'insertion'],
+  [/^external abdominal oblique/i, /hip bone/i, 'insertion'],
+  [/^internal abdominal oblique/i, /\brib\b/i, 'insertion'],
+  // Limbs.
+  [/^adductor pollicis/i, /capitate/i, 'origin'],
+  [/^short head of biceps femoris/i, /femur/i, 'origin'],
+  [/^transverse head of adductor hallucis/i, /metatarsal/i, 'origin'],
+  [/^transverse head of adductor hallucis/i, /sesamoid/i, 'insertion'],
+  [/^opponens digiti minimi muscle of foot/i, /metatarsal/i, 'insertion'],
+];
+
 export class Registry {
   constructor(data) {
     this.parts = data.parts;
+    this._fixUntypedAttachments();
     this._fixSwappedNames();
+    this._fixSides();
     this.bbox = data.bbox;
     this.byId = new Map();
     this.children = new Map();
@@ -94,6 +135,59 @@ export class Registry {
       if ((p.k === 'origin' || p.k === 'insertion') && /trapezius/i.test(p.muscle || '')) {
         p.k = /clavicle|scapula/i.test(p.bone || '') ? 'insertion' : 'origin';
       }
+    }
+  }
+
+  /**
+   * Attachment patches the import filed as bones. The atlas paints each place a muscle
+   * attaches onto the bone as a small patch, named after the muscle and tagged ".o" for an
+   * origin or ".e" for its end, numbered when a muscle has several: "Diaphragm.o1l",
+   * "Serratus anterior muscle.e3l". The import knew the plain tags and the first two
+   * numbers, and read the other 181 as ordinary skeleton meshes. So a click on a rib could
+   * answer "Serratus anterior muscle" as a part of the skeleton, a search for the diaphragm
+   * could land on a patch on a vertebra, and muscles with many slips (serratus anterior,
+   * the diaphragm, the obliques, the erectors) showed only two or three of their
+   * attachments. Given the same shape as the rest: an origin or insertion that names its
+   * muscle and its bone. Like the rest they are then data, not geometry.
+   */
+  _fixUntypedAttachments() {
+    const byId = new Map(this.parts.map(p => [p.id, p]));
+    for (const p of this.parts) {
+      if (p.k !== 'mesh' || p.g !== 'skeletal') continue;
+      const m = /\.([oe])\d+([lr])(?:\.\d+)?$/.exec(p.id);
+      if (!m) continue;
+      p.k = m[1] === 'o' ? 'origin' : 'insertion';
+      p.side = m[2];
+      // The tag was left on the end of the name as well: "Diaphragm.o1l".
+      const base = p.n.slice(0, m.index - (p.id.length - p.n.length));
+      p.b = base;
+      p.n = base.replace(/^\((.*)\)$/, '$1');
+      p.paren = base.startsWith('(') ? 1 : undefined;
+      p.muscle = p.n;
+      const bone = byId.get(p.p);
+      if (bone) p.bone = bone.n;
+    }
+  }
+
+  /**
+   * Left and right tags that disagree with where the part actually is. The body's left is
+   * +x. The atlas tags 43 parts for the wrong side: the eyelashes and the lateral ligament
+   * of the jaw joint are swapped, and 39 muscle attachment patches carry "left" while lying
+   * on a right-side bone (the pectineus's patch on the right femur, the pronator
+   * quadratus's on the right radius and ulna, serratus anterior's on the right ribs) or the
+   * other way round. Read as tagged, the left pectineus "inserted" on the right thigh, and
+   * serratus anterior's binding looked for its rib attachments on the far side of the chest.
+   *
+   * Only a part lying wholly across the midline is moved; one that merely reaches over it
+   * (the right vagus, on its way to the stomach) keeps its tag. The ids stay as they are:
+   * they are what the model's meshes are looked up by.
+   */
+  _fixSides() {
+    const CLEAR = 0.004;
+    for (const p of this.parts) {
+      if (!p.side || !p.bb) continue;
+      if (p.side === 'l' && p.bb[1][0] < -CLEAR) p.side = 'r';
+      else if (p.side === 'r' && p.bb[0][0] > CLEAR) p.side = 'l';
     }
   }
 
@@ -157,6 +251,11 @@ export class Registry {
       for (const a of list) {
         if (a.k === 'insertion' && boneRank(a.bone) <= 1 && boneRank(a.bone) < far) a.k = 'origin';
       }
+    }
+    // Then the ones known by name, which the rule above cannot work out for itself.
+    for (const a of att) {
+      const row = ATTACHMENT_KINDS.find(([m, b]) => m.test(a.muscle || '') && b.test(a.bone || ''));
+      if (row) a.k = row[2];
     }
   }
 

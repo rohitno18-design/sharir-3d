@@ -150,7 +150,7 @@ export const BARBELL_ROW = {
     {
       key: 'grip', label: 'Grip and forearm', role: 'Grip',
       note: 'Holds the bar the whole time.',
-      match: /flexor carpi|flexor digitorum|palmaris longus|flexor pollicis/i,
+      match: /flexor carpi|flexor digitorum (superficialis|profundus)|palmaris longus|flexor pollicis/i,
       effort: () => 0.48,
     },
   ],

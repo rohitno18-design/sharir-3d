@@ -113,15 +113,15 @@
     },
     {
       "t": "60d",
-      "headline": "Approaching the target dose; roughly 5–8% of body weight gone",
+      "headline": "Approaching the target dose; roughly 4–6% of body weight gone",
       "effects": [
         {
           "target": "adipose",
           "kind": "positive",
           "intensity": 0.6,
           "visual": { "opacity": 0.75 },
-          "note": "By two months most people have lost around 5–8% of body weight, with visceral fat shrinking proportionally more than subcutaneous fat — the depot that carries the cardiometabolic risk.",
-          "metric": { "label": "Weight loss at 2 months", "value": "~5–8% of body weight" }
+          "note": "By two months most people have lost around 4–6% of body weight, with visceral fat shrinking proportionally more than subcutaneous fat — the depot that carries the cardiometabolic risk.",
+          "metric": { "label": "Weight loss at 2 months", "value": "~4–6% of body weight" }
         },
         {
           "target": "arteries",

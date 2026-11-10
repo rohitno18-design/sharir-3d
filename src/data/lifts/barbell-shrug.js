@@ -115,7 +115,7 @@ export const BARBELL_SHRUG = {
     {
       key: 'grip', label: 'Grip and forearm', role: 'Grip',
       note: 'A heavy bar hangs from the fingers the whole time. The grip is often what gives out first.',
-      match: /flexor carpi|flexor digitorum|palmaris longus|flexor pollicis|brachioradialis/i,
+      match: /flexor carpi|flexor digitorum (superficialis|profundus)|palmaris longus|flexor pollicis|brachioradialis/i,
       effort: () => 0.62,
     },
     {

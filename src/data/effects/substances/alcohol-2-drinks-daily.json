@@ -145,15 +145,15 @@
     },
     {
       "t": "6m",
-      "headline": "Liver visibly enlarged and fatty on ultrasound",
+      "headline": "Liver often enlarged and fatty on ultrasound",
       "effects": [
         {
           "target": "liver",
           "kind": "negative",
           "intensity": 0.7,
           "visual": { "scale": 1.07 },
-          "note": "Fat accumulation physically enlarges the liver — hepatomegaly with a bright, echogenic appearance on ultrasound. Roughly 90% of people who drink daily at this level develop fatty liver, though most never progress further.",
-          "metric": { "label": "Fatty liver in daily drinkers", "value": "~90%" }
+          "note": "Fat accumulation physically enlarges the liver — hepatomegaly with a bright, echogenic appearance on ultrasound. Fatty liver is found in about 90% of heavy daily drinkers (4 or more drinks) and is common, though not universal, at 2 a day. Most never progress further.",
+          "metric": { "label": "Fatty liver in heavy daily drinkers (4+ drinks)", "value": "~90%" }
         },
         {
           "target": "arteries",
@@ -185,7 +185,7 @@
           "kind": "negative",
           "intensity": 0.75,
           "visual": { "scale": 1.08 },
-          "note": "In a subset — perhaps 20–30% of sustained daily drinkers — steatosis progresses to steatohepatitis with stellate cell activation and early fibrosis. That transition is silent; no symptom announces it."
+          "note": "In a minority of sustained daily drinkers, more often at higher intakes, steatosis progresses to steatohepatitis with stellate cell activation and early fibrosis. That transition is silent; no symptom announces it."
         },
         {
           "target": "esophagus",
@@ -209,15 +209,15 @@
     },
     {
       "t": "5y",
-      "headline": "Five years: fibrosis, and for some, cirrhosis",
+      "headline": "Five years: a fatty liver, scarring in some, cancer risk up",
       "effects": [
         {
           "target": "liver",
           "kind": "negative",
-          "intensity": 0.9,
-          "visual": { "scale": 0.9, "opacity": 0.7 },
-          "note": "In those who progress, repeated injury and scarring shrink and harden the liver — cirrhosis. A cirrhotic liver is smaller, nodular and stiff, not enlarged. Roughly 10–20% of long-term heavy daily drinkers reach this; Indian drinkers reach it sooner and at lower total intake.",
-          "metric": { "label": "Cirrhosis in long-term daily drinkers", "value": "~10–20%" }
+          "intensity": 0.8,
+          "visual": { "scale": 1.08 },
+          "note": "In those who progress, repeated injury lays down scar tissue in a liver that is still enlarged and fatty. At 2 drinks a day cirrhosis remains uncommon, but the risk is roughly 2 to 5 times a non-drinker's (higher in women), and it climbs steeply with every extra drink: about 10–20% of long-term heavy drinkers reach it. Indian drinkers reach it sooner and at lower total intake.",
+          "metric": { "label": "Cirrhosis risk at 2 drinks a day", "value": "~2–5× a non-drinker" }
         },
         {
           "target": "pancreas",

@@ -205,10 +205,10 @@
         },
         {
           "target": "bones",
-          "kind": "negative",
-          "intensity": 0.4,
-          "note": "The real downside: cycling is non-weight-bearing, and competitive cyclists who do nothing else consistently show lower spine and hip bone density than sedentary controls. Add squats, deadlifts or even walking.",
-          "metric": { "label": "Spine BMD in cyclists-only training", "value": "Lower than sedentary controls" }
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "The one gap: cycling is non-weight-bearing, so it does nothing for bone. Competitive road cyclists who do nothing else even show lower spine and hip bone density than non-athletes; at an hour a day the bones are simply left unchanged. Add squats, deadlifts or even walking.",
+          "metric": { "label": "Spine BMD in competitive road cyclists", "value": "Lower than non-athletes" }
         },
         {
           "target": "hippocampus",
@@ -275,10 +275,9 @@
         },
         {
           "target": "bones",
-          "kind": "negative",
-          "intensity": 0.4,
-          "visual": { "opacity": 0.85 },
-          "note": "Five years of cycling-only training leaves hip and spine bone density measurably lower than it should be for the training load. This is fixable — twice-weekly resistance training completely solves it."
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Five years of cycling and nothing else gives the hips and spine no bone-building load, so their density is no better than a non-exerciser's despite all the training. This is fixable — twice-weekly resistance training completely solves it."
         },
         {
           "target": "brain",

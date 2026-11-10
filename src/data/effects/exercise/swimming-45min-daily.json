@@ -204,9 +204,9 @@
         },
         {
           "target": "bones",
-          "kind": "negative",
-          "intensity": 0.4,
-          "note": "Non-weight-bearing exercise does not stimulate bone formation. Competitive swimmers consistently show lower bone density than land athletes and sometimes lower than sedentary controls."
+          "kind": "neutral",
+          "intensity": 0.3,
+          "note": "Non-weight-bearing exercise does not stimulate bone formation. Swimmers' bone density is about the same as that of people who play no sport, and lower than that of athletes who run or jump. Swimming does not harm bone. It simply does not build it."
         },
         {
           "target": "rotator-cuff",
@@ -248,8 +248,8 @@
         },
         {
           "target": "bones",
-          "kind": "negative",
-          "intensity": 0.4,
+          "kind": "neutral",
+          "intensity": 0.3,
           "note": "A year of swimming-only training leaves bone density where it started at best. Two resistance sessions a week completely closes this gap and should be treated as non-optional."
         }
       ]
@@ -279,10 +279,9 @@
         },
         {
           "target": "bones",
-          "kind": "negative",
-          "intensity": 0.5,
-          "visual": { "opacity": 0.85 },
-          "note": "Five years of exclusively aquatic exercise is the single real long-term risk: measurably lower hip and spine bone density and therefore higher fracture risk after 60."
+          "kind": "neutral",
+          "intensity": 0.35,
+          "note": "Five years of swimming and nothing else leaves one gap: the hips and spine get none of the loading that builds bone, so their density drifts down with age exactly as it would without any sport. Two strength sessions a week close the gap."
         },
         {
           "target": "shoulder-joint",

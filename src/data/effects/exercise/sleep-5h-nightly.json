@@ -101,8 +101,8 @@
           "target": "adipose",
           "kind": "negative",
           "intensity": 0.5,
-          "note": "The hunger-hormone shift plus late-night eating plus lower daytime activity reliably adds fat, typically 1–2 kg over a month, disproportionately visceral.",
-          "metric": { "label": "Typical weight change", "value": "+1–2 kg/month" }
+          "note": "The hunger-hormone shift plus late-night eating plus lower daytime activity reliably adds fat, roughly 0.5–1 kg over a month, disproportionately visceral.",
+          "metric": { "label": "Weight change if the extra eating continues", "value": "+0.5–1 kg/month" }
         },
         {
           "target": "brain",

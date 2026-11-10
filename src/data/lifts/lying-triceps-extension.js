@@ -147,7 +147,7 @@ export const LYING_TRICEPS_EXTENSION = {
     {
       key: 'grip', label: 'Grip and forearm', role: 'Grip',
       note: 'Holds the bar and keeps the wrists straight.',
-      match: /flexor carpi|flexor digitorum|palmaris longus|flexor pollicis|extensor carpi/i,
+      match: /flexor carpi|flexor digitorum (superficialis|profundus)|palmaris longus|flexor pollicis|extensor carpi/i,
       effort: () => 0.40,
     },
   ],

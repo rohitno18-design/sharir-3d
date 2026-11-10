@@ -208,15 +208,15 @@
     },
     {
       "t": "5y",
-      "headline": "Five years: COPD changes, real cancer risk, heart disease years earlier",
+      "headline": "Five years: early COPD changes, rising cancer risk, an older heart",
       "effects": [
         {
           "target": "lungs",
           "kind": "negative",
           "intensity": 0.85,
-          "visual": { "opacity": 0.65 },
-          "note": "Alveolar walls have been destroyed in patches — emphysema. Lung tissue becomes less dense and more air-trapped, which is why the lung looks 'thinner' rather than bigger. Lung cancer risk for a 10-a-day smoker runs roughly 10–15 times a never-smoker's.",
-          "metric": { "label": "Lung cancer risk vs never-smoker", "value": "~10–15×" }
+          "visual": { "opacity": 0.8 },
+          "note": "The small airways are inflamed and narrowed, and in some smokers alveolar walls have started to break down in patches: the beginning of emphysema, where lung tissue becomes less dense and more air-trapped, which is why the lung looks 'thinner' rather than bigger. Lung cancer risk rises with every year smoked: kept up for decades, 10 a day carries roughly 10 times a never-smoker's risk.",
+          "metric": { "label": "Lung cancer risk if this goes on for decades", "value": "~10× a never-smoker" }
         },
         {
           "target": "coronary-arteries",

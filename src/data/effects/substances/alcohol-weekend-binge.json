@@ -218,8 +218,8 @@
           "target": "liver",
           "kind": "negative",
           "intensity": 0.85,
-          "visual": { "scale": 0.92, "opacity": 0.72 },
-          "note": "For those who progress, repeated injury produces bridging fibrosis and eventually a shrunken, nodular cirrhotic liver. Indian patients frequently present with cirrhosis in their 40s from a pattern that started as weekend drinking in their 20s."
+          "visual": { "scale": 1.07 },
+          "note": "Most livers at this point are fatty and enlarged. For those who progress, repeated injury produces bridging fibrosis and, years later, a shrunken, nodular cirrhotic liver. Indian patients frequently present with cirrhosis in their 40s from a pattern that started as weekend drinking in their 20s."
         },
         {
           "target": "brain",

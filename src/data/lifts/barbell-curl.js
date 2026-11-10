@@ -145,7 +145,7 @@ export const BARBELL_CURL = {
     {
       key: 'grip', label: 'Grip and forearm', role: 'Grip',
       note: 'Holds the bar and keeps the wrists straight and firm all through the rep.',
-      match: /flexor carpi|flexor digitorum|palmaris longus|pronator teres|extensor carpi|flexor pollicis/i,
+      match: /flexor carpi|flexor digitorum (superficialis|profundus)|palmaris longus|pronator teres|extensor carpi|flexor pollicis/i,
       effort: (t) => clamp01(0.40 + 0.12 * bell(t, 0.30, 0.2)),
     },
     {

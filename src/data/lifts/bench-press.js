@@ -288,7 +288,7 @@ export const BENCH_PRESS = {
       effort: (t) => clamp01(0.18 + 0.75 * bell(t, 0.82, 0.16) + 0.20 * bell(t, 0.10, 0.14)),
     },
     {
-      key: 'coraco', label: 'Coracobrachialis', role: 'Prime mover',
+      key: 'coraco', label: 'Coracobrachialis', role: 'Synergist',
       note: 'Delavier names it among the muscles the press uses. It pulls the upper arm forward across the chest.',
       match: /coracobrachialis/i,
       effort: (t) => clamp01(0.22 + 0.40 * bell(t, 0.58, 0.18)),
@@ -318,15 +318,15 @@ export const BENCH_PRESS = {
       effort: (t) => clamp01(0.25 + 0.40 * bell(t, 0.47, 0.18)),
     },
     {
-      key: 'biceps', label: 'Biceps brachii', role: 'Antagonist',
+      key: 'biceps', label: 'Biceps and brachialis', role: 'Antagonist',
       note: 'Does very little work here. It never switches off, because it helps keep the bar steady.',
-      match: /biceps brachii|head of biceps|brachialis(?! muscle of)/i,
+      match: /biceps brachii|^brachialis muscle/i,
       effort: (t) => clamp01(0.10 + 0.18 * bell(t, 0.45, 0.20)),
     },
     {
       key: 'grip', label: 'Grip and forearm', role: 'Grip',
       note: 'Delavier says to grip the bar tightly. A tight grip is what keeps the wrists steady under load. The effort stays the same all through the rep.',
-      match: /flexor carpi|flexor digitorum|palmaris longus|pronator teres|brachioradialis|extensor carpi|flexor pollicis|adductor pollicis/i,
+      match: /flexor carpi|flexor digitorum (superficialis|profundus)|palmaris longus|pronator teres|brachioradialis|extensor carpi|flexor pollicis|adductor pollicis/i,
       effort: () => 0.48,
     },
     {

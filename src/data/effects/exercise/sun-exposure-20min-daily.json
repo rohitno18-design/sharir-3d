@@ -213,8 +213,8 @@
           "target": "liver",
           "kind": "neutral",
           "intensity": 0.4,
-          "note": "North of about 30° N — Delhi, Chandigarh, Lucknow — the winter sun is too low-angle for UVB to make vitamin D at all. Levels dip every winter regardless of how long you sit outside.",
-          "metric": { "label": "Winter synthesis above 30° N", "value": "Near zero, Nov–Feb" }
+          "note": "In North India (Delhi, Chandigarh, Lucknow) the low winter sun, fog, smog and covered skin cut vitamin D production sharply from November to February, so levels dip every winter. Only above about 35° N does the skin stop making it altogether.",
+          "metric": { "label": "Winter synthesis in North India", "value": "Sharply reduced, Nov–Feb" }
         },
         {
           "target": "immune-system",
