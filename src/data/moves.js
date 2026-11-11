@@ -299,4 +299,35 @@ export const SCRIPTS = [
       breathe: 'Breathe out as you rise. Breathe in as you lower.',
     },
   },
+  {
+    id: 'sumo-squat', part: 'Glutes', name: 'Sumo squat',
+    // A wider stance raises adductor longus and gluteus maximus activity; the quadriceps are
+    // not changed by stance width: McCaw ST, Melrose DR, Med Sci Sports Exerc 1999;31(3):428-436.
+    // The model shows the adductors (which include adductor magnus, a hip extensor in a deep
+    // squat) as the hardest-working group, just ahead of the glutes and quadriceps. Accepted
+    // by Rohit on 2026-11-11.
+    source: 'McCaw and Melrose, Med Sci Sports Exerc 1999',
+    expect: { lead: ['quads', 'glute-max'], working: ['adductors'], quiet: ['biceps', 'pec'] },
+    sub: 'No weight, feet wide and toes turned out, arms forward for balance',
+    duration: 3.4, equipment: 'none', stance: { width: 'wide', toeOut: 30 }, balance: true,
+    timing: [[0, 0], [0.42, 1], [0.5, 1], [0.9, 0], [1, 0]],
+    poses: [
+      { at: 0, legs: { knee: 6, shin: 2.3 }, arms: { raise: 8, plane: 90, elbow: 8, palm: 'in' } },
+      { at: 0.5, legs: { knee: 54, shin: 17 }, arms: { raise: 30, plane: 90, elbow: 10, palm: 'in' } },
+      { at: 1, legs: { knee: 100, shin: 28 }, arms: { raise: 55, plane: 90, elbow: 10, palm: 'in' } },
+    ],
+    phases: [
+      { key: 'down', name: 'Going down', t0: 0, t1: 0.42, hint: 'Sit straight down between the feet. The knees go out over the toes.' },
+      { key: 'bottom', name: 'The bottom', t0: 0.42, t1: 0.5, hint: 'Thighs level with the floor, chest up, heels down.' },
+      { key: 'up', name: 'Standing up', t0: 0.5, t1: 0.9, work: true, hint: 'Push the floor apart with the feet and squeeze the glutes to stand.' },
+      { key: 'stand', name: 'Standing tall', t0: 0.9, t1: 1, hint: 'Stand tall and get ready for the next one.' },
+    ],
+    ready: 'Standing with the feet wide apart and the toes turned out.',
+    form: {
+      setup: ['Stand with your feet wider than your shoulders and your toes turned out.', 'Keep your chest up and your stomach tight.'],
+      move: ['Bend your knees and sit straight down between your feet. Your arms come forward to balance you.', 'Push your knees out so they stay in line with your toes.', 'Go down until your thighs are level with the floor.', 'Push through your whole foot to stand up, squeezing your glutes at the top.'],
+      mistakes: ['Letting the knees fall inward.', 'Leaning the chest far forward.', 'Lifting the heels.'],
+      breathe: 'Breathe in as you go down. Breathe out as you stand up.',
+    },
+  },
 ];

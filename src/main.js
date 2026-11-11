@@ -23,7 +23,7 @@ import { EXERCISES, exerciseById } from './data/exercises.js';
 import { openMicroModal } from './ui/microModal.js';
 import { Nav } from './core/nav.js';
 import { openWelcome } from './ui/welcome.js';
-import { FEATURES } from './data/flags.js';
+import { FEATURES, HIDDEN_EFFECT_CATEGORIES } from './data/flags.js';
 
 const ATLAS_OFFSETS = {
   skeletal: -2.55, muscular: -1.7, joints: -0.85, nervous: 0, cardiovascular: 0.85, lymphoid: 1.7,
@@ -41,13 +41,25 @@ const ATLAS_GROUPS = [
   { keys: ['integumentary'], x: 3.4, label: 'Skin' },
 ];
 
+/**
+ * Leave whole "What happens if" categories out of the library (see flags.js). The files
+ * stay on disk; the list, the search, the combination and get() simply no longer see them.
+ */
+function hideEffectCategories(lib, hidden) {
+  if (!hidden.length) return lib;
+  lib.all = lib.all.filter(e => !hidden.includes(e.category));
+  lib.byId = new Map(lib.all.map(e => [e.id, e]));
+  lib.fuse.setCollection(lib.all);
+  return lib;
+}
+
 class App {
   constructor() {
     this.viewer = new Viewer(document.getElementById('gl'));
     this.labels = new Labels(this.viewer, document.getElementById('label-lines'), document.getElementById('labels'));
     this.labels.onClick = (it) => { if (it.target) this.focusTarget(it.target); else if (it.partId) this.selectPart(it.partId, { focus: false }); };
     this.labels.onHover = (it) => { if (it?.target) this.hoverTarget(it.target); else if (!it && this._targetHover) this.hoverTarget(null); else this.hoverPart(it?.partId || null); };
-    this.effects = new EffectsLibrary();
+    this.effects = hideEffectCategories(new EffectsLibrary(), HIDDEN_EFFECT_CATEGORIES);
     this.ageData = null;
     this.hoverTip = document.getElementById('hover-tip');
     this.morph = morphUniforms;
@@ -312,7 +324,7 @@ class App {
     this.setMode(s.mode, false);
     // After the tab, because the atlas only opens on the Systems tab.
     if (!!state.atlas !== !!s.atlas) this.toggleAtlas();
-    state.stack = [...(s.stack || [])];
+    state.stack = (s.stack || []).filter(id => this.effects.get(id));   // a hidden entry never comes back
     if (s.mode === 'effects' && (s.effect || state.stack.length)) {
       set({ effect: s.effect, effectStep: s.effectStep });
       this.applyEffect(); this.syncEffectDock(); this.panel?.render?.();
@@ -816,7 +828,7 @@ class App {
 
   refreshAttachments() { this.hi.invalidate(); }
 
-  openMicro(key, part) { openMicroModal(key, part); }
+  openMicro(key, part) { if (FEATURES.micro) openMicroModal(key, part); }
 
   // ---------------- systems / display ----------------
   refreshVisibility() { this.hi.invalidate(); this.refreshLabels(); this.updateLegend(); }

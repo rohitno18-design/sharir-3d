@@ -327,7 +327,7 @@ export class EffectsPanel {
     this.root.append(el('h3', { class: 'sec' }, `The body after ${stepLabel(state.effectStep)}`), this.bodyNow(combineAtStep([e], state.effectStep)), this.balanceChart([e]));
 
     // molecule
-    if (e.molecule) {
+    if (FEATURES.molecules && e.molecule) {
       const wrap = el('div', { class: 'molwrap' }, el('div', { class: 'cap' }, el('b', {}, moleculeLabel(e.molecule)), ' '));
       this.root.append(el('h3', { class: 'sec' }, 'The molecule in 3D'), wrap);
       const token = this._molToken = (this._molToken || 0) + 1;

@@ -50,7 +50,7 @@ export class Inspector {
     this.root.append(actions);
 
     // micro (tissue / cell level)
-    const micro = pickMicro(part);
+    const micro = FEATURES.micro ? pickMicro(part) : [];
     if (micro.length) {
       const g = el('div', { class: 'micro-grid' });
       for (const m of micro) g.append(el('button', { class: 'btn sm', onClick: () => this.app.openMicro(m.key, part) }, m.icon + ' ', lang === 'hi' ? m.hi : m.label));

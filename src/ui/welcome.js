@@ -1,6 +1,6 @@
 import { el } from '../core/util.js';
 import { state } from '../core/state.js';
-import { FEATURES } from '../data/flags.js';
+import { FEATURES, HIDDEN_EFFECT_CATEGORIES } from '../data/flags.js';
 
 const SEEN_KEY = 'sharir.welcomed.v1';
 
@@ -12,7 +12,7 @@ const MODES = [
   { mode: 'age', icon: '⏳', title: 'Change age & weight', hi: 'उम्र और वज़न',
     text: 'Slide from newborn to 90, and change body weight, to see how the body itself changes shape.' },
   { mode: 'effects', icon: '🧪', title: 'What happens if…', hi: 'क्या होगा अगर…',
-    text: 'Pick a food, workout, supplement, medicine or habit and watch what it does inside, from 1 day to 5 years.' },
+    text: `Pick a food, workout, supplement${HIDDEN_EFFECT_CATEGORIES.includes('medicine') ? '' : ', medicine'} or habit and watch what it does inside, from 1 day to 5 years.` },
   { mode: 'move', icon: '🏋️', title: 'Watch a lift', hi: 'व्यायाम देखें', wide: true, badge: 'New',
     text: 'Play a bench press and watch each muscle light up as it works. The hands, arms and bar all move the way a real lift does.' },
 ];
