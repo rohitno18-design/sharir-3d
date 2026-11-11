@@ -62,7 +62,7 @@ for (const ex of scripted) {
       if (owner.has(p.n) && owner.get(p.n) !== g.key) bad('effort model', `${p.n} is in both "${owner.get(p.n)}" and "${g.key}"`);
       owner.set(p.n, g.key);
       const leg = /lower limb/i.test(p.sub), arm = /upper limb/i.test(p.sub);
-      const legGroup = /glute|hip-flexors|adductors|hams|quads|calves|shin/.test(g.key), trunkGroup = /erector|abs|neck/.test(g.key);
+      const legGroup = /glute|hip-flexors|adductors|hams|quads|gastroc|soleus|shin/.test(g.key), trunkGroup = /erector|abs|neck/.test(g.key);
       if (leg && !legGroup && !trunkGroup) bad('effort model', `"${g.key}" lights a leg muscle: ${p.n}`);
       if (arm && legGroup) bad('effort model', `"${g.key}" lights an arm muscle: ${p.n}`);
     }

@@ -95,7 +95,8 @@ export const GROUPS = [
   { key: 'adductors', label: 'Inner thigh (adductors)', match: /adductor (magnus|longus|brevis)|^gracilis|^pectineus/i, job: 'Pull the thigh in, and help straighten a deeply bent hip.' },
   { key: 'hams', label: 'Hamstrings', match: /biceps femoris|semitendinosus|semimembranosus/i, job: 'Straighten the hip and bend the knee.' },
   { key: 'quads', label: 'Quadriceps', match: /vastus (lateralis|medialis|intermedius)|rectus femoris/i, job: 'Straighten the knee.' },
-  { key: 'calves', label: 'Calves', match: /gastrocnemius|^soleus/i, job: 'Push the ball of the foot down.' },
+  { key: 'gastroc', label: 'Calf (gastrocnemius)', match: /gastrocnemius/i, job: 'Pushes the ball of the foot down, hardest with the knee straight.' },
+  { key: 'soleus', label: 'Deep calf (soleus)', match: /^soleus/i, job: 'Pushes the ball of the foot down, whether the knee is straight or bent.' },
   { key: 'shin', label: 'Front of the shin', match: /tibialis anterior/i, job: 'Lifts the front of the foot.' },
 ];
 export const GROUP_BY_KEY = Object.fromEntries(GROUPS.map(g => [g.key, g]));
@@ -337,6 +338,7 @@ export function analyse(rig, physics = DEFAULT_PHYSICS, body = { massKg: 70, hei
     // joint, not the biceps, so the first few degrees of bend ask nothing of the flexors.
     const hang = Math.min(1, Math.max(0, (s.elbowBend - 0.17) / 0.21));
     n.elbowFlex = pos(te) * hang * hang * (3 - 2 * hang) / (STRENGTH.elbowFlex * k * curve(s.elbowBend, 0.62, 1.1)); n.elbowExt = pos(-te) / (STRENGTH.elbowExt * k);
+    n.kneeBend = s.kneeBend;
     const tk = torque[`knee.${side}`].dot(s.kneeHinge);
     n.kneeFlex = pos(tk) / (STRENGTH.kneeFlex * k); n.kneeExt = pos(-tk) / (STRENGTH.kneeExt * k * curve(s.kneeBend, 0.6, 1.3));
     // Ankle: about the shin's side-to-side axis. A positive turn points the toes down.
@@ -433,7 +435,11 @@ export function analyse(rig, physics = DEFAULT_PHYSICS, body = { massKg: 70, hei
   put('glute-med', both(n => Math.max(n.hipAbd, 0.25 * n.hipExt)));
   put('hip-flexors', both(n => n.hipFlex));
   put('quads', both(n => Math.max(n.kneeExt, 0.3 * n.hipFlex)));
-  put('calves', both(n => Math.max(n.anklePlantar, 0.35 * n.kneeFlex)));
+  // The gastrocnemius starts above the knee, so a bent knee slackens it and it can give
+  // less: the soleus under it, which starts below the knee, takes over. That is the whole
+  // difference between a straight-knee and a bent-knee (or seated) calf raise.
+  put('gastroc', both(n => Math.max(n.anklePlantar * (1 - 0.55 * Math.sin(Math.min(Math.PI / 2, n.kneeBend))), 0.35 * n.kneeFlex)));
+  put('soleus', both(n => n.anklePlantar * (0.85 + 0.15 * Math.sin(Math.min(Math.PI / 2, n.kneeBend)))));
   put('shin', both(n => n.ankleDorsi));
   effort.erector = trunk.ext;
   effort.abs = Math.max(trunk.flex, 0.7 * trunk.side, 0.8 * trunk.twist, 0.55 * trunk.squeeze + 0.25 * trunk.ext);

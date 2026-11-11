@@ -18,13 +18,16 @@ import { LYING_TRICEPS_EXTENSION } from './lifts/lying-triceps-extension.js';
 import { HIP_THRUST } from './lifts/hip-thrust.js';
 import { SCRIPTS } from './moves.js';
 import { movement } from '../core/motion.js';
+import { swaying } from '../core/sway.js';
 
 export { pressPhase };
 /** The ten lifts written by hand, each with its own bar path and effort curves shaped from EMG studies. */
 export const LIFTS = [
   BENCH_PRESS, BARBELL_ROW, OVERHEAD_PRESS, BARBELL_CURL, LYING_TRICEPS_EXTENSION, BARBELL_SHRUG,
   BACK_SQUAT, ROMANIAN_DEADLIFT, HIP_THRUST, CALF_RAISE,
-];
+// Standing, the whole body leans a little from the ankles to keep its balance as the bar
+// moves (src/core/sway.js). On a bench there is nothing to balance, and the body stays put.
+].map(swaying);
 /** Movements written as scripts: poses from joint angles, effort computed from joint torques. */
 export const MOVES = SCRIPTS.map(movement);
 export const EXERCISES = [...LIFTS, ...MOVES];

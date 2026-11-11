@@ -20,6 +20,21 @@ These live in `src/core/lift.js`, so no single lift can break them by accident.
 
 World space: metres, y up, floor at y = 0, lifter facing +z standing, the body's left at +x.
 
+## Sway: the whole body answers the bar
+
+Standing lifts are wrapped by `swaying()` (`src/core/sway.js`, applied in
+`src/data/exercises.js`). At each moment of the rep the body's real centre of mass, with
+the bar, is worked out by the same model that computes muscle effort (`biomech.js`), and
+the whole body is turned about the line through the ankles until it is over the middle of
+the foot. In a curl that is a lean back of up to 4 degrees as the bar swings out, and
+upright again as it returns. Before this, the trunk and legs stood still and only the
+arms moved.
+
+The body turns as one rigid piece and the feet are turned back flat, so the ankles do not
+move, nothing new is stretched, and whatever the lift worked out (the bar against the
+thighs, the grip, the path past the face) is kept. Lifts on a bench are left alone: there
+is nothing to balance, and correct form keeps the trunk still.
+
 ## An exercise file
 
 ```js

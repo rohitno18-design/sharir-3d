@@ -19,10 +19,10 @@ const MAP = {
   'barbell-curl': { biceps: 'biceps', grip: 'forearm', 'delt-ant': 'delt-front', brace: 'abs', triceps: 'triceps' },
   'lying-triceps-extension': { 'triceps-long': 'triceps', hold: 'lats', grip: 'forearm' },
   'barbell-shrug': { 'trap-upper': 'trap-upper', 'trap-mid': 'mid-back', grip: 'forearm', erector: 'erector' },
-  'back-squat': { quads: 'quads', glutes: 'glute-max', adductor: 'adductors', erector: 'erector', hams: 'hams', brace: 'abs', calves: 'calves' },
+  'back-squat': { quads: 'quads', glutes: 'glute-max', adductor: 'adductors', erector: 'erector', hams: 'hams', brace: 'abs', calves: 'soleus' },
   'romanian-deadlift': { hams: 'hams', glutes: 'glute-max', erector: 'erector', adductor: 'adductors', lats: 'lats', grip: 'forearm', traps: 'trap-upper' },
   'hip-thrust': { glutes: 'glute-max', hams: 'hams', 'glute-med': 'glute-med', quads: 'quads', adductor: 'adductors', brace: 'abs' },
-  'calf-raise': { gastroc: 'calves', brace: 'abs', trap: 'trap-upper' },
+  'calf-raise': { gastroc: 'gastroc', soleus: 'soleus', brace: 'abs', trap: 'trap-upper' },
 };
 
 export function run(app = window.app, { steps = 40 } = {}) {

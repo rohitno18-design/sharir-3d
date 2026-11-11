@@ -22,9 +22,12 @@ import { boneIndex } from './rig.js';
  *
  *   {
  *     id, part, name, sub, duration,
+ *     base: 'standing' | 'bench',            // 'bench': lying on the back on a flat bench, feet on the floor
  *     equipment: 'none' | 'dumbbells' | 'barbell-back',
  *     load: { kg: 20 | 'working' },          // 'working': a load that takes the hardest muscle near its limit
- *     stance: { width: 'hip' | 'shoulder' | 'wide', toeOut: 10 },
+ *     stance: { width: 'hip' | 'shoulder' | 'wide', toeOut: 10, split: 0.42 },
+ *                                            // split: left foot forward, right foot back on its ball, each by
+ *                                            // this share of the leg's length; then legs: { drop, forward, rearHeel }
  *     balance: true | 'hips',                // keep the weight over the middle of the foot: by leaning the trunk,
  *                                            // or ('hips') by sending the hips back while the written lean is kept
  *     poses: [ { at: 0, ...pose }, { at: 1, ...pose } ],
@@ -46,19 +49,22 @@ import { boneIndex } from './rig.js';
  * Arm angles are measured in the room: `raise: 0` hangs plumb however far the trunk leans.
  */
 
-const X = new THREE.Vector3(1, 0, 0);
+const X = new THREE.Vector3(1, 0, 0), Y = new THREE.Vector3(0, 1, 0);
+/** The bench: its top above the floor, and how far the middle of a lying back sits above that. */
+const BENCH_TOP = 0.46, BACK_DEPTH = 0.115;
+const LYING = new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0, 'XYZ'));
 const PALM = { up: 0, in: 90, down: 160 };
 const WIDTH = { narrow: -0.03, hip: 0.0, shoulder: 0.04, wide: 0.13 };
 /** What a joint can do. A script that asks for more is held to this, and the gate reports it. */
 export const RANGE = {
-  'legs.knee': [0, 150], 'legs.shin': [-14, 40], 'legs.heel': [0, 45],
+  'legs.knee': [0, 150], 'legs.shin': [-14, 40], 'legs.heel': [0, 45], 'legs.drop': [0, 0.6], 'legs.forward': [-0.3, 0.4], 'legs.rearHeel': [0, 75],
   'trunk.lean': [-20, 95], 'trunk.lumbar': [-25, 50], 'trunk.thorax': [-20, 40], 'trunk.neck': [-40, 45], 'trunk.head': [-25, 25],
   'trunk.side': [-35, 35], 'trunk.twist': [-45, 45],
-  'arm.raise': [0, 180], 'arm.plane': [-90, 135], 'arm.turn': [-80, 90], 'arm.elbow': [0, 150], 'arm.palm': [0, 180], 'arm.wrist': [-60, 60],
+  'arm.raise': [0, 180], 'arm.plane': [-90, 135], 'arm.turn': [-95, 95], 'arm.elbow': [0, 150], 'arm.palm': [0, 180], 'arm.wrist': [-60, 60],
   'girdle.lift': [-8, 28], 'girdle.back': [-20, 20],
 };
 const STANDING = {
-  legs: { knee: 6, shin: 2.3, heel: 0 },
+  legs: { knee: 6, shin: 2.3, heel: 0, drop: 0.02, forward: 0.06, rearHeel: 35 },
   trunk: { lean: 0, lumbar: 0, thorax: 0, neck: 0, head: 0, side: 0, twist: 0 },
   arm: { raise: 0, plane: 0, turn: 0, elbow: 8, palm: 90, wrist: 0 },
   girdle: { lift: 0, back: 3 },
@@ -159,9 +165,33 @@ function ankleLift(rig, rise) {
   return new THREE.Vector3(0, v.y - up.y, v.z - up.z);
 }
 
+/**
+ * Plant one foot flat on the floor at its own spot and solve that leg up to the hip. With
+ * `rise` the heel is up and the foot stands on its ball, as the back foot of a split stance
+ * does. The same as `plantFeet` in lift.js, for feet that are not side by side.
+ */
+function plantFoot(rig, frame, pose, side, { x, z, toeOut = 0, rise = 0 }) {
+  const m = sgn(side);
+  const A = joint(rig, side, 'ankle'), T = joint(rig, side, 'mtp');
+  const yaw = new THREE.Quaternion().setFromAxisAngle(Y, m * toeOut);
+  const orient = yaw.clone().multiply(new THREE.Quaternion().setFromAxisAngle(X, rise));
+  let aw = new THREE.Vector3(x, A.y, z);
+  if (rise) {
+    const ball = new THREE.Vector3(x, T.y, z).add(T.clone().sub(A).setY(0).applyQuaternion(yaw));
+    aw = ball.sub(T.clone().sub(A).applyQuaternion(orient));
+  }
+  const pole = new THREE.Vector3(Math.sin(m * toeOut) * 1.2, 0, Math.cos(toeOut)).normalize();
+  const leg = rig.solveLeg(side, frame.toBody(aw), frame.dirToBody(pole), { targetIsMorphed: true });
+  Object.assign(pose, leg);
+  pose[`foot.${side}`] = { quat: frame.q.clone().multiply(leg[`thigh.${side}`].quat).multiply(leg[`shin.${side}`].quat).invert().multiply(orient) };
+  if (rise) pose[`toes.${side}`] = { quat: new THREE.Quaternion().setFromAxisAngle(X, -rise) };
+}
+
 /** Turn a movement script into a lift the player can run. */
 export function movement(script) {
   const equipment = script.equipment || 'none';
+  const base = script.base || 'standing';              // 'standing' | 'bench' (lying on the back)
+  const split = base === 'standing' ? script.stance?.split || 0 : 0;
   const loadAt = equipment === 'dumbbells' ? 'hands' : equipment === 'barbell-back' ? 'back' : 'none';
   const clipped = [];
   const written = (Array.isArray(script.poses) ? script.poses : [{ at: 0, ...script.poses.start }, { at: 1, ...script.poses.end }])
@@ -193,15 +223,22 @@ export function movement(script) {
     poster: tUp * 0.6,
     ready: script.ready || '',
     form: script.form ? form(script.form.setup || [], script.form.move || [], script.form.mistakes || [], script.form.breathe || '') : null,
-    equipment: { floor: true, ...(equipment === 'barbell-back' ? { bar: 'olympic' } : {}), ...(equipment === 'dumbbells' ? { dumbbells: true } : {}) },
-    physics: { load: { at: loadAt, kg: typeof script.load?.kg === 'number' ? script.load.kg : 0 }, support: 'feet' },
+    equipment: {
+      floor: true, ...(equipment === 'barbell-back' ? { bar: 'olympic' } : {}), ...(equipment === 'dumbbells' ? { dumbbells: true } : {}),
+      ...(base === 'bench' ? { bench: { top: BENCH_TOP, length: 1.22, width: 0.33, center: [0, -0.26], along: 'z' } } : {}),
+    },
+    physics: { load: { at: loadAt, kg: typeof script.load?.kg === 'number' ? script.load.kg : 0 }, support: base === 'bench' ? 'bench' : 'feet' },
 
     camera(ctx) {
       const s = (ctx.height || 1.7433) / 1.7433;
+      if (base === 'bench') {
+        return { target: [0, BENCH_TOP + 0.34, -0.36], offset: [1.45, 1.05, 1.35], box: [[-0.95, BENCH_TOP - 0.1, -1.02], [0.95, BENCH_TOP + 0.85, 0.3]] };
+      }
       const w = reach > 45 ? 0.95 : 0.5, top = (high > 120 ? 2.25 : 1.9) * s;
       const view = script.view || 'three-quarter';
       const offset = view === 'front' ? [0.2, 0.25, 2.6] : view === 'side' ? [2.5, 0.3, 0.25] : view === 'back' ? [-0.4, 0.3, -2.5] : [1.6, 0.35, 1.9];
-      return { target: [0, 0.98 * s, 0.05], offset, box: [[-w, 0.0, -0.45], [w, top, 0.65]] };
+      const deep = split ? 0.75 : 0;
+      return { target: [0, 0.98 * s, 0.05], offset, box: [[-w, 0.0, -0.45 - deep], [w, top, 0.65 + deep]] };
     },
 
     /** The written poses blended at movement point u. */
@@ -230,7 +267,35 @@ export function movement(script) {
       // out once and not at every moment of the rep.
       if (equipment === 'dumbbells') s.grip = Object.fromEntries(SIDES.map(side => [side, rig.gripAround(side, HANDLE.radius, HANDLE.flesh, rig.barInHand(side))]));
       this._s = s;
-      if (script.balance) {
+      if (split) {
+        // In a split stance the two feet are not side by side, so the ground they hold
+        // between them is a narrow slanted strip from the back foot to the front one. As
+        // the weight goes onto the front foot it also has to move towards that foot's
+        // side, or the body would topple sideways. A real lifter's hips drift a few
+        // centimetres that way without their noticing. Here the body is posed, its centre
+        // of mass found, and the hips moved sideways until it is over that strip.
+        const keep = rig.lastPose;
+        const N = 8, table = [];
+        const phys = { ...this.physics, load: { ...this.physics.load, kg: this._kg ?? this.physics.load.kg } };
+        for (let i = 0; i <= N; i++) {
+          const q = this._at(i / N);
+          let x = 0;
+          for (let pass = 0; pass < 2; pass++) {
+            this._trialX = x;
+            rig.setPose(this._build(rig, s, q));
+            const c = analyse(rig, phys, this._body || { massKg: 70, heightM: 1.7 }).com;
+            const A = rig.jointAt('ankle', 'l', new THREE.Vector3()), T = rig.jointAt('toe', 'l', new THREE.Vector3());
+            const F = new THREE.Vector3(A.x, 0, A.z + 0.4 * (T.z - A.z)), R = rig.jointAt('mtp', 'r', new THREE.Vector3());
+            const k = clamp01((c.z - R.z) / (F.z - R.z));
+            x += lerp(R.x, F.x, k) - c.x;
+          }
+          table.push(x);
+        }
+        this._trialX = null;
+        s.shift = (u) => { const y = clamp01(u) * N, i = Math.min(N - 1, Math.floor(y)); return lerp(table[i], table[i + 1], y - i); };
+        if (keep) rig.setPose(keep);
+      }
+      if (script.balance && base === 'standing' && !split) {
         // The body is posed and its real centre of mass, with whatever it carries, is
         // brought over the middle of the foot: by leaning the trunk (`balance: true`), or,
         // for a hinge whose lean is the point of the movement, by sending the hips back
@@ -264,7 +329,53 @@ export function movement(script) {
       return s;
     },
 
+    /** Lying on the back on a flat bench, feet planted on the floor either side of it. */
+    _lying(rig, s, q) {
+      const height = this._height || 1.7433;
+      const py = BENCH_TOP + BACK_DEPTH, pz = height * 0.52;
+      const entry = { rot: [-Math.PI / 2, 0, 0], pos: [0, py, pz] };
+      const frame = Frame.fromEntry(rig, entry);
+      const p = { root: entry };
+      for (const side of SIDES) {
+        const m = sgn(side);
+        // The root lays the body down as world = (x, z + py, -y + pz); the floor comes back through that.
+        const hipZ = pz - rig.morphedJoint(side, 'hip').y, ankleY = rig.morphedJoint(side, 'ankle').y;
+        const foot = new THREE.Vector3(m * 0.205, pz - (hipZ + 0.30), ankleY - py);
+        const leg = rig.solveLeg(side, foot, new THREE.Vector3(m * 0.10, 0, 1).normalize(), { targetIsMorphed: true });
+        Object.assign(p, leg);
+        p[`foot.${side}`] = { quat: LYING.clone().multiply(leg[`thigh.${side}`].quat).multiply(leg[`shin.${side}`].quat).invert() };
+        p[`girdle.${side}`] = { rot: [0, m * d(q.girdle.back), m * d(q.girdle.lift)] };
+      }
+      const A = armSpace(rig, frame, p);
+      // Lying down, "hanging plumb" means nothing, so the arms are described against the
+      // trunk: `plane: 90` is straight up off the chest.
+      for (const side of SIDES) poseArm(rig, side, A, p, q.arms[side], s.grip?.[side], 'trunk');
+      return p;
+    },
+
+    /**
+     * A split stance: the left foot forward and flat, the right foot back on its ball. The
+     * hips sit between them and drop straight down, which is a split squat or a lunge.
+     */
+    _split(rig, s, q) {
+      const A0 = joint(rig, 'l', 'ankle'), K0 = joint(rig, 'l', 'knee'), H0 = joint(rig, 'l', 'hip');
+      const L = A0.distanceTo(K0) + K0.distanceTo(H0);
+      const rise = d(q.legs.rearHeel), up = ankleLift(rig, rise);
+      const zF = A0.z + split * L, zR = A0.z - split * L;
+      const hz = (zF + zR) / 2 + q.legs.forward * L;
+      // As high as both legs allow, then down by `drop` (a share of the leg's length).
+      const hx = this._trialX != null ? this._trialX : s.shift ? s.shift(this._u) : 0;
+      const top = (ay, az, dx) => ay + Math.sqrt(Math.max(0, (0.992 * L) ** 2 - (hz - az) ** 2 - dx ** 2));
+      const hy = Math.min(top(A0.y, zF, hx + Math.abs(H0.x) - s.feet.spread), top(A0.y + up.y, zR + up.z, hx - Math.abs(H0.x) + s.feet.spread)) - q.legs.drop * L;
+      const frame = Frame.lean(rig, d(q.trunk.lean), new THREE.Vector3(hx, hy, hz));
+      const p = { root: frame.entry() };
+      plantFoot(rig, frame, p, 'l', { x: s.feet.spread, z: zF, toeOut: s.feet.toeOut });
+      plantFoot(rig, frame, p, 'r', { x: -s.feet.spread, z: zR, rise });
+      return { p, frame };
+    },
+
     _build(rig, s, q, trial = null) {
+      if (base === 'bench') return this._lying(rig, s, q);
       // What balance decides (the lean, or the shins) comes from the table, or from the
       // value being tried while the table is made.
       const x = trial != null ? trial : s.solved ? s.solved(this._u) : null;
@@ -273,15 +384,16 @@ export function movement(script) {
       const { hip } = squatStance(rig, s.feet, shin, knee - shin);
       if (rise) hip.add(ankleLift(rig, rise));
       const lean = x != null && !byHips ? x : d(q.trunk.lean);
-      const frame = Frame.lean(rig, lean, hip);
-      const p = { root: frame.entry() };
+      const made = split ? this._split(rig, s, q) : null;
+      const frame = made ? made.frame : Frame.lean(rig, lean, hip);
+      const p = made ? made.p : { root: frame.entry() };
       const t = q.trunk;
       // Bending and turning are shared between the lower and the upper back.
       if (t.lumbar || t.side || t.twist) p.lumbar = { rot: [d(t.lumbar), d(t.twist / 2), -d(t.side / 2)] };
       if (t.thorax || t.side || t.twist) p.thorax = { rot: [d(t.thorax), d(t.twist / 2), -d(t.side / 2)] };
       if (t.neck) p.neck = { rot: [d(t.neck), 0, 0] };
       if (t.head) p.head = { rot: [d(t.head), 0, 0] };
-      plantFeet(rig, frame, p, { ...s.feet, ...(rise ? { rise } : {}) });
+      if (!split) plantFeet(rig, frame, p, { ...s.feet, ...(rise ? { rise } : {}) });
       for (const side of SIDES) p[`girdle.${side}`] = { rot: [0, sgn(side) * d(q.girdle.back), sgn(side) * d(q.girdle.lift)] };
       const A = armSpace(rig, frame, p);
       if (equipment === 'barbell-back') {
@@ -296,7 +408,8 @@ export function movement(script) {
       return p;
     },
 
-    pose(u, { rig }) {
+    pose(u, { rig, height }) {
+      if (height) this._height = height;
       const s = this._setup(rig);
       this._u = u;
       return this._build(rig, s, this._at(u));
@@ -312,6 +425,7 @@ export function movement(script) {
       const key = bodyKey();
       if (this._table?.key === key) return;
       this._body = { massKg: app.currentWeight(), heightM: app.currentHeightM() };
+      this._height = app.currentHeightCm() / 100;
       const keep = rig.lastPose;
       const N = 48;
       const sample = (kg, n) => {
@@ -339,7 +453,11 @@ export function movement(script) {
           const c = Math.min(400, Math.max(0, b - fb * (b - a) / (fb - fa)));
           a = b; fa = fb; b = c; fb = f(b);
         }
-        kg = Math.max(1, Math.round(b));
+        // Never more than a person of this size would load: about their own weight in the
+        // hands, one and a half times it across the back. Some muscles (the calves, the
+        // trapezius) are strong enough that the search would otherwise pile on more than
+        // anyone carries.
+        kg = Math.max(1, Math.round(Math.min(b, this._body.massKg * (loadAt === 'back' ? 1.5 : 1))));
       }
       this._kg = kg; this._s = null;
       this.physics = { ...this.physics, load: { ...this.physics.load, kg } };

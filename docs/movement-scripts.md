@@ -22,9 +22,11 @@ held, and each joint's position at the start and at the end. The rest is compute
   name: 'Dumbbell lateral raise',
   sub: 'Standing, arms lifted out to the sides to shoulder height',
   duration: 3.2,                  // seconds for one rep
+  base: 'standing',               // 'standing' (default) | 'bench': lying on the back on a flat bench
   equipment: 'dumbbells',         // 'none' | 'dumbbells' | 'barbell-back'
   load: { kg: 'working' },        // total kg, or 'working' (see below)
   stance: { width: 'hip', toeOut: 8 },   // 'narrow' | 'hip' | 'shoulder' | 'wide', or metres from the midline
+                                  // add split: 0.36 for a split stance (see below)
   balance: 'hips',                // true | 'hips' | omitted (see below)
   view: 'front',                  // 'front' | 'side' | 'back' | 'three-quarter' (default)
   timing: [[0, 0], [0.38, 1], [0.48, 1], [0.9, 0], [1, 0]],   // [time in rep, how far through]; this is the default
@@ -75,6 +77,30 @@ however far the trunk leans, the way a held weight does. So a bent-over fly is s
 
 A number outside its range is held to the range and reported by `npm run check`.
 
+### Lying on a bench
+
+`base: 'bench'` lays the body on its back on a flat bench with the feet planted on the
+floor, the same setup as the bench press. Lying down, "hanging plumb" means nothing, so
+here the arm angles are measured against the trunk as if it were standing: `raise: 90,
+plane: 90` is straight up off the chest, `raise: 90, plane: 0` is out to the side, level
+with the bench. `legs`, `trunk.lean` and `balance` are ignored. See `dumbbell-fly`.
+
+### Split stance
+
+`stance: { split: 0.36 }` puts the left foot forward and flat and the right foot back on
+its ball, each by that share of the leg's length from where the feet stand. The legs are
+then written differently:
+
+| Field | Meaning | Range |
+|---|---|---|
+| `legs.drop` | How far the hips come down, as a share of the leg's length. 0 is as tall as the stance allows | 0 to 0.6 |
+| `legs.forward` | Hips moved towards the front foot, same units. More puts more weight on the front leg | -0.3 to 0.4 |
+| `legs.rearHeel` | How far the back heel is lifted, degrees | 0 to 75 |
+
+The hips also drift sideways towards the front foot as it takes the weight. That is not
+written: it is solved, because the two feet hold only a narrow strip of ground between
+them and the weight has to stay over it. See `split-squat`.
+
 ### Balance
 
 - `balance: 'hips'`: keep the written trunk lean and send the hips back (or forward) until
@@ -89,7 +115,11 @@ A number outside its range is held to the range and reported by `npm run check`.
 `load: { kg: 20 }` is the whole implement (both dumbbells together). `'working'` finds the
 load that takes the hardest-working muscle to about 85% of its strength somewhere in the
 rep, for the body on screen. That is what a working set is, so the weight shown is
-believable for that body and the hard muscles light up fully.
+believable for that body and the hard muscles light up fully. It never goes above the
+lifter's own weight in the hands, or one and a half times it across the back.
+
+Dumbbells are limited by the grip. For a muscle far stronger than the hands (the calves),
+put the load on the back instead, or the grip will be the hardest-working thing on screen.
 
 ## How effort is computed
 
@@ -146,7 +176,8 @@ front, the side, behind and below before it is filmed.
 
 ## What scripts cannot do yet
 
-- Lying, seated, hanging or hands-on-floor positions. Both feet are planted.
-- One leg off the floor, or the feet at different places (lunges, step-ups).
+- Seated, hanging, face-down or hands-on-floor positions (push-ups, pull-ups, planks).
+- Incline or decline benches. The bench is flat.
+- One leg off the floor, stepping, or the right foot forward in a split.
 - One-arm loads, cables, machines, bands.
 - A barbell in the hands. Use a hand-written lift for those.
