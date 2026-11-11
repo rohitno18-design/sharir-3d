@@ -1,0 +1,148 @@
+{
+  "id": "mustard-oil-30g-daily",
+  "name": {
+    "en": "Mustard oil for daily cooking (30 g a day)",
+    "hi": "रोज़ खाना सरसों के तेल में (30 ग्राम)"
+  },
+  "category": "food",
+  "icon": "🌼",
+  "dose": "30 g (about 6 teaspoons) of traditional mustard oil a day as the only cooking oil, used for everyday cooking and tadka, not reused for frying, in a healthy adult of about 65 kg eating about 2,000 kcal. 30 g is the upper end of the ICMR-NIN guide for all visible fat on a 2,000 kcal day.",
+  "summary": {
+    "en": "Mustard oil is the traditional cooking fat of North and East India. Its fat is mostly unsaturated and carries some plant omega-3, but traditional varieties are also 40 to 50% erucic acid, a fatty acid that caused fat build-up in the hearts of young rats and piglets at high doses. The US does not allow it as a cooking oil and the EU caps erucic acid in edible oils, while India allows it. Heart damage of this kind has not been described in people, but it has not been studied directly, and one Indian study linked mustard oil to fewer heart attacks; its effect on the human heart is honestly unclear.",
+    "hi": "सरसों का तेल उत्तर और पूर्व भारत का पारंपरिक खाने का तेल है। इसका ज़्यादातर फैट अनसैचुरेटेड है और इसमें कुछ ओमेगा-3 भी है, लेकिन पारंपरिक किस्मों में 40 से 50% इरुसिक एसिड होता है, जिसने बहुत ज़्यादा मात्रा में छोटे चूहों और सूअर के बच्चों के दिल में फैट जमा किया। अमेरिका इसे खाना पकाने के तेल के रूप में नहीं मानता और यूरोप तेलों में इरुसिक एसिड की सीमा तय करता है, जबकि भारत इसकी इजाज़त देता है। इंसानों में ऐसा नुकसान दर्ज नहीं हुआ है, पर इस पर सीधी स्टडी भी नहीं हुई, और भारत की एक स्टडी में सरसों के तेल के साथ दिल के दौरे कम दिखे। सच यह है कि इंसान के दिल पर इसका असर अभी साफ़ नहीं है।"
+  },
+  "indian_context": "Kachi ghani (cold-pressed) mustard oil is the everyday fat in Punjab, Uttar Pradesh, Bihar, Bengal, Odisha and Assam. Traditional Indian varieties are high in erucic acid; low-erucic mustard varieties have been released in India but are not yet the usual oil in the market. The ICMR-NIN guide is to keep all visible fat, oil and ghee together, to 27 to 30 g a day on a 2,000 kcal diet, so the amount matters as much as the choice of oil. Reusing the same oil again and again for frying is a separate problem with any oil.",
+  "evidence": "mixed",
+  "sources": [
+    "ICMR-NIN. Dietary Guidelines for Indians, 2024",
+    "EFSA Panel on Contaminants in the Food Chain (Knutsen HK et al.). Erucic acid in feed and food. EFSA Journal 2016;14(11):4593",
+    "Rastogi T, Reddy KS, Vaz M et al. Diet and risk of ischemic heart disease in India. Am J Clin Nutr 2004;79(4):582-592",
+    "Poddar KH, Sikand G, Kalra D, Wong N, Duell PB. Mustard oil and cardiovascular health: why the controversy? J Clin Lipidol 2022;16(1):13-22",
+    "Sacks FM et al. Dietary fats and cardiovascular disease: a presidential advisory from the American Heart Association. Circulation 2017;136(3):e1-e23"
+  ],
+  "caution": "At this dose an adult is already well above the European tolerable intake for erucic acid, and children eating the same food take in more per kg of body weight; whether that matters for people is not known. Do not reuse mustard oil, or any oil, many times for deep frying. If you have heart disease or high LDL, the total amount of oil and ghee each day matters; ask your doctor which oils suit you.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "A full day's guideline amount of visible fat, mostly unsaturated",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "30 g of oil is the top of the ICMR-NIN guide for all visible fat on a 2,000 kcal day, so this dose leaves no room for ghee or butter on top. The fat itself is mostly unsaturated.",
+          "metric": {
+            "label": "ICMR-NIN guide for all visible fat (oil plus ghee), 2,000 kcal day",
+            "value": "27 to 30 g"
+          }
+        },
+        {
+          "target": "heart-muscle",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Traditional mustard oil is usually 40 to 50% erucic acid. EFSA's tolerable intake comes from heart fat build-up in young rats and piglets, with a 100-fold safety margin; this intake is about a quarter to a third of the dose that caused no effect in those animals. EFSA notes the effect has not been described in humans.",
+          "metric": {
+            "label": "Erucic acid vs EFSA tolerable daily intake (calculated: 30 g oil, 65 kg adult, oil 40 to 50% erucic acid)",
+            "value": "roughly 25 to 35 times"
+          }
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Whether arteries benefit depends on what the oil replaced",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "If mustard oil replaces ghee or vanaspati, saturated fat goes down and LDL starts to fall over the following weeks. If it replaces another vegetable oil, or is added on top of ghee, there is no such benefit."
+        },
+        {
+          "target": "heart-muscle",
+          "kind": "neutral",
+          "intensity": 0.1,
+          "note": "In the animal studies, the heart fat build-up from erucic acid peaked within the first week, then fell back while feeding continued, though it stayed above normal."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Effects depend on what the oil replaced",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Only if it took the place of saturated fat such as ghee does LDL cholesterol fall within weeks; the size depends on how much saturated fat it replaced."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "30 g of oil is about 270 kcal. Kept within the day's visible-fat allowance it adds nothing extra; on top of a rich diet it adds calories."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "No harm shown in people, but it has not been studied directly",
+      "effects": [
+        {
+          "target": "heart-muscle",
+          "kind": "neutral",
+          "intensity": 0.1,
+          "note": "No study has looked directly for erucic acid heart damage in people eating mustard oil. One US study found that people with higher erucic acid in their blood had more heart failure; another cohort showed less heart disease."
+        },
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "If mustard oil replaced ghee or vanaspati, the lower saturated fat keeps LDL lower; otherwise the arteries see little change."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Heart risk factors may improve; the evidence is limited",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "A 2022 review suggested mustard oil may improve blood lipids and other heart risk factors in people, while its effect on heart disease itself remains unclear."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "One Indian study points to fewer heart attacks; it cannot prove cause",
+      "effects": [
+        {
+          "target": "coronary-arteries",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "In a hospital-based case-control study in Delhi and Bangalore, people who cooked with mustard oil had fewer heart attacks than those who used sunflower oil; the result for cooking was only just statistically significant. The authors suggested its omega-3 fat may explain it. This kind of study cannot prove that the oil caused the difference."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Effect on the human heart still unclear; the total amount of fat matters most",
+      "effects": [
+        {
+          "target": "coronary-arteries",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Long-term trials of mustard oil in people do not exist. The 2022 review called its effects on heart disease in humans unclear. Whatever the oil, keeping all visible fat within the daily guide is what the evidence supports."
+        },
+        {
+          "target": "heart-muscle",
+          "kind": "neutral",
+          "intensity": 0.1,
+          "note": "No human heart condition from erucic acid has been described, despite long daily use across North and East India, but it has not been studied directly, and one US blood-level study raised a possible heart-failure signal."
+        }
+      ]
+    }
+  ]
+}

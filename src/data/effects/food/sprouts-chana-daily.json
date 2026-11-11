@@ -1,0 +1,151 @@
+{
+  "id": "sprouts-chana-daily",
+  "name": {
+    "en": "Sprouts or soaked chana every morning",
+    "hi": "रोज़ सुबह अंकुरित मूंग या भीगे चने"
+  },
+  "category": "food",
+  "icon": "🌱",
+  "dose": "About 100 g of soaked black chana, or one katori of short-tail sprouted moong, every morning, about one cooked serving of pulses, steamed or boiled until cooked through, in a healthy adult.",
+  "summary": {
+    "en": "Soaked chana and sprouted moong are pulses: protein, fibre and slowly digested starch in one bowl. In trials, about one serving of pulses a day lowered LDL cholesterol by about 5% within weeks and led to a small weight loss compared with diets without pulses; whether that lasts for years has not been tested. Some extra gas in the first week is common and usually settles. Sprouts can carry bacteria from inside the seed, so they should be cooked through, not eaten raw.",
+    "hi": "भीगे चने और अंकुरित मूंग दालों के परिवार से हैं: एक कटोरी में प्रोटीन, फाइबर और धीरे पचने वाला स्टार्च। ट्रायल्स में रोज़ लगभग एक कटोरी दाल-चने से कुछ हफ़्तों में LDL कोलेस्ट्रॉल करीब 5% घटा और बिना दाल वाली डाइट की तुलना में वज़न थोड़ा कम हुआ; यह सालों तक रहता है या नहीं, इसकी जाँच नहीं हुई। पहले हफ़्ते में थोड़ी गैस होना आम है और अक्सर अपने आप ठीक हो जाती है। स्प्राउट्स के बीज के अंदर से बैक्टीरिया आ सकते हैं, इसलिए इन्हें कच्चा नहीं, पूरी तरह पकाकर खाएँ।"
+  },
+  "indian_context": "Soaked kala chana and moong sprouts are a common Indian breakfast or morning snack, often with onion, tomato and lemon. They are cheap and add plant protein to diets that are high in cereal and low in protein. Sprouting needs days in warm, wet conditions, which bacteria inside the seed also like, and washing does not remove them; this is the risk with sprouts, more than with chana that is only soaked overnight. Steaming or boiling sprouts until cooked through removes it.",
+  "evidence": "moderate",
+  "sources": [
+    "Ha V et al. Effect of dietary pulse intake on established therapeutic lipid targets for cardiovascular risk reduction: a systematic review and meta-analysis of randomized controlled trials. CMAJ 2014;186(8):E252-262",
+    "Kim SJ et al. Effects of dietary pulse consumption on body weight: a systematic review and meta-analysis of randomized controlled trials. Am J Clin Nutr 2016;103(5):1213-1223",
+    "Winham DM, Hutchins AM. Perceptions of flatulence from bean consumption among adults in 3 feeding studies. Nutr J 2011;10:128",
+    "US Centers for Disease Control and Prevention. Advice to consumers on raw sprouts (Salmonella outbreak linked to raw sprouts), 2018"
+  ],
+  "caution": "Children, older adults, pregnant women and anyone with a weak immune system should eat sprouts only well cooked, never raw. If you have kidney disease and have been told to limit protein or potassium, ask your doctor about portion size. Bloating that does not settle after a couple of weeks is worth mentioning to a doctor.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Fibre and protein in one bowl; some people get gas",
+      "effects": [
+        {
+          "target": "large-intestine",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Pulses carry fibre and sugars that the small intestine cannot digest. Bacteria in the large intestine ferment them, which feeds the gut but can also make gas."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Extra gas for some in the first week, usually settling",
+      "effects": [
+        {
+          "target": "large-intestine",
+          "kind": "strain",
+          "intensity": 0.15,
+          "note": "In US trials of half a cup of beans a day, between about 1 in 5 and under half of people reported more gas in the first week, depending on the bean, and for most it settled within a few weeks.",
+          "metric": {
+            "label": "Reported more gas in week 1 (US trials, half a cup of beans a day)",
+            "value": "about 1 in 5 to under half, depending on the bean"
+          }
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "The gut has usually adjusted; LDL starts to move",
+      "effects": [
+        {
+          "target": "large-intestine",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "With daily eating, gas usually becomes less of a problem as the gut adjusts."
+        },
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.15,
+          "note": "In trials of pulses lasting 3 weeks or more, LDL cholesterol was lower than on diets without pulses."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "LDL about 5% lower and a small weight drop in trials",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "Across 26 trials, about one serving of pulses a day lowered LDL cholesterol by a modest amount compared with diets without pulses.",
+          "metric": {
+            "label": "LDL cholesterol, about 130 g of pulses a day (trials mostly of beans, peas, lentils and chickpeas, median 6 weeks)",
+            "value": "about 5% lower (about 6.5 mg/dL)"
+          }
+        },
+        {
+          "target": "adipose",
+          "kind": "positive",
+          "intensity": 0.15,
+          "note": "In trials, diets with about one serving of pulses a day led to slightly more weight loss than diets without them, even when weight loss was not the aim.",
+          "metric": {
+            "label": "Body weight vs diets without pulses (trials, median 6 weeks, mostly overweight adults)",
+            "value": "about 0.3 kg lower"
+          }
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "A small help to cholesterol, if the habit lasts",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.15,
+          "note": "The LDL reduction in trials was measured over weeks. Other cholesterol markers (apoB and non-HDL cholesterol) did not change in those trials, and longer trials have not been done."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "The weight effect in trials was small. Whether it grows over months depends on whether the bowl replaces other food or is added on top."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "A cheap protein habit, with a modest heart benefit",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "positive",
+          "intensity": 0.1,
+          "note": "A year of the habit. The LDL reduction seen in short trials was modest, and whether it lasts this long has not been tested."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Daily fibre from pulses keeps reaching the gut."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Helpful for cholesterol; the long-term picture is not yet tested",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.1,
+          "note": "The trials lasted weeks, not years, and apoB and non-HDL cholesterol did not change in them. Any lasting heart benefit from this habit is plausible but untested."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Years of daily pulses keep fibre in the diet."
+        }
+      ]
+    }
+  ]
+}

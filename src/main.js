@@ -255,6 +255,9 @@ class App {
 
   // ---------------- modes ----------------
   setMode(mode, record = true) {
+    // A "What happens if" film belongs to the page it was started from. Close it before
+    // anything about the tab changes, so it puts that page back the way it found it.
+    if (this.film?.active && this.film.kind === 'effect') this.film.exit();
     const prevMode = state.mode;
     if (record && mode !== state.mode) this.nav.push('mode');
     // A temporary view belongs to the tab that laid it (an effect, a Movement look, a
@@ -1464,7 +1467,11 @@ class App {
   /** Tell the camera how much of the canvas the panels and dock are covering. */
   updateSafeInsets() {
     // In Film mode the only thing covering the picture is its own captions.
-    if (this.film?.active) { this.viewer.setSafeInsets(this.film.safeInsets()); this.exercise?.scheduleFrame(); return; }
+    if (this.film?.active) {
+      this.viewer.setSafeInsets(this.film.safeInsets());
+      if (this.film.kind === 'effect') this.film.frameBody(); else this.exercise?.scheduleFrame();
+      return;
+    }
     const rect = (el) => (el && !el.hidden && !el.classList.contains('collapsed') && getComputedStyle(el).opacity !== '0') ? el.getBoundingClientRect() : null;
     const stage = document.getElementById('stage').getBoundingClientRect();
     const L = rect(document.getElementById('left'));

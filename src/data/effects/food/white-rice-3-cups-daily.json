@@ -1,0 +1,144 @@
+{
+  "id": "white-rice-3-cups-daily",
+  "name": {
+    "en": "3 cups of white rice every day",
+    "hi": "रोज़ 3 कटोरी (लगभग 450 ग्राम पका) सफ़ेद चावल"
+  },
+  "category": "food",
+  "icon": "🍚",
+  "dose": "3 cups (about 450 g) of cooked polished white rice a day as the main cereal, eaten with dal and sabzi, in a healthy South Asian adult. One cup is taken as 150 g cooked, as in the PURE study.",
+  "summary": {
+    "en": "Polished white rice is mostly starch, and it is digested quickly, so blood sugar rises after each rice meal and the pancreas releases insulin to bring it down. In a study of 21 countries, South Asians who ate 3 or more cups a day developed diabetes more often over about ten years than those who ate under one cup. Indian data suggest the total amount of carbohydrate matters more than whether it comes from rice or wheat.",
+    "hi": "पॉलिश किया हुआ सफ़ेद चावल ज़्यादातर स्टार्च होता है और जल्दी पचता है, इसलिए हर बार चावल खाने के बाद ब्लड शुगर बढ़ता है और पैंक्रियास इंसुलिन छोड़कर उसे नीचे लाता है। 21 देशों की एक स्टडी में, जो दक्षिण एशियाई लोग रोज़ 3 या उससे ज़्यादा कटोरी (एक कटोरी यानी लगभग 150 ग्राम पका चावल) खाते थे, उन्हें लगभग दस साल में डायबिटीज़ ज़्यादा हुई, बजाय उनके जो एक कटोरी से कम खाते थे। भारत के आँकड़े बताते हैं कि असली बात कुल कार्बोहाइड्रेट की मात्रा है, न कि वह चावल से आया या गेहूँ से।"
+  },
+  "indian_context": "Indians get about 62% of their calories from carbohydrate, among the highest in the world, and in much of South, East and North-East India that carbohydrate is mostly white rice. In a national Indian survey, people who ate refined cereals such as white rice were no less likely to have diabetes if they ate whole-wheat or millet flour instead with the same total carbohydrate; those who got more of their calories from plant protein such as dal, or from dairy, were less likely to have it. A smaller portion of rice with more dal and vegetables changes more than switching the grain.",
+  "evidence": "moderate",
+  "sources": [
+    "Bhavadharini B et al. White rice intake and incident diabetes: a study of 132,373 participants in 21 countries (PURE). Diabetes Care 2020;43(11):2643-2650",
+    "Hu EA, Pan A, Malik V, Sun Q. White rice consumption and risk of type 2 diabetes: meta-analysis and systematic review. BMJ 2012;344:e1454",
+    "Swaminathan S et al. Associations of cereal grains intake with cardiovascular disease and mortality across 21 countries in the PURE study. BMJ 2021;372:m4948",
+    "Anjana RM et al. Dietary profiles and associated metabolic risk factors in India from the ICMR-INDIAB survey-21. Nat Med 2025;31:3813-3824",
+    "Nayar S, Madhu SV. Glycemic index of wheat and rice are similar when consumed as part of a North Indian mixed meal. Indian J Endocrinol Metab 2020;24(3):251-255"
+  ],
+  "caution": "If you already have prediabetes or diabetes, the amount of rice per meal matters more for you, and your doctor or dietitian can help set a portion. Do not cut out food groups suddenly if you take insulin or diabetes tablets, because low blood sugar can follow.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Blood sugar rises after each rice meal, then comes back down",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Starch from white rice is broken down to glucose and absorbed quickly. In a healthy person the pancreas releases insulin and blood sugar returns to normal within a few hours. In a test meal in 10 healthy adults, a dal-sabzi meal with rice raised blood sugar about as much as the same meal with wheat chapati carrying the same carbohydrate."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Muscles and liver take up the glucose and store some of it as glycogen, the body's ready fuel."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "The same rise and fall, meal after meal",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "In a healthy adult, a week of rice meals simply repeats the daily pattern of a rise after each meal and a return to normal."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Whether weight changes depends on total calories, not on rice itself. If the day's food is more than the body uses, the extra is stored as fat."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "No change you can see; the pattern is what counts",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "A month of rice as the main cereal makes no measurable change in a healthy person. What matters over years is a diet that stays very high in carbohydrate and low in protein."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Still no visible change in a healthy adult",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Two months of the same pattern makes no measurable change in a healthy adult. What matters over years is how much carbohydrate the diet carries, and how little protein."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Body weight follows total calories. Large rice portions with little protein make it easy to eat more than you need."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "A high-carbohydrate pattern, repeated every day",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "strain",
+          "intensity": 0.2,
+          "note": "Months of a diet very high in carbohydrate keep asking the pancreas for large insulin responses. In a national Indian survey, people eating the most carbohydrate were more likely to have diabetes or prediabetes. This is a pattern seen in survey data, not a change measured at six months."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Heart risk not raised by rice itself; diabetes risk is the question",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "strain",
+          "intensity": 0.25,
+          "note": "A year of the same pattern. Most people at this intake do not develop diabetes in a year; the risk builds over many years."
+        },
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.1,
+          "note": "In the PURE study, white rice showed no clear link with heart disease or deaths, unlike other refined grains such as maida bread."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Higher diabetes risk at this intake in South Asians",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "In PURE, South Asians eating 3 or more cups of cooked white rice a day developed diabetes more often than those eating under one cup; many in that group ate well over 3 cups. An earlier meta-analysis, mostly of Chinese and Japanese adults, found a similar link. This is a higher chance across a population, not a certainty for any one person.",
+          "metric": {
+            "label": "Diabetes risk, 3 cups or more a day vs under 1 cup (South Asians in PURE, average follow-up 9.5 years)",
+            "value": "about 1.6 times (range 1.1 to 2.3)"
+          }
+        },
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.1,
+          "note": "White rice itself showed no clear link with heart disease in PURE. If diabetes develops, that raises heart risk on its own."
+        }
+      ]
+    }
+  ]
+}

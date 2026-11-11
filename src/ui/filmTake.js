@@ -102,6 +102,32 @@ export function workShares(groups) {
   return new Map(groups.map((g, i) => [g, mean[i] / top]));
 }
 
+// ---------- a "What happens if" take ----------
+/** Seconds each time step stays on screen. */
+export const HOLDS = [2, 3, 4, 5];
+
+/**
+ * A "What happens if" take: the body before it starts, with the dose, then each time step
+ * of the file in order (1 day to 5 years), each held `hold` seconds, and a short rest on
+ * the last one so the video does not end on a cut.
+ */
+export function buildEffectTake({ hold = 3, steps }) {
+  const segs = [];
+  let time = 0;
+  const push = (seg) => { seg.start = time; time += seg.dur; segs.push(seg); };
+  push({ step: steps[0].t, intro: true, dur: Math.max(3, hold) });
+  for (const s of steps) push({ step: s.t, dur: hold });
+  push({ step: steps[steps.length - 1].t, dur: 0.6, tail: true });
+  return { kind: 'effect', hold, segs, total: time, steps };
+}
+
+/** Which time step is on screen `ts` seconds into an effect take, and whether it is the opening card. */
+export function sampleEffectTake(take, ts) {
+  let seg = take.segs[take.segs.length - 1];
+  for (const s of take.segs) { if (ts < s.start + s.dur) { seg = s; break; } }
+  return { step: seg.step, intro: !!seg.intro, index: take.steps.findIndex(s => s.t === seg.step) };
+}
+
 /** Camera choices. */
 export const CAMERAS = [
   { key: 'still', label: 'Camera still' },

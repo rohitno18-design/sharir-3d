@@ -314,10 +314,9 @@ export class EffectsPanel {
     this.root.append(el('div', { class: 'tagrow' },
       el('span', { class: 'tag' }, CATEGORY_META[e.category]?.label || e.category),
       el('span', { class: `ev ${e.evidence}` }, `${e.evidence} evidence`)));
-    if (!inCombo) {
-      this.root.append(el('div', { class: 'btnrow' },
-        el('button', { class: 'btn sm', onClick: () => app.toggleStack(e.id) }, '＋ Add to a combination')));
-    }
+    this.root.append(el('div', { class: 'btnrow' },
+      inCombo ? null : el('button', { class: 'btn sm', onClick: () => app.toggleStack(e.id) }, '＋ Add to a combination'),
+      el('button', { class: 'btn sm primary', title: 'Record this entry as a reel, a square post or a wide video', onClick: () => app.film.enter('effect') }, '🎬 Film mode')));
     if (e.dose) this.root.append(el('div', { class: 'note' }, el('b', {}, 'Dose: '), e.dose));
     this.root.append(el('p', { class: 'desc' }, lang === 'hi' ? e.summary.hi : e.summary.en));
     if (e.indian_context) this.root.append(el('div', { class: 'note in' }, el('b', {}, '🇮🇳 India: '), e.indian_context));

@@ -1,0 +1,142 @@
+{
+  "id": "roti-4-daily",
+  "name": {
+    "en": "4 whole-wheat rotis every day",
+    "hi": "रोज़ 4 आटे की रोटी"
+  },
+  "category": "food",
+  "icon": "🫓",
+  "dose": "4 medium whole-wheat (atta) rotis a day as the main cereal, plain or with a little ghee, eaten with dal and sabzi, in a healthy adult.",
+  "summary": {
+    "en": "Whole-wheat atta keeps the bran, so roti has more fibre than polished white rice. But in a dal-sabzi meal with the same carbohydrate, chapati and rice raised blood sugar by a similar amount, and in a national Indian survey, swapping refined cereals (mostly white rice) for whole-wheat flour without eating less carbohydrate was not clearly linked to less diabetes. Roti is a fine staple; how much carbohydrate you eat overall, and how much protein comes with it, likely matters more than roti versus rice.",
+    "hi": "आटे में चोकर रहता है, इसलिए रोटी में पॉलिश चावल से ज़्यादा फाइबर होता है। लेकिन दाल-सब्ज़ी के साथ बराबर कार्बोहाइड्रेट वाली रोटी और चावल ने ब्लड शुगर लगभग बराबर बढ़ाया, और भारत के एक राष्ट्रीय सर्वे में, कुल कार्बोहाइड्रेट कम किए बिना चावल जैसे रिफ़ाइंड अनाज की जगह आटा खाने से डायबिटीज़ साफ़ तौर पर कम नहीं दिखी। रोटी अच्छा खाना है, पर रोटी या चावल से ज़्यादा फ़र्क शायद इस बात से पड़ता है कि कुल कितना कार्बोहाइड्रेट खाते हैं और साथ में कितना प्रोटीन है।"
+  },
+  "indian_context": "Roti is the main cereal in much of North and Central India, and many people switch from rice to roti believing it is better for blood sugar. Indian studies do not show a clear difference: the survey points instead to the total amount of carbohydrate, which in India is about 62% of calories, and to how much dal or dairy protein comes with it. The survey's authors suggest that atta's very fine milling may be one reason it behaves much like refined cereal. In the same survey, people eating the most atta, about twice the amount in this entry, were somewhat more likely to have diabetes or obesity; that finding is for a much larger dose than 4 rotis.",
+  "evidence": "limited",
+  "sources": [
+    "Nayar S, Madhu SV. Glycemic index of wheat and rice are similar when consumed as part of a North Indian mixed meal. Indian J Endocrinol Metab 2020;24(3):251-255",
+    "Anjana RM et al. Dietary profiles and associated metabolic risk factors in India from the ICMR-INDIAB survey-21. Nat Med 2025;31:3813-3824",
+    "Aune D, Norat T, Romundstad P, Vatten LJ. Whole grain and refined grain consumption and the risk of type 2 diabetes: a systematic review and dose-response meta-analysis of cohort studies. Eur J Epidemiol 2013;28(11):845-858",
+    "Swaminathan S et al. Associations of cereal grains intake with cardiovascular disease and mortality across 21 countries in the PURE study. BMJ 2021;372:m4948",
+    "Longvah T et al. Indian Food Composition Tables (IFCT) 2017. ICMR-National Institute of Nutrition, Hyderabad, 2017"
+  ],
+  "caution": "If you have prediabetes or diabetes, the number of rotis per meal matters as much as the number of rice cups would; ask your doctor or dietitian to help set a portion. People with coeliac disease must avoid wheat entirely.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "Blood sugar rises after a roti meal about as much as after rice",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Roti's starch is digested to glucose and the pancreas releases insulin. In a test meal in 10 healthy adults, a dal-sabzi meal with 2 chapatis raised blood sugar about as much as the same meal with rice carrying the same carbohydrate. Both meals were high on the scale.",
+          "metric": {
+            "label": "Glycaemic index of the meal, with 2 chapatis vs with rice (dal-sabzi meal, same carbohydrate, 10 healthy adults)",
+            "value": "85.5 vs 83.6, both high, no significant difference"
+          }
+        },
+        {
+          "target": "large-intestine",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Whole-wheat atta keeps the bran, so roti brings more fibre to the gut than polished white rice does."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "The same rise and fall, meal after meal",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "In a healthy adult, a week of roti meals repeats the daily pattern of a rise after each meal and a return to normal."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Ghee or butter spread on each roti adds calories that are easy to overlook."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "No change you can see; the amount is what counts",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "No study shows a change after a month of roti as the main cereal in a healthy person. The question that matters over years is how much carbohydrate the whole diet carries, and how little protein."
+        },
+        {
+          "target": "large-intestine",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "The extra fibre from whole-wheat atta keeps reaching the gut every day."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Still no visible change in a healthy adult",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Switching from rice to roti on its own has not been shown to change how hard the pancreas works if the total carbohydrate stays the same."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "A steady staple; the whole day's carbohydrate is what to watch",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "At 4 rotis with dal and vegetables, nothing points to harm. In a national Indian survey, people whose whole diet was very high in carbohydrate were more likely to have diabetes or prediabetes, whatever the grain."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Still a neutral staple at this amount",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "A year of the same pattern. If the overall diet becomes very high in carbohydrate and low in protein, that is what is linked to diabetes, not roti in particular."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Not shown to protect against diabetes; the overall diet matters more",
+      "effects": [
+        {
+          "target": "pancreas",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "In mostly Western studies, people eating more whole grains had less diabetes. In the national Indian survey, a modelled swap of refined cereal for whole-wheat flour, with the same total carbohydrate, showed no clear difference. The survey looked at Indian adults once, so it has no time span; it sits at the last step because that is the question it answers.",
+          "metric": {
+            "label": "Newly diagnosed diabetes, modelled swap of 50 g refined cereal (mostly white rice) for whole-wheat flour, same carbohydrate (one-time national survey, ICMR-INDIAB)",
+            "value": "0.94, no clear difference (range 0.57 to 1.56)"
+          }
+        },
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.1,
+          "note": "In the 21-country PURE study, followed for about 9.5 years, whole grains showed no clear link, good or bad, with heart disease or death. Refined grains such as maida bread were linked to more, at 7 or more servings a day."
+        }
+      ]
+    }
+  ]
+}

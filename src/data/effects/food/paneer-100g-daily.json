@@ -1,0 +1,201 @@
+{
+  "id": "paneer-100g-daily",
+  "name": { "en": "100 g of paneer every day", "hi": "रोज़ 100 ग्राम पनीर" },
+  "category": "food",
+  "icon": "🧀",
+  "dose": "100 g of ordinary full-fat paneer a day (about a cup of cubes), eaten in meals as sabzi, bhurji or plain, added to a usual Indian vegetarian diet, in a healthy adult who does not do regular strength training.",
+  "summary": {
+    "en": "Paneer is milk curdled with acid and pressed, which packs its protein and fat into a small piece. 100 g gives about 19 g of protein and about half a day's calcium, along with 15 to 25 g of fat, most of it saturated, and roughly 260 to 305 kcal. It makes the day's protein and calcium much easier to reach for vegetarians; the fat and the calories are the trade-off.",
+    "hi": "पनीर दूध को फाड़कर और दबाकर बनता है, इसलिए छोटे से टुकड़े में काफ़ी प्रोटीन और फैट आ जाता है। 100 ग्राम में लगभग 19 ग्राम प्रोटीन और दिन भर के कैल्शियम का करीब आधा मिलता है, साथ में 15 से 25 ग्राम फैट, जिसका ज़्यादातर हिस्सा सैचुरेटेड है, और लगभग 260 से 305 कैलोरी। शाकाहारियों के लिए प्रोटीन और कैल्शियम पूरा करना इससे बहुत आसान हो जाता है, बस फैट और कैलोरी का ध्यान रखना पड़ता है।"
+  },
+  "indian_context": "For many Indian vegetarians, paneer is one of the few protein-dense foods eaten regularly, alongside dal and milk. Restaurant and home recipes often add cream, butter or deep frying, which adds more fat than the paneer itself. 'Analogue paneer' made with vegetable fat is also sold; its recipe varies and it often has less protein and calcium than real paneer, so buy from a trusted source. Published copies of India's food composition tables differ on paneer's fat (about 15 g or about 25 g per 100 g), so this entry shows the range.",
+  "evidence": "limited",
+  "sources": [
+    "Longvah T et al. Indian Food Composition Tables (IFCT) 2017. ICMR-National Institute of Nutrition, Hyderabad, 2017",
+    "ICMR-NIN. Nutrient Requirements for Indians: Recommended Dietary Allowances and Estimated Average Requirements, 2020",
+    "World Health Organization. Saturated fatty acid and trans-fatty acid intake for adults and children: WHO guideline, 2023",
+    "Tai V, Leung W, Grey A, Reid IR, Bolland MJ. Calcium intake and bone mineral density: systematic review and meta-analysis. BMJ 2015;351:h4183",
+    "Morton RW et al. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength in healthy adults. Br J Sports Med 2018;52:376-384"
+  ],
+  "caution": "If your LDL cholesterol is high or you have heart disease, choose low-fat paneer or count full-fat paneer within your daily saturated fat limit. People with chronic kidney disease who have been told to limit protein should ask their doctor before adding about 19 g of protein a day.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "About 19 g of protein and half a day's calcium in one serving",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Paneer's protein is mainly milk protein, which digests slowly and releases amino acids over several hours. 100 g gives about a third of the ICMR daily protein allowance for a 65 kg adult (0.83 g per kg).",
+          "metric": { "label": "Protein in 100 g paneer", "value": "18.9 g" }
+        },
+        {
+          "target": "bones",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "100 g gives 476 mg of calcium, about half the ICMR adult allowance. Bone itself does not change in a day.",
+          "metric": { "label": "Calcium (ICMR adult RDA 1,000 mg a day)", "value": "476 mg" }
+        },
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "15 to 25 g of milk fat, most of it saturated. WHO advises keeping saturated fat to 10% of the day's energy or less, so one serving uses a large part of that allowance. Blood cholesterol does not change in a day."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Protein and calcium targets easier to reach; no visible change yet",
+      "effects": [
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Without strength training, the extra protein goes to everyday repair and energy. Protein on its own does not make muscles bigger."
+        },
+        {
+          "target": "bones",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Paneer adds about half the day's calcium allowance. Changes in bone density take many months to show on a scan."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Paneer is calorie-dense: roughly 260 to 305 kcal per 100 g. Added on top of the usual meals, that extra energy is stored as body fat over time."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "No muscle change without training; saturated fat starts to count",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "strain",
+          "intensity": 0.25,
+          "note": "Saturated fat raises LDL ('bad') cholesterol over weeks. How much depends on the rest of the diet: ghee, butter, cream and fried food add to the same total."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "For someone who does not train, muscle size does not change. In people who do resistance training, extra protein adds a little to the muscle that training builds."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "If the paneer is extra food rather than a swap, the added calories begin to add up."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "LDL may drift up if the day's saturated fat goes over the limit",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Whether 100 g of paneer pushes saturated fat over the WHO limit depends on what else you eat. With little other ghee or fried food it may fit; on top of a rich diet it adds to the excess."
+        },
+        {
+          "target": "bones",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Paneer keeps adding about half the day's calcium allowance. Any change in density is still too small to measure."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "No muscle gain without training. With training, the extra benefit of protein appears to level off once total intake reaches about 1.6 g per kg a day, though that figure is uncertain."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Extra calories show up unless they were swapped; muscle needs training",
+      "effects": [
+        {
+          "target": "adipose",
+          "kind": "strain",
+          "intensity": 0.2,
+          "note": "Roughly 260 to 305 kcal a day on top of the usual diet, if nothing else changes, steadily adds body fat."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "For the person in the dose, muscle stays the same. If you also do regular strength training, trials lasting a few months found added protein gave a small extra gain in lean mass over training alone.",
+          "metric": { "label": "Extra lean mass, only if you also do strength training (trials of a few months)", "value": "about +0.3 kg" }
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.2,
+          "note": "In trials of adults over 50, more calcium from food raised bone density slightly over the first year or two, then it levelled off."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "Bone density may be slightly higher; the heart effect depends on the whole diet",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "A year of extra saturated fat. If LDL has risen, low-fat paneer keeps the protein with less fat."
+        },
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.25,
+          "note": "In trials of adults over 50, a small rise in bone density is measurable by now. Younger adults were not studied in these trials."
+        },
+        {
+          "target": "adipose",
+          "kind": "strain",
+          "intensity": 0.25,
+          "note": "A year of extra calories, if they were not offset, shows as gradual weight gain."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "A useful protein and calcium food; the fat and calories are the trade-off",
+      "effects": [
+        {
+          "target": "bones",
+          "kind": "positive",
+          "intensity": 0.25,
+          "note": "More calcium from food gives a small, one-time rise in bone density that does not keep growing, and on its own is unlikely to prevent fractures.",
+          "metric": { "label": "Bone density with more dietary calcium (trials in adults over 50, at 2 years; younger adults not studied)", "value": "+0.7 to 1.8%, not rising further" }
+        },
+        {
+          "target": "arteries",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "No study has followed people eating 100 g of paneer a day for heart disease. The known route is saturated fat raising LDL cholesterol, so keep total saturated fat within the WHO limit, or choose low-fat paneer."
+        },
+        {
+          "target": "adipose",
+          "kind": "strain",
+          "intensity": 0.3,
+          "note": "Five years of 260 to 305 extra kcal a day, if not offset by eating less elsewhere or moving more, adds up to a steady gain in body fat."
+        },
+        {
+          "target": "skeletal-muscle",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "Without strength training, muscle is not built by protein alone. With training, adequate protein helps keep the muscle that training builds."
+        }
+      ]
+    }
+  ]
+}

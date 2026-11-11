@@ -1,0 +1,153 @@
+{
+  "id": "dinner-3h-before-sleep",
+  "name": {
+    "en": "Dinner at least 3 hours before sleep",
+    "hi": "सोने से कम से कम 3 घंटे पहले खाना"
+  },
+  "category": "habit",
+  "icon": "🕗",
+  "dose": "Finishing dinner at least 3 hours before going to sleep every night (for example, dinner done by 8 pm for an 11 pm bedtime), compared with eating within an hour or so of bed, in a healthy adult.",
+  "summary": {
+    "en": "When you lie down soon after a meal, a fuller stomach makes it easier for acid to flow up into the food pipe, and in one lab trial a dinner eaten an hour before bed raised blood sugar more than the same dinner at 6 pm. Finishing dinner at least 3 hours before bed gives the stomach time to empty, especially after a light meal. Reflux guidelines suggest it, mainly for people prone to acidity; whether eating earlier changes weight or diabetes risk over years has not been shown in long trials.",
+    "hi": "खाने के तुरंत बाद लेटने पर भरे पेट से एसिड खाने की नली में आसानी से ऊपर आता है, और एक लैब ट्रायल में सोने से एक घंटा पहले किए गए खाने से ब्लड शुगर, शाम 6 बजे के उसी खाने से ज़्यादा बढ़ा। सोने से कम से कम 3 घंटे पहले खाना ख़त्म करने से पेट को खाली होने का समय मिलता है, ख़ासकर हल्के खाने के बाद। एसिडिटी की गाइडलाइन यही सलाह देती है, ख़ासकर जिन्हें एसिडिटी होती है उनके लिए; जल्दी खाने से सालों में वज़न या डायबिटीज़ का खतरा बदलता है या नहीं, यह लंबे ट्रायल्स में नहीं दिखा है।"
+  },
+  "indian_context": "Late dinners are common in many Indian cities, with long commutes and family meals late in the evening followed soon by sleep, and evening meals are often the day's heaviest. Heavy, oily meals take longer to leave the stomach than light ones, so a late heavy dinner gives the least time before lying down. Moving the main meal earlier, or keeping a late dinner light, is a free change worth trying for night-time acidity before reaching for tablets.",
+  "evidence": "limited",
+  "sources": [
+    "Fujiwara Y et al. Association between dinner-to-bed time and gastro-esophageal reflux disease. Am J Gastroenterol 2005;100(12):2633-2636",
+    "Gu C et al. Metabolic effects of late dinner in healthy volunteers: a randomized crossover clinical trial. J Clin Endocrinol Metab 2020;105(8):2789-2802",
+    "Katz PO et al. ACG clinical guideline for the diagnosis and management of gastroesophageal reflux disease. Am J Gastroenterol 2022;117(1):27-56",
+    "Abell TL et al. Consensus recommendations for gastric emptying scintigraphy. Am J Gastroenterol 2008;103(3):753-763"
+  ],
+  "caution": "Reflux that wakes you at night, trouble swallowing, vomiting, black stools or weight loss without trying need a doctor, not just a change of dinner time. People with diabetes on insulin or tablets should keep meal times steady and ask their doctor before moving meals.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "An emptier stomach at bedtime: less acid pushed up at night",
+      "effects": [
+        {
+          "target": "esophagus",
+          "kind": "positive",
+          "intensity": 0.1,
+          "note": "A light meal has mostly left the stomach by about 3 to 4 hours; heavy, oily meals take longer. Lying down on a fuller stomach makes it easier for acid to flow up into the food pipe, which is why reflux guidelines suggest avoiding meals within 2 to 3 hours of bed. The benefit is mainly for people prone to reflux."
+        },
+        {
+          "target": "pancreas",
+          "kind": "positive",
+          "intensity": 0.15,
+          "note": "In a lab trial, the same dinner eaten at 10 pm, an hour before bed, raised blood sugar more and burned less of its fat than when eaten at 6 pm, five hours before bed. A 3-hour gap sits between the two and was not tested.",
+          "metric": {
+            "label": "Peak blood sugar after a 10 pm vs a 6 pm dinner, bed at 11 pm (lab trial, 20 healthy young adults, one night of each)",
+            "value": "about 18% higher with the 10 pm dinner"
+          }
+        },
+        {
+          "target": "brain",
+          "kind": "neutral",
+          "intensity": 0.1,
+          "note": "In the same trial, eating late did not change the stages of sleep, so this entry does not claim a sleep benefit."
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Possibly fewer nights of heartburn for people prone to it",
+      "effects": [
+        {
+          "target": "esophagus",
+          "kind": "positive",
+          "intensity": 0.1,
+          "note": "If you are prone to acidity or heartburn at night, earlier dinners may mean fewer bad nights; this has not been measured week by week. For people who rarely get reflux, little changes."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "Each night, dinner is digested before lying down",
+      "effects": [
+        {
+          "target": "esophagus",
+          "kind": "positive",
+          "intensity": 0.1,
+          "note": "If you are prone to reflux, less acid may reach the food pipe at night."
+        },
+        {
+          "target": "pancreas",
+          "kind": "neutral",
+          "intensity": 0.1,
+          "note": "The rise in blood sugar after dinner is over before sleep instead of running into it. The lab trial measured single nights; whether this adds up over a month has not been tested."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "A steady habit; benefits are mostly for reflux",
+      "effects": [
+        {
+          "target": "esophagus",
+          "kind": "positive",
+          "intensity": 0.1,
+          "note": "If you are prone to reflux, the clearest benefit of an earlier dinner is less night-time reflux. The evidence behind the guideline is rated low quality, but the change is free and harmless."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.1,
+          "note": "The lab trial's authors suggested that late dinners, repeated night after night, might favour weight gain because less of the dinner's fat is burned. This has not been tested over months."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "Less reflux over months; weight effects not shown",
+      "effects": [
+        {
+          "target": "esophagus",
+          "kind": "positive",
+          "intensity": 0.1,
+          "note": "If you are prone to reflux, months of earlier dinners may keep night-time reflux down."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.1,
+          "note": "Whether eating dinner earlier on its own changes body weight over months has not been shown in long trials."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "In one study, going to bed soon after dinner was linked to more reflux disease",
+      "effects": [
+        {
+          "target": "esophagus",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "In a Japanese study, people who went to bed less than 3 hours after dinner were far more likely to have reflux disease than those who waited 4 hours or more. It compared people's habits once, so it shows a strong link, not proof of cause, and not a change measured over a year.",
+          "metric": {
+            "label": "Odds of having reflux disease, bed under 3 hours after dinner vs 4 hours or more (one Japanese case-control study, measured once, not over time)",
+            "value": "about 7.5 times (95% CI 3.4 to 16.4)"
+          }
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "A free habit that may protect the food pipe; other long-term effects unknown",
+      "effects": [
+        {
+          "target": "esophagus",
+          "kind": "positive",
+          "intensity": 0.1,
+          "note": "If you are prone to reflux, years of earlier dinners may mean less night-time acid in the food pipe, which is what the guideline aims for."
+        },
+        {
+          "target": "pancreas",
+          "kind": "neutral",
+          "intensity": 0.1,
+          "note": "Whether eating earlier lowers the risk of diabetes over years has not been tested in long trials."
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,8 @@
 import { el } from '../core/util.js';
 import { effortColor, phaseName } from './exercisePanel.js';
-import { buildTake, sampleTake, fatigueAt, workShares, cameraOffset, PACES, REP_CHOICES, CAMERAS } from './filmTake.js';
+import { buildTake, sampleTake, fatigueAt, workShares, cameraOffset, PACES, REP_CHOICES, CAMERAS, buildEffectTake, sampleEffectTake, HOLDS } from './filmTake.js';
+import { state, set } from '../core/state.js';
+import { TIMELINE_STEPS, EFFECT_KINDS } from '../data/targets.js';
 
 /**
  * Film mode: turn the Movement view into a clean shot and record it as a video.
@@ -16,6 +18,11 @@ import { buildTake, sampleTake, fatigueAt, workShares, cameraOffset, PACES, REP_
  *
  * Nothing is saved on its own. When a take finishes, a Save button appears and the user
  * decides whether to keep it.
+ *
+ * The same recorder films a "What happens if" entry (kind 'effect'): the body before it
+ * starts with the dose, then each time step of the file held a few seconds, captioned
+ * with that step's own headline and hero metric and a source line. Only the take, the
+ * moment on screen, the captions and the bar's choices differ between the two kinds.
  */
 const FORMATS = {
   reel:   { label: 'Reel 9:16',  w: 1080, h: 1920 },
@@ -39,6 +46,9 @@ export class Film {
   constructor(app) {
     this.app = app;
     this.active = false;
+    this.kind = 'lift';           // 'lift' (Movement) or 'effect' (What happens if)
+    this.effect = null;           // the entry being filmed, for an effect take
+    this.hold = 3;                // seconds each time step stays on screen, for an effect take
     this.format = 'reel';
     this.captions = true;
     this.reps = 1;
@@ -55,13 +65,24 @@ export class Film {
 
   get player() { return this.app.exercise; }
   get busy() { return !!(this.recorder || this.rendering || this.previewing); }
-  get take() { return buildTake({ reps: this.reps, pace: this.pace, repSecs: this.player?.ex?.duration || 3.4, phases: this.player?.ex?.phases }); }
+  get take() {
+    if (this.kind === 'effect') return buildEffectTake({ hold: this.hold, steps: TIMELINE_STEPS });
+    return buildTake({ reps: this.reps, pace: this.pace, repSecs: this.player?.ex?.duration || 3.4, phases: this.player?.ex?.phases });
+  }
 
-  enter() {
-    if (this.active || !this.player?.ex) return;
+  /** Film the lift on screen (`'lift'`) or the "What happens if" entry that is open (`'effect'`). */
+  enter(kind = 'lift') {
+    if (this.active) return;
+    const effect = kind === 'effect' ? this.app.effects.get(state.effect) : null;
+    if (kind === 'lift' ? !this.player?.ex : !effect) return;
+    this.kind = kind;
+    this.effect = effect;
+    // Each kind keeps its own camera choice. A standing body reads best from a still
+    // camera, so an effect film starts there; a lift starts circling as before.
+    if (kind === 'effect') { this._liftCamera = this.camera; this.camera = this._effectCamera || 'still'; }
     this.active = true;
     const v = this.app.viewer;
-    this._saved = { pixelRatio: v.renderer.getPixelRatio(), speed: this.player.speed };
+    this._saved = { pixelRatio: v.renderer.getPixelRatio(), speed: this.player?.speed, step: state.effectStep };
     document.body.classList.add('film');
     this.app.hi.setHover(null);
     this._labelsWere = this.app.labels.visible;
@@ -73,8 +94,10 @@ export class Film {
     document.getElementById('app').append(this.bar);
     this.renderBar();
     this.layout();
-    this.player.pause();
-    this.player.seek(this.player.ex?.poster ?? 0.5);
+    if (this.kind === 'lift') {
+      this.player.pause();
+      this.player.seek(this.player.ex?.poster ?? 0.5);
+    }
     this._offDraw = v.onAfterRender(() => this.draw());
     document.addEventListener('keydown', this._onKey);
     window.addEventListener('resize', this._onResize);
@@ -96,12 +119,33 @@ export class Film {
     document.body.classList.remove('film');
     this.app.labels.visible = this._labelsWere;
     v.renderer.setPixelRatio(this._saved.pixelRatio);
-    this.player.speed = this._saved.speed;
     this.restoreEffort();
     v.resize();
     this.app.updateSafeInsets();
+    if (this.kind === 'effect') {
+      clearTimeout(this._frameT);
+      // Back to the step the page was on, the timeline showing again, and the whole body
+      // framed for the normal layout once the panels are back.
+      if (state.mode === 'effects') {
+        this.app.syncEffectDock();
+        this.app.panel?.render?.();
+        requestAnimationFrame(() => this.app.viewer.resetView(this.app.currentHeightM()));
+      }
+      this.effect = null;
+      this.kind = 'lift';
+      this._effectCamera = this.camera;
+      this.camera = this._liftCamera || 'orbit';
+      return;
+    }
+    this.player.speed = this._saved.speed;
     this.player.autoFrame = true;
     this.player.scheduleFrame(120);
+  }
+
+  /** An effect take frames the whole body in the space the captions leave. */
+  frameBody(ms = 80) {
+    clearTimeout(this._frameT);
+    this._frameT = setTimeout(() => { if (this.active && this.kind === 'effect') this.app.viewer.resetView(this.app.currentHeightM()); }, ms);
   }
 
   /** Shape the stage like the video, as large as the window allows, under the film bar. */
@@ -127,8 +171,10 @@ export class Film {
     this.canvas.width = f.w; this.canvas.height = f.h;
     this._reserve = null; this._reserveKey = null;
     this.app.updateSafeInsets();
-    this.player.autoFrame = true;
-    this.player.scheduleFrame(80);
+    if (this.kind === 'lift') {
+      this.player.autoFrame = true;
+      this.player.scheduleFrame(80);
+    } else this.frameBody();
     v.requestRender();
   }
 
@@ -138,6 +184,7 @@ export class Film {
    * muscles' effort and tiredness for that point in the set, and the camera.
    */
   frameAt(take, ts, base) {
+    if (this.kind === 'effect') return this.frameEffectAt(take, ts, base);
     const p = this.player, v = this.app.viewer;
     const s = sampleTake(take, ts);
     p.seek(s.t);
@@ -161,9 +208,35 @@ export class Film {
     v.requestRender();
   }
 
-  /** Back to the plain Movement readout once a take is over. */
+  /**
+   * An effect take at `ts` seconds: the body as it was before (the opening card), or the
+   * body at that time step, exactly as the page shows it at that step.
+   */
+  frameEffectAt(take, ts, base) {
+    const v = this.app.viewer;
+    const s = sampleEffectTake(take, ts);
+    this.app.setCompare(s.intro);
+    if (state.effectStep !== s.step) { set({ effectStep: s.step }); this.app.applyEffect(); }
+    this.sample = s;
+    if (base) {
+      v.camera.position.copy(v.controls.target).add(cameraOffset(this.camera, base, ts, take.total));
+      v.camera.lookAt(v.controls.target);
+    }
+    this.app.hi.tick(ts);
+    v.requestRender();
+  }
+
+  /** Back to the plain Movement readout (or the step the page was on) once a take is over. */
   restoreEffort() {
     this.sample = null;
+    if (this.kind === 'effect') {
+      this.app.setCompare(false);
+      if (this._saved && state.effectStep !== this._saved.step) {
+        set({ effectStep: this._saved.step });
+        if (state.mode === 'effects') this.app.applyEffect();
+      }
+      return;
+    }
     const p = this.player;
     if (!p?.ex) return;
     for (const g of p.groups) g.tired = 0;
@@ -212,7 +285,127 @@ export class Film {
     g.addColorStop(0, '#171b21'); g.addColorStop(0.55, '#0c0e12'); g.addColorStop(1, '#07080a');
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
     ctx.drawImage(this.app.viewer.canvas, 0, 0, W, H);
-    if (this.captions) this.drawCaptions(ctx, W, H);
+    if (this.captions) {
+      if (this.kind === 'effect') this.drawEffectCaptions(ctx, W, H);
+      else this.drawCaptions(ctx, W, H);
+    }
+  }
+
+  /**
+   * Captions for a "What happens if" take. Every word and number is the file's own: its
+   * name, dose and evidence grade; at each step the step's headline and the hero effect's
+   * metric (the first effect of the step, as the schema defines it), exactly as written. A
+   * step whose hero carries no metric shows its headline alone: no number is borrowed from
+   * another effect. A source line sits at the bottom.
+   */
+  drawEffectCaptions(ctx, W, H) {
+    const e = this.effect;
+    if (!e) return;
+    const s = this.sample;
+    const stepT = s ? s.step : state.effectStep;
+    const intro = s ? s.intro : !!this.app._compare;
+    const idx = Math.max(0, TIMELINE_STEPS.findIndex(x => x.t === stepT));
+    const step = e.timeline.find(x => x.t === stepT) || e.timeline[0];
+    const hero = step.effects[0];
+    const cols = W >= H;
+    const u = ((cols ? H : W) / 1080) * (W === H ? 0.86 : 1);
+    const pad = 64 * u;
+    const fullW = W - pad * 2;
+    const colW = cols ? Math.min(fullW, W * 0.56) : fullW;
+
+    // ---- the top: what this is, and how good the evidence is
+    const titleFont = `800 ${60 * u}px Manrope, sans-serif`;
+    const title = wrap(ctx, e.name.en, fullW, titleFont).slice(0, 2);
+    const titleY = pad + 100 * u;
+    const evY = titleY + (title.length - 1) * 70 * u + 50 * u;
+    const titleBottom = evY + 20 * u;
+
+    // ---- the bottom block, laid out from the bottom edge up
+    const srcFont = `500 ${22 * u}px Inter, sans-serif`;
+    const n = (e.sources || []).length;
+    const src1 = n ? ellipsize(ctx, `Source: ${e.sources[0]}`, fullW, srcFont) : '';
+    const src2 = `${n > 1 ? `+${n - 1} more source${n > 2 ? 's' : ''} in Sharir 3D. ` : ''}For learning, not medical advice.`;
+    const srcY2 = H - pad;
+    const srcY1 = srcY2 - 30 * u;
+    const y = (src1 ? srcY1 : srcY2) - 46 * u;
+    const lines = [];                       // [text, font, colour, line height]
+    if (intro) {
+      const f = `500 ${30 * u}px Inter, sans-serif`;
+      wrap(ctx, `Dose: ${e.dose}`, colW, f).forEach(t => lines.push([t, f, 'rgba(255,255,255,0.85)', 42 * u]));
+    } else {
+      const fh = `600 ${36 * u}px Inter, sans-serif`;
+      wrap(ctx, step.headline, colW, fh).forEach(t => lines.push([t, fh, '#ffffff', 48 * u]));
+      if (hero?.metric) {
+        lines.push(['', '', '', 18 * u]);
+        // A number reads big; a value written as a sentence reads at text size.
+        const big = hero.metric.value.length <= 24;
+        const fl = `500 ${28 * u}px Inter, sans-serif`, fv = `800 ${(big ? 56 : 38) * u}px Manrope, sans-serif`;
+        wrap(ctx, hero.metric.label, colW, fl).forEach(t => lines.push([t, fl, 'rgba(255,255,255,0.65)', 38 * u]));
+        wrap(ctx, hero.metric.value, colW, fv).forEach(t => lines.push([t, fv, EFFECT_KINDS[hero.kind]?.color || '#ffffff', (big ? 66 : 48) * u]));
+      }
+    }
+    // Each line's height is the space above its baseline, so a big line (the metric's
+    // value) never sits on the small one above it.
+    const blockH = lines.reduce((a, l) => a + l[3], 0);
+    const blockY = y - blockH;
+    const stepNameY = blockY - 26 * u;
+    const dotsY = stepNameY - 74 * u;
+    const blockTop = dotsY - 30 * u;
+    // A tall frame keeps the body between the title and the bottom block. A square or wide
+    // frame keeps the text in a column down the left, so the body takes the right side at
+    // full height instead of a thin strip in the middle.
+    this._reserve = cols
+      ? { top: titleBottom / H, bottom: (H - srcY1 + 34 * u) / H, left: (pad + colW + 32 * u) / W }
+      : { top: titleBottom / H, bottom: (H - blockTop) / H };
+
+    const band = (y0, y1, down) => {
+      const gr = ctx.createLinearGradient(0, y0, 0, y1);
+      gr.addColorStop(down ? 0 : 1, 'rgba(5,6,8,0.8)'); gr.addColorStop(down ? 1 : 0, 'rgba(5,6,8,0)');
+      ctx.fillStyle = gr; ctx.fillRect(0, y0, W, y1 - y0);
+    };
+    band(0, titleBottom + 90 * u, true);
+    if (cols) {
+      const x1 = pad + colW + 140 * u;
+      const gr = ctx.createLinearGradient(0, 0, x1, 0);
+      gr.addColorStop(0, 'rgba(5,6,8,0.75)'); gr.addColorStop(0.7, 'rgba(5,6,8,0.55)'); gr.addColorStop(1, 'rgba(5,6,8,0)');
+      ctx.fillStyle = gr; ctx.fillRect(0, blockTop - 60 * u, x1, H - blockTop + 60 * u);
+      band(srcY1 - 60 * u, H, false);
+    } else band(blockTop - 90 * u, H, false);
+
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = '#e9c95c';
+    ctx.font = `800 ${26 * u}px Manrope, sans-serif`;
+    spaced(ctx, 'SHARIR 3D  ·  WHAT HAPPENS IF', pad, pad + 26 * u, 4 * u);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = titleFont;
+    title.forEach((t, i) => ctx.fillText(t, pad, titleY + i * 70 * u));
+    ctx.fillStyle = 'rgba(255,255,255,0.62)';
+    ctx.font = `500 ${28 * u}px Inter, sans-serif`;
+    ctx.fillText(`Evidence: ${e.evidence}`, pad, evY);
+
+    // Where on the timeline: seven dots, the current one filled.
+    const r = 9 * u, gap = 34 * u;
+    TIMELINE_STEPS.forEach((st, i) => {
+      ctx.beginPath(); ctx.arc(pad + r + i * gap, dotsY, r, 0, Math.PI * 2);
+      ctx.fillStyle = intro ? 'rgba(255,255,255,0.18)' : i < idx ? 'rgba(233,201,92,0.55)' : i === idx ? '#e9c95c' : 'rgba(255,255,255,0.18)';
+      ctx.fill();
+    });
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `800 ${60 * u}px Manrope, sans-serif`;
+    ctx.fillText(intro ? 'Before' : `After ${TIMELINE_STEPS[idx].label}`, pad, stepNameY);
+
+    let ly = blockY;
+    for (const [t, font, colour, lh] of lines) {
+      ly += lh;
+      if (t) { ctx.font = font; ctx.fillStyle = colour; ctx.fillText(t, pad, ly); }
+    }
+    ctx.font = srcFont;
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    if (src1) ctx.fillText(src1, pad, srcY1);
+    ctx.fillText(ellipsize(ctx, src2, fullW, srcFont), pad, srcY2);
+
+    const key = `${this.format}|${this._reserve.top.toFixed(2)}|${this._reserve.bottom.toFixed(2)}`;
+    if (key !== this._reserveKey) { this._reserveKey = key; if (!this.busy) this.app.updateSafeInsets(); }
   }
 
   drawCaptions(ctx, W, H) {
@@ -333,7 +526,7 @@ export class Film {
     const stage = document.getElementById('stage').getBoundingClientRect();
     const est = this.format === 'reel' ? { top: 0.13, bottom: 0.36 } : { top: 0.24, bottom: 0.36 };
     const r = this.captions ? (this._reserve || est) : { top: 0.04, bottom: 0.04 };
-    return { top: r.top * stage.height, bottom: r.bottom * stage.height, left: stage.width * 0.04, right: stage.width * 0.04 };
+    return { top: r.top * stage.height, bottom: r.bottom * stage.height, left: (r.left ?? 0.04) * stage.width, right: stage.width * 0.04 };
   }
 
   // ---------- recording ----------
@@ -366,7 +559,7 @@ export class Film {
     output.addVideoTrack(source, { frameRate: FPS });
     await output.start();
 
-    this.player.pause();
+    if (this.kind === 'lift') this.player.pause();
     const base = this.startCamera();
     this.rendering = { done: 0, frames, cancel: false, started: performance.now() };
     this.renderBar();
@@ -390,7 +583,7 @@ export class Film {
       this.endCamera(base);
       this.rendering = null;
       this.restoreEffort();
-      this.player.seek(this.player.ex?.poster ?? 0.5);
+      if (this.kind === 'lift') this.player.seek(this.player.ex?.poster ?? 0.5);
       this.renderBar();
     }
   }
@@ -416,7 +609,7 @@ export class Film {
       this.result = { blob, url: URL.createObjectURL(blob), ext: type.includes('mp4') ? 'mp4' : 'webm', secs: take.total };
       this.renderBar();
     };
-    this.player.pause();
+    if (this.kind === 'lift') this.player.pause();
     const base = this.startCamera();
     const start = performance.now();
     this.recorder = rec;
@@ -493,7 +686,9 @@ export class Film {
     }
     if (this.result) {
       const mb = (this.result.blob.size / 1048576).toFixed(1);
-      const name = `sharir-${this.player.ex.id}-${this.reps}rep-${this.format}.${this.result.ext}`;
+      const name = this.kind === 'effect'
+        ? `sharir-${this.effect?.id || 'effect'}-${this.format}.${this.result.ext}`
+        : `sharir-${this.player.ex.id}-${this.reps}rep-${this.format}.${this.result.ext}`;
       bar.append(
         el('span', { class: 'film-note' }, `Your video is ready. ${fmt(this.result.secs)}, ${mb} MB.`),
         el('a', { class: 'btn sm primary', href: this.result.url, download: name }, '⤓ Save video'),
@@ -511,6 +706,19 @@ export class Film {
       return s;
     };
     const take = this.take;
+    if (this.kind === 'effect') {
+      bar.append(
+        seg(Object.entries(FORMATS).map(([k, f]) => [k, f.label]), this.format, (k) => { this.format = k; this.renderBar(); this.layout(); }),
+        select(HOLDS.map(n => [n, `Each step ${n} s`]), this.hold, (v) => { this.hold = +v; this.renderBar(); }, 'How long each time step stays on screen'),
+        select(CAMERAS.map(c => [c.key, c.label]), this.camera, (v) => { this.camera = v; this.renderBar(); }, 'How the camera moves'),
+        el('button', { class: 'chip' + (this.captions ? ' active' : ''), onClick: () => { this.captions = !this.captions; this.renderBar(); this.app.updateSafeInsets(); this.app.viewer.requestRender(); } }, 'Captions'),
+        el('button', { class: 'btn sm', onClick: () => this.preview() }, '▶ Preview'),
+        el('button', { class: 'btn sm film-go', onClick: () => this.record() }, `● Record  ${fmt(take.total)}`),
+        el('button', { class: 'btn sm', onClick: () => this.exit() }, 'Done'),
+      );
+      if (this._msg) { bar.append(el('span', { class: 'film-note' }, this._msg)); this._msg = null; }
+      return;
+    }
     bar.append(
       seg(Object.entries(FORMATS).map(([k, f]) => [k, f.label]), this.format, (k) => { this.format = k; this.renderBar(); this.layout(); }),
       select(REP_CHOICES.map(n => [n, n === 1 ? '1 rep' : `${n} reps`]), this.reps, (v) => { this.reps = +v; this.renderBar(); }, 'How many reps'),
@@ -571,6 +779,15 @@ function wrap(ctx, text, maxW, font) {
   }
   if (line) lines.push(line);
   return lines;
+}
+
+/** One line of `text`, cut with an ellipsis if it is wider than `maxW`. */
+function ellipsize(ctx, text, maxW, font) {
+  ctx.font = font;
+  if (ctx.measureText(text).width <= maxW) return text;
+  let lo = 0, hi = text.length;
+  while (lo < hi) { const mid = (lo + hi + 1) >> 1; if (ctx.measureText(text.slice(0, mid) + '…').width <= maxW) lo = mid; else hi = mid - 1; }
+  return text.slice(0, lo).trimEnd() + '…';
 }
 
 /** Letter-spaced text, drawn a glyph at a time: canvas letterSpacing is not everywhere yet. */

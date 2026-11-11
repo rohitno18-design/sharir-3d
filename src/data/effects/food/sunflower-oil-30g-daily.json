@@ -1,0 +1,140 @@
+{
+  "id": "sunflower-oil-30g-daily",
+  "name": {
+    "en": "Refined sunflower oil for daily cooking (30 g a day)",
+    "hi": "रोज़ खाना रिफ़ाइंड सूरजमुखी तेल में (30 ग्राम)"
+  },
+  "category": "food",
+  "icon": "🌻",
+  "dose": "30 g (about 6 teaspoons) of ordinary (high-linoleic) refined sunflower oil a day as the only cooking oil, used for everyday cooking and tadka, not reused for frying, in a healthy adult eating about 2,000 kcal. 30 g is the upper end of the ICMR-NIN guide for all visible fat on a 2,000 kcal day; for a sedentary woman the guide is about 20 g.",
+  "summary": {
+    "en": "Ordinary refined sunflower oil, one of the common 'refined oils' in Indian kitchens, is low in saturated fat and rich in the omega-6 fat linoleic acid. Replacing animal fat such as ghee with vegetable oils like this lowers LDL cholesterol, and in trials, mostly using soybean oil, that swap cut heart events. One old trial found more deaths, but it also used a margarine now thought to contain trans fat. India's own guidelines advise moderating oils high in omega-6, and the amount you use matters as much as the oil: 30 g already fills the day's guide for all visible fat.",
+    "hi": "साधारण रिफ़ाइंड सूरजमुखी तेल, जो भारतीय रसोई के आम 'रिफ़ाइंड तेलों' में से एक है, सैचुरेटेड फैट में कम और ओमेगा-6 फैट (लिनोलिक एसिड) से भरपूर है। घी जैसे जानवरों वाले फैट की जगह ऐसा वनस्पति तेल लेने से LDL कोलेस्ट्रॉल घटता है, और ज़्यादातर सोयाबीन तेल वाले ट्रायल्स में इस बदलाव से दिल की बीमारी के मामले घटे। एक पुराने ट्रायल में मौतें बढ़ीं, लेकिन उसमें ऐसी मार्जरीन भी थी जिसमें ट्रांस फैट माना जाता है। भारत की अपनी गाइडलाइन ओमेगा-6 वाले तेल संभलकर इस्तेमाल करने को कहती है, और तेल कौन सा है उतना ही ज़रूरी है कि कितना है: 30 ग्राम से ही दिन भर की दिखने वाली चिकनाई की सीमा पूरी हो जाती है।"
+  },
+  "indian_context": "In urban India 'refined oil' usually means sunflower, soybean, rice bran or palm oil, and many families switched to it from ghee, vanaspati or mustard oil on the advice that it is heart-friendly. Whether the switch helps depends on what it replaced: swapping ghee or vanaspati for it lowers saturated fat, while swapping mustard oil for it removes the plant omega-3 that mustard oil carries. ICMR-NIN 2024 advises moderating oils high in omega-6, such as sunflower oil, and keeping all visible fat, oil and ghee together, to 27 to 30 g a day on a 2,000 kcal diet.",
+  "evidence": "mixed",
+  "sources": [
+    "ICMR-NIN. Dietary Guidelines for Indians, 2024",
+    "Sacks FM et al. Dietary fats and cardiovascular disease: a presidential advisory from the American Heart Association. Circulation 2017;136(3):e1-e23",
+    "World Health Organization. Saturated fatty acid and trans-fatty acid intake for adults and children: WHO guideline, 2023",
+    "Ramsden CE et al. Use of dietary linoleic acid for secondary prevention of coronary heart disease and death: evaluation of recovered data from the Sydney Diet Heart Study and updated meta-analysis. BMJ 2013;346:e8707",
+    "Rastogi T, Reddy KS, Vaz M et al. Diet and risk of ischemic heart disease in India. Am J Clin Nutr 2004;79(4):582-592"
+  ],
+  "caution": "Do not reuse sunflower oil, or any oil, many times for deep frying. If you have heart disease, talk to your doctor about which fats to use; one old trial in men with heart disease found more deaths when linoleic-acid oil replaced saturated fat, though that trial also used a margarine now thought to contain trans fat. The total amount of oil and ghee each day matters for everyone.",
+  "timeline": [
+    {
+      "t": "1d",
+      "headline": "A full day's guideline amount of visible fat, low in saturated fat",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "30 g of oil is the top of the ICMR-NIN guide for all visible fat on a 2,000 kcal day (about 20 g for a sedentary woman), so this dose leaves no room for ghee or butter on top. Ordinary sunflower oil is low in saturated fat and high in omega-6 linoleic acid.",
+          "metric": {
+            "label": "ICMR-NIN guide for all visible fat (oil plus ghee), 2,000 kcal day",
+            "value": "27 to 30 g"
+          }
+        }
+      ]
+    },
+    {
+      "t": "1w",
+      "headline": "Whether arteries benefit depends on what the oil replaced",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "If sunflower oil replaces ghee or vanaspati, saturated fat goes down and LDL starts to fall over the following weeks. If it replaces mustard oil or another vegetable oil, or is added on top of ghee, there is no such benefit."
+        }
+      ]
+    },
+    {
+      "t": "30d",
+      "headline": "LDL lower only if saturated fat came down",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Only if it took the place of saturated fat does LDL cholesterol fall within weeks; the size depends on how much saturated fat it replaced."
+        },
+        {
+          "target": "adipose",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "30 g of oil is about 270 kcal. Kept within the day's visible-fat allowance it adds nothing extra; on top of a rich diet it adds calories."
+        }
+      ]
+    },
+    {
+      "t": "60d",
+      "headline": "Cholesterol and heart disease are not the same thing",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "A lower LDL is a good sign, but whether it turns into fewer heart attacks is what the long trials tested, and their results differ."
+        }
+      ]
+    },
+    {
+      "t": "6m",
+      "headline": "No visible change; the long-term question is still open",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "Months of the same oil. If it replaced ghee or vanaspati, saturated fat intake stays lower. If it replaced mustard oil, the plant omega-3 that mustard oil supplied is lost from the oil; it can still come from greens, methi or flaxseed."
+        }
+      ]
+    },
+    {
+      "t": "1y",
+      "headline": "India's guideline advises moderation for oils high in omega-6",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "ICMR-NIN 2024 advises moderating the use of oils high in omega-6, such as sunflower oil, and keeping all visible fat within the daily guide. A year of 30 g a day sits at the top of that guide."
+        }
+      ]
+    },
+    {
+      "t": "5y",
+      "headline": "Helpful if it replaces animal fat; the evidence for Indians is mixed",
+      "effects": [
+        {
+          "target": "arteries",
+          "kind": "neutral",
+          "intensity": 0.2,
+          "note": "In trials, mostly in men and many after a heart attack, replacing animal fat with polyunsaturated vegetable oil, mainly soybean oil, cut heart events. That is why WHO and the American Heart Association recommend the swap. The benefit applies only if the oil replaced saturated fat.",
+          "metric": {
+            "label": "Heart events when polyunsaturated oil, mainly soybean, replaced animal fat (core trials as summarised by the AHA; mostly men, many after a heart attack)",
+            "value": "about 30% fewer"
+          }
+        },
+        {
+          "target": "heart",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "In the Sydney trial, men who had recently had a heart event and replaced saturated fat with safflower oil and a safflower margarine had more deaths. That margarine is now thought to have contained trans fat, and the AHA left this trial out of its analysis for that reason.",
+          "metric": {
+            "label": "Deaths, safflower oil and margarine (thought to contain trans fat) replacing saturated fat, men after a heart event (Sydney trial, re-analysed)",
+            "value": "about 1.6 times (range 1.0 to 2.6)"
+          }
+        },
+        {
+          "target": "coronary-arteries",
+          "kind": "neutral",
+          "intensity": 0.15,
+          "note": "In a hospital-based case-control study of long-term cooking habits in Delhi and Bangalore, people who cooked with mustard oil had about half the risk of a heart attack of those who used sunflower oil (relative risk 0.49, range 0.24 to 0.99). This kind of study cannot prove the oil caused the difference."
+        }
+      ]
+    }
+  ]
+}
