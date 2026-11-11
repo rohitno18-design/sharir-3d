@@ -11,7 +11,8 @@
     "rebuild": "vite build",
     "serve": "python launch/serve.py",
     "optimize-models": "node tools/optimize_models.mjs",
-    "check": "node tools/audit_anatomy.mjs && node tools/audit_lifts.mjs && python tools/validate_effects.py"
+    "check": "node tools/audit_anatomy.mjs && node tools/audit_lifts.mjs && python tools/validate_effects.py",
+    "gate": "node tools/gate.mjs"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +26,7 @@
   },
   "devDependencies": {
     "@gltf-transform/cli": "^4.5.0",
+    "playwright-core": "^1.65.0",
     "vite": "^8.2.2"
   }
 }

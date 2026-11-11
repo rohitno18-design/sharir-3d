@@ -6,3 +6,6 @@ assets-src/
 # scratch renders of reference books — not ours to redistribute
 .tmp_book/
 .tmp_opt/
+
+# photographs taken by the gate, for looking at, not for keeping
+gate-shots/

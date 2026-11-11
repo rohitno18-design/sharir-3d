@@ -12,6 +12,7 @@
 export const SCRIPTS = [
   {
     id: 'lateral-raise', part: 'Shoulders', name: 'Dumbbell lateral raise',
+    expect: { lead: ['delt-side'], working: ['trap-upper'], quiet: ['biceps', 'pec'] },
     sub: 'Standing, arms lifted out to the sides to shoulder height',
     duration: 3.2, equipment: 'dumbbells', load: { kg: 'working' }, stance: { width: 'hip' }, balance: 'hips', view: 'front',
     poses: [
@@ -34,6 +35,7 @@ export const SCRIPTS = [
   },
   {
     id: 'front-raise', part: 'Shoulders', name: 'Dumbbell front raise',
+    expect: { lead: ['delt-front'], quiet: ['lats', 'triceps'] },
     sub: 'Standing, arms lifted straight forward to shoulder height',
     duration: 3.2, equipment: 'dumbbells', load: { kg: 'working' }, stance: { width: 'hip' }, balance: 'hips',
     poses: [
@@ -56,6 +58,7 @@ export const SCRIPTS = [
   },
   {
     id: 'dumbbell-press', part: 'Shoulders', name: 'Dumbbell shoulder press',
+    expect: { lead: ['delt-side'], working: ['delt-front', 'serratus', 'trap-upper'], quiet: ['biceps', 'lats'] },
     sub: 'Standing, dumbbells pressed from the shoulders to overhead',
     duration: 3.2, equipment: 'dumbbells', load: { kg: 'working' }, stance: { width: 'hip' }, balance: 'hips', view: 'front',
     poses: [
@@ -78,6 +81,7 @@ export const SCRIPTS = [
   },
   {
     id: 'dumbbell-curl', part: 'Biceps', name: 'Dumbbell curl',
+    expect: { lead: ['biceps'], quiet: ['lats'] },
     sub: 'Standing, palms up, both arms together',
     duration: 3.2, equipment: 'dumbbells', load: { kg: 'working' }, stance: { width: 'hip' }, balance: 'hips',
     poses: [
@@ -100,6 +104,7 @@ export const SCRIPTS = [
   },
   {
     id: 'reverse-fly', part: 'Back', name: 'Bent-over reverse fly',
+    expect: { lead: ['delt-rear'], working: ['mid-back'], quiet: ['pec', 'delt-front'] },
     sub: 'Hinged forward, arms opened out to the sides',
     duration: 3.2, equipment: 'dumbbells', load: { kg: 'working' }, stance: { width: 'hip' }, balance: 'hips', view: 'three-quarter',
     poses: [
@@ -122,6 +127,7 @@ export const SCRIPTS = [
   },
   {
     id: 'dumbbell-shrug', part: 'Traps', name: 'Dumbbell shrug',
+    expect: { lead: ['trap-upper'], quiet: ['delt-side', 'lats', 'biceps'] },
     sub: 'Standing, dumbbells by the sides, shoulders straight up',
     duration: 3.0, equipment: 'dumbbells', load: { kg: 'working' }, stance: { width: 'hip' }, balance: 'hips', view: 'front',
     poses: [
@@ -144,6 +150,7 @@ export const SCRIPTS = [
   },
   {
     id: 'bodyweight-squat', part: 'Quads', name: 'Bodyweight squat',
+    expect: { lead: ['quads', 'glute-max'], quiet: ['biceps', 'pec'] },
     sub: 'No weight, arms forward for balance, down to thighs level',
     duration: 3.4, equipment: 'none', stance: { width: 'shoulder', toeOut: 18 }, balance: true,
     timing: [[0, 0], [0.42, 1], [0.5, 1], [0.9, 0], [1, 0]],
@@ -174,6 +181,7 @@ export const SCRIPTS = [
   },
   {
     id: 'good-morning', part: 'Hamstrings', name: 'Barbell good morning',
+    expect: { lead: ['hams', 'erector'], working: ['glute-max'], quiet: ['quads'] },
     sub: 'Bar on the upper back, hips pushed back, back flat',
     duration: 3.8, equipment: 'barbell-back', load: { kg: 'working' }, stance: { width: 'hip', toeOut: 8 }, balance: 'hips',
     timing: [[0, 0], [0.42, 1], [0.5, 1], [0.9, 0], [1, 0]],
@@ -197,6 +205,7 @@ export const SCRIPTS = [
   },
   {
     id: 'dumbbell-fly', part: 'Chest', name: 'Dumbbell fly',
+    expect: { lead: ['pec'], working: ['delt-front'], quiet: ['lats', 'triceps'] },
     sub: 'Lying on a flat bench, arms opened wide and closed over the chest',
     duration: 3.6, base: 'bench', equipment: 'dumbbells', load: { kg: 'working' },
     timing: [[0, 0], [0.42, 1], [0.5, 1], [0.9, 0], [1, 0]],
@@ -221,6 +230,7 @@ export const SCRIPTS = [
   },
   {
     id: 'overhead-triceps-extension', part: 'Triceps', name: 'Overhead dumbbell extension',
+    expect: { lead: ['triceps'], quiet: ['biceps', 'pec'] },
     sub: 'Standing, dumbbells lowered behind the head and pressed up',
     duration: 3.4, equipment: 'dumbbells', load: { kg: 'working' }, stance: { width: 'hip' }, balance: 'hips', view: 'side',
     timing: [[0, 0], [0.42, 1], [0.5, 1], [0.9, 0], [1, 0]],
@@ -244,6 +254,7 @@ export const SCRIPTS = [
   },
   {
     id: 'split-squat', part: 'Glutes', name: 'Dumbbell split squat',
+    expect: { lead: ['glute-max', 'quads'], quiet: ['biceps', 'pec'] },
     sub: 'One foot forward, one back, hips straight down and up',
     duration: 3.6, equipment: 'dumbbells', load: { kg: 'working' }, stance: { width: 'hip', split: 0.36, toeOut: 4 },
     timing: [[0, 0], [0.42, 1], [0.5, 1], [0.9, 0], [1, 0]],
@@ -267,6 +278,7 @@ export const SCRIPTS = [
   },
   {
     id: 'bent-knee-calf-raise', part: 'Calves', name: 'Bent-knee calf raise',
+    expect: { lead: ['soleus'], working: ['gastroc'], quiet: ['hams'] },
     sub: 'Bar on the upper back, knees bent and held, heels raised: the deep calf muscle',
     duration: 2.8, equipment: 'barbell-back', load: { kg: 'working' }, stance: { width: 'hip', toeOut: 4 }, balance: true,
     timing: [[0, 0], [0.3, 1], [0.45, 1], [0.85, 0], [1, 0]],
