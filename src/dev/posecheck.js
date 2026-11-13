@@ -30,7 +30,7 @@ const LIMIT = {
 };
 
 /** Edges of a layer that are stretched past `ratio` at the rig's current pose, by part. */
-function stretched(app, system, { ratio = 2.6, minLen = 0.0015 } = {}) {
+export function stretched(app, system, { ratio = 2.6, minLen = 0.0015 } = {}) {
   const body = app.body, rig = body.rig;
   const batch = body.batches.find(b => b.system === system);
   if (!batch) return { count: 0, edges: 0, parts: [] };

@@ -174,6 +174,10 @@ export class BatchedBody {
         if (!b || !muscle) continue;
         followSkinBinding(muscle.mesh.geometry, b.mesh.geometry, at, /^(inferior subscapular|lower subscapular)/i, 0.04, /^(subscapularis|teres major)/i);
       }
+      for (const b of this.batches) if (TUBES.has(b.system)) rig.bindRoundHip(b.mesh.geometry, at, ROUND_HIP);
+      // What hangs below the front of the pelvis hangs (see Rig.bindHanging). Last, so
+      // nothing above undoes it.
+      for (const b of this.batches) rig.bindHanging(b.mesh.geometry, at);
       if (skin) rig.collectCreaseSamples(skin.mesh.geometry, (slot) => this.parts[slot]);
     }
     this._findDominantBones();
@@ -295,6 +299,16 @@ export class BatchedBody {
 
 const TUBES = new Set(['nervous', 'cardiovascular', 'lymphoid']);
 
+/**
+ * Nerves and vessels that leave the pelvis behind the hip and run down the back of the
+ * thigh. Bound by closeness they changed from pelvis to thigh over a few centimetres, and a
+ * hinge or a squat drew them out of the buttock as long straight sticks. They are bent
+ * round the hip over a long stretch instead (Rig.bindRoundHip). Copying the binding of the
+ * muscles or the skin round them was tried: the muscles tore them worse, because
+ * neighbouring points copied different muscles, and the skin helped only a little.
+ */
+const ROUND_HIP = /^(sciatic nerve|posterior femoral cutaneous nerve|inferior gluteal (nerve|artery|vein))/i;
+
 /** Does this geometry's binding differ anywhere from its first point's? */
 function mixedBinding(sk) {
   const a = sk.getX(0), b = sk.getY(0), w = sk.getZ(0);
@@ -413,12 +427,15 @@ diffuseColor.a *= vStyle.x;
 if (vStyle.z > 4.5) {
   // Tint the lit surface rather than paint over it. The light and dark of the shading is
   // what shows a muscle's shape and fibre direction, and a flat fill threw it away.
-  vec3 ac = activationColor(vStyle.w);
+  // A muscle at rest keeps its own colour, the same as on every other tab, and warms
+  // through orange to gold as it works. Resting muscles used to be pulled a third of the
+  // way to a dark navy, and the whole body in Movement looked darker than anywhere else.
+  vec3 ac = activationColor(0.5 + 0.5 * vStyle.w);
   float lum = dot(gl_FragColor.rgb, vec3(0.299, 0.587, 0.114));
   // Scaled so a fully lit face lands at the colour itself and a face in shadow stays dark:
   // the output here is already tone-mapped, so anything brighter just clips to a flat fill.
   vec3 tinted = ac * (0.12 + 1.05 * lum);
-  gl_FragColor.rgb = mix(gl_FragColor.rgb, tinted, 0.35 + 0.45 * vStyle.w);
+  gl_FragColor.rgb = mix(gl_FragColor.rgb, tinted, smoothstep(0.03, 0.35, vStyle.w) * (0.45 + 0.4 * vStyle.w));
   // A glow only the hardest-working muscles get, so the leader stands out from a distance.
   gl_FragColor.rgb += ac * vStyle.w * vStyle.w * 0.08;
 } else {

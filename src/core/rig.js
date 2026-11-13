@@ -111,7 +111,16 @@ const PER_SIDE = SEGMENTS.length;
  */
 const CENTRAL = ['lumbar', 'thorax', 'neck', 'head'];
 const CENTRAL_PARENT = { lumbar: 'root', thorax: 'lumbar', neck: 'thorax', head: 'neck' };
-export const BONE_COUNT = 1 + CENTRAL.length + PER_SIDE * 2;
+/**
+ * One more bone after the two limb trees: what hangs below the pelvis at the front, the
+ * scrotum and the penis. It is never posed by a lift. Whatever the pelvis does, it turns
+ * so that it hangs with gravity (see `setPose`). Fixed to the pelvis, a hip hinge tipped
+ * them out backwards between the buttocks, and the nerves and cords to them with them.
+ */
+export const BONE_COUNT = 1 + CENTRAL.length + PER_SIDE * 2 + 1;
+export const HANG = BONE_COUNT - 1;
+/** How far the hanging parts may turn away from the pelvis: lying down, not into the bench. */
+const HANG_MAX = 75 * Math.PI / 180;
 const SIDES = ['l', 'r'];
 /**
  * Bone index for a named segment: root = 0, then the spine and neck, then the left tree,
@@ -119,6 +128,7 @@ const SIDES = ['l', 'r'];
  */
 export const boneIndex = (name, side) => {
   if (name === 'root') return 0;
+  if (name === 'hang') return HANG;
   const c = CENTRAL.indexOf(name);
   if (c >= 0) return 1 + c;
   return 1 + CENTRAL.length + SIDES.indexOf(side) * PER_SIDE + SEGMENTS.findIndex(s => s.name === name);
@@ -163,6 +173,9 @@ const BAND = { arm: [0.60, 1.48], leg: [0.0, 0.95] };
  * bound to one, the testicular arteries were torn away from the testes as the hip bent.
  */
 const GENITAL = /testicular|spermatic|cremaster|deferen|pampiniform|scrot|penis|penile|pudendal|perine|urethr|prostat|of bulb/i;
+/** What may hang: the male genitals, their skin, and what runs down to them. Inside the pelvis it stays put by position. */
+const HANGS = (part) => part.sys === 'reproductive' || (part.sys === 'integumentary' && !/hair/i.test(part.n)) || part.sys === 'urinary'
+  || /testicular|spermatic|cremaster|deferen|pampiniform|scrot|penis|penile|genital branch|genitofemoral|external pudendal|ilioinguinal|dorsal (nerve|artery|vein)/i.test(part.n);
 /** Systems whose parts are named after their trunk origin rather than where they run. */
 const TUBULAR = new Set(['cardiovascular', 'nervous', 'lymphoid']);
 /**
@@ -924,6 +937,13 @@ export class Rig {
       }
     }
     this.bones[0] = { name: 'root', side: null, index: 0, parent: -1, pivot: new THREE.Vector3(0, 0, 0) };
+    // Hung from the lower front edge of the pubic symphysis, where the penis and the
+    // spermatic cords leave the pelvis. Grouped with the trunk, so the body morph shapes
+    // what it carries as it shapes the pelvis.
+    const sym = this.registry.byId.get('joints:Pubic symphysis');
+    const hp = sym?.bb ? toGl([0, Math.min(sym.bb[0][1], sym.bb[1][1]) + 0.004, Math.min(sym.bb[0][2], sym.bb[1][2])]) : new THREE.Vector3(0, 0.835, 0.05);
+    hp.x = 0;
+    this.bones[HANG] = { name: 'hang', side: null, index: HANG, parent: 0, group: 'trunk', radius: 0, pivot: hp, tail: hp.clone().add(new THREE.Vector3(0, -0.1, 0)) };
     // The spine and neck, from the vertebrae themselves.
     const jointAt = (name) => {
       const [a, b, k] = SPINE_JOINTS[name];
@@ -1990,7 +2010,7 @@ export class Rig {
     for (let i = 0; i < BONE_COUNT; i++) {
       const bone = this.bones[i];
       const key = bone.side ? `${bone.name}.${bone.side}` : bone.name;
-      this.localMatrix(bone, pose[key], local);
+      this.localMatrix(bone, i === HANG && !pose.hang ? this._hangPose() : pose[key], local);
       if (bone.parent >= 0) this._m[i].multiplyMatrices(this._m[bone.parent], local);
       else this._m[i].copy(local);
       this._m[i].toArray(this.matrices, i * 16);
@@ -1999,6 +2019,86 @@ export class Rig {
     this._writeAnchors();
     this._writeCreases();
     this.enabled.value = 1;
+  }
+
+  /**
+   * The turn that lets the hanging parts hang: the pelvis's turn undone, as far as it
+   * tipped them off the vertical, up to HANG_MAX. Its turn about the vertical is kept, so
+   * they still face where the body faces.
+   */
+  _hangPose() {
+    const R = new THREE.Quaternion().setFromRotationMatrix(this._m[0]);
+    const down = new THREE.Vector3(0, -1, 0);
+    const now = down.clone().applyQuaternion(R);
+    const swing = new THREE.Quaternion().setFromUnitVectors(now, down);
+    const ang = 2 * Math.acos(Math.min(1, Math.abs(swing.w)));
+    if (ang > HANG_MAX) swing.slerp(new THREE.Quaternion(), 1 - HANG_MAX / ang);
+    return { quat: R.clone().invert().multiply(swing).multiply(R) };
+  }
+
+  /**
+   * Bend a nerve or vessel round the back of the hip over a long stretch: all pelvis from
+   * 6 cm above the hip joint, all thigh from 14 cm below it, and blended by height in
+   * between. Height alone decides, so every point round one ring of the tube moves the same
+   * way and the tube stays round; a long blend spreads the lengthening a bent hip asks of
+   * anything behind it, as the real nerve slides and stretches along its whole course.
+   */
+  bindRoundHip(geom, partAt, match) {
+    const P = geom.attributes.position, S = geom.attributes.aSkin, A = geom.attributes.aPartIndex, S2 = geom.attributes.aSkin2;
+    if (!P || !S || !A) return 0;
+    let n = 0;
+    for (let i = 0; i < P.count; i++) {
+      const part = partAt(A.getX(i));
+      if (!part || !match.test(part.n)) continue;
+      const side = part.side || (P.getX(i) >= 0 ? 'l' : 'r');
+      const hip = this.p[side]?.hip;
+      if (!hip) continue;
+      const w = smoothstep(hip.y + 0.06, hip.y - 0.14, P.getY(i));
+      S.setXYZ(i, boneIndex('thigh', side), 0, w);
+      if (S2) S2.setXY(i, 0, 0);
+      n++;
+    }
+    S.needsUpdate = true; if (S2) S2.needsUpdate = true;
+    return n;
+  }
+
+  /**
+   * Bind what hangs below the front of the pelvis to the hanging bone: the testes, the
+   * penis and the skin over them, and the lower reach of the cords, vessels and nerves that
+   * run down to them. How much hangs grows with the distance below and in front of the
+   * pivot, so a cord leaving the pelvis bends smoothly instead of breaking at one point.
+   * Only points that were bound to the pelvis alone are changed: the inner thigh's skin and
+   * anything already on a limb stay as they are. Male parts only; nothing on a woman hangs.
+   */
+  bindHanging(geom, partAt) {
+    const P = geom.attributes.position, S = geom.attributes.aSkin, A = geom.attributes.aPartIndex, S2 = geom.attributes.aSkin2;
+    if (!P || !S || !A || !this.bones[HANG]) return 0;
+    const H = this.bones[HANG].pivot;
+    let n = 0;
+    for (let i = 0; i < P.count; i++) {
+      // On the pelvis alone: a binding of (pelvis, anything, all of the pelvis) counts too.
+      const sa = S.getX(i), sb = S.getY(i), sw = S.getZ(i);
+      const onPelvis = (sa === 0 ? Math.min(1, sw) : 0) + (sb === 0 && sw < 1.5 ? 1 - Math.min(1, sw) : 0);
+      const x = P.getX(i), y = P.getY(i), z = P.getZ(i);
+      if (Math.abs(x) > 0.075 || y > H.y + 0.01 || y < H.y - 0.2 || z < H.z - 0.06) continue;
+      const part = partAt(A.getX(i));
+      if (!part || part.sx === 'f' || !HANGS(part)) continue;
+      const skin = part.sys === 'integumentary';
+      // Skin only between the thighs and in front of them, not the groin crease beside them.
+      if (skin && Math.abs(x) > 0.05) continue;
+      // The scrotum's skin, where it lies against the thigh, was given some of the thigh by
+      // closeness. It hangs with the rest of it; left half on the thigh, it tore in two.
+      if (onPelvis < (skin && Math.abs(x) < 0.045 ? 0.4 : 0.999) || (S2 && S2.getY(i) > 0)) continue;
+      const d = Math.hypot(H.y - y, Math.max(0, z - (H.z - 0.01)));
+      // Behind the front of the symphysis (the root of the penis, the perineum) the share
+      // fades out smoothly over 6 cm, so nothing is torn along a line where it stops.
+      const w = smoothstep(0.012, 0.05, d) * smoothstep(H.z - 0.06, H.z, z);
+      if (w <= 0) continue;
+      S.setXYZ(i, HANG, 0, w);
+      n++;
+    }
+    S.needsUpdate = true;
+    return n;
   }
 
   /**

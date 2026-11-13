@@ -83,7 +83,7 @@ export class ExercisePanel {
       el('p', { class: 'pd' }, 'Press play or drag the slider. Watch the work move from one muscle to the next.'),
       // The colour key, drawn with the same ramp the body uses, so it needs no words.
       el('div', { class: 'exo-legend' },
-        el('i', { class: 'exo-grad', style: `background: linear-gradient(90deg, ${[0, 0.25, 0.5, 0.65, 0.8, 1].map(a => effortColor(a)).join(', ')})` }),
+        el('i', { class: 'exo-grad', style: `background: linear-gradient(90deg, #b5524a, ${[0.6, 0.75, 0.9, 1].map(a => effortColor(a)).join(', ')})` }),
         el('div', { class: 'exo-legend-labels' }, el('span', {}, 'Resting'), el('span', {}, 'Working'), el('span', {}, 'Hardest'))),
     );
 

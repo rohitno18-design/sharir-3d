@@ -16,8 +16,6 @@ const CONNECTIVE = /fascia|aponeuros|retinacul|intermuscular septum|\bsheath|\bb
 
 /** Below this a part is a ghost to be seen through; at or above it, it is dimmed but still solid. */
 const GHOST = 0.3;
-/** A muscle at rest in Movement: the effort colour scale at zero, cool and receding. */
-const REST = effectKindIndex('activation');
 
 export class Highlighter {
   constructor(viewer, registry, body) {
@@ -240,7 +238,7 @@ export class Highlighter {
       if (opacity >= 0.95) opaqueN[body.batchOf[slot]]++;
       if (opacity >= GHOST) bodyN[body.batchOf[slot]]++;
       const selectedAmt = isSel ? 1 : (isHover ? 0.45 : 0);
-      const kind = fx ? effectKindIndex(fx.kind) : (inMove && anyEffect && part.sys === 'muscular' ? REST : 0);
+      const kind = fx ? effectKindIndex(fx.kind) : 0;
       const intensity = fx && !this.compare ? fx.intensity : 0;
       body.setStyle(slot, opacity, selectedAmt, kind, intensity);
     }
