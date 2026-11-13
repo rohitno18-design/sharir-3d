@@ -1,13 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-import { acceleratedRaycast, computeBoundsTree, disposeBoundsTree } from 'three-mesh-bvh';
 import { SYSTEMS } from '../data/systems.js';
-import { applyMorph, invertMorph, isPlainScale } from './morph.js';
-
-THREE.Mesh.prototype.raycast = acceleratedRaycast;
-THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
-THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
 
 const finiteVec = v => Number.isFinite(v.x) && Number.isFinite(v.y) && Number.isFinite(v.z);
 
@@ -18,6 +12,15 @@ export class Viewer {
     this.canvas = canvas;
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance', preserveDrawingBuffer: true });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this._ratio = this.renderer.getPixelRatio();
+    // Not under an automated browser: the gates photograph the body and must always get full sharpness.
+    this.adaptive = !navigator.webdriver;
+    // The graphics chip can be reset under the page (the laptop sleeps, the driver
+    // restarts, too many tabs). Left alone the canvas stays blank until a reload: the body
+    // has "disappeared". Asking to keep the page and drawing again when it returns is all
+    // it takes; the renderer uploads everything afresh by itself.
+    canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); this._lost = true; });
+    canvas.addEventListener('webglcontextrestored', () => { this._lost = false; this._ids = null; this._idRT?.dispose(); this._idRT = null; this._dirty = true; });
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.05;
@@ -66,8 +69,6 @@ export class Viewer {
     ];
     this.renderer.clippingPlanes = [];
 
-    this.raycaster = new THREE.Raycaster();
-    this.raycaster.firstHitOnly = true;
     this.pickables = [];
     this._frameCbs = [];
     this._tween = null;
@@ -186,8 +187,58 @@ export class Viewer {
     // Rendering only when the scene actually changed is what keeps the fan quiet and the
     // interaction crisp: an idle atlas costs nothing.
     let drew = false;
-    if (this._dirty) { this.renderer.render(this.scene, this.camera); this._dirty = false; drew = true; }
+    if (this._dirty && !this._lost) { this.renderer.render(this.scene, this.camera); this._dirty = false; drew = true; this._idsStale = true; }
+    this._pace(drew);
     if (this._afterCbs) for (const cb of this._afterCbs) cb(drew, t);
+  }
+
+  /**
+   * Keep movement smooth by drawing fewer pixels while things move.
+   *
+   * On a laptop's built-in graphics a full-sharpness frame of the whole body can take
+   * longer than the screen's refresh, so turning the body or playing a lift stutters. While
+   * frames are coming late the picture is drawn a step less sharp, which nobody sees on a
+   * moving body, and the moment it stops it is drawn once more at full sharpness. If a
+   * step down does not make frames come sooner (the time is going somewhere pixels do not
+   * touch), it is taken back and left alone.
+   */
+  _pace(drew) {
+    if (this._held != null || !this.adaptive) return;
+    const now = performance.now(), full = Math.min(window.devicePixelRatio || 1, 2);
+    if (!drew) {
+      if (this._ratio < full && now - (this._drawnAt || 0) > 220) { this._setRatio(full); this._gap = 0; this._noGain = false; }
+      return;
+    }
+    const since = now - (this._drawnAt || 0);
+    this._drawnAt = now;
+    if (since > 150) { this._gap = 0; this._run = 0; return; }       // first frame after a rest
+    this._gap = this._gap ? this._gap * 0.85 + since * 0.15 : since;
+    this._run = (this._run || 0) + 1;
+    if (this._run < 12 || now - (this._ratioAt || 0) < 500) return;
+    if (this._tried) {
+      // Did the last step down buy anything?
+      const t = this._tried; this._tried = null;
+      if (this._gap > t.gap * 0.9) { this._noGain = true; this._setRatio(t.from); return; }
+    }
+    const floor = Math.max(0.7, full * 0.5);
+    if (!this._noGain && this._gap > 24 && this._ratio > floor + 0.01) {
+      this._tried = { gap: this._gap, from: this._ratio };
+      this._setRatio(Math.max(floor, this._ratio * 0.8));
+    }
+  }
+
+  _setRatio(r) {
+    if (Math.abs(r - this._ratio) < 0.005) return;
+    this._ratio = r; this._ratioAt = performance.now();
+    this.renderer.setPixelRatio(r);
+    this._dirty = true;
+  }
+
+  /** Draw at exactly this sharpness until released with null. Film mode sets the video's own. */
+  holdResolution(ratio) {
+    this._held = ratio;
+    this._tried = null; this._noGain = false;
+    this._setRatio(ratio ?? Math.min(window.devicePixelRatio || 1, 2));
   }
 
   // ---------- clipping ----------
@@ -202,92 +253,118 @@ export class Viewer {
   }
 
   // ---------- picking ----------
-  /** pointer: {x,y} in canvas pixels. Returns { mesh, point(world, morphed), distance } or null */
   /**
-   * Pick against the merged batches. three.js reports which triangle was hit, and the
-   * batch maps that triangle back to its part — so accurate picking needs no duplicate
-   * per-part meshes at all.
+   * Which part is under a pixel.
+   *
+   * The body is drawn once more into a hidden picture, half the size of the screen, with
+   * each part's number in place of its colour, and that picture is copied to memory. After
+   * that, asking what is under the mouse is reading one number: it costs nothing, however
+   * fast the mouse moves. The picture is only drawn again when what is on screen has
+   * changed (the camera moved, a part was hidden, the body was posed), and then only when
+   * something actually asks.
+   *
+   * It goes through exactly the same shaping, posing and visibility as the picture on
+   * screen, so it is right in any pose and at any body size.
+   *
+   * It used to be asked afresh on every movement of the mouse: the whole body drawn for
+   * one pixel and the page held up until the graphics chip answered, 50 to 90 ms each
+   * time, up to fifteen times a second. That was most of what made the app feel stuck. A
+   * second way of picking, a ray traced through a tree built over every triangle at load,
+   * only worked for an unposed, unshaped body, which is never what is on screen; it and
+   * its tree are gone.
+   *
+   * @returns { slot, part } or null
    */
   pick(px, py) {
+    const slot = this.partAt(px, py);
+    return slot == null ? null : { slot, part: this.body.partAt(slot), point: null, distance: 0 };
+  }
+
+  /** The slot of the part under a pixel, or null. */
+  partAt(px, py) {
     const body = this.body;
-    if (!body) return null;
-    // The BVH is built on the rest pose, and skinning happens in the vertex shader, so
-    // while the body is posed the geometry being raycast is not the geometry on screen.
-    // Posed, the GPU is asked instead: it draws the body again, one pixel big, with every
-    // part's number in place of its colour.
-    // The same goes for a reshaped body: its limbs thicken round their own bones, which a
-    // ray walked back through the trunk's shape cannot follow.
-    if (this.rig?.enabled.value || !isPlainScale() || body.shifted) return this._gpuPick(px, py);
-    const ndc = new THREE.Vector2((px / this.width) * 2 - 1, -(py / this.height) * 2 + 1);
-    this.raycaster.setFromCamera(ndc, this.camera);
-    const wo = this.raycaster.ray.origin.clone();
-    const wd = this.raycaster.ray.direction.clone();
+    if (!body || !(this.width > 1) || !(this.height > 1)) return null;
+    this._refreshIds();
+    const m = this._ids;
+    if (!m) return null;
+    const x = Math.min(m.w - 1, Math.max(0, Math.floor(px / this.width * m.w)));
+    const y = Math.min(m.h - 1, Math.max(0, Math.floor((1 - py / this.height) * m.h)));
+    const i = (y * m.w + x) * 4;
+    const id = m.px[i] + m.px[i + 1] * 256 + m.px[i + 2] * 65536 - 1;
+    return id < 0 || id >= body.count || !body.isVisible(id) ? null : id;
+  }
 
-    // The batch geometry is un-morphed, so walk the ray back through the morph instead of
-    // deforming four million vertices on the CPU.
-    const inv = new THREE.Matrix4().copy(this.bodyRoot.matrixWorld).invert();
-    const lo = new THREE.Vector3().copy(wo).applyMatrix4(inv);
-    const lp = new THREE.Vector3().copy(wo).addScaledVector(wd, 1).applyMatrix4(inv);
-    invertMorph(lo, lo); invertMorph(lp, lp);
-    const ld = new THREE.Vector3().subVectors(lp, lo).normalize();
-
-    const local = new THREE.Raycaster(lo, ld, 0, 100);
-    local.firstHitOnly = false;               // we may have to skip hidden parts
-    let best = null;
-    for (const batch of body.batches) {
-      if (!batch.mesh.visible) continue;
-      const hits = local.intersectObject(batch.mesh, false);
-      for (const h of hits) {
-        if (h.faceIndex == null) continue;
-        const slot = body.partForTriangle(batch, h.faceIndex);
-        // Switched off, or a faint ghost: see through it, and click through it too.
-        if (!body.isVisible(slot) || body.style[slot * 4] < 0.35) continue;
-        const wp = applyMorph(h.point, new THREE.Vector3(), { belly: 1, breast: 1 }).applyMatrix4(this.bodyRoot.matrixWorld);
-        const dist = wp.distanceTo(wo);
-        if (!best || dist < best.distance) best = { slot, part: body.partAt(slot), point: wp, distance: dist };
-        break;                                // hits are sorted; first visible one wins
-      }
+  /** How much of the view the body covers, 0 to 1, and how many different parts are in it. */
+  coverage() {
+    this._refreshIds();
+    const m = this._ids;
+    if (!m) return { share: 0, parts: 0 };
+    const seen = new Set();
+    let n = 0;
+    for (let i = 0; i < m.px.length; i += 4) {
+      const id = m.px[i] + m.px[i + 1] * 256 + m.px[i + 2] * 65536;
+      if (id) { n++; seen.add(id); }
     }
-    return best;
+    return { share: n / (m.w * m.h), parts: seen.size };
+  }
+
+  /** Compile and draw everything once, so nothing is left to compile at the first interaction. */
+  warm() {
+    if (!this.body) return;
+    this.renderer.render(this.scene, this.camera);
+    this._idsStale = true; this._idsAt = 0;
+    this._refreshIds();
+    this._dirty = true;
+  }
+
+  /** What is on screen has changed: the picture of part numbers is out of date. */
+  invalidateIds() { this._idsStale = true; }
+
+  _refreshIds() {
+    if (this._ids && !this._idsStale) return;
+    // While something is moving every frame (a lift playing, the camera turning), draw it
+    // again at most eight times a second: a hover that is a tenth of a second behind a
+    // moving body is not noticed, and a second full draw on every frame would be.
+    const now = performance.now();
+    if (this._ids && now - (this._idsAt || 0) < 120) return;
+    const w = Math.max(2, Math.round(this.width / 2)), h = Math.max(2, Math.round(this.height / 2));
+    if (!this._idRT || this._idRT.width !== w || this._idRT.height !== h) {
+      this._idRT?.dispose();
+      this._idRT = new THREE.WebGLRenderTarget(w, h);
+      this._ids = { w, h, px: new Uint8Array(w * h * 4) };
+    }
+    this._drawPick(1, this._idRT);
+    this.renderer.readRenderTargetPixels(this._idRT, 0, 0, w, h, this._ids.px);
+    this.renderer.setRenderTarget(null);
+    this._idsStale = false;
+    this._idsAt = now;
   }
 
   /**
-   * Which part is under a pixel, read back from the GPU. It goes through exactly the same
-   * morph, skinning and visibility as the picture on screen, so it is right in any pose
-   * and at any body size. Only the body is drawn: the bar and the bench are not parts.
-   */
-  _gpuPick(px, py) {
-    const body = this.body;
-    const [cr, cg, cb] = this._pickPass(px, py, 1);
-    const id = cr + cg * 256 + cb * 65536 - 1;
-    if (id < 0 || id >= body.count || !body.isVisible(id)) return null;
-    return { slot: id, part: body.partAt(id), point: null, distance: 0 };
-  }
-
-  /**
-   * The world point of the body surface under a pixel, or null over empty space. Uses the
-   * same rules as a click: whatever would be picked is what gets zoomed into.
+   * The world point of the body surface under a pixel, or null over empty space. Asked
+   * once at the start of a scroll, so it is drawn for that one pixel when wanted.
    */
   surfaceAt(px, py) {
     const body = this.body;
-    if (!body) return null;
-    if (!(this.rig?.enabled.value || !isPlainScale() || body.shifted)) return this.pick(px, py)?.point || null;
-    const [r, g, b, a] = this._pickPass(px, py, 2);
+    if (!body || this.partAt(px, py) == null) return null;
+    if (!this._pickRT) { this._pickRT = new THREE.WebGLRenderTarget(1, 1); this._pickBuf = new Uint8Array(4); }
+    this.camera.setViewOffset(this.width, this.height, Math.floor(px), Math.floor(py), 1, 1);
+    this._drawPick(2, this._pickRT);
+    this.renderer.readRenderTargetPixels(this._pickRT, 0, 0, 1, 1, this._pickBuf);
+    this.renderer.setRenderTarget(null);
+    this.camera.clearViewOffset();
+    const [r, g, b, a] = this._pickBuf;
     if (!a) return null;
     const z = r / 255 + g / 65025 + b / 16581375;
     return new THREE.Vector3((px / this.width) * 2 - 1, -(py / this.height) * 2 + 1, z * 2 - 1).unproject(this.camera);
   }
 
   /**
-   * Draw the body once, one pixel big, and read that pixel back. Mode 1 writes which part
-   * is there, mode 2 how deep it is.
+   * Draw only the body into `target`, with numbers in place of colours. Mode 1 writes
+   * which part is there, mode 2 how deep it is. The bar and the bench are not parts.
    */
-  _pickPass(px, py, mode) {
+  _drawPick(mode, target) {
     const body = this.body, r = this.renderer;
-    if (!this._pickRT) {
-      this._pickRT = new THREE.WebGLRenderTarget(1, 1);
-      this._pickBuf = new Uint8Array(4);
-    }
     const hidden = [];
     for (const o of this.scene.children) {
       if (o === this.bodyRoot || o.isLight || !o.visible) continue;
@@ -299,20 +376,14 @@ export class Viewer {
     for (const b of body.batches) { b.mesh.material.blending = THREE.NoBlending; b.mesh.material.depthWrite = true; }
     const clear = r.getClearColor(new THREE.Color()), alpha = r.getClearAlpha();
     body.uPick.value = mode;
-    this.camera.setViewOffset(this.width, this.height, Math.floor(px), Math.floor(py), 1, 1);
-    r.setRenderTarget(this._pickRT);
+    r.setRenderTarget(target);
     r.setClearColor(0x000000, 0);
     r.clear();
     r.render(this.scene, this.camera);
-    r.readRenderTargetPixels(this._pickRT, 0, 0, 1, 1, this._pickBuf);
-    r.setRenderTarget(null);
-    this.camera.clearViewOffset();
     body.uPick.value = 0;
     r.setClearColor(clear, alpha);
     body.batches.forEach((b, i) => { b.mesh.material.blending = saved[i][0]; b.mesh.material.depthWrite = saved[i][1]; });
     for (const o of hidden) o.visible = true;
-    this._dirty = true;
-    return this._pickBuf;
   }
 
   // ---------- camera ----------
@@ -379,6 +450,20 @@ export class Viewer {
     if (!finiteVec(toPos) || !finiteVec(toTarget)) return;   // never tween into NaN
     if (!finiteVec(this.camera.position) || !finiteVec(this.controls.target)) this._recoverCamera();
     this._tween = { t: 0, duration, fromPos: this.camera.position.clone(), fromTarget: this.controls.target.clone(), toPos: toPos.clone(), toTarget: toTarget.clone() };
+  }
+
+  /**
+   * The body has changed height by a factor `k`. The camera and what it looks at are moved
+   * by the same factor about the floor under the body, so it keeps looking at the same
+   * place on the body. Left where it was, a camera close on an adult's face was looking
+   * at empty air once the body became a child's, and the body seemed to have gone.
+   */
+  rescale(k) {
+    if (!(k > 0) || !Number.isFinite(k) || Math.abs(k - 1) < 1e-4) return;
+    this.camera.position.multiplyScalar(k);
+    this.controls.target.multiplyScalar(k);
+    if (this._tween) for (const key of ['fromPos', 'fromTarget', 'toPos', 'toTarget']) this._tween[key].multiplyScalar(k);
+    this._dirty = true;
   }
 
   /** Put the camera back somewhere sane after it has been corrupted. */

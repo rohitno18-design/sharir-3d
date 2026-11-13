@@ -1,11 +1,7 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { computeBoundsTree, disposeBoundsTree } from 'three-mesh-bvh';
 import { EFFECT_KINDS } from '../data/targets.js';
 import { closeSkinGaps, blendSkinBindings, orientSkin, smoothBindings, followSkin, skinOverGirdle, followSkinBinding } from './skinweld.js';
-
-THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
-THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
 
 /**
  * Batched body renderer.
@@ -238,26 +234,6 @@ export class BatchedBody {
     return rig.applyBone(this.dominant[slot], v);
   }
 
-  /** Build BVHs in idle slices so a big body never blocks the first paint. */
-  buildBVH(onDone) {
-    let i = 0;
-    const step = () => {
-      const t0 = performance.now();
-      while (i < this.batches.length && performance.now() - t0 < 14) {
-        this.batches[i].mesh.geometry.computeBoundsTree({ targetLeafSize: 12 });
-        i++;
-      }
-      // requestIdleCallback takes an options object, setTimeout takes a number — they
-      // are not interchangeable with the same second argument.
-      if (i < this.batches.length) {
-        if (window.requestIdleCallback) window.requestIdleCallback(step, { timeout: 200 });
-        else setTimeout(step, 1);
-      }
-      else onDone && onDone(this.batches.length);
-    };
-    step();
-  }
-
   slot(partId) { return this.indexOf.get(partId); }
   partAt(slot) { return this.parts[slot]; }
   boundsOf(partId) { const s = this.indexOf.get(partId); return s === undefined ? null : this.bounds[s]; }
@@ -306,24 +282,8 @@ export class BatchedBody {
     for (const b of this.batches) if (b.system === system) b.mesh.visible = on;
   }
 
-  /**
-   * Which part does a triangle in this batch belong to?
-   *
-   * Read it off the same vertex attribute the shader uses, rather than from a table of
-   * triangle ranges: three-mesh-bvh reorders the index buffer in place while building the
-   * tree, so after buildBVH() a triangle's position in that buffer says nothing about
-   * which geometry it was merged from. The attribute travels with the vertex and stays
-   * true, and the lookup is O(1) instead of a binary search.
-   */
-  partForTriangle(batch, faceIndex) {
-    const g = batch.mesh.geometry;
-    const vi = g.index ? g.index.getX(faceIndex * 3) : faceIndex * 3;
-    return g.attributes.aPartIndex.getX(vi);
-  }
-
   dispose() {
     for (const b of this.batches) {
-      b.mesh.geometry.disposeBoundsTree?.();
       b.mesh.geometry.dispose();
       b.mesh.material.dispose();
       this.scene.remove(b.mesh);

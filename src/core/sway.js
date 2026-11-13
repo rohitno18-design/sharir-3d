@@ -78,7 +78,9 @@ export function swaying(lift) {
     const keep = rig.lastPose;
     const phi = [], ay = [], az = [];
     for (let i = 0; i <= KNOTS; i++) {
-      rig.setPose(still(i / KNOTS, ctx));
+      rig.weighing = true;
+      let posed; try { posed = still(i / KNOTS, ctx); } finally { rig.weighing = false; }
+      rig.setPose(posed);
       const a = analyse(rig, lift.physics, body);
       const A = rig.jointAt('ankle', 'l', new THREE.Vector3()).add(rig.jointAt('ankle', 'r', new THREE.Vector3())).multiplyScalar(0.5);
       const toe = rig.jointAt('toe', 'l', new THREE.Vector3()), ball = rig.jointAt('mtp', 'l', new THREE.Vector3());

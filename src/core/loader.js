@@ -103,8 +103,6 @@ export async function loadBody(viewer, registry, onProgress = () => {}) {
   const body = new BatchedBody(viewer.bodyRoot).build(groups, (sys) => systemMaterial(sys, rig), rig);
   rig.releaseGeometry();
   body.rig = rig;
-  onProgress(0.96, `Indexing ${body.count} structures…`);
-  body.buildBVH((n) => console.log(`[sharir] BVH ready for ${n} batches`));
   viewer.body = body;
   viewer.rig = rig;
   return body;

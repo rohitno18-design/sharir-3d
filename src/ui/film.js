@@ -118,7 +118,7 @@ export class Film {
     document.getElementById('stage').style.cssText = '';
     document.body.classList.remove('film');
     this.app.labels.visible = this._labelsWere;
-    v.renderer.setPixelRatio(this._saved.pixelRatio);
+    v.holdResolution(null);
     this.restoreEffort();
     v.resize();
     this.app.updateSafeInsets();
@@ -166,7 +166,7 @@ export class Film {
     // Draw the 3D at the video's own resolution, so the file is sharp and not a
     // stretched copy of a small preview.
     const v = this.app.viewer;
-    v.renderer.setPixelRatio(Math.min(4, Math.max(0.5, f.w / w)));
+    v.holdResolution(Math.min(4, Math.max(0.5, f.w / w)));
     v.resize();
     this.canvas.width = f.w; this.canvas.height = f.h;
     this._reserve = null; this._reserveKey = null;

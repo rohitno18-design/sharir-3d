@@ -18,6 +18,8 @@ happens if" entry (`src/data/effects/`), step by step, with the gates each must 
 | `npm run gate -- --model` | The effort model against the hand-written lifts |
 | `python tools/review_effect.py <id>` | Review sheet for one effect file |
 | `npm run check` | Anatomy, lift and effect audits. Must pass |
+| `npm run soak` | Clicks round the app at random and checks the body never vanishes, nothing is left over from another tab, nothing throws. Run after any change in `src/core/` or `src/main.js`. `npm run soak -- 1 20` for more seeds |
+| `node tools/probe.mjs "<js>" --gpu` | Run a snippet in the app headless and print the result. For measuring. `tools/shot.mjs out.png "<js>"` saves a photo |
 | `npm run build` | Rohit's desktop shortcut serves `dist/`. Always build before saying a change is done |
 | `npm run dev` | Live version on port 5180 |
 

@@ -164,9 +164,18 @@ export class Highlighter {
     const xray = state.xray;
     const sel = this.selected;
     const hasSel = sel.size > 0;
-    const reveal = state.reveal && hasSel && state.mode !== 'systems';
+    // Reveal fades everything round the picked part so it can be seen. It only makes sense
+    // when the picked part is itself on screen. A bone picked in Explore and carried into
+    // Movement, which shows only muscle, used to "reveal" a bone that was not there by
+    // hiding every muscle: the whole body vanished. So: not on a tab that lays its own view
+    // (Systems, Movement), and not unless the picked part is showing.
+    let reveal = state.reveal && hasSel && state.mode !== 'systems' && state.mode !== 'move';
     let selSys = null;
-    if (reveal) { const first = body.parts[body.slot(sel.values().next().value)]; selSys = first?.sys || null; }
+    if (reveal) {
+      const first = body.parts[body.slot(sel.values().next().value)];
+      selSys = first?.sys || null;
+      if (!first || ![...sel].some(id => { const p = body.parts[body.slot(id)]; return p && this.isPartVisible(p); })) reveal = false;
+    }
     const anyEffect = this.effects.size > 0;
     // Which systems an effect covers almost entirely. Dimming the few parts of such a
     // system that it happens to skip does not focus anything: on the skin it only left a
@@ -229,9 +238,20 @@ export class Highlighter {
     // of the body showed through the back. Skin that is mostly opaque writes depth; skin
     // that is mostly a see-through ghost does not, so it layers evenly. A few dimmed
     // patches among opaque ones must not switch it off for the whole skin.
+    //
+    // The same holds for every other system once it is faded (X-ray, Reveal, an effect
+    // dimming what it does not touch). They used to go on writing depth while faint, so a
+    // barely visible muscle still hid the organ behind it, or did not, depending only on
+    // which system happened to be drawn first: some things showed and some did not, and it
+    // changed with what was switched on. Now a system that is mostly faint stops writing
+    // depth and is drawn after every solid one, so what is behind a ghost always shows
+    // through it. The system holding the picked part is drawn last of all, so nothing faint
+    // is painted over the one thing the user asked to see.
     body.batches.forEach((b, i) => {
       const m = b.mesh.material;
-      if (m.userData.ghostable) m.depthWrite = shownN[i] > 0 && opaqueN[i] >= shownN[i] * 0.85;
+      const solid = shownN[i] > 0 && opaqueN[i] >= shownN[i] * 0.85;
+      m.depthWrite = solid;
+      b.mesh.renderOrder = solid ? 0 : opaqueN[i] > 0 ? 2 : 1;
     });
     body.flush();
     this.viewer.requestRender();

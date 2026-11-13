@@ -24,6 +24,11 @@ export class Nav {
     for (const k of KEYS) s[k] = Array.isArray(state[k]) ? state[k].slice() : state[k];
     s.hidden = new Set(state.hidden);
     s.systems = JSON.parse(JSON.stringify(state.systems));
+    // Where the camera was, and how tall the body was then. A step back that restored
+    // what was picked but left the camera wherever it had wandered since showed the right
+    // view from the wrong place, sometimes with nothing in it.
+    const v = this.app.viewer;
+    if (v) s.cam = { pos: v.camera.position.toArray(), target: v.controls.target.toArray(), h: this.app.currentHeightM?.() || 1.7 };
     return s;
   }
 

@@ -424,6 +424,14 @@ export function movement(script) {
       const rig = app.body.rig;
       const key = bodyKey();
       if (this._table?.key === key) return;
+      // The hands are not closed round the bar while the movement is being weighed; the
+      // one grip kept from it (a dumbbell's) is closed properly afterwards.
+      rig.weighing = true;
+      try { this._prepare(app, rig, key); } finally { rig.weighing = false; }
+      if (this._s && equipment === 'dumbbells') this._s.grip = Object.fromEntries(SIDES.map(side => [side, rig.gripAround(side, HANDLE.radius, HANDLE.flesh, rig.barInHand(side))]));
+    },
+
+    _prepare(app, rig, key) {
       this._body = { massKg: app.currentWeight(), heightM: app.currentHeightM() };
       this._height = app.currentHeightCm() / 100;
       const keep = rig.lastPose;

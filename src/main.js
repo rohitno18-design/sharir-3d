@@ -97,6 +97,10 @@ class App {
     this.applyBodyMorph();
     this.hi.applyAll();
     this.viewer.resetView(this.currentHeightM());
+    // Draw once now, behind the loading card, and build the picture used for picking. The
+    // graphics chip compiles its programs on first use, which takes a second or more; done
+    // here it is part of loading instead of a freeze on the first move of the mouse.
+    this.viewer.warm();
 
     // UI
     this.topbar = new Topbar(this);
@@ -217,6 +221,12 @@ class App {
       mUp: mUp * adultness, mDown: mDown * adultness, fUp: fUp * adultness, fDown: fDown * adultness,
     });
     this.applyStance();
+    // Keep the camera on the same place on the body as it grows or shrinks. A lift frames
+    // its own shot, on a bench that does not change size, so there it is framed again.
+    if (this._shownHeight && this._shownHeight !== h) {
+      if (this.exercise?.ex) this.exercise.scheduleFrame(); else this.viewer.rescale(h / this._shownHeight);
+    }
+    this._shownHeight = h;
     this.viewer.ring.scale.setScalar(Math.max(0.55, scale));
     this.viewer.ground.scale.setScalar(Math.max(0.55, scale));
     // Recomputing 4,066 bounding spheres costs ~48 ms — far too slow to run on every
@@ -309,6 +319,7 @@ class App {
     requestAnimationFrame(() => this.updateSafeInsets());
     this.refreshLabels();
     this.updateNavUI();
+    this.ensureInView();
   }
 
   // ---------------- navigation ----------------
@@ -342,6 +353,30 @@ class App {
     this.hi.invalidate();
     this.refreshLabels();
     this.updateLegend();
+    // Back to where the camera was for that view, on the body as tall as it is now. A lift
+    // and the atlas frame their own shots.
+    if (s.cam && !this.exercise?.ex && !state.atlas) {
+      const k = this.currentHeightM() / (s.cam.h || this.currentHeightM());
+      this.viewer.tweenCamera(new THREE.Vector3(...s.cam.pos).multiplyScalar(k), new THREE.Vector3(...s.cam.target).multiplyScalar(k), 0.5);
+    }
+    this.ensureInView();
+  }
+
+  /**
+   * Make sure the camera is looking at the body. Whatever led here (a step back to an
+   * older view, a tab that framed something of its own), if the camera is aimed at a
+   * place the standing body does not reach, it is brought back: onto the picked part if
+   * there is one, otherwise the whole body. A lift and the atlas frame their own shots.
+   */
+  ensureInView() {
+    if (this.exercise?.ex || state.atlas || !this.body) return;
+    const v = this.viewer, h = this.currentHeightM();
+    const p = v._tween ? v._tween.toTarget : v.controls.target;
+    const c = v._tween ? v._tween.toPos : v.camera.position;
+    const onBody = Math.abs(p.x) < 0.6 * h && p.y > -0.15 * h && p.y < 1.15 * h && Math.abs(p.z) < 0.5 * h;
+    if (onBody && c.distanceTo(p) < 8 * h) return;
+    if (state.selected && (this.selectedIds || []).some(x => this.meshes.has(x))) this.focusSelected();
+    else v.resetView(h);
   }
 
   goBack() {
@@ -726,10 +761,25 @@ class App {
   /** Plain-language read-out of the current build, using Asian-Indian BMI cut-offs. */
 
   // ---------------- selection ----------------
+  /**
+   * Picking a part whose system is switched off shows that system for as long as the part
+   * is picked. When the pick ends, so does that. It used to stay on until the tab was
+   * changed, so the body went on showing a system its switch said was off.
+   */
+  _dropPickedSystemView() {
+    const keys = this._pickedSystems;
+    this._pickedSystems = null;
+    if (!keys?.length || !state.sysOverride) return;
+    const next = { ...state.sysOverride };
+    for (const k of keys) delete next[k];
+    this.setSysOverride(next);
+  }
+
   selectPart(id, { focus = false, both = false, record = true } = {}) {
     const part = this.registry.byId.get(id);
     if (!part) return;
     if (record && id !== state.selected) this.nav.push('select');
+    this._dropPickedSystemView();
     set({ selected: id });
     let ids = [id];
     if (both) { const sibs = this.registry.siblingsOf(part); if (sibs.length > 1) ids = sibs.map(s => s.id); }
@@ -757,12 +807,14 @@ class App {
         toast(`${this.registry.systemMeta(part.sys).label} turned on`);
       } else if (!this.hi.sysState(part.sys)?.visible) {
         this.setSysOverride({ ...(state.sysOverride || {}), [part.sys]: { visible: true } });
+        this._pickedSystems = [part.sys];
       }
     }
   }
 
   clearSelection() {
     set({ selected: null }); this.selectedIds = []; this.hi.setSelected([]); this.inspector.render();
+    this._dropPickedSystemView();
     if (window.innerWidth <= 900) document.getElementById('right').classList.remove('open');
     this.refreshLabels();
     this.updateNavUI();
@@ -1151,6 +1203,9 @@ class App {
   }
 
   _afterEffectChange() {
+    // The effect controls belong to their own tab. Reached from anywhere else (the back
+    // button replaying an old step), they must not repaint another tab's body or panel.
+    if (state.mode !== 'effects') return;
     if (this.activeEffects().length) this.applyEffect();
     else { this.clearSysOverride(); this.hi.clearEffects(); this._combined = null; this.applyBodyMorph(); }
     this.panel?.dispose?.();
@@ -1185,6 +1240,7 @@ class App {
 
   setEffectStep(t) {
     set({ effectStep: t });
+    if (state.mode !== 'effects') return;
     this.applyEffect();
     this.panel?.render?.();
     this.syncEffectDock();
@@ -1363,17 +1419,9 @@ class App {
     const canvas = this.viewer.canvas;
     let downX = 0, downY = 0, moved = false;
     canvas.addEventListener('pointerdown', (e) => { downX = e.clientX; downY = e.clientY; moved = false; });
-    let lastPosedPick = 0;
     canvas.addEventListener('pointermove', (e) => {
       if (e.buttons) { if (Math.abs(e.clientX - downX) + Math.abs(e.clientY - downY) > 5) moved = true; this.hoverTip.hidden = true; return; }
       if (this.film?.active) return;             // a hover glow would end up in the video
-      // A posed pick draws the whole body once more, so hovering asks at most about
-      // fifteen times a second instead of on every pointer event.
-      if (this.viewer.rig?.enabled.value) {
-        const now = performance.now();
-        if (now - lastPosedPick < 66) return;
-        lastPosedPick = now;
-      }
       const r = canvas.getBoundingClientRect();
       const hit = this.viewer.pick(e.clientX - r.left, e.clientY - r.top);
       if (hit) {

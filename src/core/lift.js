@@ -342,18 +342,38 @@ export function pressHeight(rig, frame, pose, half, z) {
  * touch. Distance to the nearest skin point cannot tell inside from outside on its own:
  * deep in the trunk the nearest skin is far away too.
  */
-export function clearOfBody(rig, cloud, at, dir, radius, { clear = 0.004, only = null, reach = 0.35, step = 0.01 } = {}) {
-  const gap = (k) => rig.barGap(cloud, at.clone().addScaledVector(dir, k), radius, only);
-  if (gap(reach) < clear) return at.clone().addScaledVector(dir, reach);
-  for (let k = reach; k > 0; k -= step) {
-    const next = Math.max(0, k - step);
-    if (gap(next) < clear) {
-      let lo = next, hi = k;
-      for (let i = 0; i < 10; i++) { const mid = (lo + hi) / 2; if (gap(mid) >= clear) hi = mid; else lo = mid; }
-      return at.clone().addScaledVector(dir, hi);
+export function clearOfBody(rig, cloud, at, dir, radius, { clear = 0.004, only = null, reach = 0.35 } = {}) {
+  if (!cloud) return at.clone();
+  // Worked out exactly, in one pass over the skin. The bar lies along x, so each skin point
+  // is a point in the y-z plane, and the bar (grown by the gap wanted) is a circle sliding
+  // along `dir`. Each point blocks one stretch of that slide; the bar stops at the far end
+  // of the outermost stretch it meets coming in from `reach`.
+  //
+  // This used to be found by trying the bar at every centimetre and measuring the whole
+  // skin each time, some sixty passes a call and four calls a pose: 60 ms for one pose of
+  // a deadlift, a second and a half of frozen page when the lift opened.
+  const p = cloud.pts, tag = cloud.tag, R = radius + clear, R2 = R * R;
+  let mask = null;
+  if (only) { mask = new Uint8Array(32); for (const t of only) mask[t] = 1; }
+  const dy = dir.y, dz = dir.z, dd = dy * dy + dz * dz;
+  if (dd < 1e-12) return at.clone();
+  let best = 0;
+  for (let i = 0, k = 0; i < p.length; i += 3, k++) {
+    if (mask && !mask[tag[k]]) continue;
+    const wy = p[i + 1] - at.y, wz = p[i + 2] - at.z;
+    const b = (dy * wy + dz * wz) / dd, c = (wy * wy + wz * wz - R2) / dd;
+    const disc = b * b - c;
+    if (disc <= 0) continue;
+    const root = Math.sqrt(disc), k2 = b + root;
+    if (k2 <= best) continue;
+    if (k2 > reach) {
+      // Already touching where the search starts: it can come no closer than that.
+      if (b - root < reach) return at.clone().addScaledVector(dir, reach);
+      continue;
     }
+    best = k2;
   }
-  return at.clone();
+  return at.clone().addScaledVector(dir, best);
 }
 
 /**

@@ -837,9 +837,10 @@ export class Rig {
   barGap(cloud, c, radius, only = null) {
     if (!cloud) return Infinity;
     const p = cloud.pts, tag = cloud.tag;
-    let best = Infinity;
+    let best = Infinity, mask = null;
+    if (only) { mask = new Uint8Array(32); for (const t of only) mask[t] = 1; }
     for (let i = 0, k = 0; i < p.length; i += 3, k++) {
-      if (only && !only.includes(tag[k])) continue;
+      if (mask && !mask[tag[k]]) continue;
       const dy = p[i + 1] - c.y;
       if (dy * dy >= best) continue;
       const dz = p[i + 2] - c.z, d2 = dy * dy + dz * dz;
@@ -2494,6 +2495,26 @@ export class Rig {
    */
   gripAround(side, radius, flesh, barAxis = BAR_AXIS) {
     if (!this.p[side]) return {};
+    // While a movement is only being weighed (its balance, its muscle effort), where each
+    // finger joint lies changes nothing, and closing a hand is the dearest part of a pose.
+    if (this.weighing) return {};
+    // Closing a hand is worked out a degree at a time and costs milliseconds, and through
+    // a rep the bar lies in the hand in nearly the same line at every moment. So each
+    // answer is kept, by the bar's line to the nearest third of a degree, and a rep closes
+    // each hand a handful of times instead of at every one of its 360 moments.
+    const n = barAxis.clone().normalize(), Q = 200;
+    const key = `${side}|${radius}|${flesh}|${Math.round(n.x * Q)},${Math.round(n.y * Q)},${Math.round(n.z * Q)}|${morphKey()}`;
+    const kept = (this._grips ||= new Map());
+    let g = kept.get(key);
+    if (!g) {
+      if (kept.size > 4000) kept.clear();
+      g = this._closeHand(side, radius, flesh, n.set(Math.round(n.x * Q), Math.round(n.y * Q), Math.round(n.z * Q)));
+      kept.set(key, g);
+    }
+    return { ...g };
+  }
+
+  _closeHand(side, radius, flesh, barAxis) {
     const C = this._morphed(side, 'grip');
     const out = {};
     // The bar's direction as the HAND sees it. The hand turns through the rep, so a fixed
