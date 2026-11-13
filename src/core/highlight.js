@@ -14,6 +14,11 @@ import { effectKindIndex } from './batched.js';
  */
 const CONNECTIVE = /fascia|aponeuros|retinacul|intermuscular septum|\bsheath|\bbursa/i;
 
+/** Below this a part is a ghost to be seen through; at or above it, it is dimmed but still solid. */
+const GHOST = 0.3;
+/** A muscle at rest in Movement: the effort colour scale at zero, cool and receding. */
+const REST = effectKindIndex('activation');
+
 export class Highlighter {
   constructor(viewer, registry, body) {
     this.viewer = viewer; this.registry = registry; this.body = body;
@@ -177,6 +182,7 @@ export class Highlighter {
       if (!first || ![...sel].some(id => { const p = body.parts[body.slot(id)]; return p && this.isPartVisible(p); })) reveal = false;
     }
     const anyEffect = this.effects.size > 0;
+    const inMove = state.mode === 'move';
     // Which systems an effect covers almost entirely. Dimming the few parts of such a
     // system that it happens to skip does not focus anything: on the skin it only left a
     // patchwork of dark and light panels.
@@ -192,7 +198,7 @@ export class Highlighter {
       for (const [sys, n] of all) if ((hit.get(sys) || 0) >= n * 0.6) covered.add(sys);
     }
     // How much of each batch is showing opaque, for the depth switch below.
-    const shownN = new Uint32Array(body.batches.length), opaqueN = new Uint32Array(body.batches.length);
+    const shownN = new Uint32Array(body.batches.length), opaqueN = new Uint32Array(body.batches.length), bodyN = new Uint32Array(body.batches.length);
 
     for (let slot = 0; slot < body.count; slot++) {
       const part = body.parts[slot];
@@ -204,7 +210,12 @@ export class Highlighter {
 
       let opacity = sys.opacity * (fx && fx.opacity != null && !this.compare ? fx.opacity : 1);
       if (xray && !isSel && !isHover && !fx) opacity *= 0.16;
-      if (anyEffect && !fx && !isSel && !isHover && !covered.has(part.sys)) opacity *= 0.35;
+      // What happens if fades what an effect does not touch, so the organ it is about can be
+      // seen through the rest. Movement must not: there the body is the subject, and faded
+      // to a third the resting muscles, and the whole skin or skeleton when one of those
+      // was the layer on show, let the bench and the floor show through the lifter. In
+      // Movement a resting muscle stays solid and is drawn cool instead (below).
+      if (anyEffect && !inMove && !fx && !isSel && !isHover && !covered.has(part.sys)) opacity *= 0.35;
 
       // Reveal keeps a thin frame of reference (own system + skeleton) and drops the rest:
       // ghosting everything does not work, because thousands of low-alpha surfaces stack
@@ -227,8 +238,9 @@ export class Highlighter {
 
       shownN[body.batchOf[slot]]++;
       if (opacity >= 0.95) opaqueN[body.batchOf[slot]]++;
+      if (opacity >= GHOST) bodyN[body.batchOf[slot]]++;
       const selectedAmt = isSel ? 1 : (isHover ? 0.45 : 0);
-      const kind = fx ? effectKindIndex(fx.kind) : 0;
+      const kind = fx ? effectKindIndex(fx.kind) : (inMove && anyEffect && part.sys === 'muscular' ? REST : 0);
       const intensity = fx && !this.compare ? fx.intensity : 0;
       body.setStyle(slot, opacity, selectedAmt, kind, intensity);
     }
@@ -247,9 +259,14 @@ export class Highlighter {
     // depth and is drawn after every solid one, so what is behind a ghost always shows
     // through it. The system holding the picked part is drawn last of all, so nothing faint
     // is painted over the one thing the user asked to see.
+    //
+    // Faint means a ghost, not merely dimmed. Movement and What happens if dim the muscles
+    // that are not working to about a third so the working ones stand out; those are still
+    // a body and must still hide what is behind them. Counting them as ghosts turned the
+    // whole body see-through in Movement, front and back and insides all at once.
     body.batches.forEach((b, i) => {
       const m = b.mesh.material;
-      const solid = shownN[i] > 0 && opaqueN[i] >= shownN[i] * 0.85;
+      const solid = shownN[i] > 0 && (m.userData.ghostable ? opaqueN[i] >= shownN[i] * 0.85 : bodyN[i] >= shownN[i] * 0.5);
       m.depthWrite = solid;
       b.mesh.renderOrder = solid ? 0 : opaqueN[i] > 0 ? 2 : 1;
     });

@@ -77,6 +77,17 @@ function check(app) {
     if (c.parts === 0) bad.push(`on screen: ${shown} parts are switched on but nothing of the body is drawn in view`);
   }
   if (shown === 0 && !state.isolate) bad.push('on screen: no part is switched on at all');
+  // In Movement the body is the subject and must be solid: every system on show hides what
+  // is behind it, unless the user has asked to see through it (X-ray, or a picked part with
+  // Reveal). Dimmed muscles once counted as ghosts and the whole lifter went see-through.
+  if (mode === 'move' && app.exercise.ex && !state.xray && !state.selected) {
+    const moveView = app.panel?.view;
+    for (const b of app.body.batches) {
+      if (!b.mesh.visible || b.mesh.material.depthWrite) continue;
+      if (moveView === 'all' && (state.systems[b.system]?.opacity ?? 1) < 0.95) continue;   // the user's own see-through setting
+      bad.push(`see-through: ${b.system} is drawn as a ghost in Movement`);
+    }
+  }
 
   if (mode !== 'move') {
     if (app.exercise.ex) bad.push(`leftover: lift "${app.exercise.ex.id}" still running on the ${mode} tab`);
