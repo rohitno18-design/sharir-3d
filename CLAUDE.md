@@ -19,6 +19,7 @@ happens if" entry (`src/data/effects/`), step by step, with the gates each must 
 | `python tools/review_effect.py <id>` | Review sheet for one effect file |
 | `npm run check` | Anatomy, lift and effect audits. Must pass |
 | `npm run soak` | Clicks round the app at random and checks the body never vanishes, nothing is left over from another tab, nothing throws. Run after any change in `src/core/` or `src/main.js`. `npm run soak -- 1 20` for more seeds |
+| `npm run skin` | Torn skin in every movement, with and without the shoulder mending (skinfix.js). The mended total must stay below the bones-only total |
 | `npm run props` | Bars, plates, dumbbells, benches and the floor are solid: tests every piece against the posed skin at 24 moments of every movement. Must print "Everything stays out of the body" |
 | `npm run loadtime` | How long the built app takes to load, step by step (`npm run build` first). It was 2 minutes once because one step lost its triangle tree; under 20 s cold is normal |
 | `npm run body` | How well the body holds together when posed: nerves and vessels coming out through the skin, lifting off their muscles, branches pulling away, sticks. Run before and after any change to bindings (rig.js, skinweld.js, batched.js); totals must not go up. `-- --all` for every movement |

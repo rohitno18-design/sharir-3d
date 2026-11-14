@@ -38,9 +38,13 @@ export function systemMaterial(system, rig) {
     envMapIntensity: 0.55,
     // Skin is the body's outer surface and only its outside should ever show. Drawn
     // double-sided, its inside faces came through as flat planes across the face and dark
-    // cracks over the body. Everything else stays double-sided: many inner structures are
+    // cracks over the body. So the skin is drawn double-sided only so its back faces can be
+    // let through where the skin has been mended after posing (skinfix.js): a fold there is
+    // skin turned over on itself, and dropped it showed as a crack. Everywhere else its back
+    // faces are thrown away in the shader, exactly as drawing the front alone did
+    // (rig.js, patchForRig). Everything else is double-sided: many inner structures are
     // open sheets that have to read from both sides.
-    side: system === 'integumentary' ? THREE.FrontSide : THREE.DoubleSide,
+    side: THREE.DoubleSide,
     transparent: true,                     // per-part opacity comes from the style texture
     depthWrite: !TRANSPARENT.has(system),
     // three.js draws a transparent DOUBLE-SIDED material in two passes (back faces, then
@@ -56,6 +60,8 @@ export function systemMaterial(system, rig) {
   // So do the neck muscles bound along their fibres (Rig.blendFibreTrunks), and the nerves
   // and vessels that copy a muscle's binding (followSkinBinding).
   if (['integumentary', 'muscular', 'nervous', 'cardiovascular'].includes(system)) mat.defines = { ...(mat.defines || {}), SHARIR_SKIN3: '' };
+  // The skin takes a correction after posing (Delta Mush round the shoulders, skinfix.js).
+  if (system === 'integumentary') mat.defines = { ...(mat.defines || {}), SHARIR_CORR: '', SHARIR_FRONT_ONLY: '' };
   patchMaterial(mat);                      // body morph runs first…
   if (rig) patchForRig(mat, rig);          // …then the pose…
   return mat;                              // …and batching patches on top of both

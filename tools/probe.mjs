@@ -14,7 +14,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
-const code = args.find((a, i) => !a.startsWith('--') && Number.isNaN(+a) && !(i > 0 && args[i - 1] === '--url'));
+const code = args.find((a, i) => !a.startsWith('--') && Number.isNaN(+a) && !(i > 0 && (args[i - 1] === '--url' || args[i - 1] === '--init')));
 const ti = args.indexOf('--timeout');
 const timeout = (ti >= 0 ? +args[ti + 1] : 90) * 1000;
 if (!code) { console.log('Usage: node tools/probe.mjs "<js>" [--timeout seconds] [--gpu]'); process.exit(2); }
@@ -28,6 +28,9 @@ const browser = await chromium.launch({ headless: true, channel: 'chrome', args:
 let code_ = 0;
 try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+  // --init "<js>" runs before the app loads, to set switches the build reads (window.__x).
+  const ii = args.indexOf('--init');
+  if (ii >= 0) await page.addInitScript(args[ii + 1]);
   page.on('pageerror', e => console.log('[page error]', String(e.message || e)));
   page.on('console', m => { if (m.type() === 'error') console.log('[console error]', m.text()); });
   await page.goto(server.resolvedUrls.local[0], { waitUntil: 'load' });

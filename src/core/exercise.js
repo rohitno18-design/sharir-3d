@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { bodyKey, phaseAt, EZ_BENDS, dumbbellSize } from './lift.js';
+import { SkinFix } from './skinfix.js';
 
 /**
  * Exercise player. Runs any lift written in the movement framework's format.
@@ -55,6 +56,22 @@ export class ExercisePlayer {
     this.app.viewer.controls.addEventListener('start', this._grab);
     this.scheduleFrame(320);
     this._warm();
+    this._planSkin();
+  }
+
+  /**
+   * Work out the skin's corrections round the shoulders and hips for this lift (skinfix.js),
+   * in the gaps between frames. Until they are in, the skin is shown as the bones pose it.
+   */
+  _planSkin() {
+    const body = this.app.body;
+    if (!body?.rig?.ok) return;
+    this.skinFix ||= new SkinFix(body);
+    const ex = this.ex, fault = this.fault || '';
+    this._skinKey = `${ex.id}|${fault}|${bodyKey()}`;
+    this.skinFix.plan(this._skinKey, (u) => this.poseAt(u), () => { if (this.ex === ex && this._pose) this.app.body.rig.setPose(this._pose); }, {
+      ready: () => { if (this.ex === ex) this.seek(this.t); },
+    });
   }
 
   /**
@@ -83,6 +100,7 @@ export class ExercisePlayer {
 
   stop() {
     this.ex = null;
+    this.skinFix?.stop();
     this.playing = false;
     this.autoFrame = false;
     clearTimeout(this._frameT);
@@ -185,6 +203,11 @@ export class ExercisePlayer {
 
     this._pose = this.poseAt(this.ex.u(this.t));
     rig.setPose(this._pose);
+    // The skin's correction for this moment. A changed body or mistake needs its own.
+    if (this.skinFix) {
+      if (this._skinKey !== `${this.ex.id}|${this.fault || ''}|${bodyKey()}`) this._planSkin();
+      this.skinFix.apply(this.ex.u(this.t));
+    }
 
     for (const g of this.groups) {
       g.effort = Math.max(0, Math.min(1, g.def.effort(this.t)));

@@ -3137,8 +3137,17 @@ export function patchForRig(material, rig) {
     const marker = 'transformed = morphBody(transformed);';
     if (!shader.vertexShader.includes(marker)) { console.warn('[rig] morph hook not found — pose disabled'); return; }
     shader.vertexShader = shader.vertexShader
-      .replace('#include <common>', '#include <common>\n' + RIG_GLSL)
-      .replace(marker, 'vec3 sharirRest = morphBody(transformed);\n transformed = sharirCrease(sharirRest, sharirPose(sharirRest), aMorphMask);');
+      .replace('#include <common>', '#include <common>\n' + RIG_GLSL + '\n#ifdef SHARIR_CORR\nattribute vec3 aCorr;\nvarying float vSharirCorr;\n#endif')
+      // The skin's correction after posing (Delta Mush round the shoulders, skinfix.js).
+      .replace(marker, 'vec3 sharirRest = morphBody(transformed);\n transformed = sharirCrease(sharirRest, sharirPose(sharirRest), aMorphMask);'
+        + '\n#ifdef SHARIR_CORR\n vSharirCorr = 0.0;\n if (uPosed > 0.5) { transformed += aCorr; vSharirCorr = dot(aCorr, aCorr) > 1e-12 ? 1.0 : 0.0; }\n#endif');
+    // A front-only surface drawn double-sided (the skin, see loader.js): its back faces are
+    // thrown away except where it has been mended, where a fold shows instead of a crack.
+    if (shader.fragmentShader.includes('#include <clipping_planes_fragment>')) {
+      shader.fragmentShader = shader.fragmentShader
+        .replace('#include <common>', '#include <common>\n#ifdef SHARIR_CORR\nvarying float vSharirCorr;\n#endif')
+        .replace('#include <clipping_planes_fragment>', '#include <clipping_planes_fragment>\n#ifdef SHARIR_FRONT_ONLY\nif (!gl_FrontFacing && vSharirCorr < 0.001) discard;\n#endif');
+    }
     if (shader.vertexShader.includes('#include <beginnormal_vertex>')) {
       shader.vertexShader = shader.vertexShader.replace('#include <beginnormal_vertex>',
         '#include <beginnormal_vertex>\n objectNormal = sharirPoseNormal(objectNormal);');

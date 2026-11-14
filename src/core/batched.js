@@ -154,6 +154,8 @@ export class BatchedBody {
       mesh.userData.system = system;
       this.scene.add(mesh);
 
+      // The skin's correction after posing (skinfix.js): none until a lift asks for one.
+      if (system === 'integumentary') merged.setAttribute('aCorr', new THREE.BufferAttribute(new Float32Array(merged.attributes.position.count * 3), 3).setUsage(THREE.DynamicDrawUsage));
       this.batches.push({ system, mesh });
       for (const it of items) this.batchOf[this.indexOf.get(it.part.id)] = this.batches.length - 1;
     }

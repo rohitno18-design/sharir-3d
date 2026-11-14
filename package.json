@@ -16,6 +16,7 @@
     "body": "node tools/body.mjs",
     "loadtime": "node tools/loadtime.mjs",
     "props": "node tools/props.mjs",
+    "skin": "node tools/skin.mjs",
     "gate": "node tools/gate.mjs"
   },
   "keywords": [],
