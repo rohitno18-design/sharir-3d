@@ -674,3 +674,172 @@ export function followSkinBinding(skin, target, partAt, match, radius = 0.03, fr
   TS.needsUpdate = true; if (T2) T2.needsUpdate = true;
   return changed;
 }
+
+/**
+ * Nerves and vessels move with the muscles they lie on.
+ *
+ * Bound to the nearest bone by closeness, a nerve on the back of the thigh changed from
+ * pelvis to thigh over a few centimetres, while the hamstrings and the glutes round it
+ * bend over a long stretch. In a hinge or a squat it left them: it came out from under
+ * the buttock and hung in the air behind the leg. Here each point takes the binding of the
+ * nearest muscle point under it, so it goes where that muscle goes.
+ *
+ * Copied point by point, neighbouring points of one thin nerve can copy two different
+ * muscles that move apart, and the nerve tore between them. So the copied bindings are
+ * then smoothed along each nerve, a share of each point's neighbours at a time: every
+ * point ends up close to what the muscle under it does, and the nerve stays in one piece.
+ *
+ * Bindings are worked with as weights per bone (up to three, the skin's `aSkin2` being the
+ * third). Muscle points bound along their fibres (psoas, the lat, the pec: weight over 1.5)
+ * cannot be expressed that way. With `fibre(part)` true for a part, its points lying on
+ * one copy that binding as it is and are held out of the smoothing; otherwise they are not
+ * copied from. Held out of the smoothing, the edge between the two can tear, so it is kept
+ * for nerves that run along such a muscle for most of their length (the nerve to the lat).
+ *
+ * `weld` (metres): points of two different parts this close are smoothed together too, so
+ * a branch stays joined to the nerve or vessel it leaves. Bound apart, the veins of the
+ * arm came 11 cm away from the vein of the armpit they drain into with the arms overhead.
+ *
+ * `pick(part, x, y, z, i)` chooses the points to move; `from(part)` the muscles to follow.
+ */
+export function followMuscles(muscle, target, partAt, { pick, from, bones: allow = () => true, radius = 0.025, passes = 30, fibre = null, weld = 0 } = {}) {
+  const MP = muscle.attributes.position, MS = muscle.attributes.aSkin, MA = muscle.attributes.aPartIndex, M2 = muscle.attributes.aSkin2;
+  const TP = target.attributes.position, TS = target.attributes.aSkin, TA = target.attributes.aPartIndex;
+  if (!MS || !TS || !MA || !TA) return 0;
+  if (!target.attributes.aSkin2) target.setAttribute('aSkin2', new THREE.BufferAttribute(new Float32Array(TP.count * 2), 2));
+  const T2 = target.attributes.aSkin2;
+  // Which target points move, and the parts they belong to (a part is smoothed as a whole).
+  const n = TP.count, chosen = new Uint8Array(n);
+  let count = 0;
+  for (let i = 0; i < n; i++) {
+    const part = partAt(TA.getX(i));
+    if (part && TS.getZ(i) < 1.5 && allow(TS.getX(i)) && allow(TS.getY(i)) && pick(part, TP.getX(i), TP.getY(i), TP.getZ(i), i)) { chosen[i] = 1; count++; }
+  }
+  if (!count) return 0;
+  // Muscle points to copy from, in a grid.
+  const cell = 0.02, R = Math.ceil(radius / cell), r2 = radius * radius;
+  const key = (i, j, k) => ((i + 2048) * 4096 + (j + 2048)) * 4096 + (k + 2048);
+  const grid = new Map(), fibreAt = new Set();
+  for (let i = 0; i < MP.count; i++) {
+    const isFibre = MS.getZ(i) > 1.5;
+    if (isFibre ? !fibre || !allow(MS.getX(i)) : !allow(MS.getX(i)) || !allow(MS.getY(i))) continue;
+    if (isFibre) fibreAt.add(i);
+    const part = partAt(MA.getX(i));
+    if (!part || !from(part)) continue;
+    const k = key(Math.floor(MP.getX(i) / cell), Math.floor(MP.getY(i) / cell), Math.floor(MP.getZ(i) / cell));
+    (grid.get(k) || grid.set(k, []).get(k)).push(i);
+  }
+  // Every point's binding as weights per bone.
+  const bones = [], at = new Map();
+  const slot = (b) => { if (!at.has(b)) { at.set(b, bones.length); bones.push(b); } return at.get(b); };
+  const ids = [], local = new Int32Array(n).fill(-1);
+  for (let i = 0; i < n; i++) if (chosen[i]) { local[i] = ids.length; ids.push(i); }
+  const own = (S, S2, i, add) => {
+    const w = Math.min(1, Math.max(0, S.getZ(i))), c = S2 ? S2.getY(i) : 0;
+    add(S.getX(i), w * (1 - c));
+    add(S.getY(i), (1 - w) * (1 - c));
+    if (c > 0) add(S2.getX(i), c);
+  };
+  const pinned = new Uint8Array(ids.length), pin = new Float32Array(ids.length * 5);
+  const entries = ids.map((i, k) => {
+    const x = TP.getX(i), y = TP.getY(i), z = TP.getZ(i);
+    const mayPin = !!fibre && fibre(partAt(TA.getX(i)));
+    const cx = Math.floor(x / cell), cy = Math.floor(y / cell), cz = Math.floor(z / cell);
+    let best = -1, bd = r2;
+    for (let dx = -R; dx <= R; dx++) for (let dy = -R; dy <= R; dy++) for (let dz = -R; dz <= R; dz++) {
+      const list = grid.get(key(cx + dx, cy + dy, cz + dz));
+      if (!list) continue;
+      for (const j of list) {
+        const mx = MP.getX(j);
+        if (mx * x < 0 && Math.abs(mx) > 0.01 && Math.abs(x) > 0.01) continue;
+        if (!mayPin && fibreAt.has(j)) continue;
+        const d2 = (mx - x) ** 2 + (MP.getY(j) - y) ** 2 + (MP.getZ(j) - z) ** 2;
+        if (d2 < bd) { bd = d2; best = j; }
+      }
+    }
+    const e = [];
+    const add = (b, w) => { if (w > 1e-4) e.push(slot(b), w); };
+    if (best >= 0 && MS.getZ(best) > 1.5) {
+      pinned[k] = 1;
+      pin.set([MS.getX(best), MS.getY(best), MS.getZ(best), M2 ? M2.getX(best) : 0, M2 ? M2.getY(best) : 0], k * 5);
+      return e;
+    }
+    if (best >= 0) own(MS, M2, best, add); else own(TS, T2, i, add);
+    return e;
+  });
+  const K = bones.length, m = ids.length;
+  let W = new Float32Array(m * K);
+  entries.forEach((e, k) => { for (let q = 0; q < e.length; q += 2) W[k * K + e[q]] += e[q + 1]; });
+  // Neighbours along the mesh, and points that sit on top of each other at a seam.
+  const nb = Array.from({ length: m }, () => []);
+  const idx = target.index.array;
+  for (let t = 0; t < idx.length; t += 3) {
+    for (let e = 0; e < 3; e++) {
+      const a = local[idx[t + e]], b = local[idx[t + (e + 1) % 3]];
+      if (a >= 0 && b >= 0) { nb[a].push(b); nb[b].push(a); }
+    }
+  }
+  const seen = new Map();
+  for (let k = 0; k < m; k++) {
+    const i = ids[k];
+    const s = `${Math.round(TP.getX(i) * 5000)},${Math.round(TP.getY(i) * 5000)},${Math.round(TP.getZ(i) * 5000)}`;
+    const j = seen.get(s);
+    if (j === undefined) seen.set(s, k); else { nb[k].push(j); nb[j].push(k); }
+  }
+  if (weld > 0) {
+    const wg = new Map(), wc = weld * 2;
+    for (let k = 0; k < m; k++) {
+      const i = ids[k], q = key(Math.floor(TP.getX(i) / wc), Math.floor(TP.getY(i) / wc), Math.floor(TP.getZ(i) / wc));
+      (wg.get(q) || wg.set(q, []).get(q)).push(k);
+    }
+    for (let k = 0; k < m; k++) {
+      const i = ids[k], x = TP.getX(i), y = TP.getY(i), z = TP.getZ(i), pa = TA.getX(i);
+      const cx = Math.floor(x / wc), cy = Math.floor(y / wc), cz = Math.floor(z / wc);
+      for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) for (let dz = -1; dz <= 1; dz++) {
+        const list = wg.get(key(cx + dx, cy + dy, cz + dz));
+        if (!list) continue;
+        for (const j of list) {
+          if (j <= k || TA.getX(ids[j]) === pa) continue;
+          const jj = ids[j];
+          if ((TP.getX(jj) - x) ** 2 + (TP.getY(jj) - y) ** 2 + (TP.getZ(jj) - z) ** 2 > weld * weld) continue;
+          nb[k].push(j); nb[j].push(k);
+        }
+      }
+    }
+  }
+  let next = new Float32Array(m * K);
+  for (let p = 0; p < passes; p++) {
+    for (let k = 0; k < m; k++) {
+      if (pinned[k]) continue;
+      const list = nb[k];
+      let cnt = 0;
+      for (const j of list) if (!pinned[j]) cnt++;
+      for (let b = 0; b < K; b++) {
+        let s = 0;
+        for (const j of list) if (!pinned[j]) s += W[j * K + b];
+        next[k * K + b] = cnt ? 0.5 * W[k * K + b] + 0.5 * s / cnt : W[k * K + b];
+      }
+    }
+    [W, next] = [next, W];
+  }
+  // Back to the three strongest bones.
+  for (let k = 0; k < m; k++) {
+    if (pinned[k]) {
+      const i = ids[k], o = k * 5;
+      TS.setXYZ(i, pin[o], pin[o + 1], pin[o + 2]);
+      T2.setXY(i, pin[o + 3], pin[o + 4]);
+      continue;
+    }
+    const top = [];
+    for (let b = 0; b < K; b++) if (W[k * K + b] > 1e-4) top.push([b, W[k * K + b]]);
+    top.sort((a, b) => b[1] - a[1]);
+    const [A, B, C] = [top[0] || [0, 1], top[1] || [top[0] ? top[0][0] : 0, 0], top[2] || [0, 0]];
+    const sum = A[1] + B[1] + C[1] || 1;
+    const wc = C[1] / sum, wab = A[1] + B[1] || 1;
+    const i = ids[k];
+    TS.setXYZ(i, bones[A[0]], bones[B[0]], A[1] / wab);
+    T2.setXY(i, wc > 0.02 ? bones[C[0]] : 0, wc > 0.02 ? wc : 0);
+  }
+  TS.needsUpdate = true; T2.needsUpdate = true;
+  return m;
+}

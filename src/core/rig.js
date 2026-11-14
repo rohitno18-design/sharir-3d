@@ -1524,7 +1524,12 @@ export class Rig {
       // The long bones by name: a bone can arrive as several pieces, and a vote taken piece
       // by piece gave the lower end of the humerus to the forearm.
       const OWN = [[/scapula|clavicle/i, 'girdle'], [/humerus/i, 'upperarm'], [/^ulna$/i, 'forearm1'], [/^radius$/i, 'forearm2'],
-        [/femur/i, 'thigh'], [/tibia|fibula|patella/i, 'shin'], [/phalanx of .* finger of foot/i, 'toes']];
+        [/femur/i, 'thigh'], [/tibia|fibula|patella/i, 'shin'], [/phalanx of .* finger of foot/i, 'toes'],
+        // The palm's bones. One of the pieces the fourth metacarpal arrives in, its head,
+        // lies nearer the ring finger's first joint than the hand's line, voted for the
+        // finger, and flew 8 cm off the hand whenever the fingers closed on a bar.
+        [/^(second|third|fourth|fifth) metacarpal/i, 'hand'], [/^(scaphoid|lunate|triquetrum|pisiform|trapezium|trapezoid|capitate|hamate)/i, 'hand'],
+        [/metatarsal|^(talus|calcaneus|navicular|cuboid|.*cuneiform)/i, 'foot']];
       const own = OWN.find(([re]) => re.test(part.n));
       if (own) {
         let sx = 0;
@@ -2026,6 +2031,9 @@ export class Rig {
    * tipped them off the vertical, up to HANG_MAX. Its turn about the vertical is kept, so
    * they still face where the body faces.
    */
+  /** Does this bone belong to an arm (girdle to fingertips)? */
+  isArmBone(i) { const b = this.bones[i]; return !!b && b.group === 'arm'; }
+
   _hangPose() {
     const R = new THREE.Quaternion().setFromRotationMatrix(this._m[0]);
     const down = new THREE.Vector3(0, -1, 0);
@@ -2034,32 +2042,6 @@ export class Rig {
     const ang = 2 * Math.acos(Math.min(1, Math.abs(swing.w)));
     if (ang > HANG_MAX) swing.slerp(new THREE.Quaternion(), 1 - HANG_MAX / ang);
     return { quat: R.clone().invert().multiply(swing).multiply(R) };
-  }
-
-  /**
-   * Bend a nerve or vessel round the back of the hip over a long stretch: all pelvis from
-   * 6 cm above the hip joint, all thigh from 14 cm below it, and blended by height in
-   * between. Height alone decides, so every point round one ring of the tube moves the same
-   * way and the tube stays round; a long blend spreads the lengthening a bent hip asks of
-   * anything behind it, as the real nerve slides and stretches along its whole course.
-   */
-  bindRoundHip(geom, partAt, match) {
-    const P = geom.attributes.position, S = geom.attributes.aSkin, A = geom.attributes.aPartIndex, S2 = geom.attributes.aSkin2;
-    if (!P || !S || !A) return 0;
-    let n = 0;
-    for (let i = 0; i < P.count; i++) {
-      const part = partAt(A.getX(i));
-      if (!part || !match.test(part.n)) continue;
-      const side = part.side || (P.getX(i) >= 0 ? 'l' : 'r');
-      const hip = this.p[side]?.hip;
-      if (!hip) continue;
-      const w = smoothstep(hip.y + 0.06, hip.y - 0.14, P.getY(i));
-      S.setXYZ(i, boneIndex('thigh', side), 0, w);
-      if (S2) S2.setXY(i, 0, 0);
-      n++;
-    }
-    S.needsUpdate = true; if (S2) S2.needsUpdate = true;
-    return n;
   }
 
   /**
@@ -2092,7 +2074,9 @@ export class Rig {
       const d = Math.hypot(H.y - y, Math.max(0, z - (H.z - 0.01)));
       // Behind the front of the symphysis (the root of the penis, the perineum) the share
       // fades out smoothly over 6 cm, so nothing is torn along a line where it stops.
-      const w = smoothstep(0.012, 0.05, d) * smoothstep(H.z - 0.06, H.z, z);
+      // Out towards the thigh it fades too: the external pudendal vessels leave the femoral
+      // vessels there, and hung at that end they came 6 cm away from them.
+      const w = smoothstep(0.012, 0.05, d) * smoothstep(H.z - 0.06, H.z, z) * (skin ? 1 : smoothstep(0.068, 0.042, Math.abs(x)));
       if (w <= 0) continue;
       S.setXYZ(i, HANG, 0, w);
       n++;

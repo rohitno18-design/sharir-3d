@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { EFFECT_KINDS } from '../data/targets.js';
-import { closeSkinGaps, blendSkinBindings, orientSkin, smoothBindings, followSkin, skinOverGirdle, followSkinBinding } from './skinweld.js';
+import { closeSkinGaps, blendSkinBindings, orientSkin, smoothBindings, followSkin, skinOverGirdle, followSkinBinding, followMuscles } from './skinweld.js';
 
 /**
  * Batched body renderer.
@@ -174,7 +174,32 @@ export class BatchedBody {
         if (!b || !muscle) continue;
         followSkinBinding(muscle.mesh.geometry, b.mesh.geometry, at, /^(inferior subscapular|lower subscapular)/i, 0.04, /^(subscapularis|teres major)/i);
       }
-      for (const b of this.batches) if (TUBES.has(b.system)) rig.bindRoundHip(b.mesh.geometry, at, ROUND_HIP);
+      // Nerves and vessels of the hip and the leg go with the muscles they lie on (see
+      // followMuscles in skinweld.js).
+      const hipY = rig.p.l.hip.y;
+      for (const b of this.batches) {
+        if (!muscle || (b.system !== 'nervous' && b.system !== 'cardiovascular')) continue;
+        followMuscles(muscle.mesh.geometry, b.mesh.geometry, at, {
+          pick: (part, x, y) => y < hipY + 0.08 && !HANGING.test(part.n) && !UNDER_SKIN.test(part.n),
+          from: (part) => !CONNECTIVE_SHEET.test(part.n),
+          bones: (bone) => !rig.isArmBone(bone),        // the hands hang beside the thighs
+          radius: 0.045, weld: 0.002,
+        });
+        // The same round the shoulder and the armpit, where the girdle, the arm and the
+        // ribcage all move apart: the nerves to the serratus, the lat and the cuff, and the
+        // vessels of the armpit, go with the muscles they lie on.
+        const gh = { l: rig.p.l.gh, r: rig.p.r.gh };
+        followMuscles(muscle.mesh.geometry, b.mesh.geometry, at, {
+          pick: (part, x, y, z) => {
+            const g = gh[x >= 0 ? 'l' : 'r'];
+            return y > hipY + 0.08 && Math.abs(x) > 0.05 && (x - g.x) ** 2 + (y - g.y) ** 2 + (z - g.z) ** 2 < 0.24 * 0.24 && !ARM_NERVE.test(part.n);
+          },
+          from: (part) => !CONNECTIVE_SHEET.test(part.n),
+          radius: 0.035, weld: 0.002, fibre: (part) => /^thoracodorsal/i.test(part.n),
+        });
+      }
+      // The nerves of the skin itself run in the fat just under it, and go with it.
+      for (const b of this.batches) if (skin && b.system === 'nervous') followSkinBinding(skin.mesh.geometry, b.mesh.geometry, at, UNDER_SKIN, 0.08);
       // What hangs below the front of the pelvis hangs (see Rig.bindHanging). Last, so
       // nothing above undoes it.
       for (const b of this.batches) rig.bindHanging(b.mesh.geometry, at);
@@ -299,15 +324,14 @@ export class BatchedBody {
 
 const TUBES = new Set(['nervous', 'cardiovascular', 'lymphoid']);
 
-/**
- * Nerves and vessels that leave the pelvis behind the hip and run down the back of the
- * thigh. Bound by closeness they changed from pelvis to thigh over a few centimetres, and a
- * hinge or a squat drew them out of the buttock as long straight sticks. They are bent
- * round the hip over a long stretch instead (Rig.bindRoundHip). Copying the binding of the
- * muscles or the skin round them was tried: the muscles tore them worse, because
- * neighbouring points copied different muscles, and the skin helped only a little.
- */
-const ROUND_HIP = /^(sciatic nerve|posterior femoral cutaneous nerve|inferior gluteal (nerve|artery|vein))/i;
+/** What hangs between the thighs (bound by Rig.bindHanging), left alone by followMuscles. */
+const HANGING = /testicular|spermatic|cremaster|deferen|pampiniform|scrot|penis|penile|pudendal|perine|genital|dorsal (nerve|artery|vein)/i;
+/** The arm's own nerves, which run in the arm's muscles and are already bound well there. */
+const ARM_NERVE = /^(radial|median|ulnar|musculocutaneous) nerve/i;
+/** Nerves of the skin of the buttock and the back of the thigh, which lie in the fat under it. */
+const UNDER_SKIN = /^(posterior femoral cutaneous nerve|.*cluneal nerve)/i;
+/** Sheets round the muscles rather than muscle: nothing is copied from them. */
+const CONNECTIVE_SHEET = /fascia|aponeuros|retinacul|septum|sheath|bursa|iliotibial/i;
 
 /** Does this geometry's binding differ anywhere from its first point's? */
 function mixedBinding(sk) {
