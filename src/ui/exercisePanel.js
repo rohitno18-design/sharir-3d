@@ -10,9 +10,11 @@ export function phaseName(t, ex) {
 }
 
 /**
- * A lift is a muscle story, so Movement opens on the muscles rather than on whatever the
- * Systems panel happened to be left showing. Each of these lays a temporary view over the
- * user's own system settings; leaving Movement puts their settings back untouched.
+ * What Movement shows of the body. "My systems" is the user's own settings from the
+ * Systems panel, and is where it starts. The others lay a temporary view over those
+ * settings; leaving Movement puts them back untouched. Whichever the user picks is kept,
+ * for every lift and the next visit: it used to go back to the muscles every time a lift
+ * was opened, so the same choice had to be made again and again.
  */
 const VIEWS = [
   { key: 'muscle', label: 'Muscles', sys: ['muscular'] },
@@ -23,14 +25,22 @@ const VIEWS = [
   { key: 'deep', label: 'Muscle + bone', sys: ['muscular', 'skeletal'] },
   { key: 'all', label: 'My systems', sys: null },
 ];
-export const DEFAULT_VIEW = 'muscle';
+export const DEFAULT_VIEW = 'all';
+const VIEW_KEY = 'sharir-move-view';
+
+/** The view the user last picked in Movement, or "My systems". */
+export function savedView() {
+  let k = null;
+  try { k = localStorage.getItem(VIEW_KEY); } catch {}
+  return VIEWS.some(v => v.key === k) ? k : DEFAULT_VIEW;
+}
 
 export class ExercisePanel {
   constructor(root, app) {
     this.root = root; this.app = app;
-    this.view = DEFAULT_VIEW;
+    this.view = savedView();
     this.render();
-    this.setView(DEFAULT_VIEW);
+    this.setView(this.view, { remember: false });
     if (this.player) this.player.onSeek = () => this.liveUpdate();
   }
 
@@ -40,9 +50,10 @@ export class ExercisePanel {
   }
 
   /** Lay one layer over the body, and show which one is on. */
-  setView(key) {
-    const v = VIEWS.find(x => x.key === key) || VIEWS[0];
+  setView(key, { remember = true } = {}) {
+    const v = VIEWS.find(x => x.key === key) || VIEWS.find(x => x.key === DEFAULT_VIEW);
     this.view = v.key;
+    if (remember) { try { localStorage.setItem(VIEW_KEY, v.key); } catch {} }
     this.app.showOnlySystems(v.sys);
     this.markView();
   }

@@ -17,7 +17,7 @@
  */
 
 import * as THREE from 'three';
-import { form } from '../../core/lift.js';
+import { form, benchSink, BENCH_GIVE, bodyKey } from '../../core/lift.js';
 
 const d = (deg) => (deg * Math.PI) / 180;
 const lerp = (a, b, k) => a + (b - a) * k;
@@ -183,6 +183,27 @@ export const BENCH_PRESS = {
     return new THREE.Vector3(m * 0.3, lerp(-0.62, -0.30, u), -1).normalize();
   },
 
+  /**
+   * How high the body lies, per body: laid down, then lifted until its back and buttocks
+   * rest on the pad and give into it only as much as padding does. A fixed height for every
+   * body left the buttocks 5 cm inside the bench and the shoulder blades 3 cm.
+   */
+  _lieHeight(rig, height) {
+    const key = `${bodyKey()}|${height}`;
+    if (this._lie?.key === key) return this._lie.py;
+    this._lie = { key, py: BENCH_TOP + 0.115 };
+    const was = rig.weighing;
+    rig.weighing = true;                     // the fingers do not matter to how the body lies
+    try {
+      for (let pass = 0; pass < 2; pass++) {
+        let sink = -Infinity;
+        for (const u of [0, 0.5, 1]) sink = Math.max(sink, benchSink(rig, this.pose(u, { height, rig }), this.equipment.bench));
+        this._lie.py += sink - BENCH_GIVE;
+      }
+    } finally { rig.weighing = was; }
+    return this._lie.py;
+  },
+
   pose(u, ctx = {}) {
     const height = ctx.height || 1.7433;
     const rig = ctx.rig;
@@ -190,7 +211,8 @@ export const BENCH_PRESS = {
     const p = {};
     // The whole body rotates onto its back. The pivot is the floor origin, so the body
     // swings down flat and is then lifted so its back rests on the bench pad.
-    const py = BENCH_TOP + 0.115;
+    // Lifted until this body's own back and buttocks rest on the pad (see _lieHeight).
+    const py = rig ? this._lieHeight(rig, height) : BENCH_TOP + 0.115;
     const pz = height * 0.52;
     p.root = { rot: [d(-90), 0, 0], pos: [0, py, pz] };
     // The root lays the body down as world = (x, z + py, -y + pz), so anything that has to

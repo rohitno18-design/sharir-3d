@@ -433,3 +433,203 @@ export function ezGrip(half, forearm) {
 
 /** A short caption list turned into the `form` block's shape, for authoring convenience. */
 export const form = (setup, move, mistakes, breathe) => ({ setup, move, mistakes, breathe });
+
+// ---------- solid equipment ----------
+
+/**
+ * A dumbbell's heads for the weight it holds: two steel cylinders, each a little shorter
+ * than it is wide, sized from the steel they must contain (7850 kg/m³), with the handle's
+ * own 0.6 kg taken off. The handle is 15 cm, and each head starts 6.2 cm from its middle.
+ * Drawn and tested against the body with these same numbers. The heads used to grow by a
+ * rule of thumb that made a 15 kg dumbbell's plates a fifth wider than real ones.
+ */
+export function dumbbellSize(totalKg) {
+  const each = Math.max(1, (totalKg || 10) / 2);
+  const steel = Math.max(0.2, (each - 0.6) / 2);
+  const R = Math.max(0.038, Math.cbrt(steel / (7850 * Math.PI * 0.85)));
+  const L = Math.max(0.03, 0.85 * R);
+  return { R, L, at: 0.062 + L / 2, handle: 0.15 };
+}
+
+/** Where a held dumbbell is in the room: its middle and the line through its handle. The rig must be posed. */
+export function dumbbellAt(rig, side, size) {
+  const c = rig.jointAt('grip', side, new THREE.Vector3());
+  const axis = rig.barInHand(side).applyQuaternion(rig.boneQuat('hand', side)).normalize();
+  return { c, axis, size };
+}
+
+/**
+ * How a dumbbell has to move to come out of the body: the smallest push, in the room,
+ * that takes both heads clear of every point of `cloud` by `margin`, worked out point by
+ * point (out sideways from the handle's line, or off the end of a head, whichever is
+ * shorter) and summed. Zero if it is clear. Floor and the other dumbbell are added by the
+ * caller.
+ */
+export function pushOutOfBody(db, cloud, margin = 0.008) {
+  const { c, axis, size } = db;
+  const R = size.R + margin, H = size.L / 2 + margin, reach2 = R * R + H * H;
+  const sum = new THREE.Vector3(), w = new THREE.Vector3();
+  let most = 0;
+  const p = cloud.pts;
+  for (const s of [-1, 1]) {
+    const hx = c.x + axis.x * s * size.at, hy = c.y + axis.y * s * size.at, hz = c.z + axis.z * s * size.at;
+    for (let i = 0; i < p.length; i += 3) {
+      const dx = p[i] - hx, dy = p[i + 1] - hy, dz = p[i + 2] - hz;
+      if (dx * dx + dy * dy + dz * dz > reach2) continue;
+      const a = dx * axis.x + dy * axis.y + dz * axis.z;
+      if (Math.abs(a) >= H) continue;
+      w.set(dx - a * axis.x, dy - a * axis.y, dz - a * axis.z);
+      const r = w.length();
+      if (r >= R) continue;
+      const radial = R - r, along = H - Math.abs(a);
+      if (radial <= along && r > 1e-6) { sum.addScaledVector(w, -radial / r); most = Math.max(most, radial); }
+      else { sum.addScaledVector(axis, -Math.sign(a || 1) * along); most = Math.max(most, along); }
+    }
+  }
+  if (most === 0) return sum;
+  // Pushed from both sides at once (between the thighs) the pulls cancel; out to the side
+  // is then the way a real arm goes.
+  if (sum.length() < most * 0.3) sum.set(Math.sign(c.x || 1), 0, 0);
+  return sum.normalize().multiplyScalar(most);
+}
+
+/** How far two dumbbells overlap, and the way to push `a` off `b` (half the overlap each). */
+export function pushApart(a, b, margin = 0.006) {
+  // Each head as a stack of three spheres along its line: close enough for two weights
+  // meeting side by side or end to end.
+  const balls = (db) => {
+    const out = [];
+    const r = Math.max(db.size.R, db.size.L / 2);
+    for (const s of [-1, 1]) for (const k of [-0.33, 0, 0.33]) {
+      out.push(db.c.clone().addScaledVector(db.axis, s * db.size.at + k * db.size.L));
+    }
+    return { out, r: Math.min(r, db.size.R) };
+  };
+  const A = balls(a), B = balls(b);
+  let most = 0;
+  for (const p of A.out) for (const q of B.out) most = Math.max(most, A.r + B.r + margin - p.distanceTo(q));
+  if (most <= 0) return new THREE.Vector3();
+  const dir = a.c.clone().sub(b.c);
+  if (dir.lengthSq() < 1e-10) dir.set(1, 0, 0);
+  return dir.normalize().multiplyScalar(most / 2);
+}
+
+/**
+ * How far a posed body sinks into a bench pad, in metres (negative if it floats above).
+ * `bench` is the equipment description: top, width, length, centre [x, z], along 'x'|'z'.
+ * Read off the trunk and leg skin, so it follows this body's own back and buttocks.
+ */
+export function benchSink(rig, pose, bench) {
+  const cloud = rig.bodyCloud(pose);
+  if (!cloud) return 0;
+  const along = bench.along === 'x';
+  const hx = (along ? bench.length : bench.width) / 2, hz = (along ? bench.width : bench.length) / 2;
+  const [cx, cz] = bench.center;
+  const p = cloud.pts;
+  let most = -Infinity;
+  for (let i = 0; i < p.length; i += 3) {
+    if (Math.abs(p[i] - cx) > hx || Math.abs(p[i + 2] - cz) > hz) continue;
+    const y = p[i + 1];
+    if (y > bench.top + 0.08 || y < bench.top - 0.12) continue;
+    most = Math.max(most, bench.top - y);
+  }
+  return most === -Infinity ? 0 : most;
+}
+
+/** A padded bench gives this much under a lying body. */
+export const BENCH_GIVE = 0.006;
+
+/**
+ * The shortest move of a held dumbbell that takes it clear of the body, searched along the
+ * ways an arm can move a hand: out to the side, forward, back, up, down and between them.
+ * For each way, the dumbbell is slid along it until no point of `cloud` is within `margin`
+ * of its heads or its handle; the way with the shortest slide wins, with a small cost for
+ * straying from `prev` (the move chosen a moment earlier) so the arm moves smoothly through
+ * the rep. Ways the arm cannot reach (`reach`: { S, max }, the shoulder and how far the
+ * hand can get from it) are skipped. Returns a vector in the room; zero if already clear.
+ *
+ * A push summed point by point, tried first, picked a different way out at every step as
+ * the weight moved, and wandered.
+ */
+export function clearanceMove(db, cloud, side, { margin = 0.008, prev = null, reach = null, maxT = 0.22 } = {}) {
+  const { c, axis, size } = db;
+  const parts = [
+    { o: size.at, R: size.R + margin, H: size.L / 2 + margin },
+    { o: -size.at, R: size.R + margin, H: size.L / 2 + margin },
+    { o: 0, R: 0.016 + margin * 0.5, H: size.handle / 2 },
+  ];
+  const e1 = new THREE.Vector3(1, 0, 0).cross(axis);
+  if (e1.lengthSq() < 1e-6) e1.set(0, 1, 0).cross(axis);
+  e1.normalize();
+  const e2 = new THREE.Vector3().crossVectors(axis, e1);
+  const p = cloud.pts;
+  const reachR = size.at + size.L / 2 + size.R + margin;
+  // First, cheaply: does it touch anything where it is? Most moments it does not.
+  let touching = false;
+  for (let i = 0; i < p.length && !touching; i += 3) {
+    const dx = p[i] - c.x, dy = p[i + 1] - c.y, dz = p[i + 2] - c.z;
+    if (dx * dx + dy * dy + dz * dz >= reachR * reachR) continue;
+    const a = dx * axis.x + dy * axis.y + dz * axis.z, u = dx * e1.x + dy * e1.y + dz * e1.z, v = dx * e2.x + dy * e2.y + dz * e2.z;
+    for (const q of parts) if (Math.abs(a - q.o) < q.H && u * u + v * v < q.R * q.R) { touching = true; break; }
+  }
+  if (!touching) return new THREE.Vector3();
+  // Then the points it could reach on any slide, in the dumbbell's own terms (along its
+  // handle, and across it), filed in 1 cm slices along the handle, so each test looks only
+  // at the slices its heads and handle cover.
+  const box = reachR + maxT, SL = 0.01, base = -box, nS = Math.ceil((2 * box) / SL) + 1;
+  const count = new Int32Array(nS + 1);
+  const keep = [];
+  for (let i = 0; i < p.length; i += 3) {
+    const dx = p[i] - c.x, dy = p[i + 1] - c.y, dz = p[i + 2] - c.z;
+    if (dx * dx + dy * dy + dz * dz >= box * box) continue;
+    const a = dx * axis.x + dy * axis.y + dz * axis.z;
+    keep.push(a, dx * e1.x + dy * e1.y + dz * e1.z, dx * e2.x + dy * e2.y + dz * e2.z);
+    count[Math.min(nS - 1, Math.max(0, Math.floor((a - base) / SL))) + 1]++;
+  }
+  for (let k = 1; k <= nS; k++) count[k] += count[k - 1];
+  const n = keep.length / 3, U = new Float32Array(n), V = new Float32Array(n), At = new Float32Array(n), fill = count.slice(0, nS);
+  for (let k = 0; k < n; k++) {
+    const a = keep[k * 3], slot = fill[Math.min(nS - 1, Math.max(0, Math.floor((a - base) / SL)))]++;
+    At[slot] = a; U[slot] = keep[k * 3 + 1]; V[slot] = keep[k * 3 + 2];
+  }
+  const inside = (ox, oy, oz) => {
+    const oa = ox * axis.x + oy * axis.y + oz * axis.z, ou = ox * e1.x + oy * e1.y + oz * e1.z, ov = ox * e2.x + oy * e2.y + oz * e2.z;
+    for (const q of parts) {
+      const from = oa + q.o - q.H, to = oa + q.o + q.H, r2 = q.R * q.R;
+      const s0 = Math.max(0, Math.floor((from - base) / SL)), s1 = Math.min(nS - 1, Math.floor((to - base) / SL));
+      if (s1 < 0 || s0 > nS - 1) continue;
+      for (let k = count[s0]; k < count[s1 + 1]; k++) {
+        const a = At[k];
+        if (a <= from || a >= to) continue;
+        const du = U[k] - ou, dv = V[k] - ov;
+        if (du * du + dv * dv < r2) return true;
+      }
+    }
+    return false;
+  };
+  if (!inside(0, 0, 0)) return new THREE.Vector3();
+  const m = side === 'l' ? 1 : -1;
+  // The way the hand already went a moment ago is tried first: it is nearly always the
+  // answer again, and once a short slide is found every other way stops early.
+  const ways = prev && prev.lengthSq() > 1e-6 ? [[prev.x, prev.y, prev.z, 0.98]] : [];
+  ways.push(
+    [m, 0, 0, 1], [0, 0, 1, 1], [0, 0, -1, 1.25], [0, 1, 0, 1.1], [0, -1, 0, 1.1],
+    [m, 0, 1, 1.02], [m, 0, -1, 1.15], [m, 1, 0, 1.05], [m, -1, 0, 1.05], [0, 1, 1, 1.1], [0, -1, 1, 1.1],
+  );
+  let best = null, bestCost = Infinity;
+  const v = new THREE.Vector3();
+  for (const [x, y, z, w] of ways) {
+    v.set(x, y, z).normalize();
+    let lo = 0, hi = -1;
+    // A slide longer than the best so far, weighed, can never win: stop there.
+    const limit = Math.min(maxT, bestCost / w);
+    for (let t = 0.012; t <= limit + 0.012; t += 0.012) { if (!inside(v.x * t, v.y * t, v.z * t)) { hi = t; break; } lo = t; }
+    if (hi < 0) continue;
+    for (let k = 0; k < 5; k++) { const mid = (lo + hi) / 2; if (inside(v.x * mid, v.y * mid, v.z * mid)) lo = mid; else hi = mid; }
+    const move = v.clone().multiplyScalar(hi);
+    if (reach && move.clone().add(c).distanceTo(reach.S) > reach.max) continue;
+    const cost = hi * w;
+    if (cost < bestCost) { bestCost = cost; best = move; }
+  }
+  return best || new THREE.Vector3();
+}

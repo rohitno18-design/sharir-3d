@@ -309,8 +309,13 @@ const ANCHORED = [
   // fibre goes with its own end of it (see CREST). Moved by one point, the pec's fibres that
   // insert lower down the crest were 11 cm out with the arms overhead, and its tendon
   // stood out from the armpit in folded sheets.
+  // `twist`: the pec's tendon is folded. Its clavicular fibres insert lowest on the crest
+  // and its lowest fibres, the abdominal part, highest (the posterior lamina), so the
+  // fibres are laid on the crest in the reverse of their order on the chest. Laid on by
+  // height instead, the abdominal part went to the far end of the crest, which with the
+  // arms overhead is the highest point of the arm, and stood out of the chest as a strap.
   { re: /pectoralis major/i, limb: 'upperarm', trunk: 'root', spine: 'thorax', at: 'Crest of greater tubercle',
-    record: { muscle: 'Pectoralis major muscle', bone: 'Humerus' }, mode: 'fibre', start: true, crest: true },
+    record: { muscle: 'Pectoralis major muscle', bone: 'Humerus' }, mode: 'fibre', start: true, crest: true, twist: true },
   // The rotator cuff: from the shoulder blade onto the ball of the humerus.
   { re: /^(supraspinatus|infraspinatus|teres minor)/i, limb: 'upperarm', trunk: 'girdle', at: 'Greater tubercle', mode: 'wrap', near: 0.02, far: 0.10 },
   { re: /^subscapularis/i, limb: 'upperarm', trunk: 'girdle', at: 'Lesser tubercle', mode: 'wrap', near: 0.02, far: 0.10 },
@@ -693,13 +698,36 @@ export class Rig {
     const crest = new Map();
     for (const side of SIDES) for (const e of this.anchors[side]) if (e.crest) crest.set(anchorSlot(e.def, side), { e, far: crestSlot(e.def, side) });
     const d = new THREE.Vector3();
+    // A twisted tendon (the pec's): each fibre's place on the crest comes from where the
+    // fibre lies in the fan, read as its angle seen from the insertion, highest fibre to
+    // the far end of the crest and lowest to the near end. Points close to the tendon are
+    // on the crest already, and keep their own place there.
+    const fan = new Map();
+    for (const [slot, c] of crest) {
+      if (!c.e.def.twist) continue;
+      const m = slot >= ANCHORED.length ? -1 : 1;      // the right side's slots come second; its inward is +x
+      const angles = [];
+      for (let i = 0; i < P.count; i++) {
+        if (S.getZ(i) < 1.5 || Math.round(S.getY(i)) !== slot) continue;
+        d.set(P.getX(i), P.getY(i), P.getZ(i)).sub(c.e.point);
+        if (d.length() > 0.06) angles.push(Math.atan2(d.y, -m * d.x));
+      }
+      angles.sort((a, b) => a - b);
+      if (angles.length > 20) fan.set(slot, { m, lo: angles[Math.floor(angles.length * 0.02)], hi: angles[Math.floor(angles.length * 0.98)] });
+    }
     for (let i = 0; i < P.count; i++) {
-      const z = S.getZ(i), c = z >= 1.5 ? crest.get(Math.round(S.getY(i))) : null;
+      const z = S.getZ(i), slot = z >= 1.5 ? Math.round(S.getY(i)) : -1, c = slot >= 0 ? crest.get(slot) : null;
       if (!c) continue;
       const { point, crest: L } = c.e;
       d.set(P.getX(i), P.getY(i), P.getZ(i)).sub(point);
-      const t = Math.min(L.hi, Math.max(L.lo, d.dot(L.dir))) / CREST_LEN;
-      S2.setXY(i, -(c.far + 1), 2 + t);
+      let t = Math.min(L.hi, Math.max(L.lo, d.dot(L.dir)));
+      const f = fan.get(slot);
+      if (f) {
+        const k = Math.min(1, Math.max(0, (Math.atan2(d.y, -f.m * d.x) - f.lo) / (f.hi - f.lo || 1)));
+        const byFan = L.lo + (L.hi - L.lo) * k;
+        t += (byFan - t) * smoothstep(0.02, 0.06, d.length());
+      }
+      S2.setXY(i, -(c.far + 1), 2 + t / CREST_LEN);
     }
     let n = 0;
     for (let i = 0; i < P.count; i++) {

@@ -1,7 +1,8 @@
 import * as THREE from 'three';
+import { step } from './timing.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { EFFECT_KINDS } from '../data/targets.js';
-import { closeSkinGaps, blendSkinBindings, orientSkin, smoothBindings, followSkin, skinOverGirdle, followSkinBinding, followMuscles } from './skinweld.js';
+import { closeSkinGaps, blendSkinBindings, orientSkin, smoothBindings, followSkin, skinOverGirdle, followSkinBinding, followMuscles, layOnto } from './skinweld.js';
 
 /**
  * Batched body renderer.
@@ -85,6 +86,7 @@ export class BatchedBody {
 
     // 2. merge each system into one geometry
     for (const [system, items] of groups) {
+      step('bind ' + system);
       const geoms = [];
       // The skin is a patchwork of region meshes. Make them one surface: close the small
       // gaps between neighbouring patches here, and blend their bone weights across the
@@ -93,7 +95,7 @@ export class BatchedBody {
       const skin = system === 'integumentary'
         ? items.filter(it => !(it.part.sx && it.part.sx !== 'm') && !/hair/i.test(it.part.n) && it.geometry.index)
         : null;
-      if (skin?.length) { this.skinFlipped = orientSkin(skin); closeSkinGaps(skin); }
+      if (skin?.length) { step('skin: orient'); this.skinFlipped = orientSkin(skin); step('skin: close gaps'); closeSkinGaps(skin); step('skin: bind points'); }
       for (const it of items) {
         const g = it.geometry;
         const slot = this.indexOf.get(it.part.id);
@@ -128,7 +130,7 @@ export class BatchedBody {
         geoms.push(g);
       }
       if (!geoms.length) continue;
-      if (skin?.length && rig) blendSkinBindings(skin);
+      if (skin?.length && rig) { step('skin: blend seams'); blendSkinBindings(skin); step('skin: merge'); }
       // Nerves, vessels and lymphatics are thin tubes. Where one passes in and out of a
       // limb's reach, the points round one ring of the tube were split between limb and
       // trunk, and a bent hip tore the tube into long spikes. The skin's smoothing makes
@@ -157,6 +159,7 @@ export class BatchedBody {
     }
     // The muscles round the back of the hip move with the skin over them. Done once every
     // system is merged, because the skin is built after the muscles.
+    step('skin and muscle passes');
     if (rig) {
       const skin = this.batches.find(b => b.system === 'integumentary');
       const muscle = this.batches.find(b => b.system === 'muscular');
@@ -174,6 +177,20 @@ export class BatchedBody {
         if (!b || !muscle) continue;
         followSkinBinding(muscle.mesh.geometry, b.mesh.geometry, at, /^(inferior subscapular|lower subscapular)/i, 0.04, /^(subscapularis|teres major)/i);
       }
+      step('nerves follow muscles');
+      // The posterior cutaneous nerve of the thigh runs down the back of the thigh deep to
+      // the fascia, on the hamstrings; only its last branches, behind the knee, come up
+      // under the skin. The atlas leaves its thigh stretch 2 to 3 cm off the hamstrings, in
+      // the fat a centimetre under the skin, where it showed as a nerve hanging outside the
+      // body. It is laid onto them, from where it comes out from under gluteus maximus.
+      const nerves = this.batches.find(x => x.system === 'nervous');
+      const foldY = rig.p.l.hip.y - 0.06;
+      if (nerves && muscle) layOnto(nerves.mesh.geometry, muscle.mesh.geometry, at, {
+        pick: (part) => /^posterior femoral cutaneous nerve$/i.test(part.n),
+        weight: (part, x, y) => smoothstep01((foldY + 0.03 - y) / 0.06),
+        from: (part) => /^(semitendinosus|semimembranosus|long head of biceps femoris|short head of biceps femoris|adductor magnus|gluteus maximus)/i.test(part.n),
+        gap: 0.004,
+      });
       // Nerves and vessels of the hip and the leg go with the muscles they lie on (see
       // followMuscles in skinweld.js).
       const hipY = rig.p.l.hip.y;
@@ -183,7 +200,11 @@ export class BatchedBody {
           pick: (part, x, y) => y < hipY + 0.08 && !HANGING.test(part.n) && !UNDER_SKIN.test(part.n),
           from: (part) => !CONNECTIVE_SHEET.test(part.n),
           bones: (bone) => !rig.isArmBone(bone),        // the hands hang beside the thighs
-          radius: 0.045, weld: 0.002,
+          // Smoothed over a short stretch only: enough to keep each ring of a tube together,
+          // not so far that the binding of the buttock reaches down the thigh. Over the whole
+          // nerve, the nerve on the hamstrings took an eighth of the pelvis's turn and lifted
+          // 4 cm off them at the bottom of a hinge.
+          radius: 0.045, weld: 0.002, passes: 8,
         });
         // The same round the shoulder and the armpit, where the girdle, the arm and the
         // ribcage all move apart: the nerves to the serratus, the lat and the cuff, and the
@@ -200,11 +221,13 @@ export class BatchedBody {
       }
       // The nerves of the skin itself run in the fat just under it, and go with it.
       for (const b of this.batches) if (skin && b.system === 'nervous') followSkinBinding(skin.mesh.geometry, b.mesh.geometry, at, UNDER_SKIN, 0.08);
+      step('hanging and creases');
       // What hangs below the front of the pelvis hangs (see Rig.bindHanging). Last, so
       // nothing above undoes it.
       for (const b of this.batches) rig.bindHanging(b.mesh.geometry, at);
       if (skin) rig.collectCreaseSamples(skin.mesh.geometry, (slot) => this.parts[slot]);
     }
+    step('bone per part');
     this._findDominantBones();
     return this;
   }
@@ -329,7 +352,8 @@ const HANGING = /testicular|spermatic|cremaster|deferen|pampiniform|scrot|penis|
 /** The arm's own nerves, which run in the arm's muscles and are already bound well there. */
 const ARM_NERVE = /^(radial|median|ulnar|musculocutaneous) nerve/i;
 /** Nerves of the skin of the buttock and the back of the thigh, which lie in the fat under it. */
-const UNDER_SKIN = /^(posterior femoral cutaneous nerve|.*cluneal nerve)/i;
+const UNDER_SKIN = /cluneal nerve/i;
+const smoothstep01 = (t) => { const x = Math.min(1, Math.max(0, t)); return x * x * (3 - 2 * x); };
 /** Sheets round the muscles rather than muscle: nothing is copied from them. */
 const CONNECTIVE_SHEET = /fascia|aponeuros|retinacul|septum|sheath|bursa|iliotibial/i;
 

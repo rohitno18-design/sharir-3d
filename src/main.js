@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { Viewer } from './core/viewer.js';
 import { loadRegistry } from './core/registry.js';
 import { loadBody } from './core/loader.js';
+import { step, report as reportLoad } from './core/timing.js';
 import { Film } from './ui/film.js';
 import { Highlighter } from './core/highlight.js';
 import { Labels } from './core/labels.js';
@@ -73,12 +74,14 @@ class App {
     const prog = (p, label) => { bar.style.width = Math.round(p * 92) + '%'; if (label) sub.textContent = label; };
 
     prog(0.02, 'Loading anatomy index…');
+    step('anatomy index');
     this.registry = await loadRegistry();
     prog(0.06, 'Loading Hindi names…');
     try { const h = await fetch('/data/hindi.json'); if (h.ok) this.registry.setHindi(await h.json()); } catch {}
     try { const a = await fetch('/data/age.json'); if (a.ok) this.ageData = await a.json(); } catch {}
 
     prog(0.08, 'Building the body…');
+    step('models download');
     this.body = await loadBody(this.viewer, this.registry, (p, l) => prog(0.08 + p * 0.9, l));
     // Everything downstream only ever asked "does this part exist?" — keep that answer
     // available without dragging 4,000 mesh objects around.
@@ -86,6 +89,7 @@ class App {
     this.hi = new Highlighter(this.viewer, this.registry, this.body);
     this.exercise = new ExercisePlayer(this);
     this.film = new Film(this);
+    step('body set-up');
     // The player owns the clock but not the loop: it advances on the frames the viewer is
     // already producing, and asks for more only while something is actually moving.
     this.viewer.onFrame(() => {
@@ -100,7 +104,9 @@ class App {
     // Draw once now, behind the loading card, and build the picture used for picking. The
     // graphics chip compiles its programs on first use, which takes a second or more; done
     // here it is part of loading instead of a freeze on the first move of the mouse.
+    step('first draw (shaders)');
     this.viewer.warm();
+    step('panels');
 
     // UI
     this.topbar = new Topbar(this);
@@ -118,6 +124,7 @@ class App {
     window.addEventListener('resize', () => this.syncNarrow());
 
     prog(1, 'Ready');
+    reportLoad();
     // Fade the loading card out, then take it off the page. Left in place at zero opacity,
     // its pulsing logo kept the compositor busy every frame for the whole session, and it
     // showed through faintly whenever the body was drawn see-through.
@@ -971,7 +978,7 @@ class App {
     this.leftRoot.innerHTML = '';
     this.exercise.start(ex);
     this.panel = new ExercisePanel(this.leftRoot, this);
-    this.panel.setView?.(this.panel.view);
+    this.panel.setView?.(this.panel.view, { remember: false });
   }
 
   /** Back to the starting shot for this tab. */

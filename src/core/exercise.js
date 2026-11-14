@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { bodyKey, phaseAt, EZ_BENDS } from './lift.js';
+import { bodyKey, phaseAt, EZ_BENDS, dumbbellSize } from './lift.js';
 
 /**
  * Exercise player. Runs any lift written in the movement framework's format.
@@ -247,7 +247,9 @@ export class ExercisePlayer {
         const post = new THREE.Mesh(new THREE.BoxGeometry(0.08, b.top - 0.10, 0.08), frame);
         post.position.set(b.center[0] + (along ? off : 0), (b.top - 0.10) / 2, b.center[1] + (along ? 0 : off));
         g.add(post);
-        const foot = new THREE.Mesh(new THREE.BoxGeometry(along ? 0.10 : wid + 0.09, 0.05, along ? wid + 0.09 : 0.10), frame);
+        // The feet of the frame are no wider than the pad: the lifter's own feet stand on
+        // the floor either side of the bench, and a wider bar went through their heels.
+        const foot = new THREE.Mesh(new THREE.BoxGeometry(along ? 0.10 : wid - 0.02, 0.05, along ? wid - 0.02 : 0.10), frame);
         foot.position.set(b.center[0] + (along ? off : 0), 0.025, b.center[1] + (along ? 0 : off));
         g.add(foot);
       }
@@ -295,11 +297,12 @@ export class ExercisePlayer {
     } else this.bar = null;
 
     // Dumbbells: one in each hand, placed in the grip every frame like the bar. The heads
-    // grow with the weight, so a heavy pair looks heavy.
+    // are as big as steel of that weight is (dumbbellSize), the same numbers the movement
+    // used to keep them out of the body.
     this.dumbbells = null;
     if (eq.dumbbells) {
-      const each = Math.max(1, (this.ex.physics?.load?.kg || 10) / 2);
-      const headR = Math.min(0.085, 0.036 + 0.0032 * each), headL = Math.min(0.075, 0.03 + 0.0022 * each);
+      const size = dumbbellSize(this.ex.physics?.load?.kg);
+      const headR = size.R, headL = size.L;
       const R = this.ex.bar?.radius ?? 0.016;
       this.dumbbells = {};
       for (const side of ['l', 'r']) {
@@ -310,7 +313,7 @@ export class ExercisePlayer {
         for (const s of [-1, 1]) {
           const head = new THREE.Mesh(new THREE.CylinderGeometry(headR, headR, headL, 24), iron);
           head.rotation.z = Math.PI / 2;
-          head.position.x = s * (0.062 + headL / 2);
+          head.position.x = s * size.at;
           db.add(head);
         }
         g.add(db);

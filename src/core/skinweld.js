@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { MeshBVH, acceleratedRaycast } from 'three-mesh-bvh';
 
 /**
  * The atlas builds the skin out of separate region patches: pectoral, deltoid, anterior
@@ -304,8 +305,12 @@ export function orientSkin(items) {
   const merged = mergeGeometries(geoms, false);
   geoms.forEach(g => g.dispose());
   if (!merged) return 0;
-  merged.computeBoundsTree?.();
+  // The rays are cast against a tree of the skin's triangles. Without it every ray tests
+  // every triangle of the skin: ten thousand rays took two minutes of every load, after
+  // the app's other use of this tree (picking) was taken out and this one was missed.
+  merged.boundsTree = new MeshBVH(merged);
   const probe = new THREE.Mesh(merged, new THREE.MeshBasicMaterial({ side: THREE.DoubleSide }));
+  probe.raycast = acceleratedRaycast;
   probe.updateMatrixWorld(true);
   const ray = new THREE.Raycaster();
   ray.firstHitOnly = false;
@@ -354,7 +359,7 @@ export function orientSkin(items) {
       }
     }
   }
-  merged.disposeBoundsTree?.();
+  merged.boundsTree = null;
   merged.dispose();
   probe.material.dispose();
   return flipped;
@@ -717,7 +722,9 @@ export function followMuscles(muscle, target, partAt, { pick, from, bones: allow
   }
   if (!count) return 0;
   // Muscle points to copy from, in a grid.
-  const cell = 0.02, R = Math.ceil(radius / cell), r2 = radius * radius;
+  // Small cells searched from the middle outwards, stopping once nothing nearer can be
+  // left: a fixed 7-by-7-by-7 block of big cells took nine seconds of every load.
+  const cell = 0.01, R = Math.ceil(radius / cell), r2 = radius * radius;
   const key = (i, j, k) => ((i + 2048) * 4096 + (j + 2048)) * 4096 + (k + 2048);
   const grid = new Map(), fibreAt = new Set();
   for (let i = 0; i < MP.count; i++) {
@@ -746,7 +753,11 @@ export function followMuscles(muscle, target, partAt, { pick, from, bones: allow
     const mayPin = !!fibre && fibre(partAt(TA.getX(i)));
     const cx = Math.floor(x / cell), cy = Math.floor(y / cell), cz = Math.floor(z / cell);
     let best = -1, bd = r2;
-    for (let dx = -R; dx <= R; dx++) for (let dy = -R; dy <= R; dy++) for (let dz = -R; dz <= R; dz++) {
+    for (let ring = 0; ring <= R; ring++) {
+      // Every point of an outer ring is at least (ring - 1) cells away.
+      if (ring > 1 && bd < ((ring - 1) * cell) ** 2) break;
+      for (let dx = -ring; dx <= ring; dx++) for (let dy = -ring; dy <= ring; dy++) for (let dz = -ring; dz <= ring; dz++) {
+      if (Math.max(Math.abs(dx), Math.abs(dy), Math.abs(dz)) !== ring) continue;
       const list = grid.get(key(cx + dx, cy + dy, cz + dz));
       if (!list) continue;
       for (const j of list) {
@@ -755,6 +766,7 @@ export function followMuscles(muscle, target, partAt, { pick, from, bones: allow
         if (!mayPin && fibreAt.has(j)) continue;
         const d2 = (mx - x) ** 2 + (MP.getY(j) - y) ** 2 + (MP.getZ(j) - z) ** 2;
         if (d2 < bd) { bd = d2; best = j; }
+      }
       }
     }
     const e = [];
@@ -807,17 +819,39 @@ export function followMuscles(muscle, target, partAt, { pick, from, bones: allow
       }
     }
   }
-  let next = new Float32Array(m * K);
+  // Smoothing only ever mixes bones within one connected piece (a nerve and the branches
+  // welded to it), and a piece holds a handful of bones out of the fifty. Working out only
+  // those keeps this to a fraction of a second; over all fifty it took ten seconds a load.
+  const comp = new Int32Array(m).map((_, k) => k);
+  const root = (k) => { while (comp[k] !== k) { comp[k] = comp[comp[k]]; k = comp[k]; } return k; };
+  for (let k = 0; k < m; k++) for (const j of nb[k]) { const a = root(k), b = root(j); if (a !== b) comp[a] = b; }
+  const used = new Map();
+  for (let k = 0; k < m; k++) {
+    const r = root(k);
+    let set = used.get(r);
+    if (!set) used.set(r, set = new Set());
+    for (let b = 0; b < K; b++) if (W[k * K + b] > 0) set.add(b);
+  }
+  const active = new Array(m);
+  const lists = new Map();
+  for (let k = 0; k < m; k++) {
+    const r = root(k);
+    let l = lists.get(r);
+    if (!l) lists.set(r, l = Int32Array.from(used.get(r)));
+    active[k] = l;
+  }
+  const cnt = new Int32Array(m);
+  for (let k = 0; k < m; k++) for (const j of nb[k]) if (!pinned[j]) cnt[k]++;
+  let next = W.slice();
   for (let p = 0; p < passes; p++) {
     for (let k = 0; k < m; k++) {
-      if (pinned[k]) continue;
-      const list = nb[k];
-      let cnt = 0;
-      for (const j of list) if (!pinned[j]) cnt++;
-      for (let b = 0; b < K; b++) {
+      if (pinned[k] || !cnt[k]) continue;
+      const list = nb[k], act = active[k], c = cnt[k];
+      for (let q = 0; q < act.length; q++) {
+        const b = act[q];
         let s = 0;
-        for (const j of list) if (!pinned[j]) s += W[j * K + b];
-        next[k * K + b] = cnt ? 0.5 * W[k * K + b] + 0.5 * s / cnt : W[k * K + b];
+        for (let t = 0; t < list.length; t++) { const j = list[t]; if (!pinned[j]) s += W[j * K + b]; }
+        next[k * K + b] = 0.5 * W[k * K + b] + 0.5 * s / c;
       }
     }
     [W, next] = [next, W];
@@ -831,7 +865,7 @@ export function followMuscles(muscle, target, partAt, { pick, from, bones: allow
       continue;
     }
     const top = [];
-    for (let b = 0; b < K; b++) if (W[k * K + b] > 1e-4) top.push([b, W[k * K + b]]);
+    for (const b of active[k]) if (W[k * K + b] > 1e-4) top.push([b, W[k * K + b]]);
     top.sort((a, b) => b[1] - a[1]);
     const [A, B, C] = [top[0] || [0, 1], top[1] || [top[0] ? top[0][0] : 0, 0], top[2] || [0, 0]];
     const sum = A[1] + B[1] + C[1] || 1;
@@ -841,5 +875,85 @@ export function followMuscles(muscle, target, partAt, { pick, from, bones: allow
     T2.setXY(i, wc > 0.02 ? bones[C[0]] : 0, wc > 0.02 ? wc : 0);
   }
   TS.needsUpdate = true; T2.needsUpdate = true;
+  return m;
+}
+
+/**
+ * Lay part of a nerve or vessel down onto the muscles it really lies on, where the atlas
+ * left it standing off them in the fat under the skin.
+ *
+ * Each chosen point is moved to `gap` off the nearest point of the given muscles (out the
+ * way it already was from them), scaled by `weight(part, x, y, z)` so it blends in from
+ * where it is right. The moves are then smoothed along the nerve's own mesh, so a tube is
+ * carried as a whole, round, and joins smoothly onto the stretch that does not move.
+ * Run before anything is bound: what follows binds the nerve where it now lies.
+ */
+export function layOnto(target, muscle, partAt, { pick, weight, from, gap = 0.004, radius = 0.06 } = {}) {
+  const TP = target.attributes.position, TA = target.attributes.aPartIndex;
+  const MP = muscle.attributes.position, MA = muscle.attributes.aPartIndex;
+  const n = TP.count, w = new Float32Array(n), ids = [];
+  for (let i = 0; i < n; i++) {
+    const part = partAt(TA.getX(i));
+    if (!part || !pick(part)) continue;
+    w[i] = weight(part, TP.getX(i), TP.getY(i), TP.getZ(i));
+    ids.push(i);
+  }
+  if (!ids.length) return 0;
+  const cell = 0.02, R = Math.ceil(radius / cell);
+  const key = (i, j, k) => ((i + 2048) * 4096 + (j + 2048)) * 4096 + (k + 2048);
+  const grid = new Map();
+  for (let i = 0; i < MP.count; i++) {
+    const part = partAt(MA.getX(i));
+    if (!part || !from(part)) continue;
+    const k = key(Math.floor(MP.getX(i) / cell), Math.floor(MP.getY(i) / cell), Math.floor(MP.getZ(i) / cell));
+    (grid.get(k) || grid.set(k, []).get(k)).push(i);
+  }
+  const local = new Int32Array(n).fill(-1);
+  ids.forEach((i, k) => { local[i] = k; });
+  const m = ids.length, D = new Float32Array(m * 3);
+  ids.forEach((i, k) => {
+    if (w[i] <= 0) return;
+    const x = TP.getX(i), y = TP.getY(i), z = TP.getZ(i);
+    const cx = Math.floor(x / cell), cy = Math.floor(y / cell), cz = Math.floor(z / cell);
+    let best = -1, bd = radius * radius;
+    for (let dx = -R; dx <= R; dx++) for (let dy = -R; dy <= R; dy++) for (let dz = -R; dz <= R; dz++) {
+      const list = grid.get(key(cx + dx, cy + dy, cz + dz));
+      if (!list) continue;
+      for (const j of list) {
+        const d2 = (MP.getX(j) - x) ** 2 + (MP.getY(j) - y) ** 2 + (MP.getZ(j) - z) ** 2;
+        if (d2 < bd) { bd = d2; best = j; }
+      }
+    }
+    if (best < 0) return;
+    const mx = MP.getX(best), my = MP.getY(best), mz = MP.getZ(best);
+    const l = Math.sqrt(bd) || 1;
+    const tx = mx + (x - mx) / l * gap, ty = my + (y - my) / l * gap, tz = mz + (z - mz) / l * gap;
+    D[k * 3] = (tx - x) * w[i]; D[k * 3 + 1] = (ty - y) * w[i]; D[k * 3 + 2] = (tz - z) * w[i];
+  });
+  // Each point takes the average move of the points of its own part within 1.5 cm: a ring
+  // of the tube moves as one and stays round, while a stretch further along keeps its own
+  // move. Smoothed along the mesh instead, the move faded towards the stretch that stays,
+  // and the lower thigh was laid only half way down.
+  const near = 0.015, g2 = new Map();
+  const gk = (x, y, z) => key(Math.floor(x / near), Math.floor(y / near), Math.floor(z / near));
+  ids.forEach((i, k) => { const q = gk(TP.getX(i), TP.getY(i), TP.getZ(i)); (g2.get(q) || g2.set(q, []).get(q)).push(k); });
+  const cur = new Float32Array(m * 3);
+  ids.forEach((i, k) => {
+    const x = TP.getX(i), y = TP.getY(i), z = TP.getZ(i), pa = TA.getX(i);
+    const cx = Math.floor(x / near), cy = Math.floor(y / near), cz = Math.floor(z / near);
+    let sx = 0, sy = 0, sz = 0, c = 0;
+    for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) for (let dz = -1; dz <= 1; dz++) {
+      const list = g2.get(key(cx + dx, cy + dy, cz + dz));
+      if (!list) continue;
+      for (const j of list) {
+        const jj = ids[j];
+        if (TA.getX(jj) !== pa || (TP.getX(jj) - x) ** 2 + (TP.getY(jj) - y) ** 2 + (TP.getZ(jj) - z) ** 2 > near * near) continue;
+        sx += D[j * 3]; sy += D[j * 3 + 1]; sz += D[j * 3 + 2]; c++;
+      }
+    }
+    if (c) { cur[k * 3] = sx / c; cur[k * 3 + 1] = sy / c; cur[k * 3 + 2] = sz / c; }
+  });
+  ids.forEach((i, k) => TP.setXYZ(i, TP.getX(i) + cur[k * 3], TP.getY(i) + cur[k * 3 + 1], TP.getZ(i) + cur[k * 3 + 2]));
+  TP.needsUpdate = true;
   return m;
 }

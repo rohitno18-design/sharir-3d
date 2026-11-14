@@ -14,6 +14,8 @@
     "check": "node tools/audit_anatomy.mjs && node tools/audit_lifts.mjs && python tools/validate_effects.py",
     "soak": "node tools/soak.mjs",
     "body": "node tools/body.mjs",
+    "loadtime": "node tools/loadtime.mjs",
+    "props": "node tools/props.mjs",
     "gate": "node tools/gate.mjs"
   },
   "keywords": [],
@@ -23,7 +25,8 @@
   "dependencies": {
     "fuse.js": "^7.5.0",
     "mediabunny": "^1.59.1",
-    "three": "^0.186.0"
+    "three": "^0.186.0",
+    "three-mesh-bvh": "^0.9.15"
   },
   "devDependencies": {
     "@gltf-transform/cli": "^4.5.0",

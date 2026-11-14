@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { d, lerp, clamp01, keyCurve, Frame, plantFeet, handsOnBar, joint, restingOn, squatStance, armSpace, SIDES, sgn, form, bodyKey } from './lift.js';
+import { d, lerp, clamp01, keyCurve, Frame, plantFeet, handsOnBar, joint, restingOn, squatStance, armSpace, SIDES, sgn, form, bodyKey,
+  dumbbellSize, dumbbellAt, pushApart, clearanceMove, benchSink, BENCH_GIVE } from './lift.js';
 import { analyse, angles, GROUPS } from './biomech.js';
 import { boneIndex } from './rig.js';
 
@@ -50,8 +51,13 @@ import { boneIndex } from './rig.js';
  */
 
 const X = new THREE.Vector3(1, 0, 0), Y = new THREE.Vector3(0, 1, 0);
-/** The bench: its top above the floor, and how far the middle of a lying back sits above that. */
-const BENCH_TOP = 0.46, BACK_DEPTH = 0.115;
+/**
+ * The bench: its top above the floor (a flat bench is 42 to 45 cm), and a first guess at
+ * how far the middle of a lying back sits above that; the real height is found per body.
+ * At 46 cm, once the body lay on the pad instead of 5 cm into it, the hips of a lifter
+ * with feet on the floor went 32 degrees past straight, further than a hip goes.
+ */
+const BENCH_TOP = 0.42, BACK_DEPTH = 0.115;
 const LYING = new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0, 'XYZ'));
 const PALM = { up: 0, in: 90, down: 160 };
 const WIDTH = { narrow: -0.03, hip: 0.0, shoulder: 0.04, wide: 0.13 };
@@ -108,7 +114,11 @@ function blend(a, b, k) {
  * own arm solver then turns the bones, so the elbow is the same true hinge it is in every
  * lift and stays short of locking.
  */
-function poseArm(rig, side, A, pose, arm, grip, space) {
+/**
+ * Pose one arm from its angles. `shift`, a move in the room, is added to where the hand
+ * ends up: it is how a held dumbbell is kept out of the body (see `_clearance`).
+ */
+function poseArm(rig, side, A, pose, arm, grip, space, shift = null) {
   const m = sgn(side);
   // In the room's terms by default: "down" is where gravity pulls, so an arm described as
   // hanging hangs plumb however far the trunk leans, the way a held weight does.
@@ -133,6 +143,7 @@ function poseArm(rig, side, A, pose, arm, grip, space) {
   const L1 = joint(rig, side, 'gh').distanceTo(joint(rig, side, 'el'));
   const L2 = joint(rig, side, 'el').distanceTo(rig._gripAfterWrist(side, wq));
   const T = S.clone().addScaledVector(toArm(dir.clone()), L1).addScaledVector(toArm(fore.clone()), L2);
+  if (shift && shift.lengthSq() > 0) T.add(A.dirToArm(shift.clone()));
   const pole = toArm(n.clone().negate());
   const solved = rig.solveArm(side, T, pole, { girdle, rootQ: A.q, pronation: d(arm.palm), wrist: d(arm.wrist), morphed: true });
   // The solver was made for hands on a bar. It points the elbow's joint at its pole, and
@@ -326,13 +337,99 @@ export function movement(script) {
         s.byHips = byHips;
         if (keep) rig.setPose(keep);
       }
+      if (base === 'bench') {
+        // Lying on the pad, not in it. The body is laid down and then lifted until its own
+        // back and buttocks rest on the pad, giving into it only as much as padding does.
+        // A fixed height for every body left the buttocks 5 cm inside the bench.
+        const keep = rig.lastPose, bench = this.equipment.bench;
+        s.py = BENCH_TOP + BACK_DEPTH;
+        for (let pass = 0; pass < 2; pass++) {
+          let sink = -Infinity;
+          for (const u of [0, 0.5, 1]) { this._u = u; sink = Math.max(sink, benchSink(rig, this._lying(rig, s, this._at(u)), bench)); }
+          s.py += sink - BENCH_GIVE;
+        }
+        if (keep) rig.setPose(keep);
+      }
+      // While the load is being searched for, where the hands go by a few centimetres does
+      // not change it; the dumbbells are kept clear once the load is known (prepare).
+      if (equipment === 'dumbbells' && !rig.weighing) this._clearance(rig, s);
       return s;
+    },
+
+    /** The move given to one hand to keep its dumbbell clear, at the moment being built. */
+    _shift(s, side) {
+      if (s.clearNow) return s.clearNow[side];
+      return s.clear ? s.clear(this._u, side) : null;
+    },
+
+    /**
+     * Dumbbells are solid. At each of a couple of dozen moments of the rep the body is
+     * posed, each dumbbell is tested against the skin of the trunk and the legs, against
+     * the other dumbbell and against the floor, and its hand is moved the shortest way
+     * that clears it, by a few millimetres to spare. Then again, until nothing touches.
+     * The arm follows the hand, so it is the arm that moves out of the way, the way a
+     * lifter's does: held out a little from the thighs at the bottom of a curl, a little
+     * forward of the chest at the top, apart from each other at the top of a fly.
+     *
+     * Without this the weights went 2 to 4 cm into the thighs, the buttocks, the groin and
+     * the chest, and through each other.
+     */
+    _clearance(rig, s) {
+      const keep = rig.lastPose;
+      const size = dumbbellSize(this._kg ?? this.physics.load.kg);
+      const N = 16, tab = { l: [], r: [] };
+      const build = (q) => (base === 'bench' ? this._lying(rig, s, q) : this._build(rig, s, q));
+      let prev = { l: null, r: null };
+      for (let i = 0; i <= N; i++) {
+        this._u = i / N;
+        const q = this._at(this._u);
+        const shift = { l: prev.l ? prev.l.clone() : new THREE.Vector3(), r: prev.r ? prev.r.clone() : new THREE.Vector3() };
+        s.clearNow = shift;
+        // The trunk and legs do not move when only the hands do, so their skin is posed once.
+        let cloud = null;
+        for (let pass = 0; pass < 4; pass++) {
+          const p = build(q);
+          rig.setPose(p);
+          cloud ||= rig.bodyCloud(p);
+          const db = { l: dumbbellAt(rig, 'l', size), r: dumbbellAt(rig, 'r', size) };
+          let moved = 0;
+          for (const side of SIDES) {
+            const me = db[side];
+            const S = rig.jointAt('gh', side, new THREE.Vector3()), E = rig.jointAt('el', side, new THREE.Vector3());
+            const reach = { S, max: (S.distanceTo(E) + E.distanceTo(me.c)) * 0.985 };
+            const push = clearanceMove(me, cloud, side, { prev: shift[side], reach });
+            push.add(pushApart(me, db[side === 'l' ? 'r' : 'l']));
+            // Above the floor: the lowest point of either head.
+            const up = Math.abs(me.axis.y), low = me.c.y - up * (size.at + size.L / 2) - Math.sqrt(Math.max(0, 1 - up * up)) * size.R;
+            if (low < 0.006) push.y += 0.006 - low;
+            const need = push.length();
+            if (need < 1e-4) continue;
+            shift[side].add(push);
+            moved = Math.max(moved, need);
+          }
+          if (moved < 0.001) break;
+        }
+        // Starting each moment from the move the moment before keeps the arm on one path
+        // through the rep, and lets it ease back in as soon as the weight is clear.
+        for (const side of SIDES) tab[side].push(shift[side].clone());
+        prev = { l: shift.l.clone(), r: shift.r.clone() };
+        // Ease back towards the written path where nothing is in the way.
+        for (const side of SIDES) prev[side].multiplyScalar(0.7);
+      }
+      s.clearNow = null;
+      // Each moment takes the largest move of itself and its neighbours, so a weight that
+      // clears at two neighbouring moments cannot clip in between them.
+      const wide = (list) => list.map((v, i) => [list[i - 1], v, list[i + 1]].filter(Boolean).reduce((a, b) => (b.lengthSq() > a.lengthSq() ? b : a)).clone());
+      const T = { l: wide(tab.l), r: wide(tab.r) };
+      s.clear = (u, side) => { const x = clamp01(u) * N, i = Math.min(N - 1, Math.floor(x)); return T[side][i].clone().lerp(T[side][i + 1], x - i); };
+      if (keep) rig.setPose(keep);
     },
 
     /** Lying on the back on a flat bench, feet planted on the floor either side of it. */
     _lying(rig, s, q) {
       const height = this._height || 1.7433;
-      const py = BENCH_TOP + BACK_DEPTH, pz = height * 0.52;
+      // How high the body lies: its own back and buttocks resting on the pad (`_setup`).
+      const py = s.py ?? BENCH_TOP + BACK_DEPTH, pz = height * 0.52;
       const entry = { rot: [-Math.PI / 2, 0, 0], pos: [0, py, pz] };
       const frame = Frame.fromEntry(rig, entry);
       const p = { root: entry };
@@ -349,7 +446,7 @@ export function movement(script) {
       const A = armSpace(rig, frame, p);
       // Lying down, "hanging plumb" means nothing, so the arms are described against the
       // trunk: `plane: 90` is straight up off the chest.
-      for (const side of SIDES) poseArm(rig, side, A, p, q.arms[side], s.grip?.[side], 'trunk');
+      for (const side of SIDES) poseArm(rig, side, A, p, q.arms[side], s.grip?.[side], 'trunk', this._shift(s, side));
       return p;
     },
 
@@ -403,7 +500,7 @@ export function movement(script) {
           pole: (side) => frame.dirToWorld(new THREE.Vector3(sgn(side) * 0.25, -1, -0.45)),
         });
       } else {
-        for (const side of SIDES) poseArm(rig, side, A, p, q.arms[side], s.grip?.[side], script.armSpace || 'room');
+        for (const side of SIDES) poseArm(rig, side, A, p, q.arms[side], s.grip?.[side], script.armSpace || 'room', this._shift(s, side));
       }
       return p;
     },
@@ -428,7 +525,10 @@ export function movement(script) {
       // one grip kept from it (a dumbbell's) is closed properly afterwards.
       rig.weighing = true;
       try { this._prepare(app, rig, key); } finally { rig.weighing = false; }
-      if (this._s && equipment === 'dumbbells') this._s.grip = Object.fromEntries(SIDES.map(side => [side, rig.gripAround(side, HANDLE.radius, HANDLE.flesh, rig.barInHand(side))]));
+      if (this._s && equipment === 'dumbbells') {
+        this._s.grip = Object.fromEntries(SIDES.map(side => [side, rig.gripAround(side, HANDLE.radius, HANDLE.flesh, rig.barInHand(side))]));
+        this._clearance(rig, this._s);
+      }
     },
 
     _prepare(app, rig, key) {
